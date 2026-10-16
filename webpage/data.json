@@ -1,5 +1,8 @@
 {
     "Launcher": [
+    { "name":"version" , "key":"1.5.0" }, 
+    { "name" : "versiontitle" , "key":"修好了 Java，换上了新装"},
+    { "name":"versionlog" , "key":"修复 Java 运行时下载：镜像站文件名变了导致安装失败，现改为动态获取<br>安装包改用 Inno Setup，可直接从旧版就地升级<br>全局配色统一（天蓝为主、深蓝暗色），启动动画与官网一并换新<br>修复浅色模式下启动界面不跟随主题、若干按钮样式失效" },
     { "name":"version" , "key":"1.4.4" }, 
     { "name" : "versiontitle" , "key":"光影支持！"},
     { "name":"versionlog" , "key":"新增 OptiFine（光影）支持<br>一键安装，自动处理继承、库文件、tweakClass<br>支持 inheritsFrom 版本继承机制" },

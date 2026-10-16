@@ -670,22 +670,22 @@
                     <div id="custom-java-mirror-container" class="setting-row hidden">
                       <div class="setting-left">
                         <div class="setting-label">自定义镜像源地址</div>
-                        <div class="setting-desc">支持使用 {v} 变量代表Java版本，例如：https://example.com/java/{v}/OpenJDK{v}U-jre_x64_windows_hotspot_{v}.zip<br>或不使用变量：https://example.com/java/OpenJDK8U-jre_x64_windows_hotspot_8u402b06.zip</div>
+                        <div class="setting-desc">支持使用 {v} 变量代表 Java 版本，例如：https://example.com/java/{v}/OpenJDK{v}U-jre_x64_windows_hotspot_{v}.zip</div>
                       </div>
-                      <div class="setting-control" style="flex-direction: column; align-items: flex-start;">
+                      <div class="setting-control setting-control-column">
                         <input type="text" id="custom-java-mirror-url" class="setting-input" placeholder="https://example.com/java/{v}/OpenJDK{v}U-jre_x64_windows_hotspot_{v}.zip">
-                        <div class="setting-desc" style="margin-top: 8px;">
+                        <div class="setting-desc mirror-help">
                           <strong>支持的变量：</strong>
-                          <ul style="margin: 5px 0 5px 20px;">
-                            <li><code>{v}</code> - Java版本号（如 8, 17, 21）</li>
-                            <li><code>{version}</code> - 完整版本号（如 8u402b06）</li>
+                          <ul>
+                            <li><code>{v}</code> - Java 版本号（如 8、17、21、25）</li>
+                            <li><code>{version}</code> - 完整版本号（形如 17.0.20.1_1，随上游发布变化）</li>
                           </ul>
                           <strong>示例：</strong>
-                          <div style="margin-top: 5px; padding: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; font-family: monospace;">
-                            <div style="color: #4fc3f7;">清华大学：</div>
-                            <div style="color: #b8c0d0;">https://mirrors.tuna.tsinghua.edu.cn/Adoptium/{v}/jre/x64/windows/</div>
-                            <div style="color: #4fc3f7; margin-top: 8px;">自定义：</div>
-                            <div style="color: #b8c0d0;">https://cdn.example.com/java/{v}/OpenJDK{v}U-jre_x64_windows_hotspot_{v}.zip</div>
+                          <div class="mirror-help-code">
+                            <div class="mirror-help-label">清华大学：</div>
+                            <div class="mirror-help-url">https://mirrors.tuna.tsinghua.edu.cn/Adoptium/{v}/jre/x64/windows/</div>
+                            <div class="mirror-help-label">自定义：</div>
+                            <div class="mirror-help-url">https://cdn.example.com/java/{v}/OpenJDK{v}U-jre_x64_windows_hotspot_{v}.zip</div>
                           </div>
                         </div>
                       </div>
@@ -778,16 +778,16 @@
                   
                   <div class="setting-card about-card">
                     <div class="about-header">
-                      <img src="icon.ico" alt="图标" class="about-icon" onerror="this.style.display='none'">
+                      <img src="../static/icon/GPCL.png" alt="图标" class="about-icon">
                       <div class="about-info">
                         <div class="about-title">Good Plan Craft Launcher</div>
-                        <div class="about-version" id="about-version">版本: 1.1.0</div>
+                        <div class="about-version" id="about-version">版本: -</div>
                       </div>
                     </div>
                     <button id="check-update-btn" class="check-update-btn">检查更新</button>
                     <div id="update-status" class="update-status"></div>
                     <button id="go-download-btn" class="go-download-btn hidden">立即下载</button>
-                    <button id="open-website-btn" class="go-download-btn hidden" style="margin-top:6px;background:var(--button-secondary-bg, #444);">打开官网</button>
+                    <button id="open-website-btn" class="go-download-btn go-download-btn-secondary hidden">打开官网</button>
                     
                     <div class="auto-update-setting">
                       <div class="setting-row">
@@ -831,17 +831,6 @@
                           <div class="thanks-name">MC 百科</div>
                           <div class="thanks-desc">提供了 Mod 名称的中文翻译和更多相关信息</div>
                         </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="setting-card">
-                    <h3 class="acknowledgement-title">鸣谢</h3>
-                    <div class="acknowledgement-item">
-                      <img src="../static/more/avatar/sgmxe.jpg" alt="上古米歇尔" class="acknowledgement-avatar">
-                      <div class="acknowledgement-content">
-                        <div class="acknowledgement-name">上古米歇尔</div>
-                        <blockquote class="acknowledgement-quote">知觉赋予感觉以意义，因此知觉产生的是对世界的解释，而不是对世界的完美表征。</blockquote>
                       </div>
                     </div>
                   </div>

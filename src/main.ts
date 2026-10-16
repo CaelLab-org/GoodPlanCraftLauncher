@@ -963,8 +963,9 @@ ipcMain.handle('get-java-download-url', async (_: any, javaVersion: string) => {
     const settingsPath = path.join(GAME_DIR, 'settings', 'java_mirror.json');
     let settings: any = { mirror: 'tsinghua', customUrl: '' };
     if (fs.existsSync(settingsPath)) settings = JSON.parse(fs.readFileSync(settingsPath, 'utf8'));
-    const url = getJavaDownloadUrl(javaVersion, settings.mirror, settings.customUrl);
+    const url = await getJavaDownloadUrl(javaVersion, settings.mirror, settings.customUrl);
     writeLog(`[Java] 获取下载URL: Java ${javaVersion} - ${url}`);
+    if (!url) return { success: false, error: '没有可用的下载源' };
     return { success: true, url };
   } catch (e: any) { writeLog(`[Java] 获取下载URL失败: ${e.message}`); return { success: false, error: e.message }; }
 });
@@ -988,21 +989,53 @@ async function fetchJavaDownloadUrlFromAPI(javaVersion: string): Promise<string 
   }
 }
 
-function getJavaDownloadUrl(javaVersion: string, mirror: string, customUrl: string): string {
-  const tsinghuaMirrors: Record<string, string> = {
-    "8": "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/8/jre/x64/windows/OpenJDK8U-jre_x64_windows_hotspot_8u492b09.zip",
-    "17": "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/17/jre/x64/windows/OpenJDK17U-jre_x64_windows_hotspot_17.0.19_10.zip",
-    "21": "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/21/jre/x64/windows/OpenJDK21U-jre_x64_windows_hotspot_21.0.12_8.zip",
-    "25": "https://mirrors.tuna.tsinghua.edu.cn/Adoptium/25/jre/x64/windows/OpenJDK25U-jre_x64_windows_hotspot_25.0.3_9.zip"
-  };
-  if (mirror === 'custom' && customUrl) {
-    let url = customUrl;
-    url = url.replace(/\{v\}/gi, javaVersion);
-    const versionMap: Record<string, string> = { "8": "8u492b09", "17": "17.0.19_10", "21": "21.0.12_8", "25": "25.0.3_9" };
-    url = url.replace(/\{version\}/gi, versionMap[javaVersion] || javaVersion);
-    return url;
+const javaSourceCache: Record<string, { mirror: string; origin: string }> = {};
+
+function javaVersionToken(filename: string): string | null {
+  const m = filename.match(/hotspot_([^/\\]+?)\.zip$/i);
+  return m ? m[1] : null;
+}
+
+// 从 Adoptium API 拿当前文件名，拼出清华镜像地址；文件名是唯一的版本真相来源，
+// 不再写死具体版本号（写死的会在镜像同步后集体 404）。
+async function resolveJavaSources(javaVersion: string): Promise<{ mirror: string; origin: string } | null> {
+  if (javaSourceCache[javaVersion]) return javaSourceCache[javaVersion];
+
+  const origin: string | null = await fetchJavaDownloadUrlFromAPI(javaVersion);
+  if (!origin) {
+    writeLog(`[Java] 未能获取 Java ${javaVersion} 的下载文件名，无可用下载源`);
+    return null;
   }
-  return tsinghuaMirrors[javaVersion] || tsinghuaMirrors["17"];
+
+  const filename: string = decodeURIComponent(origin.split('/').pop() || '');
+  if (!filename) return null;
+
+  const sources: { mirror: string; origin: string } = {
+    mirror: `https://mirrors.tuna.tsinghua.edu.cn/Adoptium/${javaVersion}/jre/x64/windows/${filename}`,
+    origin
+  };
+  javaSourceCache[javaVersion] = sources;
+  writeLog(`[Java] Java ${javaVersion} 文件名: ${filename}`);
+  return sources;
+}
+
+async function getJavaDownloadUrl(javaVersion: string, mirror: string, customUrl: string): Promise<string> {
+  const sources: { mirror: string; origin: string } | null = await resolveJavaSources(javaVersion);
+
+  if (mirror === 'custom' && customUrl) {
+    const token: string | null = sources ? javaVersionToken(sources.mirror) : null;
+    return customUrl
+      .replace(/\{v\}/gi, javaVersion)
+      .replace(/\{version\}/gi, token || javaVersion);
+  }
+
+  return sources ? sources.mirror : '';
+}
+
+async function getJavaFallbackUrl(javaVersion: string, mirror: string): Promise<string> {
+  const sources: { mirror: string; origin: string } | null = await resolveJavaSources(javaVersion);
+  if (!sources) return '';
+  return mirror === 'custom' ? sources.mirror : sources.origin;
 }
 
 function saveJavaMirrorSettings(mirror: string, customUrl: string): boolean {
@@ -1172,37 +1205,29 @@ async function downloadAndInstallJava(javaVersion: string): Promise<any> {
       }
     } catch (e: any) {}
 
-    // 优先通过 Adoptium API 获取最新下载地址
-    let downloadUrl: string | null = null;
-    if (settings.mirror !== 'custom') {
-      try {
-        downloadUrl = await fetchJavaDownloadUrlFromAPI(javaVersion);
-      } catch (e: any) {
-        writeLog(`[Java] Adoptium API 获取失败: ${e.message}`);
-      }
+    // 镜像源优先，Adoptium API / GitHub 兜底
+    let downloadUrl: string = '';
+    try {
+      downloadUrl = await getJavaDownloadUrl(javaVersion, settings.mirror, settings.customUrl);
+    } catch (e: any) {
+      writeLog(`[Java] 获取主下载源失败: ${e.message}`);
     }
+    writeLog(`[Java] 主下载源(${settings.mirror}): ${downloadUrl || '无'}`);
 
-    // API 失败则使用配置的镜像源
-    if (!downloadUrl) {
-      downloadUrl = getJavaDownloadUrl(javaVersion, settings.mirror, settings.customUrl);
-      writeLog(`[Java] 使用镜像源: ${settings.mirror}, URL: ${downloadUrl}`);
-    } else {
-      writeLog(`[Java] 使用 Adoptium API URL: ${downloadUrl}`);
-    }
+    let result: any = downloadUrl
+      ? await downloadJavaWithWebContents(javaVersion, downloadUrl)
+      : { success: false, error: '没有可用的下载源' };
 
-    const result = await downloadJavaWithWebContents(javaVersion, downloadUrl);
-    
-    // 如果第一个源下载失败，尝试备用源
+    // 主源失败则换另一个源：清华镜像 <-> Adoptium API
     if (!result.success && !result.error?.includes('取消')) {
       writeLog(`[Java] 首个下载源失败: ${result.error}，尝试备用源...`);
-      const fallbackUrl = getJavaDownloadUrl(javaVersion, 'tsinghua', '');
-      if (fallbackUrl !== downloadUrl) {
+      const fallbackUrl: string = await getJavaFallbackUrl(javaVersion, settings.mirror);
+      if (fallbackUrl && fallbackUrl !== downloadUrl) {
         writeLog(`[Java] 尝试备用源: ${fallbackUrl}`);
-        const fallbackResult = await downloadJavaWithWebContents(javaVersion, fallbackUrl);
-        return fallbackResult;
+        result = await downloadJavaWithWebContents(javaVersion, fallbackUrl);
       }
     }
-    
+
     return result;
     
   } catch (e: any) {
@@ -1439,35 +1464,13 @@ async function getJavaRuntimeDownloadInfo(javaVersion: string): Promise<any> {
     
     writeLog(`[Java] 正在查找 Java ${javaVersion} (${runtimeKey}) 的下载信息...`);
 
-    // 优先通过 Adoptium API 获取最新下载地址
-    try {
-      const apiUrl = `https://api.adoptium.net/v3/assets/latest/${javaVersion}/hotspot?image_type=jre&architecture=x64&os=windows`;
-      const data = await fetchText(apiUrl);
-      const json = JSON.parse(data);
-      if (json && json.length > 0 && json[0].binary?.package?.link) {
-        const url = json[0].binary.package.link;
-        const size = json[0].binary.package.size || null;
-        writeLog(`[Java] ✓ Adoptium API 获取成功: ${url}`);
-        return { url, name: runtimeKey, sha1: null, size };
-      }
-    } catch (e: any) {
-      writeLog(`[Java] Adoptium API 请求失败: ${e.message}，使用镜像源`);
+    // 清华镜像优先，Adoptium API 兜底
+    const sources: { mirror: string; origin: string } | null = await resolveJavaSources(javaVersion);
+    if (sources) {
+      writeLog(`[Java] ✓ 清华镜像: ${sources.mirror}`);
+      return { url: sources.mirror, name: runtimeKey, sha1: null, size: null };
     }
 
-    // API 失败则使用镜像源
-    const runtimeInfo: any = {
-      "8": { id: "jre-legacy", url: getJavaDownloadUrl("8", "tsinghua", "") },
-      "17": { id: "java-runtime-gamma", url: getJavaDownloadUrl("17", "tsinghua", "") },
-      "21": { id: "java-runtime-delta", url: getJavaDownloadUrl("21", "tsinghua", "") },
-      "25": { id: "java-runtime-epsilon", url: getJavaDownloadUrl("25", "tsinghua", "") }
-    };
-    
-    const javaInfo: any = runtimeInfo[javaVersion];
-    if (javaInfo) {
-      writeLog(`[Java] ✓ 使用镜像源 URL: ${javaInfo.url}`);
-      return { url: javaInfo.url, name: javaInfo.id, sha1: null, size: null };
-    }
-    
     writeLog(`[Java] ✗ 无法找到 Java ${javaVersion} 的下载信息`);
     return null;
     

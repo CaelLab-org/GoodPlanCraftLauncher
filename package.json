@@ -1,13 +1,16 @@
 {
   "name": "gpcl",
-  "version": "1.4.4",
+  "version": "1.5.0",
   "description": "GoodPlanCraftLauncher",
   "main": "main.js",
   "scripts": {
     "build-ts": "node build.js",
     "start": "npm run build-ts && electron dist/",
     "start:dev": "npm run build-ts && electron dist/",
-    "build-prod": "npm run build-ts && electron-builder --publish=never",
+    "pack": "npm run build-ts && electron-builder --win --dir --publish=never",
+    "installer": "node scripts/build-installer.mjs",
+    "build-prod": "npm run pack && node scripts/build-installer.mjs",
+    "dist:nsis": "npm run build-ts && electron-builder --publish=never",
     "typecheck": "tsc --noEmit",
     "clean": "if (Test-Path dist) { Remove-Item -Recurse -Force dist }",
     "test": "echo \"Error: no test specified\" && exit 1"
