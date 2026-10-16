@@ -2,7 +2,7 @@
  * Copyright (c) 2026 Yunyun(云云) By 虚舟实验室(CaelLab) / CaelLabGameTS
  * Licensed under the CaelLab BY-SA Code License, Version 3
  * or any later version. https://www.caellab.com/license/cbs-v3.txt
- * Source: https://github.com/yunyun-3782/GoodPlanCraftLauncher
+ * Source: https://github.com/CaelLab-org/GoodPlanCraftLauncher
  */
 
 * {
@@ -16,6 +16,8 @@
 }
 
 :root {
+  /* 由 applyScale() 写入，用于把 vh 折算回缩放前的坐标系（zoom 不会折算 vh） */
+  --app-zoom: 1;
   --bg-primary: #0d1425;
   --bg-secondary: #121b30;
   --bg-tertiary: rgba(10, 16, 30, 0.95);
@@ -144,14 +146,14 @@ body {
   font-family: var(--font-sans);
   background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
   color: var(--text-primary);
-  min-height: 100vh;
+  min-height: calc(100vh / var(--app-zoom));
   overflow: hidden;
 }
 
 .app-layout {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: calc(100vh / var(--app-zoom));
   overflow: hidden;
 }
 
@@ -430,6 +432,22 @@ body.light-mode .custom-select-dropdown {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
+}
+
+/* 下面没空间就翻到触发按钮上方（placeDropdown() 加这个类） */
+.custom-select-dropdown.open-up {
+  top: auto;
+  bottom: calc(100% + 8px);
+  transform: translateY(10px);
+}
+
+.custom-select-dropdown.open-up.open {
+  transform: translateY(0);
+}
+
+.username-history.open-up {
+  top: auto;
+  bottom: calc(100% + 6px);
 }
 
 .custom-select-option {
@@ -1127,7 +1145,7 @@ select {
   margin-top: 52px;
   padding: 24px;
   overflow: hidden;
-  max-height: calc(100vh - 52px);
+  max-height: calc((100vh / var(--app-zoom)) - 52px);
 }
 
 .container {
@@ -1147,7 +1165,7 @@ select {
 .download-page {
   padding: 0;
   overflow-y: auto;
-  max-height: calc(100vh - 100px);
+  max-height: calc((100vh / var(--app-zoom)) - 100px);
 }
 
 .download-header {
@@ -2027,7 +2045,7 @@ select {
 
 .forum-iframe-full {
   width: 100%;
-  height: calc(100vh - 52px);
+  height: calc((100vh / var(--app-zoom)) - 52px);
   border: none;
   background: #fff;
   margin: 0;
@@ -2046,7 +2064,7 @@ select {
   margin: 0;
   max-width: none;
   overflow: hidden;
-  height: calc(100vh - 52px);
+  height: calc((100vh / var(--app-zoom)) - 52px);
 }
 
 #more-page.forum-mode #more-sidebar {
@@ -2064,16 +2082,16 @@ select {
   flex: 1;
   padding: 0;
   margin: 0 0 0 180px;
-  max-height: calc(100vh - 52px);
+  max-height: calc((100vh / var(--app-zoom)) - 52px);
   overflow: hidden;
   width: calc(100% - 180px);
   position: relative;
-  height: calc(100vh - 52px);
+  height: calc((100vh / var(--app-zoom)) - 52px);
 }
 
 #more-page.forum-mode #more-content-forum {
   display: block;
-  height: calc(100vh - 52px);
+  height: calc((100vh / var(--app-zoom)) - 52px);
   width: 100%;
   margin: 0;
   padding: 0;
@@ -2085,8 +2103,8 @@ select {
   max-width: none;
   margin: 0;
   display: flex;
-  min-height: calc(100vh - 100px);
-  height: calc(100vh - 100px);
+  min-height: calc((100vh / var(--app-zoom)) - 100px);
+  height: calc((100vh / var(--app-zoom)) - 100px);
   overflow: hidden;
 }
 
@@ -2133,7 +2151,7 @@ select {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  max-height: calc(100vh - 100px);
+  max-height: calc((100vh / var(--app-zoom)) - 100px);
 }
 
 .settings-content-panel {
@@ -3191,6 +3209,27 @@ body.light-mode .update-card-log {
   align-items: center;
   justify-content: center;
   backdrop-filter: blur(8px);
+  opacity: 0;
+  transition: opacity 0.3s ease-out;
+}
+
+.launch-animation-overlay.show {
+  opacity: 1;
+}
+
+.launch-animation-overlay.fade-out {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.32s ease-in;
+}
+
+.launch-animation-overlay .launch-animation-content {
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.26s ease-out;
+}
+
+.launch-animation-overlay.fade-out .launch-animation-content {
+  transform: translateY(-10px) scale(0.99);
+  opacity: 0;
 }
 
 body.light-mode .launch-animation-overlay {
@@ -3350,4 +3389,472 @@ body.light-mode .launch-animation-overlay {
   right: 20px;
   bottom: 20px;
   z-index: 60;
+}
+
+/* 最近使用的用户名 */
+.username-field {
+  position: relative;
+}
+
+.username-input {
+  padding: 10px 28px;
+}
+
+.username-history-btn {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: var(--text-tertiary);
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.username-history-btn:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
+}
+
+.username-history-btn.open {
+  background: var(--bg-card-hover);
+  color: var(--accent-primary);
+}
+
+.username-history {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 6px);
+  z-index: 30;
+  background: var(--bg-card);
+  border: 1px solid var(--border-medium);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+}
+
+.username-history-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 6px 8px 12px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.username-history-item:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
+}
+
+.username-history-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.username-history-remove {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.username-history-remove:hover {
+  background: rgba(239, 83, 80, 0.16);
+  color: var(--error);
+}
+
+.username-history-empty {
+  padding: 10px 12px;
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* 运行中的 Minecraft */
+.container {
+  transition: max-width 0.34s cubic-bezier(0.22, 1, 0.36, 1);
+}
+body:has(#game-monitor.active) .container {
+  max-width: 1120px;
+}
+
+.launch-content {
+  min-width: 0;
+}
+
+.game-monitor {
+  flex: 0 0 0;
+  width: 0;
+  padding: 18px 14px;
+  opacity: 0;
+  visibility: hidden;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid transparent;
+  /* 绝不能让这一列把整张卡片撑高：卡片一高，侧栏的皮肤区(flex:1)和
+     margin-bottom:auto 的开始按钮就会把用户名/按钮/页脚顶到窗口外面去 */
+  max-height: 480px;
+  /* 只动宽度与透明度：内部内容用固定 min-width + 裁切，展开过程中不重排 */
+  transition: flex-basis 0.34s cubic-bezier(0.22, 1, 0.36, 1),
+              width 0.34s cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 0.2s ease-out,
+              visibility 0s linear 0.34s;
+}
+
+.game-monitor.active {
+  flex-basis: 216px;
+  width: 216px;
+  opacity: 1;
+  visibility: visible;
+  border-left-color: var(--border-light);
+  transition: flex-basis 0.34s cubic-bezier(0.22, 1, 0.36, 1),
+              width 0.34s cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 0.26s ease-out 0.05s,
+              visibility 0s;
+}
+
+.game-monitor-header,
+.game-monitor-body,
+.game-monitor-actions {
+  min-width: 188px;
+  opacity: 0;
+  transform: translateX(14px);
+  transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.24s ease-out;
+}
+
+.game-monitor.active .game-monitor-header,
+.game-monitor.active .game-monitor-body,
+.game-monitor.active .game-monitor-actions {
+  opacity: 1;
+  transform: none;
+  transition: transform 0.38s cubic-bezier(0.22, 1, 0.36, 1) 0.04s, opacity 0.28s ease-out 0.08s;
+}
+
+.game-monitor-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.game-monitor-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  flex: 0 0 auto;
+}
+
+.game-monitor-dot.running {
+  background: var(--success);
+  box-shadow: 0 0 8px rgba(102, 187, 106, 0.6);
+  animation: monitorPulse 1.6s ease-in-out infinite;
+}
+
+.game-monitor-dot.stopped {
+  background: var(--text-muted);
+}
+
+@keyframes monitorPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.game-monitor-state {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.game-monitor-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.game-monitor-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.game-monitor-label {
+  flex: 0 0 auto;
+  color: var(--text-muted);
+}
+
+.game-monitor-value {
+  font-family: var(--font-mono);
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.game-monitor-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.game-monitor-btn {
+  padding: 8px 10px;
+  background: var(--bg-card-hover);
+  border: 1px solid var(--border-medium);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.game-monitor-btn:hover {
+  background: var(--bg-input-hover);
+  border-color: var(--border-medium);
+  color: var(--text-primary);
+}
+
+.game-monitor-btn-danger {
+  color: var(--error);
+  border-color: rgba(239, 83, 80, 0.35);
+}
+
+.game-monitor-btn-danger:hover {
+  background: rgba(239, 83, 80, 0.14);
+  border-color: var(--error);
+  color: var(--error);
+}
+
+.game-monitor-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* Minecraft 崩溃提示 */
+.crash-dialog-box {
+  min-width: 460px;
+  max-width: 560px;
+}
+
+.crash-dialog-icon {
+  color: var(--error);
+}
+
+.crash-dialog-brand {
+  margin-left: auto;
+  padding: 2px 6px;
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+
+.crash-dialog-box .dialog-body p + p {
+  margin-top: 10px;
+}
+
+
+.crash-dialog-help {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-light);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.crash-dialog-help-label {
+  flex: 0 0 auto;
+  padding: 2px 6px;
+  border: 1px solid var(--border-accent);
+  border-radius: 4px;
+  color: var(--accent-primary);
+  font-size: 11px;
+  letter-spacing: 0.5px;
+}
+
+/* 网址直接写出来：截图发出去别人也看得清 */
+.crash-dialog-help-url {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--accent-primary);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--border-accent);
+  word-break: break-all;
+}
+
+.crash-dialog-help-url:hover {
+  color: var(--accent-secondary);
+  border-bottom-color: var(--accent-secondary);
+}
+
+/* 「查看详情」是二级入口，做成不抢眼的小链接 */
+.crash-dialog-more a {
+  color: var(--text-tertiary);
+  font-size: 12px;
+  text-decoration: none;
+  border-bottom: 1px solid var(--border-medium);
+}
+
+.crash-dialog-more a:hover {
+  color: var(--accent-primary);
+  border-bottom-color: var(--border-accent);
+}
+
+/* ===== 图标：独立 svg 文件 + mask，颜色跟随 currentColor ===== */
+.icon {
+  --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'/%3E");
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  flex: none;
+  vertical-align: -0.16em;
+  background-color: currentColor;
+  -webkit-mask: var(--icon) center / contain no-repeat;
+  mask: var(--icon) center / contain no-repeat;
+}
+
+.icon-arrow-left { --icon: url("icons/chevron-left.svg"); }
+.icon-chevron { --icon: url("icons/chevron-down.svg"); }
+.icon-play { --icon: url("icons/play.svg"); }
+.icon-download { --icon: url("icons/download.svg"); }
+.icon-gear { --icon: url("icons/gear.svg"); }
+.icon-more { --icon: url("icons/more.svg"); }
+.icon-minimize { --icon: url("icons/minimize.svg"); }
+.icon-close { --icon: url("icons/close.svg"); }
+.icon-trash { --icon: url("icons/trash.svg"); }
+.icon-user { --icon: url("icons/user.svg"); }
+.icon-diamond { --icon: url("icons/diamond.svg"); }
+.icon-check { --icon: url("icons/check.svg"); }
+.icon-check-circle { --icon: url("icons/check-circle.svg"); }
+.icon-x-circle { --icon: url("icons/x-circle.svg"); }
+.icon-info { --icon: url("icons/info-circle.svg"); }
+.icon-alert { --icon: url("icons/alert.svg"); }
+.icon-question { --icon: url("icons/question.svg"); }
+.icon-loader { --icon: url("icons/loader.svg"); }
+.icon-bulb { --icon: url("icons/bulb.svg"); }
+.icon-file { --icon: url("icons/file.svg"); }
+.icon-box { --icon: url("icons/box.svg"); }
+.icon-star { --icon: url("icons/star.svg"); }
+.icon-dot { --icon: url("icons/dot.svg"); }
+.icon-sliders { --icon: url("icons/sliders.svg"); }
+.icon-palette { --icon: url("icons/palette.svg"); }
+.icon-book { --icon: url("icons/book.svg"); }
+.icon-chat { --icon: url("icons/chat.svg"); }
+.icon-save { --icon: url("icons/save.svg"); }
+.icon-bolt { --icon: url("icons/bolt.svg"); }
+.icon-eye { --icon: url("icons/eye.svg"); }
+.icon-gamepad { --icon: url("icons/gamepad.svg"); }
+.icon-thread { --icon: url("icons/thread.svg"); }
+
+.icon.spin {
+  animation: iconSpin 1s linear infinite;
+}
+
+@keyframes iconSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* 语义色（版本分类的小圆点用得上） */
+.icon-success { color: var(--success); }
+.icon-error { color: var(--error); }
+.icon-warning { color: var(--warning); }
+.icon-muted { color: var(--text-muted); }
+.cat-release { color: #4caf50; }
+.cat-snapshot { color: #ffc107; }
+.cat-old_beta { color: #ff9800; }
+.cat-old_alpha { color: #f44336; }
+.cat-other { color: var(--text-muted); }
+
+/* 设置页：加宽控件与说明行 */
+.setting-control-wide {
+  flex: 1 1 300px;
+  max-width: 380px;
+}
+
+.setting-control-wide .setting-input {
+  width: 100%;
+  min-width: 240px;
+}
+
+.setting-hint {
+  margin-top: 10px;
+  font-size: 12px;
+  line-height: 1.9;
+  color: var(--text-dim);
+}
+
+.setting-hint code {
+  padding: 1px 5px;
+  margin-right: 2px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.setting-hint a {
+  margin-left: 8px;
+  color: var(--accent-primary);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--border-accent);
+}
+
+.setting-hint a:hover {
+  color: var(--accent-secondary);
+}
+
+/* 页面切换：淡入 + 轻微上移，别用纯硬切 */
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.page-enter {
+  animation: pageEnter 0.26s cubic-bezier(0.22, 1, 0.36, 1);
 }

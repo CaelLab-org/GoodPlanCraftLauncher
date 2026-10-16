@@ -1,0 +1,875 @@
+/*
+ * Copyright (c) 2026 Yunyun(云云) By 虚舟实验室(CaelLab) / CaelLabGameTS
+ * Licensed under the CaelLab BY-SA Code License, Version 2.0
+ * or any later version. https://www.caellab.com/license/bysa-code-v2.txt
+ * Source: https://github.com/CaelLab-org/GoodPlanCraftLauncher
+ */
+
+
+// __IMPORTS_BEGIN__
+import { BrowserWindow, ipcMain, net } from 'electron';
+import fs from 'fs';
+import path from 'path';
+
+import { APP_VERSION, CACHE_DIR, GAME_DIR, formatTimestamp, writeLog } from './config';
+import { installVersionWithModLoader } from './modloader';
+import { mainWindow } from './shell';
+import { MAX_CONCURRENT, activeDownloads, completedDownloadFiles, currentDownloadPath, currentDownloadType, currentDownloadVersion, downloadQueue, isDownloading, isJavaDownloading, setActiveDownloads, setCompletedDownloadFiles, setCurrentDownloadPath, setCurrentDownloadType, setCurrentDownloadVersion, setDownloadQueue, setIsDownloading, setIsJavaDownloading, setMaxConcurrent, setShouldCancelDownload, setTotalDownloadFiles, shouldCancelDownload, totalDownloadFiles } from './state';
+// __IMPORTS_END__
+
+ipcMain.handle('confirm-close-download', async () => {
+  if (isDownloading && currentDownloadVersion) {
+setShouldCancelDownload(true);
+    try {
+      const versionDir = currentDownloadPath || path.join(GAME_DIR, 'versions', currentDownloadVersion);
+      const cancelFilePath = path.join(versionDir, 'CancelDownload.txt');
+      const cancelContent = `GoodPlanCraftLauncher ${APP_VERSION}\n取消时间：${formatTimestamp()}\n\n正确的关闭\n您在下载完成前正确地关闭了GPCL。`;
+      if (fs.existsSync(versionDir)) {
+        fs.writeFileSync(cancelFilePath, cancelContent, 'utf8');
+        const files = fs.readdirSync(versionDir);
+        for (const file of files) {
+          const filePath = path.join(versionDir, file);
+          if (file !== 'CancelDownload.txt') {
+            if (fs.statSync(filePath).isDirectory()) {
+              fs.rmSync(filePath, { recursive: true, force: true });
+            } else {
+              fs.unlinkSync(filePath);
+            }
+          }
+        }
+      }
+      writeLog(`已清理游戏版本下载目录: ${versionDir}`);
+    } catch (e: any) {
+      console.error('清理下载失败:', e);
+      writeLog(`清理下载失败: ${e.message}`);
+    }
+setIsDownloading(false);
+setCurrentDownloadVersion(null);
+setCurrentDownloadType(null);
+setCurrentDownloadPath(null);
+  }
+  if (mainWindow) mainWindow.destroy();
+  return { success: true };
+});
+
+
+ipcMain.handle('cancel-close', () => ({ success: true }));
+
+
+ipcMain.handle('cancel-download-only', async () => {
+  writeLog('[取消下载] 开始取消下载流程');
+
+setShouldCancelDownload(true);
+
+  const pendingCount: number = downloadQueue.length;
+setDownloadQueue([]);
+  writeLog(`[取消下载] 已清空 ${pendingCount} 个待处理下载任务`);
+
+  const waitStart: number = Date.now();
+  while (activeDownloads > 0 && (Date.now() - waitStart) < 2000) {
+    await new Promise<void>(r => setTimeout(r, 100));
+  }
+  writeLog(`[取消下载] 活跃下载数: ${activeDownloads}`);
+  
+  if ((isDownloading && currentDownloadVersion) || isJavaDownloading) {
+    try {
+      if (currentDownloadType === 'game' && currentDownloadPath) {
+        
+        const versionDir: string = currentDownloadPath;
+        if (fs.existsSync(versionDir)) {
+          const files: string[] = fs.readdirSync(versionDir);
+          for (const file of files) {
+            const filePath: string = path.join(versionDir, file);
+            try {
+              if (fs.statSync(filePath).isDirectory()) {
+                fs.rmSync(filePath, { recursive: true, force: true });
+              } else {
+                fs.unlinkSync(filePath);
+              }
+            } catch (e: any) {
+              writeLog(`清理文件失败: ${filePath} - ${e.message}`);
+            }
+          }
+        }
+        writeLog(`[取消下载] 已清理游戏版本下载目录: ${versionDir}`);
+      } else if (currentDownloadType === 'java' && currentDownloadPath) {
+        
+        const javaFile: string = currentDownloadPath;
+        if (fs.existsSync(javaFile)) {
+          try {
+            fs.unlinkSync(javaFile);
+            writeLog(`[取消下载] 已清理Java下载文件: ${javaFile}`);
+          } catch (e: any) {
+            writeLog(`清理Java文件失败: ${e.message}`);
+          }
+        }
+      }
+    } catch (e: any) {
+      console.error('清理下载失败:', e);
+      writeLog(`清理下载失败: ${e.message}`);
+    }
+
+setIsDownloading(false);
+setIsJavaDownloading(false);
+setCurrentDownloadVersion(null);
+setCurrentDownloadType(null);
+setCurrentDownloadPath(null);
+setActiveDownloads(0);
+setTotalDownloadFiles(0);
+setCompletedDownloadFiles(0);
+  }
+
+  for (const w of BrowserWindow.getAllWindows()) {
+    w.webContents.send('download-cancelled');
+  }
+  
+  writeLog('[取消下载] 取消下载流程完成');
+  return { success: true };
+});
+
+
+export async function fetchText(url: string): Promise<string> {
+  return new Promise<string>((resolve, reject) => {
+    let finished: boolean = false;
+
+    const fallbackToHttps = (reason: any): void => {
+      if (finished) return;
+      try {
+        const https = require('https');
+        const req2 = https.get(url, { timeout: 20000 }, (res2: any) => {
+          let body: string = '';
+          res2.on('data', (d: any) => body += d);
+          res2.on('end', () => { finished = true; resolve(body); });
+          res2.on('error', (err2: any) => { if (!finished) { finished = true; reject(err2); } });
+        });
+        req2.on('timeout', () => { req2.destroy(); if (!finished) { finished = true; reject('超时'); } });
+        req2.on('error', (err2: any) => { if (!finished) { finished = true; reject(err2); } });
+      } catch (e2: any) {
+        if (!finished) { finished = true; reject(e2); }
+      }
+    };
+
+    try {
+      const req = net.request(url);
+      const to: any = setTimeout(() => { try { req.abort(); } catch {} ; fallbackToHttps('timeout'); }, 20000);
+
+      req.on('response', (res: any) => {
+        clearTimeout(to);
+        let body: string = '';
+        res.on('data', (d: any) => body += d);
+        res.on('end', () => { if (!finished) { finished = true; resolve(body); } });
+        res.on('error', (err: any) => { if (!finished) fallbackToHttps(err); });
+      });
+
+      req.on('error', (err: any) => { if (!finished) fallbackToHttps(err); });
+      req.end();
+    } catch (e: any) {
+      fallbackToHttps(e);
+    }
+  });
+}
+
+
+export async function downloadWithPool(url: string, dest: string, label: string): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
+    downloadQueue.push({ url, dest, label, resolve, reject });
+    processDownloadQueue();
+  });
+}
+
+
+export async function processDownloadQueue(): Promise<void> {
+  while (downloadQueue.length > 0 && activeDownloads < MAX_CONCURRENT && !shouldCancelDownload) {
+    const task: any = downloadQueue.shift();
+    setActiveDownloads(activeDownloads + 1);
+    downloadFileInternal(task.url, task.dest, task.label)
+      .then(() => {
+        task.resolve();
+      })
+      .catch((err: any) => {
+        task.reject(err);
+      })
+      .finally(() => {
+        setActiveDownloads(activeDownloads - 1);
+        setCompletedDownloadFiles(completedDownloadFiles + 1);
+        processDownloadQueue();
+      });
+  }
+
+  if (shouldCancelDownload) {
+    while (downloadQueue.length > 0) {
+      const task: any = downloadQueue.shift();
+      task.reject(new Error('下载已取消'));
+    }
+    
+    for (const w of BrowserWindow.getAllWindows()) {
+      w.webContents.send('download-cancelled');
+    }
+  }
+}
+
+
+export async function downloadFile(url: string, dest: string, label: string): Promise<void> {
+  if (fs.existsSync(dest)) {
+    const stat = fs.statSync(dest);
+    if (stat.size > 1024) {
+      for (const w of BrowserWindow.getAllWindows()) {
+        w.webContents.send('download-progress', {
+          label,
+          percent: 100,
+          current: completedDownloadFiles,
+          total: totalDownloadFiles
+        });
+      }
+      return;
+    }
+  }
+  await downloadWithPool(url, dest, label);
+}
+
+
+export async function downloadFileInternal(url: string, dest: string, label: string): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
+    const dir: string = path.dirname(dest);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+
+    const file = fs.createWriteStream(dest, { encoding: undefined as any });
+    let loaded: number = 0;
+    let total: number = 0;
+
+    const fallbackToHttps = (reason: any): void => {
+      writeLog(`[下载] ${label} HTTP请求失败: ${reason}，尝试HTTPS`);
+      try {
+        const https = require('https');
+        
+        const options: any = {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+          }
+        };
+        
+        const req2 = https.get(url, options, (res2: any) => {
+          
+          if (res2.statusCode >= 300 && res2.statusCode < 400 && res2.headers.location) {
+            writeLog(`[下载] ${label} 重定向到: ${res2.headers.location}`);
+            file.close();
+            
+            downloadFileInternal(res2.headers.location, dest, label).then(resolve).catch(reject);
+            return;
+          }
+          
+          total = parseInt(res2.headers['content-length'] || '0', 10);
+
+          const contentType: string = res2.headers['content-type'] || '';
+          if (!contentType.includes('zip') && !contentType.includes('octet-stream')) {
+            writeLog(`[下载] ${label} 警告: 内容类型是 ${contentType}，可能不是ZIP文件`);
+          }
+          
+          writeLog(`[下载] ${label} 开始下载，大小: ${total} bytes`);
+          
+          res2.on('data', (d: any) => {
+            if (shouldCancelDownload) {
+              req2.destroy();
+              file.destroy();
+              reject(new Error('下载已取消'));
+              return;
+            }
+            loaded += d.length;
+            file.write(d);
+            const p: number = total > 0 ? Math.floor((loaded / total) * 100) : 0;
+            for (const w of BrowserWindow.getAllWindows()) {
+              w.webContents.send('download-progress', {
+                label,
+                percent: p,
+                bytesDownloaded: loaded,
+                current: completedDownloadFiles,
+                total: totalDownloadFiles
+              });
+            }
+          });
+          res2.on('end', () => {
+            file.end();
+            writeLog(`[下载] ${label} 下载完成，实际大小: ${loaded} bytes`);
+            resolve();
+          });
+          res2.on('error', (err2: any) => {
+            file.destroy();
+            reject(err2);
+          });
+        });
+        req2.on('timeout', () => { req2.destroy(); reject('超时'); });
+        req2.on('error', (err2: any) => {
+          file.destroy();
+          reject(err2);
+        });
+      } catch (e2: any) {
+        file.destroy();
+        reject(e2);
+      }
+    };
+
+    try {
+      const req = net.request(url);
+      const to: any = setTimeout(() => { try { req.abort(); } catch {} ; fallbackToHttps('timeout'); }, 60000);
+
+      req.setHeader('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36');
+
+      req.on('response', (res: any) => {
+        clearTimeout(to);
+
+        if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+          writeLog(`[下载] ${label} 重定向到: ${res.headers.location}`);
+          file.close();
+          
+          downloadFileInternal(res.headers.location, dest, label).then(resolve).catch(reject);
+          return;
+        }
+        
+        total = parseInt(res.headers['content-length'] || '0', 10);
+
+        const contentType: string = res.headers['content-type'] || '';
+        if (!contentType.includes('zip') && !contentType.includes('octet-stream')) {
+          writeLog(`[下载] ${label} 警告: 内容类型是 ${contentType}，可能不是ZIP文件`);
+        }
+        
+        writeLog(`[下载] ${label} 开始下载，大小: ${total} bytes`);
+        
+        res.on('data', (d: any) => {
+          if (shouldCancelDownload) {
+            try { req.abort(); } catch {}
+            file.destroy();
+            reject(new Error('下载已取消'));
+            return;
+          }
+          loaded += d.length;
+          file.write(d);
+          const p: number = total > 0 ? Math.floor((loaded / total) * 100) : 0;
+          for (const w of BrowserWindow.getAllWindows()) {
+            w.webContents.send('download-progress', {
+              label,
+              percent: p,
+              bytesDownloaded: loaded,
+              current: completedDownloadFiles,
+              total: totalDownloadFiles
+            });
+          }
+        });
+        res.on('end', () => {
+          file.end();
+          writeLog(`[下载] ${label} 下载完成，实际大小: ${loaded} bytes`);
+          resolve();
+        });
+        res.on('error', (err: any) => {
+          file.destroy();
+          fallbackToHttps(err);
+        });
+      });
+
+      req.on('error', (err: any) => {
+        file.destroy();
+        fallbackToHttps(err);
+      });
+
+      req.end();
+    } catch (e: any) {
+      file.destroy();
+      fallbackToHttps(e);
+    }
+  });
+}
+
+
+export async function downloadFileInternalWithTimeout(url: string, dest: string, label: string, timeoutMs: number): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
+    let settled: boolean = false;
+    const timer: any = setTimeout(() => {
+      if (!settled) {
+        settled = true;
+        reject(new Error(`连接超时 (${timeoutMs / 1000}秒)`));
+      }
+    }, timeoutMs);
+
+    downloadFileInternal(url, dest, label)
+      .then((result: any) => {
+        if (!settled) {
+          settled = true;
+          clearTimeout(timer);
+          resolve(result);
+        }
+      })
+      .catch((err: any) => {
+        if (!settled) {
+          settled = true;
+          clearTimeout(timer);
+          reject(err);
+        }
+      });
+  });
+}
+
+
+
+export async function installVersion(versionId: string, maxConcurrent: number = 20, downloadPath: string | null = null): Promise<any> {
+  const targetDir: string = downloadPath || path.join(GAME_DIR, 'versions', versionId);
+  const versionDir: string = targetDir;
+  const cancelFilePath: string = path.join(versionDir, 'CancelDownload.txt');
+  if (fs.existsSync(cancelFilePath)) {
+    try { fs.unlinkSync(cancelFilePath); } catch (e: any) {}
+  }
+
+setShouldCancelDownload(false);
+setIsDownloading(true);
+setCurrentDownloadVersion(versionId);
+setCurrentDownloadType('game');
+setCurrentDownloadPath(targetDir);
+  writeLog(`开始下载：${versionId} 到 ${targetDir}`);
+
+  try {
+setMaxConcurrent(maxConcurrent);
+setDownloadQueue([]);
+setActiveDownloads(0);
+setTotalDownloadFiles(0);
+setCompletedDownloadFiles(0);
+
+    const versionDir2: string = path.join(GAME_DIR, 'versions', versionId);
+    if (!fs.existsSync(versionDir2)) fs.mkdirSync(versionDir2, { recursive: true });
+
+    const versionJsonPath: string = path.join(versionDir2, versionId + '.json');
+    const versionJarPath: string = path.join(versionDir2, versionId + '.jar');
+
+    const manifest: any = JSON.parse(await fetchText('https://piston-meta.mojang.com/mc/game/version_manifest_v2.json'));
+    const vInfo: any = manifest.versions.find((v: any) => v.id === versionId);
+    if (!vInfo) throw new Error('版本不存在: ' + versionId);
+
+    if (!fs.existsSync(versionJsonPath)) {
+      const vData: string = await fetchText(vInfo.url);
+      fs.writeFileSync(versionJsonPath, vData);
+    }
+
+    const versionData: any = JSON.parse(fs.readFileSync(versionJsonPath, 'utf8'));
+
+    if (!fs.existsSync(versionJarPath)) {
+      await downloadFile(versionData.downloads.client.url, versionJarPath, '客户端');
+    }
+
+    if (shouldCancelDownload) {
+      writeLog(`下载取消：${versionId}`);
+      throw new Error('下载已取消');
+    }
+
+    const assetIndexPath: string = path.join(GAME_DIR, 'assets', 'indexes', versionData.assetIndex.id + '.json');
+    if (!fs.existsSync(assetIndexPath)) {
+      await downloadFile(versionData.assetIndex.url, assetIndexPath, '资源索引');
+    }
+
+    if (shouldCancelDownload) {
+      writeLog(`下载取消：${versionId}`);
+      throw new Error('下载已取消');
+    }
+
+    let assetIndexData: any;
+    for (let i: number = 0; i < 10; i++) {
+      try {
+        assetIndexData = JSON.parse(fs.readFileSync(assetIndexPath, 'utf8'));
+        break;
+      } catch (e: any) {
+        await new Promise<void>(r => setTimeout(r, 500));
+      }
+    }
+    if (!assetIndexData) throw new Error('无法读取资源索引');
+
+    const toDownload: any[] = [];
+
+    for (const [name, obj] of Object.entries(assetIndexData.objects) as [string, any][]) {
+      const hash: string = obj.hash;
+      const prefix: string = hash.substring(0, 2);
+      const assetPath: string = path.join(GAME_DIR, 'assets', 'objects', prefix, hash);
+      if (!fs.existsSync(assetPath)) {
+        toDownload.push({
+          url: `https://resources.download.minecraft.net/${prefix}/${hash}`,
+          dest: assetPath,
+          label: `资源: ${name}`
+        });
+      }
+    }
+
+    for (const lib of versionData.libraries) {
+      if (lib.downloads?.artifact) {
+        const libPath: string = path.join(GAME_DIR, 'libraries', lib.downloads.artifact.path);
+        if (!fs.existsSync(libPath)) {
+          toDownload.push({
+            url: lib.downloads.artifact.url,
+            dest: libPath,
+            label: `库: ${lib.name}`
+          });
+        }
+      }
+      if (lib.downloads?.classifiers) {
+        for (const [cls, info] of Object.entries(lib.downloads.classifiers) as [string, any][]) {
+          if (cls.includes('natives-windows')) {
+            const libPath: string = path.join(GAME_DIR, 'libraries', info.path);
+            if (!fs.existsSync(libPath)) {
+              toDownload.push({
+                url: info.url,
+                dest: libPath,
+                label: `原生库: ${lib.name}`
+              });
+            }
+          }
+        }
+      }
+    }
+
+setTotalDownloadFiles(toDownload.length);
+setCompletedDownloadFiles(0);
+
+    const downloadPromises: Promise<void>[] = toDownload.map((item: any) => downloadFile(item.url, item.dest, item.label));
+    await Promise.all(downloadPromises);
+
+    const nativesDir: string = path.join(GAME_DIR, 'versions', versionId, 'natives');
+    if (!fs.existsSync(nativesDir)) fs.mkdirSync(nativesDir, { recursive: true });
+
+    for (const lib of versionData.libraries) {
+      if (lib.downloads?.classifiers) {
+        for (const [cls, info] of Object.entries(lib.downloads.classifiers) as [string, any][]) {
+          if (cls.includes('natives-windows')) {
+            const libPath: string = path.join(GAME_DIR, 'libraries', info.path);
+            if (fs.existsSync(libPath)) {
+              const AdmZip: any = require('adm-zip');
+              const zip: any = new AdmZip(libPath);
+              zip.extractAllTo(nativesDir, true);
+            }
+          }
+        }
+      }
+    }
+
+    if (shouldCancelDownload) {
+      writeLog(`下载取消：${versionId}`);
+      throw new Error('下载已取消');
+    }
+
+    writeLog(`下载完成：${versionId}`);
+
+    updateVersionLastPlayed(versionId, targetDir);
+    
+    return { success: true };
+  } catch (e: any) {
+    writeLog(`下载失败：${versionId} - ${e.message}`);
+    if (fs.existsSync(targetDir)) {
+      try {
+        fs.rmSync(targetDir, { recursive: true, force: true });
+        writeLog(`已删除下载失败的文件夹：${targetDir}`);
+      } catch (delErr: any) {
+        writeLog(`删除文件夹失败：${delErr.message}`);
+      }
+    }
+    return { success: false, error: e.message };
+  } finally {
+setIsDownloading(false);
+setCurrentDownloadVersion(null);
+setCurrentDownloadType(null);
+setCurrentDownloadPath(null);
+setShouldCancelDownload(false);
+setDownloadQueue([]);
+setActiveDownloads(0);
+setTotalDownloadFiles(0);
+setCompletedDownloadFiles(0);
+  }
+}
+
+
+export function updateVersionLastPlayed(versionId: string, targetDir?: string): void {
+  try {
+    const versionDir: string = targetDir || path.join(GAME_DIR, 'versions', versionId);
+    const gpclDir: string = path.join(versionDir, 'gpcl');
+    const configPath: string = path.join(gpclDir, 'config.json');
+    
+    let settings: any = {};
+
+    if (fs.existsSync(configPath)) {
+      try {
+        settings = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+      } catch (e: any) {
+        settings = {};
+      }
+    }
+
+    settings.lastPlayed = new Date().toISOString();
+
+    if (!fs.existsSync(gpclDir)) {
+      fs.mkdirSync(gpclDir, { recursive: true });
+    }
+
+    fs.writeFileSync(configPath, JSON.stringify(settings, null, 2), 'utf8');
+    writeLog(`[版本] ${versionId} 最后启动时间已更新: ${settings.lastPlayed}`);
+    
+  } catch (e: any) {
+    writeLog(`[版本] 更新 ${versionId} 最后启动时间失败: ${e.message}`);
+  }
+}
+
+
+ipcMain.handle('scan-versions', async (_, gameDir?: string, silent: boolean = false) => {
+  const targetDir: string = gameDir ? path.resolve(gameDir) : GAME_DIR;
+  const versionsDir: string = path.join(targetDir, 'versions');
+  if (!fs.existsSync(versionsDir)) {
+    if (!silent) writeLog('扫描本地版本：未找到versions目录');
+    return [];
+  }
+  const entries = fs.readdirSync(versionsDir, { withFileTypes: true });
+  const versions: string[] = [];
+  const skippedVersions: string[] = [];
+  
+  for (const entry of entries) {
+    if (entry.isDirectory()) {
+      const versionDir: string = path.join(versionsDir, entry.name);
+      try {
+        const files: string[] = fs.readdirSync(versionDir);
+
+        if (files.length === 1 && files[0] === 'CancelDownload.txt') {
+          skippedVersions.push(entry.name);
+          if (!silent) writeLog(`扫描本地版本：跳过空目录 "${entry.name}"（仅包含 CancelDownload.txt）`);
+          continue;
+        }
+
+        const jsonFiles: string[] = files.filter((f: string) => f.endsWith('.json'));
+
+        if (jsonFiles.length === 0) {
+          skippedVersions.push(entry.name);
+          if (!silent) writeLog(`扫描本地版本：跳过 "${entry.name}"（无 .json 文件）`);
+          continue;
+        }
+
+
+        
+        const baseVersionId: string = entry.name; 
+        const mcVersion: string = baseVersionId; 
+
+        if (jsonFiles.includes(`${baseVersionId}.json`)) {
+          versions.push(baseVersionId);
+        }
+
+        for (const jsonFile of jsonFiles) {
+          const jsonVersionId: string = jsonFile.replace('.json', '');
+          
+          if (jsonVersionId !== baseVersionId && !versions.includes(jsonVersionId)) {
+            versions.push(jsonVersionId);
+          }
+        }
+        
+      } catch (e: any) {
+        writeLog(`扫描本地版本：读取目录 "${entry.name}" 失败 - ${e.message}`);
+      }
+    }
+  }
+  
+  if (skippedVersions.length > 0 && !silent) {
+    writeLog(`扫描本地版本：跳过 ${skippedVersions.length} 个无效目录 - [${skippedVersions.join(', ')}]`);
+  }
+  if (!silent) writeLog(`扫描本地版本：共 ${versions.length} 个版本 - [${versions.join(', ')}]`);
+  return versions;
+});
+
+
+ipcMain.handle('get-version-manifest', async () => {
+  try {
+    if (!fs.existsSync(CACHE_DIR)) fs.mkdirSync(CACHE_DIR, { recursive: true });
+    const cacheFile: string = path.join(CACHE_DIR, 'version_manifest.json');
+
+    let data: string | undefined;
+    let fromCache: boolean = false;
+    if (fs.existsSync(cacheFile)) {
+      const stat = fs.statSync(cacheFile);
+      const age: number = Date.now() - stat.mtimeMs;
+      if (age < 10 * 60 * 1000) {
+        data = fs.readFileSync(cacheFile, 'utf8');
+        fromCache = true;
+      }
+    }
+
+    if (!data) {
+      try {
+        data = await fetchText('https://piston-meta.mojang.com/mc/game/version_manifest_v2.json');
+        fs.writeFileSync(cacheFile, data);
+        writeLog('远程拉取版本列表：成功');
+      } catch (e: any) {
+        writeLog(`远程拉取版本列表：失败 - ${e.message}`);
+        return [];
+      }
+    } else {
+      writeLog(`读取本地缓存版本列表：成功`);
+    }
+
+    const parsed: any = JSON.parse(data!);
+    
+    writeLog(`版本列表：共 ${parsed.versions.length} 个版本`);
+    return parsed.versions;
+  } catch (e: any) {
+    writeLog(`版本列表解析失败：${e.message}`);
+    return [];
+  }
+});
+
+
+ipcMain.handle('download-version', (event: any, versionId: string, maxConcurrent: number, downloadPath: string) => installVersion(versionId, maxConcurrent, downloadPath));
+
+
+ipcMain.handle('download-with-modloader', (event: any, versionId: string, loaderType: string, loaderVersion: string, maxConcurrent: number) => 
+  installVersionWithModLoader(versionId, loaderType, loaderVersion, maxConcurrent));
+
+
+ipcMain.handle('get-version-config', (event: any, versionId: string) => readVersionConfig(versionId));
+
+ipcMain.handle('get-version-display-name', (event: any, versionId: string) => generateVersionDisplayName(versionId));
+
+ipcMain.handle('get-launch-display-name', (event: any, versionId: string) => generateLaunchDisplayName(versionId));
+
+
+ipcMain.handle('delete-version', async (_, versionId: string) => {
+  try {
+    const versionDir: string = path.join(GAME_DIR, 'versions', versionId);
+    
+    if (!fs.existsSync(versionDir)) {
+      return { success: false, error: '版本不存在' };
+    }
+    
+    writeLog(`[删除版本] 开始删除版本: ${versionId}`);
+    
+    fs.rmSync(versionDir, { recursive: true, force: true });
+    
+    writeLog(`[删除版本] 版本 ${versionId} 删除成功`);
+    
+    return { success: true };
+  } catch (e: any) {
+    writeLog(`[删除版本] 删除版本失败: ${e.message}`);
+    return { success: false, error: e.message };
+  }
+});
+
+
+ipcMain.handle('get-version-settings', async (_, versionId: string) => {
+  try {
+    const versionDir: string = path.join(GAME_DIR, 'versions', versionId);
+    const gpclDir: string = path.join(versionDir, 'gpcl');
+    const configPath: string = path.join(gpclDir, 'config.json');
+    
+    if (!fs.existsSync(configPath)) {
+      return { success: true, settings: null };
+    }
+    
+    const content: string = fs.readFileSync(configPath, 'utf8');
+    const settings: any = JSON.parse(content);
+    
+    return { success: true, settings };
+  } catch (e: any) {
+    writeLog(`[版本设置] 读取版本 ${versionId} 设置失败: ${e.message}`);
+    return { success: false, error: e.message, settings: null };
+  }
+});
+
+
+ipcMain.handle('save-version-settings', async (_, versionId: string, settings: any) => {
+  try {
+    const versionDir: string = path.join(GAME_DIR, 'versions', versionId);
+    const gpclDir: string = path.join(versionDir, 'gpcl');
+    
+    if (!fs.existsSync(gpclDir)) {
+      fs.mkdirSync(gpclDir, { recursive: true });
+    }
+    
+    const configPath: string = path.join(gpclDir, 'config.json');
+
+    fs.writeFileSync(configPath, JSON.stringify(settings, null, 2), 'utf8');
+    
+    writeLog(`[版本设置] 版本 ${versionId} 设置已保存`);
+    
+    return { success: true };
+  } catch (e: any) {
+    writeLog(`[版本设置] 保存版本 ${versionId} 设置失败: ${e.message}`);
+    return { success: false, error: e.message };
+  }
+});
+
+
+export function readVersionConfig(versionId: string): any {
+  const versionDir: string = path.join(GAME_DIR, 'versions', versionId);
+  const configPath: string = path.join(versionDir, 'gpcl', 'config.ini');
+  
+  if (!fs.existsSync(configPath)) {
+    return null;
+  }
+  
+  try {
+    const content: string = fs.readFileSync(configPath, 'utf8');
+    const config: any = {
+      Minecraft: '',
+      Forge: ''
+    };
+    
+    const lines: string[] = content.split('\n');
+    let inVersionSection: boolean = false;
+    
+    for (const line of lines) {
+      const trimmed: string = line.trim();
+      
+      if (trimmed === '[Version]') {
+        inVersionSection = true;
+        continue;
+      }
+      
+      if (!inVersionSection) continue;
+      
+      const parts: string[] = trimmed.split('=');
+      if (parts.length === 2) {
+        const key: string = parts[0].trim();
+        const value: string = parts[1].trim();
+        if (config.hasOwnProperty(key)) {
+          config[key] = value;
+        }
+      }
+    }
+    
+    return config;
+  } catch (e: any) {
+    writeLog(`[Config] 读取配置失败: ${e.message}`);
+    return null;
+  }
+}
+
+
+export function generateVersionDisplayName(versionId: string): string {
+  const config: any = readVersionConfig(versionId);
+  
+  if (!config) {
+    return versionId;
+  }
+  
+  const parts: string[] = [];
+  parts.push(config.Minecraft || versionId);
+  
+  if (config.Forge) {
+    parts.push(`Forge${config.Forge}`);
+  }
+  
+  return parts.join(' ');
+}
+
+
+export function generateLaunchDisplayName(versionId: string): string {
+  const config: any = readVersionConfig(versionId);
+  
+  if (!config) {
+    return versionId;
+  }
+  
+  const parts: string[] = [];
+  parts.push(config.Minecraft || versionId);
+  
+  if (config.Forge) {
+    parts.push(`Forge${config.Forge}`);
+  }
+  
+  return parts.join(' ');
+}
+

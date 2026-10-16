@@ -1,173 +1,94 @@
-# [GoodPlanCraftLauncher](https://gamets.caellab.com/gpcl/)
+# GoodPlanCraftLauncher
 
-> 轻量 · 高效 · 开源 —— 一款专为 Windows 平台设计的 Minecraft 启动器
+轻量、开源的 Minecraft 启动器，Windows 桌面端，基于 Electron + TypeScript。
 
-[![Version](https://img.shields.io/badge/version-1.4.4-blue.svg)](https://github.com/CaelLab/GoodPlanCraftLauncher/releases)
+[![Version](https://img.shields.io/badge/version-1.5.1-blue.svg)](https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases)
 [![License](https://img.shields.io/badge/license-CaelLab%20BY--SA%203-green.svg)](LICENSE)
-[![Platform](https://img.shields.io/badge/platform-Windows%2010%2B-lightgrey.svg)](https://www.microsoft.com/windows)
-[![Status](https://img.shields.io/badge/status-stable-brightgreen.svg)](https://github.com/CaelLab/GoodPlanCraftLauncher)
 
----
+官网：<https://gamets.caellab.com/gpcl/>
 
-## 目录
+## 功能
 
-- [简介](#简介)
-- [核心特性](#核心特性)
-- [系统要求](#系统要求)
-- [下载与安装](#下载与安装)
-- [功能预览](#功能预览)
-- [开源许可证](#开源许可证)
-- [贡献指南](#贡献指南)
-- [更新日志](#更新日志)
-- [技术架构](#技术架构)
-- [常见问题](#常见问题)
-- [相关链接](#相关链接)
-- [致谢](#致谢)
-- [免责声明](#免责声明)
+- **版本管理**：下载、安装、切换各版本的正式版 / 快照 / Beta / Alpha，依赖库与资源文件自动处理
+- **模组加载器**：Forge、Fabric、OptiFine 一键安装，支持 `inheritsFrom` 版本继承
+- **登录**：离线登录与微软正版登录，可随时切换
+- **崩溃处理**：游戏异常退出时说明原因，一键导出错误报告（崩溃报告 + 日志 + 系统信息，token 已打码）
+- **运行中面板**：游戏启动后右侧显示版本、PID、时长、内存与实时日志，可随时结束游戏
+- **自定义窗口标题**：支持 `{mc_version}`、`{time}` 等魔术字，详见[说明页](https://gamets.caellab.com/gpcl/help/magic-words/)
+- 深色 / 浅色主题、启动动画、最多 128 线程并发下载
 
----
+## 下载
 
-## 简介
+到 [Releases](https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases) 下载 `GPCL-<版本>-Setup.exe`，或从官网下载。
 
-**GoodPlanCraftLauncher**（以下简称 GPCL）是一款轻量级 Minecraft 启动器，由虚舟实验室（CaelLab）开发并维护。项目始于 2026 年 5 月 20 日，经过密集迭代，目前已发布至 v1.4.4 版本。GPCL 致力于为玩家提供简洁、直观且高效的游戏启动体验，在保持功能完整性的同时，将启动器自身的资源占用控制在极低水平。
+- 最新版本：**v1.5.1**（2026-10-16）
+- 系统要求：Windows 10 64 位及以上
+- 磁盘占用：安装后约 360 MB（不含 Minecraft 游戏本体与各版本文件）
+- Java 运行时：启动器会按游戏版本自动补齐对应版本，无需手动装
 
-在登录方式上，GPCL 同时支持离线登录与正版登录两种模式，无论您是否拥有正版 Minecraft 账号，都能顺畅进入游戏。在版本管理方面，GPCL 内置了完整的版本自动管理机制，用户只需点击按钮，即可完成游戏版本的下载、安装与切换，启动器会自动解析并处理所有依赖库及资源文件，无需手动干预。
+安装包可直接覆盖旧版升级，游戏与设置在 `%APPDATA%\gpcl`，升级和卸载都不会动它。
 
-此外，GPCL 在启动性能上做了大量优化。通过改进启动流程、引入缓存机制以及采用机器码编译技术，显著缩短了从点击启动到进入游戏主界面的等待时间。对于模组玩家而言，GPCL 从 v1.3.3 版本开始完整支持 Forge、Fabric 和 OptiFine，使得模组安装与加载变得简单可靠。
+## 从源码构建
 
-项目自开源以来，已收到多位社区贡献者的反馈与建议，形成了良性的迭代循环。未来将继续完善功能、修复问题，并计划探索跨平台支持的可能性。
+需要 Node.js 18+；打安装包还需要 [Inno Setup 6.5+](https://jrsoftware.org/isdl.php)。
 
----
+```bash
+npm install
+npm run build-ts     # 编译 TS + 复制静态资源到 dist/
+npm start            # 开发态启动
+npm run build-prod   # 出安装包 → release/GPCL-<版本>-Setup.exe 与 GPCL.sha1
+```
 
-## 核心特性
+发版时 `package.json`、`package-lock.json`、`version.txt`、`webpage/index.html`、`webpage/data.json` 都要同步版本号。
 
-| 功能模块 | 描述 |
-|----------|------|
-| 双模式登录 | 同时支持离线模式与正版账号登录，兼顾不同用户群体的使用习惯与需求 |
-| 智能版本管理 | 一键完成游戏版本的下载、安装与切换，自动解析并处理所有依赖库及原生资源文件 |
-| 极速启动引擎 | 通过优化的启动流程、多层次缓存机制以及机器码编译技术，大幅缩短启动等待时间 |
-| Java 运行时管理 | 自动检测并补全 Java 运行环境，支持自定义镜像源地址（默认使用清华大学开源镜像站） |
-| 视觉主题适配 | 完整支持浅色模式与深色模式，自动跟随系统外观偏好设置，提供一致的视觉体验 |
-| 自动更新与维护 | 内置更新检测机制，支持日志自动清理策略（清理周期可配置），保持启动器长期整洁高效 |
+## 文档
 
----
+- [游戏崩溃了怎么办](https://gamets.caellab.com/gpcl/help/mc-game/)：导出错误报告、看日志、常见崩溃原因
+- [魔术字（替换标记）](https://gamets.caellab.com/gpcl/help/magic-words/)：窗口标题里能用的占位符
 
-## 系统要求
+## 反馈
 
-在安装 GPCL 之前，请确保您的计算机满足以下最低配置要求：
+- 论坛：<https://forum.xmuer.online/>
+- 邮箱：[gamets@caellab.com](mailto:gamets@caellab.com)
+- 代码问题：[提交 Issue](https://github.com/CaelLab-org/GoodPlanCraftLauncher/issues)
 
-| 项目 | 要求 |
-|------|------|
-| 操作系统 | Windows 10 64位（版本 1709 及以上），Windows 11 同样兼容 |
-| Java 运行时 | 启动器具备自动补全能力，但建议用户手动清理系统中冗余或冲突的 Java 文件以避免潜在问题 |
-| 磁盘空间 | 启动器本体至少需要 90 MB 可用空间（不包含 Minecraft 游戏本体及各版本文件） |
-| 内存 | 建议 2 GB 以上可用内存，以保证游戏及启动器的流畅运行 |
-
----
-
-## 下载与安装
-
-请前往 [GitHub Releases 页面](https://github.com/CaelLab/GoodPlanCraftLauncher/releases) 下载对应版本的最新安装包。
-
-- **最新稳定版本**：v1.4.4
-- **发布日期**：2026 年 6 月 2 日
-- **支持平台**：Windows 10 / 11 64位
-
-下载完成后，直接运行安装程序即可完成部署。首次启动时，启动器会自动进行必要的初始化配置，并展示欢迎动画引导新用户完成基础设置。
-
----
-
-## 功能预览
-
-GPCL 的主要界面分为以下几个核心区域：
-
-| 界面模块 | 功能说明 |
-|----------|----------|
-| 主界面 | 游戏启动的核心入口，清晰展示当前选中的游戏版本、启动按钮以及状态信息 |
-| 版本管理 | 集中管理所有已安装的游戏版本，支持在线下载正式版、快照版、Beta 版及 Alpha 版 |
-| 下载中心 | 分类展示可下载的游戏版本与相关资源，采用折叠式导航设计，信息层级清晰 |
-| 设置面板 | 整合游戏设置、下载设置、外观设置、高级设置及关于信息五大模块，配置项丰富且组织合理 |
-
-> 更多界面细节与操作演示，请参阅项目 Wiki 或 Releases 附件中的截图与说明文档。
-
----
+改代码前建议先开 Issue 讨论一下，避免重复劳动；提交 PR 前请确保本地能跑通 `npm run build-ts`。
 
 ## 开源许可证
 
-本项目采用 **CaelLab BY-SA Code License, Version 3**（或任何更新版本）进行授权。该许可证是一款面向代码、网站与数字作品的简短 Copyleft 许可，强调署名（BY）与衍生作品的持续开源（ShareAlike）。其核心条款如下：
+本项目采用 **CaelLab BY-SA Code License, Version 3**（或任何更新版本）授权。这是一份面向代码、网站与数字作品的简短 Copyleft 许可，强调署名（BY）与衍生作品持续开源（ShareAlike）：
 
-- **自由使用**：允许复制、修改、分发本软件，无论用于个人、商业还是非商业目的
-- **署名（BY）**：分发时必须保留原始版权声明与许可全文，标注作者与作品名称；通过网络分发时还需链接许可原文 URL
-- **相同方式共享（SA）**：修改后的版本必须以本许可证（或其更新版本）发布，不得附加额外限制或技术保护措施
-- **提供源码**：分发编译产物（安装包、打包版本等）时，必须同时以本许可证提供该版本对应的完整源码
+- **自由使用**：允许复制、修改、分发，个人、商业、非商业均可
+- **署名（BY）**：分发时必须保留原始版权声明与许可全文，标注作者与作品名称；通过网络分发还需链接许可原文
+- **相同方式共享（SA）**：修改版必须以本许可证（或更新版本）发布，不得附加额外限制或技术保护措施
+- **提供源码**：分发编译产物（安装包等）时，必须同时以本许可证提供该版本对应的完整源码
 - **专利授权**：贡献者授予使用者专利许可，并附带专利报复条款
-- **商标保留**：不得使用 "CaelLab" 名称为本项目的修改版背书或推广
+- **商标保留**：不得用 "CaelLab" 名称为本项目的修改版背书或推广
 
-查看 [完整许可证全文](LICENSE) 以了解详细条款。许可证的权威原文发布于 [caellab.com/license/cbs-v3.txt](https://www.caellab.com/license/cbs-v3.txt)。
+完整条款见 [LICENSE](LICENSE)，权威原文在 [caellab.com/license/cbs-v3.txt](https://www.caellab.com/license/cbs-v3.txt)。
 
 > **版本说明**：本项目在 v1.4.4 及更早版本发布时采用的是该许可证的 Version 1.0，此后至本次更新前采用 Version 2.0。按当时版本获得副本的使用者，其权利仍适用获得时对应的版本；自此之后发布的版本适用 Version 3 或任何更新版本。
 
----
-
-## 贡献指南
-
-GPCL 是一个社区驱动的开源项目，我们非常欢迎并感谢所有形式的贡献，包括但不限于以下类型：
-
-- 提交 Bug 报告与功能建议，请前往 [XM UER](https://forum.xmuer.online/) 进行反馈
-- 代码贡献，请 Fork 主仓库并提交 Pull Request，我们会及时进行代码审查与合并
-- 文档完善与翻译，帮助更多用户理解和使用 GPCL
-
-在提交代码贡献前，请确保您的更改符合项目的编码规范，并在本地完成完整的构建与测试流程。对于重大功能变更，建议先在 Issues 中发起讨论，避免重复工作。
-
----
-
-## 技术架构
-
-以下是 GPCL 的技术实现概览，供开发者参考：
-
-- **开发语言与框架**：具体技术栈请参考项目源码（待补充详细信息）
-- **构建方式**：采用安装版打包形式，结合机器码编译技术优化启动速度
-- **关键机制**：
-  - 动态库本地化加载，减少外部依赖
-  - 防重复运行实例检测，避免多开冲突
-  - 启动进程完整生命周期管理，支持强制终止无效进程
-  - 日志自动清理策略，保留时长可由用户自定义配置
-  - 版本隔离与独立存储，确保各版本互不干扰
-
----
-
 ## 常见问题
 
-**Q：启动时提示 Java 未找到怎么办？**  
-A：GPCL 内置了 Java 自动补全功能，正常情况下会自动下载所需版本。如遇问题，请检查网络连接，或在设置中手动指定有效的 Java 镜像源。
+**Q：提示 Java 未找到怎么办？**
+A：启动器会按版本自动补全。若失败，检查网络或在「设置 → 下载」里换个 Java 镜像源。
 
-**Q：是否支持非 Windows 平台？**  
-A：当前版本仅支持 Windows 10/11 64位系统。后续是否支持 macOS 或 Linux 将视社区需求与开发资源而定。
+**Q：支持非 Windows 平台吗？**
+A：目前只有 Windows 10 / 11 64 位。是否支持 macOS 或 Linux 要看后续需求和精力。
 
-**Q：如何切换离线模式与正版模式？**  
-A：在启动器登录界面或设置面板中，可以自由切换登录模式，无需重新启动启动器。
+**Q：怎么切换离线模式和正版模式？**
+A：在启动界面直接切换，不用重启启动器。
 
----
+**Q：游戏崩溃了，怎么让别人帮我？**
+A：用崩溃弹窗里的「导出错误报告」，把生成的压缩包发出去。**别只发截图** —— 截图里没有日志。细节见[帮助页](https://gamets.caellab.com/gpcl/help/mc-game/)。
 
-## 相关链接
+## 作者
 
-| 资源 | 地址 |
-|------|------|
-| GitHub 主仓库 | [https://github.com/CaelLab/GoodPlanCraftLauncher](https://github.com/CaelLab/GoodPlanCraftLauncher) |
-| GitCaelLab 镜像 | [https://git.caellab.com/GoodPlanCraftLauncher](https://git.caellab.com/GoodPlanCraftLauncher) |
-| 问题与建议反馈 | [XM UER论坛](https://forum.xmuer.online/) |
-| 许可证文本 | [LICENSE](LICENSE) |
-| 许可证原文（CaelLab 官方） | [https://www.caellab.com/license/cbs-v3.txt](https://www.caellab.com/license/cbs-v3.txt) |
-
----
-
-## 致谢
-
-- **作者**：Yunyun（云云）
+- Yunyun（云云）
 - 虚舟实验室（CaelLab）/ CaelLabGameTS
-- 感谢所有通过 Issue 和 Pull Request 参与贡献的社区开发者与热心玩家
+- 以及所有提 Issue、提 PR 的社区开发者与玩家
 
----
+## 免责声明
 
-> Made with ❤️ by CaelLab
-> 非常高兴能帮到你！😄
+GoodPlanCraftLauncher 是第三方开源工具，与 Mojang Studios、Microsoft、Xbox 无任何官方关联。Minecraft 为 Mojang Studios 注册商标，使用本启动器需持有有效的 Minecraft 正版授权。

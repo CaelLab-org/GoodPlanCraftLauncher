@@ -12,10 +12,16 @@ const SRC = path.resolve('src');
 // 确保 dist 目录存在
 fs.mkdirSync(DIST, { recursive: true });
 
-// 编译 main process (main.ts + preload.ts) → dist/
+// 编译 main process (main.ts + preload.ts + 各功能模块) → dist/
+// bundle:false 只编译列出的入口，主进程拆成多文件后必须全部列出，否则 dist/ 缺文件、
+// require 直接失败。types.ts 是纯类型，没有运行时输出。
 async function buildMain() {
+  const mainEntries = fs.readdirSync(SRC)
+    .filter(f => f.endsWith('.ts') && f !== 'types.ts')
+    .map(f => `src/${f}`);
+
   await esbuild.build({
-    entryPoints: ['src/main.ts', 'src/preload.ts'],
+    entryPoints: mainEntries,
     bundle: false,
     platform: 'node',
     target: 'node18',
@@ -23,7 +29,7 @@ async function buildMain() {
     outdir: 'dist',
     sourcemap: false,
   });
-  console.log('✅ main process 编译完成');
+  console.log(`✅ main process 编译完成 (${mainEntries.length} 个模块)`);
 }
 
 // 编译 renderer → dist/renderer/renderer.js (单文件输出)
@@ -78,6 +84,16 @@ function copyStatic() {
   if (fs.existsSync(skinSrc)) {
     for (const f of fs.readdirSync(skinSrc)) {
       fs.copyFileSync(path.join(skinSrc, f), path.join(skinDir, f));
+    }
+  }
+
+  // 复制图标（独立 svg，靠 CSS mask 跟随 currentColor）
+  const iconsSrc = path.join('renderer', 'icons');
+  if (fs.existsSync(iconsSrc)) {
+    const iconsDir = path.join(rendererDir, 'icons');
+    fs.mkdirSync(iconsDir, { recursive: true });
+    for (const f of fs.readdirSync(iconsSrc)) {
+      fs.copyFileSync(path.join(iconsSrc, f), path.join(iconsDir, f));
     }
   }
 

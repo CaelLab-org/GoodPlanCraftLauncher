@@ -2,7 +2,7 @@
  * Copyright (c) 2026 Yunyun(云云) By 虚舟实验室(CaelLab) / CaelLabGameTS
  * Licensed under the CaelLab BY-SA Code License, Version 2.0
  * or any later version. https://www.caellab.com/license/bysa-code-v2.txt
- * Source: https://github.com/yunyun-3782/GoodPlanCraftLauncher
+ * Source: https://github.com/CaelLab-org/GoodPlanCraftLauncher
  */
 
 import { contextBridge, ipcRenderer } from 'electron';
@@ -33,6 +33,20 @@ const gpclApi: GPCLApi = {
 
   getPlayerName: () => ipcRenderer.invoke('get-player-name'),
   savePlayerName: (name: string) => ipcRenderer.invoke('save-player-name', name),
+  getPlayerNames: () => ipcRenderer.invoke('get-player-names'),
+  deletePlayerName: (name: string) => ipcRenderer.invoke('delete-player-name', name),
+
+  getGameStatus: () => ipcRenderer.invoke('get-game-status'),
+  getGameLogTail: () => ipcRenderer.invoke('get-game-log-tail'),
+  openGameLog: () => ipcRenderer.invoke('open-game-log'),
+  stopGame: () => ipcRenderer.invoke('stop-game'),
+  exportErrorReport: (info) => ipcRenderer.invoke('export-error-report', info),
+  onGameStatus: (callback) => {
+    ipcRenderer.on('game-status', (_event, status) => callback(status));
+  },
+  onGameCrashed: (callback) => {
+    ipcRenderer.on('game-crashed', (_event, info) => callback(info));
+  },
   showMessageDialog: (options) => ipcRenderer.invoke('show-message-dialog', options),
   confirmCloseDownload: () => ipcRenderer.invoke('confirm-close-download'),
   cancelDownloadOnly: () => ipcRenderer.invoke('cancel-download-only'),
@@ -108,18 +122,17 @@ const gpclApi: GPCLApi = {
     ipcRenderer.on('update-download-progress', (_event, data) => callback(data));
   },
 
+  /**
+   * 只清「每次启动 / 下载时都会重新注册」的这几个通道（它们的注册点在函数里，会越挂越多）。
+   * 其余通道（game-log / game-closed / game-status / game-crashed / java-download-* /
+   * microsoft-auth-result 等）在渲染层是模块加载时注册一次的，被清掉就再也没人补回来 ——
+   * 表现是关掉游戏后面板一直显示「运行中」、启动过一次之后再登录正版没有反应。别加进来。
+   */
   removeAllListeners: () => {
-    ipcRenderer.removeAllListeners('game-log');
-    ipcRenderer.removeAllListeners('game-closed');
-    ipcRenderer.removeAllListeners('game-error');
-    ipcRenderer.removeAllListeners('download-progress');
     ipcRenderer.removeAllListeners('confirm-close-while-downloading');
-    ipcRenderer.removeAllListeners('show-java-install-dialog');
-    ipcRenderer.removeAllListeners('java-download-completed');
-    ipcRenderer.removeAllListeners('java-download-failed');
     ipcRenderer.removeAllListeners('game-window-created');
+    ipcRenderer.removeAllListeners('download-progress');
     ipcRenderer.removeAllListeners('update-download-progress');
-    ipcRenderer.removeAllListeners('microsoft-auth-result');
   },
 
   startMicrosoftAuth: () => ipcRenderer.invoke('start-microsoft-auth'),

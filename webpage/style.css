@@ -2,7 +2,7 @@
  * Copyright (c) 2026 Yunyun(云云) By 虚舟实验室(CaelLab) / CaelLabGameTS
  * Licensed under the CaelLab BY-SA Code License, Version 3
  * or any later version. https://www.caellab.com/license/cbs-v3.txt
- * Source: https://github.com/yunyun-3782/GoodPlanCraftLauncher
+ * Source: https://github.com/CaelLab-org/GoodPlanCraftLauncher
  */
 
 /* ===== 设计变量 ===== */
@@ -447,6 +447,13 @@ nav.scrolled {
 .feature-icon svg { width: 22px; height: 22px; }
 .feature-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; }
 .feature-card p { color: var(--text-2); font-size: 0.92rem; }
+.feature-link {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px dashed rgba(79, 195, 247, 0.45);
+    white-space: nowrap;
+}
+.feature-link:hover { color: var(--accent-hover); border-bottom-color: var(--accent-hover); }
 
 /* ===== 截图 ===== */
 .screenshots { background: var(--bg); }
