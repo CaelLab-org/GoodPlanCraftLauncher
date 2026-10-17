@@ -7,12 +7,14 @@
 
 
 // __IMPORTS_BEGIN__
-import { enableMoreEl, icon, memoryOptimizeBtn, settingsBtnMinus, settingsBtnPlus, settingsBtnSave, settingsNumInput, showToast } from './dom';
+import { enableMoreEl, icon, initCustomSelect, memoryOptimizeBtn, setCustomSelectValue, settingsNumInput, showToast } from './dom';
 import { allNewerVersions, updateAvailable } from './update';
 // __IMPORTS_END__
 
+let currentMaxConcurrent: number = 64;
+
 export function getMaxConcurrentFromSettings(): number {
-  return DEFAULT_MAX_THREADS;
+  return currentMaxConcurrent;
 }
 
 
@@ -30,18 +32,15 @@ if (memoryOptimizeBtn) {
     
     const beforeMemory: number = await window.gpcl.getMemoryUsage();
     
-    await window.gpcl.optimizeMemory();
-    
-    const afterMemory: number = await window.gpcl.getMemoryUsage();
-    
-    const savedMemory: string = (beforeMemory - afterMemory).toFixed(2);
-    const afterMemoryFormatted: string = afterMemory.toFixed(2);
+    const result: any = await window.gpcl.optimizeMemory();
+    const freedMB: number = result?.freedMB ?? Math.max(0, beforeMemory - (result?.afterMB ?? beforeMemory));
+    const afterMB: number = result?.afterMB ?? await window.gpcl.getMemoryUsage();
     
     (memoryOptimizeBtn as HTMLButtonElement).disabled = false;
     if (btnIcon) btnIcon.textContent = originalIcon;
     if (btnText) btnText.textContent = originalText;
     
-    showToast(`内存优化完成！\n当前内存占用: ${afterMemoryFormatted}GB\n比优化前减少了: ${savedMemory}GB`, 'success');
+    showToast('内存优化完成', `GPCL 当前占用 ${afterMB} MB，${freedMB > 0 ? `回收了 ${freedMB} MB` : '没有可回收的内存'}`, 'success');
   });
 }
 
@@ -63,140 +62,39 @@ export async function saveSettingToStorage(maxConcurrent: number): Promise<boole
   try {
     const settings = await loadSettings();
     settings.download.maxConcurrent = maxConcurrent;
-    await gpcl.saveSettings(settings);
+    currentMaxConcurrent = maxConcurrent;
+    await window.gpcl.saveSettings(settings);
     return true;
   } catch (e: any) { return false; }
 }
 
 if (settingsNumInput) {
-  (async (): Promise<void> => {
-    settingsNumInput.value = String(await loadSettingFromStorage());
-  })();
-  function clampSettingsInput(): void {
+  const threadValue: HTMLElement | null = document.getElementById('num-threads-value');
+
+  const updateThreadLabel = (): void => {
+    if (threadValue) threadValue.textContent = settingsNumInput!.value;
+  };
+
+  const clampSettingsInput = (): void => {
     let v: number = parseInt(settingsNumInput!.value, 10);
     if (isNaN(v) || v < 1) v = 1;
     if (v > MAX_THREADS_LIMIT) v = MAX_THREADS_LIMIT;
     settingsNumInput!.value = String(v);
-  }
-  settingsNumInput.addEventListener('change', clampSettingsInput);
-  settingsNumInput.addEventListener('blur', clampSettingsInput);
-  if (settingsBtnMinus) {
-    settingsBtnMinus.addEventListener('click', () => {
-      let v: number = parseInt(settingsNumInput.value, 10) || 1;
-      if (v > 1) { settingsNumInput.value = String(v - 1); clampSettingsInput(); }
-    });
-  }
-  if (settingsBtnPlus) {
-    settingsBtnPlus.addEventListener('click', () => {
-      let v: number = parseInt(settingsNumInput.value, 10) || 1;
-      if (v < MAX_THREADS_LIMIT) { settingsNumInput.value = String(v + 1); clampSettingsInput(); }
-    });
-  }
-  if (settingsBtnSave) {
-    settingsBtnSave.addEventListener('click', async (): Promise<void> => {
-      clampSettingsInput();
-      await saveSettingToStorage(parseInt(settingsNumInput.value, 10));
-      const orig: string | null = settingsBtnSave.textContent;
-      settingsBtnSave.textContent = '已保存!';
-      setTimeout(() => { settingsBtnSave.textContent = orig; }, 1500);
-    });
-  }
-}
+    updateThreadLabel();
+  };
 
+  (async (): Promise<void> => {
+    const stored: number = await loadSettingFromStorage();
+    currentMaxConcurrent = stored;
+    settingsNumInput.value = String(stored);
+    updateThreadLabel();
+  })();
 
-export async function reloadAllSettingsToUI(): Promise<void> {
-  const settings = await loadSettings();
-  
-  const settingsMemory: HTMLElement | null = document.getElementById('settings-memory');
-  if (settingsMemory) {
-    (settingsMemory as HTMLInputElement).value = settings.game?.memory || '4';
-  }
-  
-  const settingsWindowMode: HTMLElement | null = document.getElementById('settings-window-mode');
-  if (settingsWindowMode) {
-    (settingsWindowMode as HTMLInputElement).value = settings.game?.windowMode || 'windowed';
-  }
-  
-  const settingsTheme: HTMLElement | null = document.getElementById('settings-theme');
-  if (settingsTheme) {
-    (settingsTheme as HTMLInputElement).value = settings.appearance?.theme || 'dark';
-    applyTheme(settings.appearance?.theme || 'dark');
-  }
-  
-  const settingsScale: HTMLElement | null = document.getElementById('settings-scale');
-  if (settingsScale) {
-    (settingsScale as HTMLInputElement).value = settings.appearance?.scale || '100';
-    applyScale(settings.appearance?.scale || '100');
-  }
-  
-  const settingsNumInputEl: HTMLElement | null = document.getElementById('num-threads');
-  if (settingsNumInputEl) {
-    (settingsNumInputEl as HTMLInputElement).value = String(settings.download?.maxConcurrent || 64);
-  }
-  
-  const javaMirrorSelect: HTMLElement | null = document.getElementById('java-mirror-select');
-  const customMirrorContainer: HTMLElement | null = document.getElementById('custom-java-mirror-container');
-  const customMirrorUrl: HTMLInputElement | null = document.getElementById('custom-java-mirror-url') as HTMLInputElement | null;
-  if (javaMirrorSelect) {
-    (javaMirrorSelect as HTMLInputElement).value = settings.download?.javaMirror || 'tsinghua';
-    if (customMirrorContainer) {
-      customMirrorContainer.classList.toggle('hidden', (javaMirrorSelect as HTMLInputElement).value !== 'custom');
-    }
-    if (customMirrorUrl) {
-      customMirrorUrl.value = settings.download?.customJavaMirror || '';
-    }
-  }
-  
-  const autoCheckUpdate: HTMLInputElement | null = document.getElementById('auto-check-update') as HTMLInputElement | null;
-  if (autoCheckUpdate) {
-    autoCheckUpdate.checked = settings.advanced?.autoCheckUpdate !== false;
-  }
-  const preventMultipleLaunch: HTMLInputElement | null = document.getElementById('prevent-multiple-launch') as HTMLInputElement | null;
-  if (preventMultipleLaunch) {
-    preventMultipleLaunch.checked = settings.advanced?.preventMultipleLaunch !== false;
-  }
-
-  const autoClearLogs: HTMLInputElement | null = document.getElementById('auto-clear-logs') as HTMLInputElement | null;
-  const logRetentionContainer: HTMLElement | null = document.getElementById('log-retention-container');
-  const logRetentionValue: HTMLInputElement | null = document.getElementById('log-retention-value') as HTMLInputElement | null;
-  const logRetentionUnit: HTMLElement | null = document.getElementById('log-retention-unit');
-  
-  if (autoClearLogs) {
-    autoClearLogs.checked = settings.advanced?.autoClearLogs !== false;
-  }
-  
-  if (logRetentionContainer) {
-    logRetentionContainer.classList.toggle('hidden', settings.advanced?.autoClearLogs === false);
-  }
-  
-  if (logRetentionValue) {
-    logRetentionValue.value = String(settings.advanced?.logRetentionValue || 7);
-  }
-  
-  if (logRetentionUnit) {
-    (logRetentionUnit as HTMLInputElement).value = settings.advanced?.logRetentionUnit || 'day';
-  }
-
-  const playStartupAnimationEl: HTMLInputElement | null = document.getElementById('play-startup-animation') as HTMLInputElement | null;
-  if (playStartupAnimationEl) {
-    playStartupAnimationEl.checked = settings.appearance?.playStartupAnimation === true;
-  }
-
-  const skipSplashEl: HTMLInputElement | null = document.getElementById('skip-splash') as HTMLInputElement | null;
-  if (skipSplashEl) {
-    skipSplashEl.checked = settings.appearance?.skipSplash === true;
-  }
-
-  const enableMoreEl: HTMLInputElement | null = document.getElementById('enable-more') as HTMLInputElement | null;
-  if (enableMoreEl) {
-    enableMoreEl.checked = settings.appearance?.enableMore !== false;
-    updateMoreMenuVisibility(settings.appearance?.enableMore !== false);
-  }
-
-  const developerModeEl: HTMLInputElement | null = document.getElementById('developer-mode') as HTMLInputElement | null;
-  if (developerModeEl) {
-    developerModeEl.checked = settings.advanced?.developerMode === true;
-  }
+  settingsNumInput.addEventListener('input', updateThreadLabel);
+  settingsNumInput.addEventListener('change', async (): Promise<void> => {
+    clampSettingsInput();
+    await saveSettingToStorage(parseInt(settingsNumInput!.value, 10));
+  });
 }
 
 
@@ -276,22 +174,36 @@ export async function loadSettings(): Promise<any> {
     console.error('加载设置失败:', e);
     return {
       game: {
-        memory: '2',
+        memory: 'auto',
         playerName: 'GPCL_Player',
         javaPath: '',
         jvmArgs: '',
-        windowMode: 'windowed'
+        gcPreset: 'default',
+        windowMode: 'windowed',
+        windowTitle: 'Minecraft {mc_version} (GPCL)',
+        keepWindowTitle: false,
+        processPriority: 'normal',
+        launcherVisibility: 'keep',
+        windowSize: 'default',
+        windowWidth: 854,
+        windowHeight: 480,
+        optimizeBeforeLaunch: false
       },
       appearance: {
         theme: 'light',
         scale: '100',
         playStartupAnimation: true,
-        skipSplash: false
+        skipSplash: false,
+        tipFrequency: 'rare',
+        enableMore: true
       },
       download: {
         maxConcurrent: 64,
         javaMirror: 'tsinghua',
-        customJavaMirror: ''
+        customJavaMirror: '',
+        fileSource: 'auto',
+        versionSource: 'auto',
+        speedLimit: 0
       },
       advanced: {
         autoCheckUpdate: true,
@@ -326,14 +238,17 @@ export async function initTheme(): Promise<void> {
   const settings = await loadSettings();
   const theme: string = settings.appearance?.theme || 'dark';
   applyTheme(theme);
-  
-  const themeSelect: HTMLElement | null = document.getElementById('settings-theme');
-  if (themeSelect) {
-    (themeSelect as HTMLInputElement).value = theme;
-    themeSelect.addEventListener('change', async (): Promise<void> => {
-      const newTheme: string = (themeSelect as HTMLInputElement).value;
-      applyTheme(newTheme);
-      await saveThemeSetting(newTheme);
+
+  const themeGroup: HTMLElement | null = document.getElementById('settings-theme');
+  if (themeGroup) {
+    const radios: NodeListOf<HTMLInputElement> = themeGroup.querySelectorAll<HTMLInputElement>('input[name="theme"]');
+    radios.forEach((radio: HTMLInputElement) => {
+      radio.checked = radio.value === theme;
+      radio.addEventListener('change', async (): Promise<void> => {
+        if (!radio.checked) return;
+        applyTheme(radio.value);
+        await saveThemeSetting(radio.value);
+      });
     });
   }
 }
@@ -369,4 +284,279 @@ export async function initScale(): Promise<void> {
     });
   }
 }
+
+
+async function saveGameSetting(patch: Record<string, any>): Promise<void> {
+  const settings = await loadSettings();
+  settings.game = settings.game || {};
+  Object.assign(settings.game, patch);
+  await window.gpcl.saveSettings(settings);
+}
+
+
+export async function initMemorySettings(): Promise<void> {
+  const modeGroup: HTMLElement | null = document.getElementById('settings-memory-mode');
+  const slider: HTMLInputElement | null = document.getElementById('settings-memory-slider') as HTMLInputElement | null;
+  const customRow: HTMLElement | null = document.getElementById('memory-custom-row');
+  const valueLabel: HTMLElement | null = document.getElementById('settings-memory-value');
+  const allocLabel: HTMLElement | null = document.getElementById('memory-alloc-label');
+  const freeLabel: HTMLElement | null = document.getElementById('memory-free-label');
+  const usageLabel: HTMLElement | null = document.getElementById('memory-usage-label');
+  const usageBar: HTMLElement | null = document.getElementById('memory-usage-used');
+  const warning: HTMLElement | null = document.getElementById('memory-warning');
+  const optimizeToggle: HTMLInputElement | null = document.getElementById('optimize-before-launch') as HTMLInputElement | null;
+  if (!modeGroup && !slider) return;
+
+  let systemInfo: any = { totalMB: 0, freeMB: 0, autoMemoryMB: 0 };
+
+  const updateLabels = (auto: boolean): void => {
+    const customGB: number = slider ? (parseInt(slider.value, 10) || 1) : 4;
+    const allocMB: number = auto ? (systemInfo.autoMemoryMB || 1024) : customGB * 1024;
+    if (valueLabel) valueLabel.textContent = `${customGB} GB`;
+    if (allocLabel) allocLabel.textContent = `${(allocMB / 1024).toFixed(1)} GB${auto ? '（自动）' : ''}`;
+    if (freeLabel) freeLabel.textContent = systemInfo.freeMB > 0 ? `${(systemInfo.freeMB / 1024).toFixed(1)} GB` : '--';
+    if (usageLabel) {
+      const totalGB: number = systemInfo.totalMB / 1024;
+      const usedGB: number = (systemInfo.totalMB - systemInfo.freeMB) / 1024;
+      usageLabel.textContent = totalGB > 0 ? `${usedGB.toFixed(1)} GB / ${totalGB.toFixed(1)} GB` : '-- / --';
+      if (usageBar) usageBar.style.width = `${totalGB > 0 ? Math.min(100, (usedGB / totalGB) * 100) : 0}%`;
+    }
+    if (warning) {
+      const lowFree: boolean = systemInfo.freeMB > 0 && systemInfo.freeMB < 4096;
+      warning.classList.toggle('hidden', !lowFree);
+      warning.textContent = auto
+        ? '当前可用内存较少，自动分配已按可用内存下调；启动前建议关闭一些程序。'
+        : '当前可用内存较少，自定义值可能超过可用内存；启动前建议关闭一些程序。';
+    }
+  };
+
+  const setMode = (auto: boolean): void => {
+    if (modeGroup) {
+      modeGroup.querySelectorAll<HTMLInputElement>('input[name="memory-mode"]').forEach((radio: HTMLInputElement) => {
+        radio.checked = radio.value === (auto ? 'auto' : 'custom');
+      });
+    }
+    if (slider) slider.disabled = auto;
+    customRow?.classList.toggle('hidden', auto);
+    updateLabels(auto);
+  };
+
+  const refresh = async (): Promise<void> => {
+    const settings = await loadSettings();
+    const stored: string = String(settings.game?.memory ?? 'auto');
+    const auto: boolean = stored === 'auto';
+    try { systemInfo = await window.gpcl.getSystemMemory(); } catch {}
+
+    if (slider) {
+      const maxGB: number = systemInfo.totalMB > 0 ? Math.max(2, Math.floor(systemInfo.totalMB / 1024) - 1) : 16;
+      slider.max = String(maxGB);
+      const customGB: number = parseInt(stored, 10);
+      const fallbackGB: number = Math.round((systemInfo.autoMemoryMB || 4096) / 1024);
+      slider.value = String(Math.min(maxGB, Math.max(1, isNaN(customGB) ? fallbackGB : Math.round(customGB))));
+    }
+
+    setMode(auto);
+    if (optimizeToggle) optimizeToggle.checked = settings.game?.optimizeBeforeLaunch === true;
+  };
+
+  if (modeGroup) {
+    modeGroup.addEventListener('change', async (): Promise<void> => {
+      const selected: HTMLInputElement | null = modeGroup.querySelector<HTMLInputElement>('input[name="memory-mode"]:checked');
+      const auto: boolean = selected?.value === 'auto';
+      await saveGameSetting({ memory: auto ? 'auto' : String(slider?.value || 4) });
+      setMode(auto);
+    });
+  }
+
+  if (slider) {
+    slider.addEventListener('input', () => updateLabels(false));
+    slider.addEventListener('change', async (): Promise<void> => {
+      await saveGameSetting({ memory: String(slider.value) });
+      updateLabels(false);
+    });
+  }
+
+  if (optimizeToggle) {
+    optimizeToggle.addEventListener('change', async (): Promise<void> => {
+      await saveGameSetting({ optimizeBeforeLaunch: optimizeToggle.checked });
+    });
+  }
+
+  await refresh();
+}
+
+
+export async function initLaunchSettings(): Promise<void> {
+  const customRow: HTMLElement | null = document.getElementById('window-size-custom-row');
+  const widthInput: HTMLInputElement | null = document.getElementById('settings-window-width') as HTMLInputElement | null;
+  const heightInput: HTMLInputElement | null = document.getElementById('settings-window-height') as HTMLInputElement | null;
+  const visibilityGroup: HTMLElement | null = document.getElementById('settings-launcher-visibility');
+  const keepTitle: HTMLInputElement | null = document.getElementById('settings-keep-window-title') as HTMLInputElement | null;
+  const jvmArgs: HTMLTextAreaElement | null = document.getElementById('settings-jvm-args') as HTMLTextAreaElement | null;
+
+  const toggleCustomRow = (value: string): void => {
+    customRow?.classList.toggle('hidden', value !== 'custom');
+  };
+
+  initCustomSelect('settings-window-size', async (value: string): Promise<void> => {
+    toggleCustomRow(value);
+    await saveGameSetting({ windowSize: value });
+  });
+
+  initCustomSelect('settings-process-priority', async (value: string): Promise<void> => {
+    await saveGameSetting({ processPriority: value });
+  });
+
+  initCustomSelect('settings-gc-preset', async (value: string): Promise<void> => {
+    await saveGameSetting({ gcPreset: value });
+  });
+
+  const settings = await loadSettings();
+  const windowSize: string = settings.game?.windowSize || 'default';
+  setCustomSelectValue('settings-window-size', windowSize);
+  toggleCustomRow(windowSize);
+  if (widthInput) widthInput.value = String(settings.game?.windowWidth || 854);
+  if (heightInput) heightInput.value = String(settings.game?.windowHeight || 480);
+  setCustomSelectValue('settings-process-priority', settings.game?.processPriority || 'normal');
+  setCustomSelectValue('settings-gc-preset', settings.game?.gcPreset || 'default');
+  if (jvmArgs) jvmArgs.value = settings.game?.jvmArgs || '';
+  if (keepTitle) keepTitle.checked = settings.game?.keepWindowTitle === true;
+
+  if (visibilityGroup) {
+    const stored: string = settings.game?.launcherVisibility || 'keep';
+    visibilityGroup.querySelectorAll<HTMLInputElement>('input[name="launcher-visibility"]').forEach((radio: HTMLInputElement) => {
+      radio.checked = radio.value === stored;
+      radio.addEventListener('change', async (): Promise<void> => {
+        if (!radio.checked) return;
+        await saveGameSetting({ launcherVisibility: radio.value });
+      });
+    });
+  }
+
+  if (keepTitle) {
+    keepTitle.addEventListener('change', async (): Promise<void> => {
+      await saveGameSetting({ keepWindowTitle: keepTitle.checked });
+    });
+  }
+
+  const saveWindowSize = async (): Promise<void> => {
+    let width: number = parseInt(widthInput?.value || '', 10);
+    let height: number = parseInt(heightInput?.value || '', 10);
+    if (isNaN(width)) width = 854;
+    if (isNaN(height)) height = 480;
+    width = Math.min(7680, Math.max(320, width));
+    height = Math.min(4320, Math.max(240, height));
+    if (widthInput) widthInput.value = String(width);
+    if (heightInput) heightInput.value = String(height);
+    await saveGameSetting({ windowWidth: width, windowHeight: height });
+  };
+
+  if (widthInput) widthInput.addEventListener('change', saveWindowSize);
+  if (heightInput) heightInput.addEventListener('change', saveWindowSize);
+
+  if (jvmArgs) {
+    jvmArgs.addEventListener('change', async (): Promise<void> => {
+      await saveGameSetting({ jvmArgs: jvmArgs.value.trim() });
+    });
+  }
+}
+
+
+export async function initDownloadSettings(): Promise<void> {
+  const speedSlider: HTMLInputElement | null = document.getElementById('settings-speed-limit') as HTMLInputElement | null;
+  const speedLabel: HTMLElement | null = document.getElementById('settings-speed-limit-value');
+
+  const updateSpeedLabel = (): void => {
+    if (!speedSlider || !speedLabel) return;
+    const value: number = parseInt(speedSlider.value, 10) || 0;
+    speedLabel.textContent = value > 0 ? `${value} MB/s` : '不限速';
+  };
+
+  initCustomSelect('settings-file-source', async (value: string): Promise<void> => {
+    const settings = await loadSettings();
+    settings.download = settings.download || {} as any;
+    settings.download.fileSource = value;
+    await window.gpcl.saveSettings(settings);
+  });
+
+  initCustomSelect('settings-version-source', async (value: string): Promise<void> => {
+    const settings = await loadSettings();
+    settings.download = settings.download || {} as any;
+    settings.download.versionSource = value;
+    await window.gpcl.saveSettings(settings);
+  });
+
+  const settings = await loadSettings();
+  setCustomSelectValue('settings-file-source', settings.download?.fileSource || 'auto');
+  setCustomSelectValue('settings-version-source', settings.download?.versionSource || 'auto');
+
+  if (speedSlider) {
+    speedSlider.value = String(settings.download?.speedLimit || 0);
+    updateSpeedLabel();
+    speedSlider.addEventListener('input', updateSpeedLabel);
+    speedSlider.addEventListener('change', async (): Promise<void> => {
+      const settings = await loadSettings();
+      settings.download = settings.download || {} as any;
+      settings.download.speedLimit = parseInt(speedSlider.value, 10) || 0;
+      await window.gpcl.saveSettings(settings);
+      updateSpeedLabel();
+    });
+  }
+}
+
+
+export async function initAboutPage(): Promise<void> {
+  const versionEl: HTMLElement | null = document.getElementById('about-version');
+  if (versionEl) {
+    try {
+      const version: string = await window.gpcl.getAppVersion();
+      versionEl.textContent = `版本: ${version}`;
+    } catch {}
+  }
+
+  try {
+    const info: any = await window.gpcl.getRuntimeInfo();
+    const fields: Record<string, any> = {
+      'runtime-app': info.appVersion,
+      'runtime-electron': info.electron,
+      'runtime-chrome': info.chrome,
+      'runtime-node': info.node,
+      'runtime-platform': info.platform
+    };
+    for (const [id, value] of Object.entries(fields)) {
+      const el: HTMLElement | null = document.getElementById(id);
+      if (el) el.textContent = value || '-';
+    }
+  } catch {}
+
+  document.querySelectorAll<HTMLAnchorElement>('.about-link').forEach((link: HTMLAnchorElement) => {
+    link.addEventListener('click', (event: Event): void => {
+      event.preventDefault();
+      const url: string | null = link.getAttribute('href');
+      if (url && window.gpcl && window.gpcl.openExternal) window.gpcl.openExternal(url);
+    });
+  });
+
+  const details: HTMLDetailsElement | null = document.getElementById('license-details') as HTMLDetailsElement | null;
+  const licenseText: HTMLElement | null = document.getElementById('license-text');
+  if (details && licenseText) {
+    details.addEventListener('toggle', async (): Promise<void> => {
+      if (!details.open || details.dataset.loaded === '1') return;
+      details.dataset.loaded = '1';
+      try {
+        const text: string = await window.gpcl.getLicenseText();
+        licenseText.textContent = text || '许可证读取失败。';
+      } catch {
+        licenseText.textContent = '许可证读取失败。';
+        details.dataset.loaded = '0';
+      }
+    });
+  }
+}
+
+
+void initMemorySettings();
+void initLaunchSettings();
+void initDownloadSettings();
+void initAboutPage();
 

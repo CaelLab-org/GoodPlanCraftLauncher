@@ -11,7 +11,7 @@ import { BrowserWindow, ipcMain, net } from 'electron';
 import fs from 'fs';
 import path from 'path';
 
-import { APP_VERSION, CACHE_DIR, GAME_DIR, formatTimestamp, writeLog } from './config';
+import { APP_VERSION, CACHE_DIR, GAME_DIR, formatTimestamp, loadSettings, writeLog } from './config';
 import { installVersionWithModLoader } from './modloader';
 import { mainWindow } from './shell';
 import { MAX_CONCURRENT, activeDownloads, completedDownloadFiles, currentDownloadPath, currentDownloadType, currentDownloadVersion, downloadQueue, isDownloading, isJavaDownloading, setActiveDownloads, setCompletedDownloadFiles, setCurrentDownloadPath, setCurrentDownloadType, setCurrentDownloadVersion, setDownloadQueue, setIsDownloading, setIsJavaDownloading, setMaxConcurrent, setShouldCancelDownload, setTotalDownloadFiles, shouldCancelDownload, totalDownloadFiles } from './state';
@@ -128,40 +128,140 @@ setCompletedDownloadFiles(0);
 });
 
 
-export async function fetchText(url: string): Promise<string> {
+export type DownloadSourcePolicy = 'auto' | 'mirror-first' | 'official-first' | 'official-only';
+
+let fileSourcePolicy: DownloadSourcePolicy = 'auto';
+let versionSourcePolicy: DownloadSourcePolicy = 'auto';
+let speedLimitBytes: number = 0;
+let speedTokens: number = 0;
+let speedLastRefill: number = Date.now();
+
+function normalizeSourcePolicy(value: any): DownloadSourcePolicy {
+  return value === 'mirror-first' || value === 'official-first' || value === 'official-only' ? value : 'auto';
+}
+
+export function loadDownloadSettings(): void {
+  try {
+    const settings: any = loadSettings();
+    fileSourcePolicy = normalizeSourcePolicy(settings.download?.fileSource);
+    versionSourcePolicy = normalizeSourcePolicy(settings.download?.versionSource);
+    setDownloadSpeedLimit(Number(settings.download?.speedLimit) || 0);
+  } catch {}
+}
+
+export function setDownloadSpeedLimit(megabytesPerSecond: number): void {
+  speedLimitBytes = Math.max(0, megabytesPerSecond) * 1024 * 1024;
+  speedTokens = speedLimitBytes;
+  speedLastRefill = Date.now();
+}
+
+async function consumeDownloadTokens(bytes: number): Promise<void> {
+  if (speedLimitBytes <= 0) return;
+  while (true) {
+    const now: number = Date.now();
+    speedTokens = Math.min(speedLimitBytes, speedTokens + ((now - speedLastRefill) / 1000) * speedLimitBytes);
+    speedLastRefill = now;
+    if (speedTokens >= bytes) {
+      speedTokens -= bytes;
+      return;
+    }
+    const waitMs: number = Math.ceil(((bytes - speedTokens) / speedLimitBytes) * 1000);
+    await new Promise<void>((resolve) => setTimeout(resolve, Math.max(10, waitMs)));
+  }
+}
+
+function mirrorUrlFor(url: string): string | null {
+  try {
+    const parsed: URL = new URL(url);
+    if (['piston-meta.mojang.com', 'launchermeta.mojang.com', 'launcher.mojang.com', 'piston-data.mojang.com'].includes(parsed.hostname)) {
+      return `https://bmclapi2.bangbang93.com${parsed.pathname}${parsed.search}`;
+    }
+    if (parsed.hostname === 'libraries.minecraft.net' || parsed.hostname === 'maven.minecraftforge.net') {
+      return `https://bmclapi2.bangbang93.com/maven${parsed.pathname}${parsed.search}`;
+    }
+    if (parsed.hostname === 'resources.download.minecraft.net') {
+      return `https://bmclapi2.bangbang93.com/assets${parsed.pathname}${parsed.search}`;
+    }
+  } catch {}
+  return null;
+}
+
+function buildSourceUrls(url: string, policy: DownloadSourcePolicy, extraMirror?: string): string[] {
+  const mirror: string | null = extraMirror || mirrorUrlFor(url);
+  if (!mirror) return [url];
+  if (policy === 'official-only') return [url];
+  if (policy === 'mirror-first') return [mirror, url];
+  return [url, mirror];
+}
+
+function sourceTimeout(policy: DownloadSourcePolicy, isOfficial: boolean, kind: 'text' | 'file'): number {
+  if (policy === 'auto' && isOfficial) return kind === 'text' ? 8000 : 15000;
+  return kind === 'text' ? 20000 : 60000;
+}
+
+function fetchTextOnce(url: string, timeoutMs: number, redirectsLeft: number = 3): Promise<string> {
   return new Promise<string>((resolve, reject) => {
-    let finished: boolean = false;
+    let settled: boolean = false;
+    const done = (fn: () => void): void => {
+      if (settled) return;
+      settled = true;
+      fn();
+    };
 
     const fallbackToHttps = (reason: any): void => {
-      if (finished) return;
+      if (settled) return;
       try {
         const https = require('https');
-        const req2 = https.get(url, { timeout: 20000 }, (res2: any) => {
+        const req2 = https.get(url, { timeout: timeoutMs, headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' } }, (res2: any) => {
+          const status: number = res2.statusCode || 0;
+          if (status >= 300 && status < 400 && res2.headers.location && redirectsLeft > 0) {
+            const nextUrl: string = new URL(res2.headers.location, url).toString();
+            res2.resume();
+            done(() => resolve(fetchTextOnce(nextUrl, timeoutMs, redirectsLeft - 1)));
+            return;
+          }
+          if (status >= 400) {
+            res2.resume();
+            done(() => reject(new Error(`HTTP ${status}`)));
+            return;
+          }
           let body: string = '';
           res2.on('data', (d: any) => body += d);
-          res2.on('end', () => { finished = true; resolve(body); });
-          res2.on('error', (err2: any) => { if (!finished) { finished = true; reject(err2); } });
+          res2.on('end', () => done(() => resolve(body)));
+          res2.on('error', (err2: any) => done(() => reject(err2)));
         });
-        req2.on('timeout', () => { req2.destroy(); if (!finished) { finished = true; reject('超时'); } });
-        req2.on('error', (err2: any) => { if (!finished) { finished = true; reject(err2); } });
+        req2.on('timeout', () => { req2.destroy(); done(() => reject(reason || '超时')); });
+        req2.on('error', (err2: any) => done(() => reject(err2)));
       } catch (e2: any) {
-        if (!finished) { finished = true; reject(e2); }
+        done(() => reject(e2));
       }
     };
 
     try {
       const req = net.request(url);
-      const to: any = setTimeout(() => { try { req.abort(); } catch {} ; fallbackToHttps('timeout'); }, 20000);
+      const timer: any = setTimeout(() => { try { req.abort(); } catch {} ; fallbackToHttps('超时'); }, timeoutMs);
 
       req.on('response', (res: any) => {
-        clearTimeout(to);
+        clearTimeout(timer);
+        const status: number = res.statusCode || 0;
+        if (status >= 300 && status < 400 && res.headers.location && redirectsLeft > 0) {
+          const nextUrl: string = new URL(res.headers.location, url).toString();
+          res.resume();
+          done(() => resolve(fetchTextOnce(nextUrl, timeoutMs, redirectsLeft - 1)));
+          return;
+        }
+        if (status >= 400) {
+          res.resume();
+          done(() => reject(new Error(`HTTP ${status}`)));
+          return;
+        }
         let body: string = '';
         res.on('data', (d: any) => body += d);
-        res.on('end', () => { if (!finished) { finished = true; resolve(body); } });
-        res.on('error', (err: any) => { if (!finished) fallbackToHttps(err); });
+        res.on('end', () => done(() => resolve(body)));
+        res.on('error', (err: any) => fallbackToHttps(err));
       });
 
-      req.on('error', (err: any) => { if (!finished) fallbackToHttps(err); });
+      req.on('error', (err: any) => { clearTimeout(timer); fallbackToHttps(err); });
       req.end();
     } catch (e: any) {
       fallbackToHttps(e);
@@ -169,10 +269,27 @@ export async function fetchText(url: string): Promise<string> {
   });
 }
 
+export async function fetchText(url: string, sources?: string[]): Promise<string> {
+  const list: string[] = sources && sources.length > 0 ? sources : buildSourceUrls(url, versionSourcePolicy);
+  let lastError: any = null;
 
-export async function downloadWithPool(url: string, dest: string, label: string): Promise<void> {
+  for (const candidate of list) {
+    try {
+      const isOfficial: boolean = candidate === url;
+      return await fetchTextOnce(candidate, sourceTimeout(versionSourcePolicy, isOfficial, 'text'));
+    } catch (error: any) {
+      lastError = error;
+      writeLog(`[下载] 文本源失败: ${candidate} - ${error.message}`);
+    }
+  }
+
+  throw lastError || new Error('请求失败');
+}
+
+
+export async function downloadWithPool(sources: string[], dest: string, label: string): Promise<void> {
   return new Promise<void>((resolve, reject) => {
-    downloadQueue.push({ url, dest, label, resolve, reject });
+    downloadQueue.push({ sources, dest, label, resolve, reject });
     processDownloadQueue();
   });
 }
@@ -182,7 +299,7 @@ export async function processDownloadQueue(): Promise<void> {
   while (downloadQueue.length > 0 && activeDownloads < MAX_CONCURRENT && !shouldCancelDownload) {
     const task: any = downloadQueue.shift();
     setActiveDownloads(activeDownloads + 1);
-    downloadFileInternal(task.url, task.dest, task.label)
+    downloadFileInternal(task.sources, task.dest, task.label)
       .then(() => {
         task.resolve();
       })
@@ -209,7 +326,7 @@ export async function processDownloadQueue(): Promise<void> {
 }
 
 
-export async function downloadFile(url: string, dest: string, label: string): Promise<void> {
+export async function downloadFile(url: string, dest: string, label: string, sources?: string[]): Promise<void> {
   if (fs.existsSync(dest)) {
     const stat = fs.statSync(dest);
     if (stat.size > 1024) {
@@ -224,25 +341,37 @@ export async function downloadFile(url: string, dest: string, label: string): Pr
       return;
     }
   }
-  await downloadWithPool(url, dest, label);
+  const list: string[] = sources && sources.length > 0 ? sources : buildSourceUrls(url, fileSourcePolicy);
+  await downloadWithPool(list, dest, label);
 }
 
 
-export async function downloadFileInternal(url: string, dest: string, label: string): Promise<void> {
+async function downloadFileOnce(url: string, dest: string, label: string, timeoutMs: number): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     const dir: string = path.dirname(dest);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
-    const file = fs.createWriteStream(dest, { encoding: undefined as any });
+    let file: any = fs.createWriteStream(dest, { encoding: undefined as any });
     let loaded: number = 0;
     let total: number = 0;
+    let fallbackStarted: boolean = false;
+
+    const resetFile = (): void => {
+      try { file.destroy(); } catch {}
+      file = fs.createWriteStream(dest, { encoding: undefined as any });
+      loaded = 0;
+    };
 
     const fallbackToHttps = (reason: any): void => {
+      if (fallbackStarted) return;
+      fallbackStarted = true;
       writeLog(`[下载] ${label} HTTP请求失败: ${reason}，尝试HTTPS`);
+      resetFile();
       try {
         const https = require('https');
         
         const options: any = {
+          timeout: timeoutMs,
           headers: {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
           }
@@ -252,9 +381,17 @@ export async function downloadFileInternal(url: string, dest: string, label: str
           
           if (res2.statusCode >= 300 && res2.statusCode < 400 && res2.headers.location) {
             writeLog(`[下载] ${label} 重定向到: ${res2.headers.location}`);
+            file.end(() => {
+              downloadFileOnce(res2.headers.location, dest, label, timeoutMs).then(resolve).catch(reject);
+            });
+            return;
+          }
+
+          if (res2.statusCode >= 400) {
+            writeLog(`[下载] ${label} HTTP ${res2.statusCode}`);
             file.close();
-            
-            downloadFileInternal(res2.headers.location, dest, label).then(resolve).catch(reject);
+            res2.resume();
+            reject(new Error(`HTTP ${res2.statusCode}`));
             return;
           }
           
@@ -286,6 +423,12 @@ export async function downloadFileInternal(url: string, dest: string, label: str
                 total: totalDownloadFiles
               });
             }
+            if (speedLimitBytes > 0) {
+              res2.pause();
+              void consumeDownloadTokens(d.length).then(() => {
+                if (!shouldCancelDownload) res2.resume();
+              });
+            }
           });
           res2.on('end', () => {
             file.end();
@@ -310,7 +453,7 @@ export async function downloadFileInternal(url: string, dest: string, label: str
 
     try {
       const req = net.request(url);
-      const to: any = setTimeout(() => { try { req.abort(); } catch {} ; fallbackToHttps('timeout'); }, 60000);
+      const to: any = setTimeout(() => { try { req.abort(); } catch {} ; fallbackToHttps('timeout'); }, timeoutMs);
 
       req.setHeader('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36');
 
@@ -319,9 +462,17 @@ export async function downloadFileInternal(url: string, dest: string, label: str
 
         if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
           writeLog(`[下载] ${label} 重定向到: ${res.headers.location}`);
+          file.end(() => {
+            downloadFileOnce(res.headers.location, dest, label, timeoutMs).then(resolve).catch(reject);
+          });
+          return;
+        }
+
+        if (res.statusCode >= 400) {
+          writeLog(`[下载] ${label} HTTP ${res.statusCode}`);
           file.close();
-          
-          downloadFileInternal(res.headers.location, dest, label).then(resolve).catch(reject);
+          res.resume();
+          reject(new Error(`HTTP ${res.statusCode}`));
           return;
         }
         
@@ -353,6 +504,12 @@ export async function downloadFileInternal(url: string, dest: string, label: str
               total: totalDownloadFiles
             });
           }
+          if (speedLimitBytes > 0) {
+            res.pause();
+            void consumeDownloadTokens(d.length).then(() => {
+              if (!shouldCancelDownload) res.resume();
+            });
+          }
         });
         res.on('end', () => {
           file.end();
@@ -360,13 +517,11 @@ export async function downloadFileInternal(url: string, dest: string, label: str
           resolve();
         });
         res.on('error', (err: any) => {
-          file.destroy();
           fallbackToHttps(err);
         });
       });
 
       req.on('error', (err: any) => {
-        file.destroy();
         fallbackToHttps(err);
       });
 
@@ -379,37 +534,31 @@ export async function downloadFileInternal(url: string, dest: string, label: str
 }
 
 
-export async function downloadFileInternalWithTimeout(url: string, dest: string, label: string, timeoutMs: number): Promise<void> {
-  return new Promise<void>((resolve, reject) => {
-    let settled: boolean = false;
-    const timer: any = setTimeout(() => {
-      if (!settled) {
-        settled = true;
-        reject(new Error(`连接超时 (${timeoutMs / 1000}秒)`));
-      }
-    }, timeoutMs);
+export async function downloadFileInternal(sources: string[], dest: string, label: string): Promise<void> {
+  let lastError: any = null;
 
-    downloadFileInternal(url, dest, label)
-      .then((result: any) => {
-        if (!settled) {
-          settled = true;
-          clearTimeout(timer);
-          resolve(result);
-        }
-      })
-      .catch((err: any) => {
-        if (!settled) {
-          settled = true;
-          clearTimeout(timer);
-          reject(err);
-        }
-      });
-  });
+  for (let i = 0; i < sources.length; i++) {
+    const url: string = sources[i];
+    try {
+      await downloadFileOnce(url, dest, label, sourceTimeout(fileSourcePolicy, i === 0, 'file'));
+      return;
+    } catch (error: any) {
+      lastError = error;
+      writeLog(`[下载] 下载源失败: ${url} - ${error.message}`);
+      try {
+        await new Promise<void>((resolve) => setTimeout(resolve, 100));
+        if (fs.existsSync(dest)) fs.unlinkSync(dest);
+      } catch {}
+    }
+  }
+
+  throw lastError || new Error('下载失败');
 }
 
 
 
 export async function installVersion(versionId: string, maxConcurrent: number = 20, downloadPath: string | null = null): Promise<any> {
+  loadDownloadSettings();
   const targetDir: string = downloadPath || path.join(GAME_DIR, 'versions', versionId);
   const versionDir: string = targetDir;
   const cancelFilePath: string = path.join(versionDir, 'CancelDownload.txt');
@@ -437,19 +586,23 @@ setCompletedDownloadFiles(0);
     const versionJsonPath: string = path.join(versionDir2, versionId + '.json');
     const versionJarPath: string = path.join(versionDir2, versionId + '.jar');
 
-    const manifest: any = JSON.parse(await fetchText('https://piston-meta.mojang.com/mc/game/version_manifest_v2.json'));
+    const manifestUrl: string = 'https://piston-meta.mojang.com/mc/game/version_manifest_v2.json';
+    const manifestSources: string[] = buildSourceUrls(manifestUrl, versionSourcePolicy, 'https://bmclapi2.bangbang93.com/mc/game/version_manifest_v2.json');
+    const manifest: any = JSON.parse(await fetchText(manifestUrl, manifestSources));
     const vInfo: any = manifest.versions.find((v: any) => v.id === versionId);
     if (!vInfo) throw new Error('版本不存在: ' + versionId);
 
     if (!fs.existsSync(versionJsonPath)) {
-      const vData: string = await fetchText(vInfo.url);
+      const versionJsonSources: string[] = buildSourceUrls(vInfo.url, versionSourcePolicy, `https://bmclapi2.bangbang93.com/version/${versionId}/json`);
+      const vData: string = await fetchText(vInfo.url, versionJsonSources);
       fs.writeFileSync(versionJsonPath, vData);
     }
 
     const versionData: any = JSON.parse(fs.readFileSync(versionJsonPath, 'utf8'));
 
     if (!fs.existsSync(versionJarPath)) {
-      await downloadFile(versionData.downloads.client.url, versionJarPath, '客户端');
+      const clientSources: string[] = buildSourceUrls(versionData.downloads.client.url, fileSourcePolicy, `https://bmclapi2.bangbang93.com/version/${versionId}/client`);
+      await downloadFile(versionData.downloads.client.url, versionJarPath, '客户端', clientSources);
     }
 
     if (shouldCancelDownload) {
@@ -459,7 +612,8 @@ setCompletedDownloadFiles(0);
 
     const assetIndexPath: string = path.join(GAME_DIR, 'assets', 'indexes', versionData.assetIndex.id + '.json');
     if (!fs.existsSync(assetIndexPath)) {
-      await downloadFile(versionData.assetIndex.url, assetIndexPath, '资源索引');
+      const assetIndexSources: string[] = buildSourceUrls(versionData.assetIndex.url, versionSourcePolicy);
+      await downloadFile(versionData.assetIndex.url, assetIndexPath, '资源索引', assetIndexSources);
     }
 
     if (shouldCancelDownload) {
@@ -485,8 +639,10 @@ setCompletedDownloadFiles(0);
       const prefix: string = hash.substring(0, 2);
       const assetPath: string = path.join(GAME_DIR, 'assets', 'objects', prefix, hash);
       if (!fs.existsSync(assetPath)) {
+        const assetUrl: string = `https://resources.download.minecraft.net/${prefix}/${hash}`;
         toDownload.push({
-          url: `https://resources.download.minecraft.net/${prefix}/${hash}`,
+          url: assetUrl,
+          sources: buildSourceUrls(assetUrl, fileSourcePolicy),
           dest: assetPath,
           label: `资源: ${name}`
         });
@@ -499,6 +655,7 @@ setCompletedDownloadFiles(0);
         if (!fs.existsSync(libPath)) {
           toDownload.push({
             url: lib.downloads.artifact.url,
+            sources: buildSourceUrls(lib.downloads.artifact.url, fileSourcePolicy),
             dest: libPath,
             label: `库: ${lib.name}`
           });
@@ -511,6 +668,7 @@ setCompletedDownloadFiles(0);
             if (!fs.existsSync(libPath)) {
               toDownload.push({
                 url: info.url,
+                sources: buildSourceUrls(info.url, fileSourcePolicy),
                 dest: libPath,
                 label: `原生库: ${lib.name}`
               });
@@ -523,7 +681,7 @@ setCompletedDownloadFiles(0);
 setTotalDownloadFiles(toDownload.length);
 setCompletedDownloadFiles(0);
 
-    const downloadPromises: Promise<void>[] = toDownload.map((item: any) => downloadFile(item.url, item.dest, item.label));
+    const downloadPromises: Promise<void>[] = toDownload.map((item: any) => downloadFile(item.url, item.dest, item.label, item.sources));
     await Promise.all(downloadPromises);
 
     const nativesDir: string = path.join(GAME_DIR, 'versions', versionId, 'natives');
@@ -674,6 +832,7 @@ ipcMain.handle('scan-versions', async (_, gameDir?: string, silent: boolean = fa
 
 ipcMain.handle('get-version-manifest', async () => {
   try {
+    loadDownloadSettings();
     if (!fs.existsSync(CACHE_DIR)) fs.mkdirSync(CACHE_DIR, { recursive: true });
     const cacheFile: string = path.join(CACHE_DIR, 'version_manifest.json');
 
@@ -690,7 +849,9 @@ ipcMain.handle('get-version-manifest', async () => {
 
     if (!data) {
       try {
-        data = await fetchText('https://piston-meta.mojang.com/mc/game/version_manifest_v2.json');
+        const manifestUrl: string = 'https://piston-meta.mojang.com/mc/game/version_manifest_v2.json';
+        const manifestSources: string[] = buildSourceUrls(manifestUrl, versionSourcePolicy, 'https://bmclapi2.bangbang93.com/mc/game/version_manifest_v2.json');
+        data = await fetchText(manifestUrl, manifestSources);
         fs.writeFileSync(cacheFile, data);
         writeLog('远程拉取版本列表：成功');
       } catch (e: any) {

@@ -71,7 +71,10 @@ export interface GPCLApi {
   getVersionDisplayName(versionId: string): Promise<string>;
   getLaunchDisplayName(versionId: string): Promise<string>;
   getMemoryUsage(): Promise<number>;
-  optimizeMemory(): Promise<void>;
+  optimizeMemory(): Promise<{ beforeMB: number; afterMB: number; freedMB: number }>;
+  getSystemMemory(): Promise<{ totalMB: number; freeMB: number; autoMemoryMB: number }>;
+  getLicenseText(): Promise<string>;
+  getRuntimeInfo(): Promise<{ appVersion: string; electron: string; chrome: string; node: string; platform: string }>;
   downloadUpdate(version: string): Promise<any>;
   cancelUpdateDownload(): Promise<void>;
   verifyUpdateSHA1(filePath: string): Promise<boolean>;
@@ -92,9 +95,17 @@ export interface GameSettings {
   playerName: string;
   javaPath: string;
   jvmArgs: string;
+  gcPreset: string;
   windowMode: string;
   /** 自定义游戏窗口标题，支持 {mc_version} 等魔术字 */
   windowTitle: string;
+  keepWindowTitle: boolean;
+  processPriority: string;
+  launcherVisibility: string;
+  windowSize: string;
+  windowWidth: number;
+  windowHeight: number;
+  optimizeBeforeLaunch: boolean;
 }
 
 export interface AppearanceSettings {
@@ -104,12 +115,16 @@ export interface AppearanceSettings {
   skipSplash: boolean;
   /** 启动小知识的出现频率：off / rare / half / always */
   tipFrequency: string;
+  enableMore: boolean;
 }
 
 export interface DownloadSettings {
   maxConcurrent: number;
   javaMirror: string;
   customJavaMirror: string;
+  fileSource: string;
+  versionSource: string;
+  speedLimit: number;
 }
 
 export interface AdvancedSettings {

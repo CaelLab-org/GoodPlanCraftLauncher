@@ -25,8 +25,8 @@ import { refreshGameMonitor } from './monitor';
 import { currentPage, showPage, switchSettingsTab } from './nav';
 import { closeUsernameHistory, playerHistory, setPlayerHistory } from './player';
 import { msAuthData, setMsAuthData } from './session';
-import { applyScale, applyTheme, initScale, initTheme, loadSettings, updateSettingsBadge } from './settings';
-import { allNewerVersions, checkForUpdates, getCurrentVersion, isUpdateDownloadActive, renderUpdateVersionCards, startUpdateDownload, updateAvailable } from './update';
+import { applyScale, initScale, initTheme, loadSettings, updateSettingsBadge } from './settings';
+import { allNewerVersions, checkForUpdates, isUpdateDownloadActive, renderUpdateVersionCards, startUpdateDownload, updateAvailable } from './update';
 import { bindModLoaderEvents, loadRemoteVersions, loadVersions, renderVersionSelectList, selectedVersionId } from './versions';
 
 import './chart';
@@ -239,16 +239,8 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
   const logRetentionValueEl: HTMLInputElement | null = document.getElementById('log-retention-value') as HTMLInputElement | null;
   const logRetentionUnitEl: HTMLElement | null = document.getElementById('log-retention-unit');
 
-  const aboutVersion: HTMLElement | null = document.getElementById('about-version');
-  
   const customMirrorContainerEl: HTMLElement | null = document.getElementById('custom-java-mirror-container');
   const customMirrorUrlEl: HTMLInputElement | null = document.getElementById('custom-java-mirror-url') as HTMLInputElement | null;
-
-  initCustomSelect('settings-memory', async (value: string): Promise<void> => {
-    const settings = await loadSettings();
-    settings.game.memory = value;
-    await gpcl.saveSettings(settings);
-  });
 
   initCustomSelect('settings-window-mode', async (value: string): Promise<void> => {
     const settings = await loadSettings();
@@ -291,14 +283,6 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
       }
     });
   }
-
-  initCustomSelect('settings-theme', async (value: string): Promise<void> => {
-    const settings = await loadSettings();
-    if (!settings.appearance) settings.appearance = {} as any;
-    settings.appearance.theme = value;
-    await gpcl.saveSettings(settings);
-    applyTheme(value);
-  });
 
   initCustomSelect('settings-scale', async (value: string): Promise<void> => {
     const settings = await loadSettings();
@@ -506,11 +490,6 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
     });
   }
 
-  if (aboutVersion) {
-    const version: string = await getCurrentVersion();
-    aboutVersion.textContent = `版本: ${version}`;
-  }
-
   if (customMirrorUrlEl) {
     customMirrorUrlEl.addEventListener('input', async (): Promise<void> => {
       await saveJavaMirrorSettings(getCustomSelectValue('java-mirror-select') || 'tsinghua', customMirrorUrlEl.value);
@@ -520,34 +499,17 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
   (async (): Promise<void> => {
     const settings = await loadSettings();
 
-    let memoryValue: string = '2'; 
-    if (settings.game?.memory) {
-      const storedMemory: string = String(settings.game.memory);
-      if (storedMemory.includes('096')) {
-        
-        const mb: number = parseInt(storedMemory);
-        if (!isNaN(mb)) {
-          memoryValue = String(mb / 1024);
-        }
-      } else {
-        memoryValue = storedMemory;
-      }
-    }
-    setCustomSelectValue('settings-memory', memoryValue);
-
     setCustomSelectValue('settings-window-mode', settings.game?.windowMode || 'windowed');
 
     const windowTitleSync: HTMLInputElement | null = document.getElementById('settings-window-title') as HTMLInputElement | null;
     if (windowTitleSync) {
-      windowTitleSync.value = settings.game?.windowTitle || 'Minecraft {mc_version} (GPCL)';
+      windowTitleSync.value = typeof settings.game?.windowTitle === 'string'
+        ? settings.game.windowTitle
+        : 'Minecraft {mc_version} (GPCL)';
     }
 
     setLaunchTipFrequency(settings.appearance?.tipFrequency || 'rare');
     setCustomSelectValue('settings-tip-frequency', launchTipFrequency);
-
-    const theme: string = settings.appearance?.theme || 'dark';
-    setCustomSelectValue('settings-theme', theme);
-    applyTheme(theme);
 
     const scale: string = settings.appearance?.scale || '100';
     setCustomSelectValue('settings-scale', scale);

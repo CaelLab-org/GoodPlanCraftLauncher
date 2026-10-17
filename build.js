@@ -118,6 +118,11 @@ function copyStatic() {
     fs.copyFileSync('version.txt', path.join(DIST, 'version.txt'));
   }
 
+  // 关于页的许可证原文，随程序本地携带
+  if (fs.existsSync('LICENSE')) {
+    fs.copyFileSync('LICENSE', path.join(DIST, 'LICENSE.txt'));
+  }
+
   // 生成 dist/package.json
   const pkg = require('./package.json');
   const distPkg = {

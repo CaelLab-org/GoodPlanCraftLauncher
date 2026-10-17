@@ -402,12 +402,6 @@ if (floatCloseBtn) {
 
 export const settingsNumInput: HTMLInputElement | null = document.getElementById('num-threads') as HTMLInputElement | null;
 
-export const settingsBtnMinus: HTMLElement | null = document.getElementById('btn-minus');
-
-export const settingsBtnPlus: HTMLElement | null = document.getElementById('btn-plus');
-
-export const settingsBtnSave: HTMLElement | null = document.getElementById('btn-save');
-
 export const enableMoreEl: HTMLInputElement | null = document.getElementById('enable-more') as HTMLInputElement | null;
 
 export function setStatus(text: string, type: string = 'info'): void {

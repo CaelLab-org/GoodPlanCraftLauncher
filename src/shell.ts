@@ -9,9 +9,10 @@
 // __IMPORTS_BEGIN__
 import { BrowserWindow, Menu, app, dialog, ipcMain, shell } from 'electron';
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 
-import { BASE_DIR, writeLog } from './config';
+import { APP_VERSION, BASE_DIR, getSystemMemoryInfo, writeLog } from './config';
 import { isDeveloperMode, isDownloading, isJavaDownloading } from './state';
 // __IMPORTS_END__
 
@@ -199,100 +200,124 @@ ipcMain.handle('write-json-file', async (_, subPath: string, fileName: string, d
 });
 
 
-ipcMain.handle('get-memory-usage', () => {
-  return new Promise<number>((resolve) => {
-    if (process.platform === 'win32') {
-      const { spawn } = require('child_process');
-      const wmic = spawn('wmic', ['process', 'where', `processid=${process.pid}`, 'get', 'WorkingSetSize', '/value']);
-      
-      let output: string = '';
-      wmic.stdout.on('data', (data: any) => {
-        output += data.toString();
-      });
-      
-      wmic.on('close', (code: number | null) => {
-        try {
-          const match: RegExpMatchArray | null = output.match(/WorkingSetSize=(\d+)/);
-          if (match) {
-            const memBytes: number = parseInt(match[1]);
-            const memGB: number = memBytes / (1024 * 1024 * 1024);
-            writeLog(`[内存获取] WMIC成功: ${memGB.toFixed(2)}GB`);
-            resolve(parseFloat(memGB.toFixed(2)));
-          } else {
-            writeLog(`[内存获取] WMIC匹配失败，输出: "${output.trim()}"`);
-            const memUsage = process.memoryUsage();
-            const memGB: number = memUsage.heapUsed / (1024 * 1024 * 1024);
-            resolve(parseFloat(memGB.toFixed(2)));
-          }
-        } catch (e: any) {
-          writeLog(`[内存获取] WMIC解析失败: ${e.message}`);
-          const memUsage = process.memoryUsage();
-          const memGB: number = memUsage.heapUsed / (1024 * 1024 * 1024);
-          resolve(parseFloat(memGB.toFixed(2)));
-        }
-      });
-      
-      wmic.on('error', (e: any) => {
-        writeLog(`[内存获取] WMIC调用失败: ${e.message}`);
-        const memUsage = process.memoryUsage();
-        const memGB: number = memUsage.heapUsed / (1024 * 1024 * 1024);
-        resolve(parseFloat(memGB.toFixed(2)));
-      });
-    } else {
-      const memUsage = process.memoryUsage();
-      const memGB: number = memUsage.heapUsed / (1024 * 1024 * 1024);
-      resolve(parseFloat(memGB.toFixed(2)));
+function getLauncherWorkingSetMB(): number {
+  try {
+    const totalKB: number = app.getAppMetrics().reduce((sum: number, metric: any) => {
+      return sum + (metric.memory?.workingSetSize || 0);
+    }, 0);
+    return Math.round(totalKB / 1024);
+  } catch {
+    return 0;
+  }
+}
+
+
+export function trimWorkingSets(): Promise<{ beforeMB: number; afterMB: number; freedMB: number }> {
+  const beforeMB: number = getLauncherWorkingSetMB();
+
+  return new Promise((resolve) => {
+    if (process.platform !== 'win32') {
+      resolve({ beforeMB, afterMB: beforeMB, freedMB: 0 });
+      return;
     }
-  });
-});
 
+    const typeDef: string = [
+      'using System;',
+      'using System.Runtime.InteropServices;',
+      'public static class GpclMem {',
+      '  [DllImport("psapi.dll")] public static extern bool EmptyWorkingSet(IntPtr h);',
+      '  [DllImport("kernel32.dll")] public static extern IntPtr OpenProcess(int access, bool inherit, int pid);',
+      '  [DllImport("kernel32.dll")] public static extern bool CloseHandle(IntPtr h);',
+      '}'
+    ].join('\n');
 
-ipcMain.handle('optimize-memory', async () => {
-  writeLog('[内存优化] 开始执行内存优化...');
-  
-  if (process.platform === 'win32') {
-    const { exec } = require('child_process');
-    
-    return new Promise<boolean>((resolve) => {
-      exec('rundll32.exe advapi32.dll,ProcessIdleTasks', { timeout: 30000 }, (error: any, stdout: string, stderr: string) => {
-        if (error) {
-          writeLog(`[内存优化] ProcessIdleTasks执行失败: ${error.message}`);
-        }
-        
-        setTimeout(() => {
-          if (global.gc) {
-            writeLog('[内存优化] 执行V8垃圾回收...');
-            global.gc();
-          }
-          
-          if (mainWindow) {
-            writeLog('[内存优化] 清理渲染进程缓存...');
-            mainWindow.webContents.session.clearCache().catch((e: any) => writeLog(`[内存优化] 清理缓存失败: ${e.message}`));
-            mainWindow.webContents.session.clearStorageData().catch((e: any) => writeLog(`[内存优化] 清理存储失败: ${e.message}`));
-          }
-          
-          setTimeout(() => {
-            writeLog('[内存优化] 内存优化完成');
-            resolve(true);
-          }, 2000);
-        }, 3000);
-      });
+    const script: string = [
+      `Add-Type -TypeDefinition @'`,
+      typeDef,
+      `'@`,
+      `$root = ${process.pid}`,
+      `$all = Get-CimInstance Win32_Process | Select-Object ProcessId, ParentProcessId`,
+      `$queue = New-Object System.Collections.Queue`,
+      `$seen = @{}`,
+      `$queue.Enqueue([int]$root)`,
+      `$count = 0`,
+      `while ($queue.Count -gt 0) {`,
+      `  $procId = [int]$queue.Dequeue()`,
+      `  if ($seen.ContainsKey($procId)) { continue }`,
+      `  $seen[$procId] = $true`,
+      `  $h = [GpclMem]::OpenProcess(0x0500, $false, $procId)`,
+      `  if ($h -ne [IntPtr]::Zero) {`,
+      `    if ([GpclMem]::EmptyWorkingSet($h)) { $count++ }`,
+      `    [GpclMem]::CloseHandle($h) | Out-Null`,
+      `  }`,
+      `  foreach ($child in $all) {`,
+      `    if ([int]$child.ParentProcessId -eq $procId) { $queue.Enqueue([int]$child.ProcessId) }`,
+      `  }`,
+      `}`,
+      `Write-Output ("TRIMMED|" + $count)`
+    ].join('\n');
+
+    const { spawn } = require('child_process');
+    const ps = spawn('powershell', ['-NoProfile', '-NonInteractive', '-Command', script], { windowsHide: true });
+    let output: string = '';
+    let settled: boolean = false;
+
+    const finish = (): void => {
+      if (settled) return;
+      settled = true;
+      const afterMB: number = getLauncherWorkingSetMB();
+      writeLog(`[内存优化] 工作集: ${beforeMB}MB -> ${afterMB}MB，共处理 ${output.match(/TRIMMED\|(\d+)/)?.[1] || '0'} 个进程`);
+      resolve({ beforeMB, afterMB, freedMB: Math.max(0, beforeMB - afterMB) });
+    };
+
+    ps.stdout?.on('data', (data: any) => { output += data.toString(); });
+    ps.stderr?.on('data', (data: any) => {
+      const text: string = data.toString().trim();
+      if (text) writeLog(`[内存优化] ${text}`);
     });
-  } else {
-    if (global.gc) {
-      writeLog('[内存优化] 执行V8垃圾回收...');
-      global.gc();
-    }
-    
-    if (mainWindow) {
-      writeLog('[内存优化] 清理渲染进程缓存...');
-      await mainWindow.webContents.session.clearCache();
-      await mainWindow.webContents.session.clearStorageData();
-    }
-    
-    writeLog('[内存优化] 内存优化完成');
-    return true;
+    ps.on('error', (error: any) => {
+      writeLog(`[内存优化] 执行失败: ${error.message}`);
+      finish();
+    });
+    ps.on('exit', () => finish());
+    setTimeout(() => {
+      if (!settled) {
+        try { ps.kill(); } catch {}
+        writeLog('[内存优化] 执行超时');
+        finish();
+      }
+    }, 15000);
+  });
+}
+
+
+ipcMain.handle('get-memory-usage', () => getLauncherWorkingSetMB());
+
+
+ipcMain.handle('get-system-memory', () => getSystemMemoryInfo());
+
+
+ipcMain.handle('optimize-memory', () => trimWorkingSets());
+
+
+ipcMain.handle('get-license-text', () => {
+  try {
+    const localPath: string = path.join(__dirname, 'LICENSE.txt');
+    const sourcePath: string = path.join(__dirname, '..', 'LICENSE');
+    return fs.readFileSync(fs.existsSync(localPath) ? localPath : sourcePath, 'utf8');
+  } catch (error: any) {
+    writeLog(`[关于] 读取许可证失败: ${error.message}`);
+    return '';
   }
 });
+
+
+ipcMain.handle('get-runtime-info', () => ({
+  appVersion: APP_VERSION || app.getVersion(),
+  electron: process.versions.electron || '',
+  chrome: process.versions.chrome || '',
+  node: process.versions.node || '',
+  platform: `${os.type()} ${os.release()} (${os.arch()})`
+}));
 
 

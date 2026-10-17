@@ -13,10 +13,10 @@ import os from 'os';
 import path from 'path';
 import { spawn, spawnSync } from 'child_process';
 
-import { DEFAULT_SETTINGS, GAME_DIR, LOG_FILE, loadSettings, writeLog } from './config';
+import { DEFAULT_SETTINGS, GAME_DIR, LOG_FILE, computeAutoMemoryMB, loadSettings, writeLog } from './config';
 import { generateLaunchDisplayName } from './download';
 import { downloadAndInstallJava, ensureJavaRuntime, getJavaVersionFromVersionData } from './java';
-import { mainWindow } from './shell';
+import { mainWindow, trimWorkingSets } from './shell';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const AdmZip = require('adm-zip');
 // __IMPORTS_END__
@@ -75,6 +75,12 @@ export let gameTitleTemplate: string = '';
 export let gameTitleContext: any = null;
 
 export let gameTitleSent: string = '';
+
+export let gameTitleKeepAlive: boolean = false;
+
+export let gameTitleFoundAt: number | null = null;
+
+export const GAME_TITLE_ENFORCE_MS: number = 20000;
 
 
 export const GAME_LOG_KEEP_BYTES: number = 256 * 1024;
@@ -264,6 +270,7 @@ export function startGameTitlePowerShell(): void {
   if (!gameTitleTemplate) return;
   const pid: number | null = currentGamePid;
   if (!pid) return;
+  gameTitleFoundAt = null;
 
   const typeDef: string = [
     'using System; using System.Text; using System.Runtime.InteropServices;',
@@ -322,7 +329,10 @@ export function startGameTitlePowerShell(): void {
       while (index >= 0) {
         const line: string = output.slice(0, index).trim();
         output = output.slice(index + 1);
-        if (line.startsWith('FOUND|')) writeLog(`[窗口标题] 已找到游戏窗口，句柄: ${line.slice(6)}`);
+        if (line.startsWith('FOUND|')) {
+          gameTitleFoundAt = Date.now();
+          writeLog(`[窗口标题] 已找到游戏窗口，句柄: ${line.slice(6)}`);
+        }
         index = output.indexOf('\n');
       }
     });
@@ -345,6 +355,11 @@ export function startGameTitlePowerShell(): void {
 
 export function pushGameTitle(): void {
   if (!gameTitlePowerShell || !gameTitlePowerShell.stdin || gameTitlePowerShell.stdin.destroyed) return;
+  if (!gameTitleKeepAlive && gameTitleFoundAt && Date.now() - gameTitleFoundAt >= GAME_TITLE_ENFORCE_MS) {
+    writeLog('[窗口标题] 20 秒已到，停止持续校正');
+    stopGameTitlePowerShell();
+    return;
+  }
   const title: string = renderGameTitle(gameTitleTemplate, gameTitleContext);
   try {
     gameTitlePowerShell.stdin.write(`${title}\n`);
@@ -357,10 +372,32 @@ export function pushGameTitle(): void {
 
 export function stopGameTitlePowerShell(): void {
   gameTitleSent = '';
+  gameTitleFoundAt = null;
   if (gameTitlePowerShell) {
     try { gameTitlePowerShell.stdin.end(); } catch {}
     try { gameTitlePowerShell.kill(); } catch {}
     gameTitlePowerShell = null;
+  }
+}
+
+
+export function applyProcessPriority(pid: number, priority: string): void {
+  if (process.platform !== 'win32') return;
+  const priorityClass: string = priority === 'low' ? 'BelowNormal' : priority === 'high' ? 'High' : '';
+  if (!priorityClass) return;
+
+  const script: string = `try { (Get-Process -Id ${pid} -ErrorAction Stop).PriorityClass = '${priorityClass}'; Write-Output 'OK' } catch { Write-Output ('ERR|' + $_.Exception.Message) }`;
+  try {
+    const ps = spawn('powershell', ['-NoProfile', '-NonInteractive', '-Command', script], { windowsHide: true });
+    let output: string = '';
+    ps.stdout?.on('data', (data: any) => { output += data.toString(); });
+    ps.on('error', (error: any) => writeLog(`[启动] 设置进程优先级失败: ${error.message}`));
+    ps.on('close', () => {
+      if (output.includes('OK')) writeLog(`[启动] 进程优先级已设置为 ${priorityClass}`);
+      else writeLog(`[启动] 设置进程优先级失败: ${output.trim()}`);
+    });
+  } catch (error: any) {
+    writeLog(`[启动] 设置进程优先级失败: ${error.message}`);
   }
 }
 
@@ -566,7 +603,28 @@ export function resolveInheritsFrom(vd: any, gameDir: string): any {
 }
 
 
-export function buildLaunchArgs(vd: any, gameDir: string, versionId: string, username: string, windowMode: string, memoryMB: number | null, serverIp: string | null, authInfo?: { uuid: string; accessToken: string; userType: string }): any {
+export const G1GC_ARGS: string[] = [
+  '-XX:+UseG1GC',
+  '-XX:+ParallelRefProcEnabled',
+  '-XX:MaxGCPauseMillis=200',
+  '-XX:+UnlockExperimentalVMOptions',
+  '-XX:+DisableExplicitGC',
+  '-XX:G1NewSizePercent=30',
+  '-XX:G1MaxNewSizePercent=40',
+  '-XX:G1HeapRegionSize=8M',
+  '-XX:G1ReservePercent=20',
+  '-XX:G1HeapWastePercent=5',
+  '-XX:G1MixedGCCountTarget=4',
+  '-XX:InitiatingHeapOccupancyPercent=15',
+  '-XX:G1MixedGCLiveThresholdPercent=90',
+  '-XX:G1RSetUpdatingPauseTimePercent=5',
+  '-XX:SurvivorRatio=32',
+  '-XX:+PerfDisableSharedMem',
+  '-XX:MaxTenuringThreshold=1'
+];
+
+
+export function buildLaunchArgs(vd: any, gameDir: string, versionId: string, username: string, windowMode: string, memoryMB: number | null, serverIp: string | null, authInfo?: { uuid: string; accessToken: string; userType: string }, launchOptions?: { jvmArgsRaw?: string; gcPreset?: string; windowSize?: string; windowWidth?: number; windowHeight?: number }): any {
   const cp: string[] = [];
   
   const clientJar: string = path.join(gameDir, 'versions', versionId, `${versionId}.jar`);
@@ -605,16 +663,26 @@ export function buildLaunchArgs(vd: any, gameDir: string, versionId: string, use
   const nativesDir: string = path.join(gameDir, 'versions', versionId, 'natives');
   const assetsDir: string = path.join(gameDir, 'assets');
 
-  const jvmArgs: string[] = [
-    `-Djava.library.path=${nativesDir}`,
-    '-cp', cp.join(';'),
-  ];
+  const jvmArgs: string[] = [];
 
   if (memoryMB) {
-    jvmArgs.unshift(`-Xmx${memoryMB}M`);
+    jvmArgs.push(`-Xmx${memoryMB}M`);
     writeLog(`[启动] 已设置最大内存: ${memoryMB}M`);
   } else {
     writeLog(`[启动] 未设置内存限制`);
+  }
+
+  if (launchOptions?.gcPreset === 'g1gc') {
+    jvmArgs.push(...G1GC_ARGS);
+    writeLog('[启动] 已启用 G1GC 调优参数');
+  }
+
+  jvmArgs.push(`-Djava.library.path=${nativesDir}`, '-cp', cp.join(';'));
+
+  const extraJvmArgs: string[] = splitArgs(launchOptions?.jvmArgsRaw || '');
+  if (extraJvmArgs.length > 0) {
+    jvmArgs.push(...extraJvmArgs);
+    writeLog(`[启动] 已追加自定义 JVM 参数: ${extraJvmArgs.length} 项`);
   }
 
   const vars: any = {
@@ -660,20 +728,39 @@ export function buildLaunchArgs(vd: any, gameDir: string, versionId: string, use
     ];
   }
 
+  let targetWidth: number = 0;
+  let targetHeight: number = 0;
+  const sizePreset: string = launchOptions?.windowSize || 'default';
+  if (sizePreset === 'custom') {
+    targetWidth = Math.max(0, Number(launchOptions?.windowWidth) || 0);
+    targetHeight = Math.max(0, Number(launchOptions?.windowHeight) || 0);
+  } else if (sizePreset !== 'default') {
+    const parts: string[] = sizePreset.split('x');
+    targetWidth = Math.max(0, parseInt(parts[0], 10) || 0);
+    targetHeight = Math.max(0, parseInt(parts[1], 10) || 0);
+  }
+
   if (windowMode === 'fullscreen') {
     gameArgs.push('--fullscreen');
     writeLog(`[启动] 已添加全屏参数: --fullscreen`);
   } else if (windowMode === 'borderless') {
-    
+    const borderlessWidth: number = targetWidth || 1920;
+    const borderlessHeight: number = targetHeight || 1080;
     gameArgs.push('--fullscreen');
     gameArgs.push('--width');
-    gameArgs.push('1920');
+    gameArgs.push(String(borderlessWidth));
     gameArgs.push('--height');
-    gameArgs.push('1080');
-    writeLog(`[启动] 已添加无边框窗口参数: --fullscreen --width 1920 --height 1080`);
+    gameArgs.push(String(borderlessHeight));
+    writeLog(`[启动] 已添加无边框窗口参数: --fullscreen --width ${borderlessWidth} --height ${borderlessHeight}`);
   } else if (windowMode === 'minimized') {
     
     writeLog(`[启动] 已设置最小化模式`);
+  } else if (targetWidth > 0 && targetHeight > 0) {
+    gameArgs.push('--width');
+    gameArgs.push(String(targetWidth));
+    gameArgs.push('--height');
+    gameArgs.push(String(targetHeight));
+    writeLog(`[启动] 已添加窗口大小参数: ${targetWidth}x${targetHeight}`);
   }
 
   if (serverIp && serverIp.trim()) {
@@ -762,11 +849,16 @@ ipcMain.handle('launch-minecraft', async (_, opt: any) => {
       writeLog(`[启动] 读取版本设置失败: ${e.message}`);
     }
 
-    if (memoryMB === null && settings.game?.memory) {
-      const globalMemory: number = parseFloat(settings.game.memory);
-      if (!isNaN(globalMemory)) {
-        memoryMB = Math.floor(globalMemory * 1024);
-        writeLog(`[启动] 使用全局内存设置: ${memoryMB}M`);
+    if (memoryMB === null) {
+      if (settings.game?.memory === 'auto') {
+        memoryMB = computeAutoMemoryMB();
+        writeLog(`[启动] 使用自动内存设置: ${memoryMB}M`);
+      } else if (settings.game?.memory) {
+        const globalMemory: number = parseFloat(settings.game.memory);
+        if (!isNaN(globalMemory)) {
+          memoryMB = Math.floor(globalMemory * 1024);
+          writeLog(`[启动] 使用全局内存设置: ${memoryMB}M`);
+        }
       }
     }
 
@@ -826,10 +918,19 @@ ipcMain.handle('launch-minecraft', async (_, opt: any) => {
     const authInfo: any = opt.authUuid && opt.authAccessToken
       ? { uuid: opt.authUuid, accessToken: opt.authAccessToken, userType: opt.authUserType || 'msa' }
       : undefined;
-    const { jvmArgs, gameArgs, mainClass } = buildLaunchArgs(vd, gameDir, versionId, username, actualWindowMode, memoryMB, serverIp, authInfo);
+    const { jvmArgs, gameArgs, mainClass } = buildLaunchArgs(vd, gameDir, versionId, username, actualWindowMode, memoryMB, serverIp, authInfo, {
+      jvmArgsRaw: settings.game?.jvmArgs,
+      gcPreset: settings.game?.gcPreset,
+      windowSize: settings.game?.windowSize,
+      windowWidth: settings.game?.windowWidth,
+      windowHeight: settings.game?.windowHeight
+    });
     const args: string[] = [...jvmArgs, mainClass, ...gameArgs];
 
-    gameTitleTemplate = (settings.game && settings.game.windowTitle) || DEFAULT_SETTINGS.game.windowTitle;
+    gameTitleTemplate = settings.game && typeof settings.game.windowTitle === 'string'
+      ? settings.game.windowTitle
+      : DEFAULT_SETTINGS.game.windowTitle;
+    gameTitleKeepAlive = settings.game?.keepWindowTitle === true;
     // 标题由外部 SetWindowText 设置：客户端会把 --title 当未识别参数直接忽略
     // （实测 1.21.11 日志：Completely ignored arguments: [--title, ...]）
     {
@@ -850,8 +951,11 @@ ipcMain.handle('launch-minecraft', async (_, opt: any) => {
     writeLog(`[启动] 参数数: ${args.length}`);
     writeLog(`[启动] JVM参数: ${JSON.stringify(jvmArgs)}`);
     writeLog(`[启动] 游戏参数: ${JSON.stringify(gameArgs.slice(0, 10))}...`);
-    writeLog(`[启动] Classpath条目数: ${jvmArgs[2].split(';').length}`);
-    writeLog(`[启动] Classpath总长度: ${jvmArgs[2].length} 字符`);
+
+    if (settings.game?.optimizeBeforeLaunch) {
+      writeLog('[启动] 启动前执行内存优化...');
+      await trimWorkingSets();
+    }
 
     let proc: any;
     for (let i: number = 0; i < 3; i++) {
@@ -868,6 +972,10 @@ ipcMain.handle('launch-minecraft', async (_, opt: any) => {
         writeLog(`启动游戏失败：${e.message}`);
         return { success: false, error: e.message };
       }
+    }
+
+    if (proc && settings.game?.processPriority && settings.game.processPriority !== 'normal') {
+      applyProcessPriority(proc.pid, settings.game.processPriority);
     }
 
     // 没有在跑的游戏时，以“这次启动前”为崩溃报告的基准
@@ -998,6 +1106,11 @@ ipcMain.handle('launch-minecraft', async (_, opt: any) => {
     if (launchCancelFlag) {
       writeLog('[启动] 窗口检测结束后检测到取消标志');
       return { success: false, error: '启动已取消', cancelled: true };
+    }
+
+    if (settings.game?.launcherVisibility === 'minimize' && mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.minimize();
+      writeLog('[启动] 已最小化启动器');
     }
 
     return { success: true, pid: proc.pid };

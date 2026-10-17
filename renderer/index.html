@@ -481,35 +481,71 @@
               <div class="settings-page-inner">
                 <div class="settings-group">
                   <h2 class="settings-group-title">游戏设置</h2>
-                  <p class="settings-group-desc">配置游戏运行相关参数</p>
-                  
-                  <div class="setting-card">
+                  <p class="settings-group-desc">内存、窗口和启动方式</p>
+
+                  <div class="setting-card setting-card--group">
+                    <div class="setting-card-head">
+                      <span class="setting-card-icon"><span class="icon icon-thread"></span></span>
+                      <div>
+                        <div class="setting-card-title">内存分配</div>
+                        <div class="setting-card-desc">自动模式会根据电脑内存给系统留出空间</div>
+                      </div>
+                    </div>
+
                     <div class="setting-row">
                       <div class="setting-left">
-                        <div class="setting-label">游戏内存</div>
-                        <div class="setting-desc">设置游戏分配的最大内存（GB）</div>
+                        <div class="setting-label">分配方式</div>
+                        <div class="setting-desc">由 GPCL 自动控制，或手动指定上限</div>
                       </div>
                       <div class="setting-control">
-                        <div class="custom-select" data-select-id="settings-memory">
-                          <div class="custom-select-trigger">
-                            <span class="custom-select-value">2 GB</span>
-                            <span class="custom-select-arrow icon icon-chevron" ></span>
-                          </div>
-                          <div class="custom-select-dropdown">
-                            <div class="custom-select-option" data-value="0.5">512 MB</div>
-                            <div class="custom-select-option" data-value="1">1 GB</div>
-                            <div class="custom-select-option selected" data-value="2">2 GB</div>
-                            <div class="custom-select-option" data-value="4">4 GB</div>
-                            <div class="custom-select-option" data-value="6">6 GB</div>
-                            <div class="custom-select-option" data-value="8">8 GB</div>
-                            <div class="custom-select-option" data-value="16">16 GB</div>
-                          </div>
+                        <div class="segmented" id="settings-memory-mode">
+                          <label><input type="radio" name="memory-mode" value="auto" checked><span>自动</span></label>
+                          <label><input type="radio" name="memory-mode" value="custom"><span>自定义</span></label>
                         </div>
                       </div>
                     </div>
+
+                    <div class="setting-row" id="memory-custom-row">
+                      <div class="setting-left">
+                        <div class="setting-label">自定义上限</div>
+                        <div class="setting-desc">拖动选择分配给游戏的最大内存</div>
+                      </div>
+                      <div class="setting-control setting-control-slider">
+                        <input type="range" id="settings-memory-slider" class="range-input" min="1" max="16" step="1" value="4">
+                        <span class="range-value" id="settings-memory-value">4 GB</span>
+                      </div>
+                    </div>
+
+                    <div class="memory-usage">
+                      <div class="memory-usage-head"><span>系统内存（已用 / 总计）</span><span id="memory-usage-label">-- / --</span></div>
+                      <div class="memory-usage-track"><div class="memory-usage-used" id="memory-usage-used"></div></div>
+                      <div class="memory-usage-foot"><span>当前可用 <b id="memory-free-label">--</b></span><span>GPCL 将分配 <b id="memory-alloc-label">--</b></span></div>
+                    </div>
+                    <div class="setting-hint memory-warning hidden" id="memory-warning">当前可用内存较少，自动分配已按可用内存下调；启动前建议关闭一些程序。</div>
+
+                    <div class="setting-row">
+                      <div class="setting-left">
+                        <div class="setting-label">启动游戏前优化内存</div>
+                        <div class="setting-desc">启动前回收 GPCL 自身占用的内存，不影响正在运行的游戏</div>
+                      </div>
+                      <div class="setting-control">
+                        <label class="switch">
+                          <input type="checkbox" id="optimize-before-launch">
+                          <span class="slider"></span>
+                        </label>
+                      </div>
+                    </div>
                   </div>
-                  
-                  <div class="setting-card">
+
+                  <div class="setting-card setting-card--group">
+                    <div class="setting-card-head">
+                      <span class="setting-card-icon"><span class="icon icon-gamepad"></span></span>
+                      <div>
+                        <div class="setting-card-title">显示</div>
+                        <div class="setting-card-desc">窗口模式、尺寸和标题</div>
+                      </div>
+                    </div>
+
                     <div class="setting-row">
                       <div class="setting-left">
                         <div class="setting-label">窗口模式</div>
@@ -530,13 +566,45 @@
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div class="setting-card">
+                    <div class="setting-row">
+                      <div class="setting-left">
+                        <div class="setting-label">窗口大小</div>
+                        <div class="setting-desc">窗口模式下使用的游戏分辨率</div>
+                      </div>
+                      <div class="setting-control">
+                        <div class="custom-select" data-select-id="settings-window-size">
+                          <div class="custom-select-trigger">
+                            <span class="custom-select-value">默认</span>
+                            <span class="custom-select-arrow icon icon-chevron" ></span>
+                          </div>
+                          <div class="custom-select-dropdown">
+                            <div class="custom-select-option selected" data-value="default">默认</div>
+                            <div class="custom-select-option" data-value="1280x720">1280 × 720</div>
+                            <div class="custom-select-option" data-value="1600x900">1600 × 900</div>
+                            <div class="custom-select-option" data-value="1920x1080">1920 × 1080</div>
+                            <div class="custom-select-option" data-value="custom">自定义</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="setting-row hidden" id="window-size-custom-row">
+                      <div class="setting-left">
+                        <div class="setting-label">自定义尺寸</div>
+                        <div class="setting-desc">宽 × 高（像素）</div>
+                      </div>
+                      <div class="setting-control">
+                        <input type="number" id="settings-window-width" class="num-display" min="320" max="7680" value="854">
+                        <span class="size-sep">×</span>
+                        <input type="number" id="settings-window-height" class="num-display" min="240" max="4320" value="480">
+                      </div>
+                    </div>
+
                     <div class="setting-row">
                       <div class="setting-left">
                         <div class="setting-label">游戏窗口标题</div>
-                        <div class="setting-desc">自定义 Minecraft 窗口标题，支持 {mc_version}、{time} 等魔术字</div>
+                        <div class="setting-desc">支持 {mc_version}、{time} 等魔术字</div>
                       </div>
                       <div class="setting-control setting-control-wide">
                         <input type="text" id="settings-window-title" class="setting-input" placeholder="Minecraft {mc_version} (GPCL)" spellcheck="false">
@@ -546,6 +614,62 @@
                       可用：<code>{mc_version}</code> <code>{mc_id}</code> <code>{username}</code> <code>{gpcl_version}</code> <code>{date}</code> <code>{time}</code> <code>{datetime}</code> <code>{java}</code> <code>{memory}</code>
                       <a href="#" id="window-title-help">魔术字说明</a><br>
                       留空表示不修改游戏窗口标题
+                    </div>
+
+                    <div class="setting-row">
+                      <div class="setting-left">
+                        <div class="setting-label">尽量保持该名称</div>
+                        <div class="setting-desc">关闭时只在窗口出现后校正 20 秒；开启后整局游戏一直保持</div>
+                      </div>
+                      <div class="setting-control">
+                        <label class="switch">
+                          <input type="checkbox" id="settings-keep-window-title">
+                          <span class="slider"></span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="setting-card setting-card--group">
+                    <div class="setting-card-head">
+                      <span class="setting-card-icon"><span class="icon icon-sliders"></span></span>
+                      <div>
+                        <div class="setting-card-title">启动行为</div>
+                        <div class="setting-card-desc">游戏进程和启动器窗口</div>
+                      </div>
+                    </div>
+
+                    <div class="setting-row">
+                      <div class="setting-left">
+                        <div class="setting-label">进程优先级</div>
+                        <div class="setting-desc">让游戏更积极地抢 CPU，或把资源让给其他程序</div>
+                      </div>
+                      <div class="setting-control">
+                        <div class="custom-select" data-select-id="settings-process-priority">
+                          <div class="custom-select-trigger">
+                            <span class="custom-select-value">中（默认）</span>
+                            <span class="custom-select-arrow icon icon-chevron" ></span>
+                          </div>
+                          <div class="custom-select-dropdown">
+                            <div class="custom-select-option" data-value="low">低</div>
+                            <div class="custom-select-option selected" data-value="normal">中（默认）</div>
+                            <div class="custom-select-option" data-value="high">高</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="setting-row">
+                      <div class="setting-left">
+                        <div class="setting-label">启动器可见性</div>
+                        <div class="setting-desc">游戏启动后怎么处理启动器窗口</div>
+                      </div>
+                      <div class="setting-control">
+                        <div class="segmented" id="settings-launcher-visibility">
+                          <label><input type="radio" name="launcher-visibility" value="keep" checked><span>保持不变</span></label>
+                          <label><input type="radio" name="launcher-visibility" value="minimize"><span>最小化</span></label>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -558,7 +682,7 @@
                   <h2 class="settings-group-title">兼容性设置</h2>
                   <p class="settings-group-desc">解决启动器兼容性问题</p>
                   
-                  <div class="setting-card">
+                  <div class="setting-card setting-card--group">
                     <div class="setting-row">
                       <div class="setting-left">
                         <div class="setting-label">恢复默认设置</div>
@@ -580,30 +704,30 @@
               <div class="settings-page-inner">
                 <div class="settings-group">
                   <h2 class="settings-group-title">外观设置</h2>
-                  <p class="settings-group-desc">配置启动器外观相关参数</p>
-                  
-                  <div class="setting-card">
+                  <p class="settings-group-desc">主题、缩放和启动时的显示</p>
+
+                  <div class="setting-card setting-card--group">
+                    <div class="setting-card-head">
+                      <span class="setting-card-icon"><span class="icon icon-palette"></span></span>
+                      <div>
+                        <div class="setting-card-title">外观</div>
+                        <div class="setting-card-desc">启动器本身的显示方式</div>
+                      </div>
+                    </div>
+
                     <div class="setting-row">
                       <div class="setting-left">
                         <div class="setting-label">主题模式</div>
                         <div class="setting-desc">选择启动器主题</div>
                       </div>
                       <div class="setting-control">
-                        <div class="custom-select" data-select-id="settings-theme">
-                          <div class="custom-select-trigger">
-                            <span class="custom-select-value">浅色模式</span>
-                            <span class="custom-select-arrow icon icon-chevron" ></span>
-                          </div>
-                          <div class="custom-select-dropdown">
-                            <div class="custom-select-option" data-value="dark">深色模式</div>
-                            <div class="custom-select-option selected" data-value="light">浅色模式</div>
-                          </div>
+                        <div class="segmented" id="settings-theme">
+                          <label><input type="radio" name="theme" value="dark"><span>深色</span></label>
+                          <label><input type="radio" name="theme" value="light" checked><span>浅色</span></label>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  
-                  <div class="setting-card">
+
                     <div class="setting-row">
                       <div class="setting-left">
                         <div class="setting-label">界面缩放</div>
@@ -629,7 +753,15 @@
                     </div>
                   </div>
 
-                  <div class="setting-card">
+                  <div class="setting-card setting-card--group">
+                    <div class="setting-card-head">
+                      <span class="setting-card-icon"><span class="icon icon-play"></span></span>
+                      <div>
+                        <div class="setting-card-title">启动显示</div>
+                        <div class="setting-card-desc">进入游戏前的动画和提示</div>
+                      </div>
+                    </div>
+
                     <div class="setting-row">
                       <div class="setting-left">
                         <div class="setting-label">播放启动动画</div>
@@ -642,13 +774,11 @@
                         </label>
                       </div>
                     </div>
-                  </div>
 
-                  <div class="setting-card">
                     <div class="setting-row">
                       <div class="setting-left">
-                        <div class="setting-label">不渲染Splash</div>
-                        <div class="setting-desc">尝试在启动时不渲染Splash直接进入主界面，但可能延长白屏时间，同时对于预编译不友好</div>
+                        <div class="setting-label">不渲染 Splash</div>
+                        <div class="setting-desc">启动时不渲染 Splash 直接进入主界面，但可能延长白屏时间</div>
                       </div>
                       <div class="setting-control">
                         <label class="switch">
@@ -657,13 +787,11 @@
                         </label>
                       </div>
                     </div>
-                  </div>
 
-                  <div class="setting-card">
                     <div class="setting-row">
                       <div class="setting-left">
                         <div class="setting-label">启动小知识</div>
-                        <div class="setting-desc">启动游戏时显示一条 Minecraft 小知识，默认概率出现</div>
+                        <div class="setting-desc">启动游戏时显示一条 Minecraft 小知识</div>
                       </div>
                       <div class="setting-control">
                         <div class="custom-select" data-select-id="settings-tip-frequency">
@@ -680,13 +808,11 @@
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div class="setting-card">
                     <div class="setting-row">
                       <div class="setting-left">
                         <div class="setting-label">启用更多</div>
-                        <div class="setting-desc">显示顶部导航栏中的"更多"菜单</div>
+                        <div class="setting-desc">显示顶部导航栏中的「更多」菜单</div>
                       </div>
                       <div class="setting-control">
                         <label class="switch">
@@ -704,23 +830,101 @@
               <div class="settings-page-inner">
                 <div class="settings-group">
                   <h2 class="settings-group-title">下载设置</h2>
-                  <p class="settings-group-desc">配置Minecraft版本下载相关参数</p>
-                  
-                  <div class="setting-card">
+                  <p class="settings-group-desc">下载源、并发和速度</p>
+
+                  <div class="setting-card setting-card--group">
+                    <div class="setting-card-head">
+                      <span class="setting-card-icon"><span class="icon icon-download"></span></span>
+                      <div>
+                        <div class="setting-card-title">下载源</div>
+                        <div class="setting-card-desc">官方源和 BMCLAPI 镜像的优先顺序</div>
+                      </div>
+                    </div>
+
                     <div class="setting-row">
                       <div class="setting-left">
-                        <div class="setting-label">最大线程数</div>
-                        <div class="setting-desc">在下载时，由于小文件较多，需要使用多线程下载提高速度，此处数值越高，代表可建立的连接数越高，但越消耗性能。建议值：64-128。</div>
+                        <div class="setting-label">文件下载源</div>
+                        <div class="setting-desc">客户端、资源文件和依赖库</div>
                       </div>
                       <div class="setting-control">
-                        <button class="num-btn" id="btn-minus">−</button>
-                        <input type="number" class="num-display" id="num-threads" value="64" min="1" max="128">
-                        <button class="num-btn" id="btn-plus">+</button>
+                        <div class="custom-select" data-select-id="settings-file-source">
+                          <div class="custom-select-trigger">
+                            <span class="custom-select-value">优先官方，缓慢时换镜像</span>
+                            <span class="custom-select-arrow icon icon-chevron" ></span>
+                          </div>
+                          <div class="custom-select-dropdown">
+                            <div class="custom-select-option selected" data-value="auto">优先官方，缓慢时换镜像</div>
+                            <div class="custom-select-option" data-value="mirror-first">尽量使用镜像源</div>
+                            <div class="custom-select-option" data-value="official-first">优先使用官方源</div>
+                            <div class="custom-select-option" data-value="official-only">尽量使用官方源</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="setting-row">
+                      <div class="setting-left">
+                        <div class="setting-label">版本列表源</div>
+                        <div class="setting-desc">版本清单、版本 JSON 和资源索引</div>
+                      </div>
+                      <div class="setting-control">
+                        <div class="custom-select" data-select-id="settings-version-source">
+                          <div class="custom-select-trigger">
+                            <span class="custom-select-value">优先官方，缓慢时换镜像</span>
+                            <span class="custom-select-arrow icon icon-chevron" ></span>
+                          </div>
+                          <div class="custom-select-dropdown">
+                            <div class="custom-select-option selected" data-value="auto">优先官方，缓慢时换镜像</div>
+                            <div class="custom-select-option" data-value="mirror-first">尽量使用镜像源</div>
+                            <div class="custom-select-option" data-value="official-first">优先使用官方源</div>
+                            <div class="custom-select-option" data-value="official-only">尽量使用官方源</div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  <div class="setting-card">
+                  <div class="setting-card setting-card--group">
+                    <div class="setting-card-head">
+                      <span class="setting-card-icon"><span class="icon icon-thread"></span></span>
+                      <div>
+                        <div class="setting-card-title">速度</div>
+                        <div class="setting-card-desc">并发连接数和总下载速度上限</div>
+                      </div>
+                    </div>
+
+                    <div class="setting-row">
+                      <div class="setting-left">
+                        <div class="setting-label">最大线程数</div>
+                        <div class="setting-desc">小文件较多时提高并发能加快下载，建议 64–128</div>
+                      </div>
+                      <div class="setting-control setting-control-slider">
+                        <input type="range" id="num-threads" class="range-input" min="1" max="128" step="1" value="64">
+                        <span class="range-value" id="num-threads-value">64</span>
+                      </div>
+                    </div>
+
+                    <div class="setting-row">
+                      <div class="setting-left">
+                        <div class="setting-label">速度限制</div>
+                        <div class="setting-desc">所有下载任务共享这个上限，0 表示不限速；下次下载开始时生效</div>
+                      </div>
+                      <div class="setting-control setting-control-slider">
+                        <input type="range" id="settings-speed-limit" class="range-input" min="0" max="20" step="1" value="0">
+                        <span class="range-value" id="settings-speed-limit-value">不限速</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="setting-card setting-card--group">
+                    <div class="setting-card-head">
+                      <span class="setting-card-icon"><span class="icon icon-save"></span></span>
+                      <div>
+                        <div class="setting-card-title">Java 下载</div>
+                        <div class="setting-card-desc">Java 运行时单独使用下面的镜像源</div>
+                      </div>
+                    </div>
+
                     <div class="setting-row">
                       <div class="setting-left">
                         <div class="setting-label">Java 镜像源</div>
@@ -745,7 +949,7 @@
                     <div id="custom-java-mirror-container" class="setting-row hidden">
                       <div class="setting-left">
                         <div class="setting-label">自定义镜像源地址</div>
-                        <div class="setting-desc">支持使用 {v} 变量代表 Java 版本，例如：https://example.com/java/{v}/OpenJDK{v}U-jre_x64_windows_hotspot_{v}.zip</div>
+                        <div class="setting-desc">支持使用 {v} 变量代表 Java 版本</div>
                       </div>
                       <div class="setting-control setting-control-column">
                         <input type="text" id="custom-java-mirror-url" class="setting-input" placeholder="https://example.com/java/{v}/OpenJDK{v}U-jre_x64_windows_hotspot_{v}.zip">
@@ -774,9 +978,17 @@
               <div class="settings-page-inner">
                 <div class="settings-group">
                   <h2 class="settings-group-title">高级设置</h2>
-                  <p class="settings-group-desc">配置高级选项</p>
-                  
-                  <div class="setting-card">
+                  <p class="settings-group-desc">启动行为、日志和 Java 参数</p>
+
+                  <div class="setting-card setting-card--group">
+                    <div class="setting-card-head">
+                      <span class="setting-card-icon"><span class="icon icon-gear"></span></span>
+                      <div>
+                        <div class="setting-card-title">启动与日志</div>
+                        <div class="setting-card-desc">启动器自身的行为</div>
+                      </div>
+                    </div>
+
                     <div class="setting-row">
                       <div class="setting-left">
                         <div class="setting-label">防止多次启动</div>
@@ -789,13 +1001,11 @@
                         </label>
                       </div>
                     </div>
-                  </div>
 
-                  <div class="setting-card">
                     <div class="setting-row">
                       <div class="setting-left">
                         <div class="setting-label">开发者选项</div>
-                        <div class="setting-desc">启用后允许打开 DevTools、右键菜单及刷新页面</div>
+                        <div class="setting-desc">允许打开 DevTools、右键菜单及刷新页面</div>
                       </div>
                       <div class="setting-control">
                         <label class="switch">
@@ -804,13 +1014,11 @@
                         </label>
                       </div>
                     </div>
-                  </div>
 
-                  <div class="setting-card">
                     <div class="setting-row">
                       <div class="setting-left">
                         <div class="setting-label">自动清除日志</div>
-                        <div class="setting-desc">开启后将在启动时自动清理过期的日志文件</div>
+                        <div class="setting-desc">启动时自动清理过期的日志文件</div>
                       </div>
                       <div class="setting-control">
                         <label class="switch">
@@ -819,6 +1027,7 @@
                         </label>
                       </div>
                     </div>
+
                     <div id="log-retention-container" class="setting-row setting-row-indent">
                       <div class="setting-left">
                         <div class="setting-label">保留日志时间</div>
@@ -841,6 +1050,45 @@
                       </div>
                     </div>
                   </div>
+
+                  <div class="setting-card setting-card--group">
+                    <div class="setting-card-head">
+                      <span class="setting-card-icon"><span class="icon icon-bolt"></span></span>
+                      <div>
+                        <div class="setting-card-title">Java 高级</div>
+                        <div class="setting-card-desc">不懂就不要改，错误参数会让游戏直接起不来</div>
+                      </div>
+                    </div>
+
+                    <div class="setting-row setting-row-stack">
+                      <div class="setting-left">
+                        <div class="setting-label">自定义 JVM 参数</div>
+                        <div class="setting-desc">空格分隔，支持引号；留空使用默认参数</div>
+                      </div>
+                      <div class="setting-control-column">
+                        <textarea id="settings-jvm-args" class="setting-input setting-textarea" rows="3" placeholder="-XX:+UseG1GC" spellcheck="false"></textarea>
+                      </div>
+                    </div>
+
+                    <div class="setting-row">
+                      <div class="setting-left">
+                        <div class="setting-label">内存管理</div>
+                        <div class="setting-desc">G1GC 调优会追加一组常用的垃圾回收参数</div>
+                      </div>
+                      <div class="setting-control">
+                        <div class="custom-select" data-select-id="settings-gc-preset">
+                          <div class="custom-select-trigger">
+                            <span class="custom-select-value">默认</span>
+                            <span class="custom-select-arrow icon icon-chevron" ></span>
+                          </div>
+                          <div class="custom-select-dropdown">
+                            <div class="custom-select-option selected" data-value="default">默认</div>
+                            <div class="custom-select-option" data-value="g1gc">G1GC 调优</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -849,21 +1097,24 @@
               <div class="settings-page-inner">
                 <div class="settings-group">
                   <h2 class="settings-group-title">关于</h2>
-                  <p class="settings-group-desc">关于 Good Plan Craft Launcher</p>
-                  
-                  <div class="setting-card about-card">
+                  <p class="settings-group-desc">项目信息、链接和许可证</p>
+
+                  <div class="setting-card about-card about-hero">
                     <div class="about-header">
                       <img src="../static/icon/GPCL.png" alt="图标" class="about-icon">
                       <div class="about-info">
-                        <div class="about-title">Good Plan Craft Launcher</div>
+                        <div class="about-title">GoodPlanCraftLauncher</div>
                         <div class="about-version" id="about-version">版本: -</div>
+                        <div class="about-byline">虚舟实验室（CaelLab）</div>
                       </div>
                     </div>
-                    <button id="check-update-btn" class="check-update-btn">检查更新</button>
+                    <div class="about-actions">
+                      <button id="check-update-btn" class="check-update-btn">检查更新</button>
+                      <button id="go-download-btn" class="go-download-btn hidden">立即下载</button>
+                      <button id="open-website-btn" class="go-download-btn go-download-btn-secondary hidden">打开官网</button>
+                    </div>
                     <div id="update-status" class="update-status"></div>
-                    <button id="go-download-btn" class="go-download-btn hidden">立即下载</button>
-                    <button id="open-website-btn" class="go-download-btn go-download-btn-secondary hidden">打开官网</button>
-                    
+
                     <div class="auto-update-setting">
                       <div class="setting-row">
                         <div class="setting-left">
@@ -880,33 +1131,56 @@
                     </div>
                   </div>
 
-                  <div class="setting-card">
+                  <div class="setting-card about-section">
+                    <h3 class="about-section-title">链接</h3>
+                    <div class="about-links">
+                      <a class="about-link" href="https://gamets.caellab.com/gpcl/">
+                        <span class="icon icon-globe"></span>
+                        <span><b>官网</b><small>gamets.caellab.com/gpcl</small></span>
+                      </a>
+                      <a class="about-link" href="https://github.com/CaelLab-org/GoodPlanCraftLauncher">
+                        <span class="icon icon-github"></span>
+                        <span><b>GitHub 仓库</b><small>CaelLab-org/GoodPlanCraftLauncher</small></span>
+                      </a>
+                      <a class="about-link" href="mailto:gamets@caellab.com">
+                        <span class="icon icon-mail"></span>
+                        <span><b>邮箱</b><small>gamets@caellab.com</small></span>
+                      </a>
+                      <a class="about-link" href="https://gamets.caellab.com/gpcl/help/">
+                        <span class="icon icon-book"></span>
+                        <span><b>帮助</b><small>安装、登录、Java 和模组</small></span>
+                      </a>
+                    </div>
+                  </div>
+
+                  <div class="setting-card about-section">
+                    <h3 class="about-section-title">开发者</h3>
                     <div class="about-developer">
                       <img src="../static/more/avatar/yunyun.jpg" alt="Yunyun" class="developer-avatar">
                       <div class="developer-info">
                         <div class="developer-name">Yunyun</div>
-                        <div class="developer-role">GoodPlanCraftLauncher 的开发者！</div>
+                        <div class="developer-role">GoodPlanCraftLauncher 的开发者</div>
                       </div>
                     </div>
                   </div>
 
-                  <div class="setting-card">
-                    <h3 class="special-thanks-title">鸣谢</h3>
-                    <div class="thanks-list">
-                      <div class="thanks-item">
-                        <div class="thanks-avatar"><span class="icon icon-box"></span></div>
-                        <div class="thanks-info">
-                          <div class="thanks-name">bangbang93</div>
-                          <div class="thanks-desc">提供 BMCLAPI 镜像源和 Forge 安装工具</div>
-                        </div>
-                      </div>
-                      <div class="thanks-item">
-                        <div class="thanks-avatar"><span class="icon icon-book"></span></div>
-                        <div class="thanks-info">
-                          <div class="thanks-name">MC 百科</div>
-                          <div class="thanks-desc">提供了 Mod 名称的中文翻译和更多相关信息</div>
-                        </div>
-                      </div>
+                  <div class="setting-card about-section">
+                    <h3 class="about-section-title">许可证</h3>
+                    <p class="about-text">CaelLab BY-SA Code License, Version 3（或任何更新版本）。完整条款随程序保存在本地，下面可以直接展开。</p>
+                    <details class="license-details" id="license-details">
+                      <summary>查看许可证原文 <span class="icon icon-chevron"></span></summary>
+                      <pre class="license-text" id="license-text">许可证加载中…</pre>
+                    </details>
+                  </div>
+
+                  <div class="setting-card about-section">
+                    <h3 class="about-section-title">运行环境</h3>
+                    <div class="runtime-grid" id="about-runtime-grid">
+                      <div class="runtime-item"><span>启动器</span><b id="runtime-app">-</b></div>
+                      <div class="runtime-item"><span>Electron</span><b id="runtime-electron">-</b></div>
+                      <div class="runtime-item"><span>Chromium</span><b id="runtime-chrome">-</b></div>
+                      <div class="runtime-item"><span>Node</span><b id="runtime-node">-</b></div>
+                      <div class="runtime-item runtime-item-wide"><span>系统</span><b id="runtime-platform">-</b></div>
                     </div>
                   </div>
                 </div>
@@ -941,7 +1215,7 @@
                       <div class="toolbox-icon-large"><span class="icon icon-save"></span></div>
                       <div class="toolbox-content">
                         <div class="toolbox-title">内存优化</div>
-                        <div class="toolbox-description">将物理内存降低，但这不仅限于GPCL和Minecraft！但如果你使用的是机械盘，会造成短暂的严重卡顿</div>
+                        <div class="toolbox-description">回收 GPCL 自身进程占用的物理内存，不会影响正在运行的游戏；机械硬盘上可能出现短暂卡顿</div>
                         <button id="memory-optimize-btn" class="toolbox-btn-primary">
                           <span class="btn-icon icon icon-bolt" ></span>
                           <span class="btn-text">立即优化</span>

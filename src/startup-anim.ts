@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2026 Yunyun(云云) By 虚舟实验室(CaelLab) / CaelLabGameTS
- * Licensed under the CaelLab BY-SA Code License, Version 2.0
- * or any later version. https://www.caellab.com/license/bysa-code-v2.txt
+ * Licensed under the CaelLab BY-SA Code License, Version 3
+ * or any later version. https://www.caellab.com/license/cbs-v3.txt
  * Source: https://github.com/CaelLab-org/GoodPlanCraftLauncher
  */
 
@@ -87,7 +87,7 @@ ipcMain.handle('play-startup-animation', async () => {
 '<canvas id="c"></canvas>\n' +
 '<div class="scene" id="welcome"><div id="welcome-txt"><h1>Minecraft\u6B22\u8FCE\u4F60\uFF01</h1><p>By GPCL And AllMinecraftPlayer</p></div></div>\n' +
 '<div class="scene" id="logo-caellab"><div class="logo-row"><img src="caellab.png" alt="CaelLab"></div><div class="logo-text"><div class="logo-title">\u865A\u821F\u5B9E\u9A8C\u5BA4</div><a href="https://www.caellab.com" target="_blank" class="footer-link">caellab.com</a></div></div>\n' +
-'<div class="scene" id="logo-both"><div class="logo-row"><img class="caellab-img" src="caellab.png" alt="CaelLab"><img class="gamets-img" src="' + gametsFile + '" alt="GameTS"></div><div class="logo-text logo-text-bottom"><div class="copyright">Copyright \u00A9 2026 Yunyun(\u4E91\u4E91) By \u865A\u821F\u5B9E\u9A8C\u5BA4(CaelLab) / CaelLabGameTS</div><p class="license-text">Licensed under <a href="https://www.caellab.com/license/bysa-code-v2.txt" target="_blank" class="footer-link">CaelLab BY-SA Code License v2.0</a>. Open Source on <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" class="footer-link">GitHub</a>.</p></div></div>\n' +
+'<div class="scene" id="logo-both"><div class="logo-row"><img class="caellab-img" src="caellab.png" alt="CaelLab"><img class="gamets-img" src="' + gametsFile + '" alt="GameTS"></div><div class="logo-text logo-text-bottom"><div class="copyright">Copyright \u00A9 2026 Yunyun(\u4E91\u4E91) By \u865A\u821F\u5B9E\u9A8C\u5BA4(CaelLab) / CaelLabGameTS</div><p class="license-text">Licensed under <a href="https://www.caellab.com/license/cbs-v3.txt" target="_blank" class="footer-link">CaelLab BY-SA Code License Version 3</a>. Open Source on <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" class="footer-link">GitHub</a>.</p></div></div>\n' +
 '<div class="scene" id="logo-gpcl"><img src="GPCL.png" alt="GPCL"><div class="logo-text logo-text-bottom"><div class="disclaimer">GoodPlanCraftLauncher \u4E0E Mojang Studios \u53CA Microsoft\u3001Xbox \u65E0\u5B98\u65B9\u5173\u8054\u3002Minecraft \u4E3A Mojang Studios \u5546\u6807\u3002</div></div></div>\n' +
 '<div id="sweep-line"><div class="band" id="sweep-band"></div></div>\n' +
 '<div id="flash"></div><div id="fade"></div>\n' +

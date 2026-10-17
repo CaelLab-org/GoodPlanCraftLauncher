@@ -111,6 +111,9 @@ const gpclApi: GPCLApi = {
 
   getMemoryUsage: () => ipcRenderer.invoke('get-memory-usage'),
   optimizeMemory: () => ipcRenderer.invoke('optimize-memory'),
+  getSystemMemory: () => ipcRenderer.invoke('get-system-memory'),
+  getLicenseText: () => ipcRenderer.invoke('get-license-text'),
+  getRuntimeInfo: () => ipcRenderer.invoke('get-runtime-info'),
 
   downloadUpdate: (version: string) => ipcRenderer.invoke('download-update', version),
   cancelUpdateDownload: () => ipcRenderer.invoke('cancel-update-download'),

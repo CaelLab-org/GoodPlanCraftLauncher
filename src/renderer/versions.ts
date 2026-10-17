@@ -614,7 +614,10 @@ export function showVersionDetail(version: any): void {
 
   if (idEl) idEl.textContent = `Minecraft ${version.id}`;
   if (typeEl) typeEl.textContent = getCategoryLabel(version.type);
-  if (typeLabelEl) typeLabelEl.textContent = `${getCategoryIcon(version.type)} ${getCategoryLabel(version.type)}`;
+  if (typeLabelEl) {
+    typeLabelEl.innerHTML = getCategoryIcon(version.type);
+    typeLabelEl.append(' ' + getCategoryLabel(version.type));
+  }
   if (timeEl) timeEl.textContent = formatDate(version.releaseTime) || '未知';
 
   resetModLoaderState();

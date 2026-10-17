@@ -9,8 +9,24 @@
 // __IMPORTS_BEGIN__
 import { app, ipcMain } from 'electron';
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 // __IMPORTS_END__
+
+export function computeAutoMemoryMB(totalBytes: number = os.totalmem(), freeBytes: number = os.freemem()): number {
+  const totalMB: number = Math.floor(totalBytes / (1024 * 1024));
+  const freeMB: number = Math.floor(freeBytes / (1024 * 1024));
+  const target: number = Math.floor((totalMB * 0.3) / 1024) * 1024;
+  const available: number = Math.max(0, freeMB - 2048);
+  const capped: number = Math.floor(available / 512) * 512;
+  return Math.max(1024, Math.min(8192, target, capped));
+}
+
+export function getSystemMemoryInfo(): { totalMB: number; freeMB: number; autoMemoryMB: number } {
+  const totalMB: number = Math.floor(os.totalmem() / (1024 * 1024));
+  const freeMB: number = Math.floor(os.freemem() / (1024 * 1024));
+  return { totalMB, freeMB, autoMemoryMB: computeAutoMemoryMB() };
+}
 
 export function formatTimestamp(): string {
   const now = new Date();
@@ -57,24 +73,36 @@ export let UPDATA_DIR: string;
 
 export const DEFAULT_SETTINGS = {
   game: {
-    memory: '2',
+    memory: 'auto',
     playerName: 'GPCL_Player',
     javaPath: '',
     jvmArgs: '',
+    gcPreset: 'default',
     windowMode: 'windowed',
-    windowTitle: 'Minecraft {mc_version} (GPCL)'
+    windowTitle: 'Minecraft {mc_version} (GPCL)',
+    keepWindowTitle: false,
+    processPriority: 'normal',
+    launcherVisibility: 'keep',
+    windowSize: 'default',
+    windowWidth: 854,
+    windowHeight: 480,
+    optimizeBeforeLaunch: false
   },
   appearance: {
     theme: 'light',
     scale: '110',
     playStartupAnimation: true,
     skipSplash: false,
-    tipFrequency: 'rare'
+    tipFrequency: 'rare',
+    enableMore: true
   },
   download: {
     maxConcurrent: 64,
     javaMirror: 'tsinghua',
-    customJavaMirror: ''
+    customJavaMirror: '',
+    fileSource: 'auto',
+    versionSource: 'auto',
+    speedLimit: 0
   },
   advanced: {
     autoCheckUpdate: true,
