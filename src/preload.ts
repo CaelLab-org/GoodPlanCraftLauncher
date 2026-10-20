@@ -99,15 +99,33 @@ const gpclApi: GPCLApi = {
   readJsonFile: (subPath: string, fileName: string) => ipcRenderer.invoke('read-json-file', subPath, fileName),
   writeJsonFile: (subPath: string, fileName: string, data: any) => ipcRenderer.invoke('write-json-file', subPath, fileName, data),
 
+  selectVersionFolder: () => ipcRenderer.invoke('select-version-folder'),
+  selectVersionArchive: () => ipcRenderer.invoke('select-version-archive'),
+  installLocalVersion: (sourcePath: string) => ipcRenderer.invoke('install-local-version', sourcePath),
   getForgeVersions: (mcVersion: string) => ipcRenderer.invoke('get-forge-versions', mcVersion),
   getFabricVersions: (mcVersion: string) => ipcRenderer.invoke('get-fabric-versions', mcVersion),
   getOptiFineVersions: (mcVersion: string) => ipcRenderer.invoke('get-optifine-versions', mcVersion),
-  downloadWithModLoader: (versionId: string, loaderType: string, loaderVersion: string, maxConcurrent: number) =>
-    ipcRenderer.invoke('download-with-modloader', versionId, loaderType, loaderVersion, maxConcurrent),
+  downloadWithModLoader: (versionId: string, loaderType: string, loaderVersion: string, maxConcurrent: number, options?: any) =>
+    ipcRenderer.invoke('download-with-modloader', versionId, loaderType, loaderVersion, maxConcurrent, options),
 
   getVersionConfig: (versionId: string) => ipcRenderer.invoke('get-version-config', versionId),
   getVersionDisplayName: (versionId: string) => ipcRenderer.invoke('get-version-display-name', versionId),
   getLaunchDisplayName: (versionId: string) => ipcRenderer.invoke('get-launch-display-name', versionId),
+
+  modsSearch: (options) => ipcRenderer.invoke('mods-search', options),
+  modsVersions: (options) => ipcRenderer.invoke('mods-versions', options),
+  modsInstall: (options) => ipcRenderer.invoke('mods-install', options),
+  modsInstallDirect: (options) => ipcRenderer.invoke('mods-install-direct', options),
+  curseforgeLookup: (options) => ipcRenderer.invoke('mods-curseforge-lookup', options),
+  getModsDir: (versionId?: string) => ipcRenderer.invoke('get-mods-dir', versionId),
+  getVersionInfo: (versionId: string) => ipcRenderer.invoke('get-version-info', versionId),
+  listInstalledVersions: () => ipcRenderer.invoke('list-installed-versions'),
+  onModDownloadProgress: (callback) => {
+    ipcRenderer.on('mod-download-progress', (_event, data) => callback(data));
+  },
+  onInstallStage: (callback) => {
+    ipcRenderer.on('install-stage', (_event, data) => callback(data));
+  },
 
   getMemoryUsage: () => ipcRenderer.invoke('get-memory-usage'),
   optimizeMemory: () => ipcRenderer.invoke('optimize-memory'),
@@ -115,11 +133,11 @@ const gpclApi: GPCLApi = {
   getLicenseText: () => ipcRenderer.invoke('get-license-text'),
   getRuntimeInfo: () => ipcRenderer.invoke('get-runtime-info'),
 
-  downloadUpdate: (version: string) => ipcRenderer.invoke('download-update', version),
+  downloadUpdate: (version: string, manual?: boolean) => ipcRenderer.invoke('download-update', version, !!manual),
   cancelUpdateDownload: () => ipcRenderer.invoke('cancel-update-download'),
-  verifyUpdateSHA1: (filePath: string) => ipcRenderer.invoke('verify-update-sha1', filePath),
-  executeUpdateInstaller: (installerPath: string) => ipcRenderer.invoke('execute-update-installer', installerPath),
-  setUpdateShutdownHook: (installerPath: string) => ipcRenderer.invoke('set-update-shutdown-hook', installerPath),
+  installUpdate: (installerPath: string, relaunch: boolean) => ipcRenderer.invoke('install-update', installerPath, relaunch),
+  setUpdateShutdownHook: (installerPath: string, relaunch?: boolean) => ipcRenderer.invoke('set-update-shutdown-hook', installerPath, !!relaunch),
+  getUpdateState: () => ipcRenderer.invoke('get-update-state'),
 
   onUpdateDownloadProgress: (callback) => {
     ipcRenderer.on('update-download-progress', (_event, data) => callback(data));
@@ -134,8 +152,8 @@ const gpclApi: GPCLApi = {
   removeAllListeners: () => {
     ipcRenderer.removeAllListeners('confirm-close-while-downloading');
     ipcRenderer.removeAllListeners('game-window-created');
-    ipcRenderer.removeAllListeners('download-progress');
     ipcRenderer.removeAllListeners('update-download-progress');
+    // download-progress 在 launch / java-panel 里只在启动时注册一次，清掉就没人补回来
   },
 
   startMicrosoftAuth: () => ipcRenderer.invoke('start-microsoft-auth'),

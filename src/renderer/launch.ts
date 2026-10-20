@@ -436,187 +436,333 @@ export function hideLaunchAnimation(): void {
 }
 
 
+interface DownloadTask {
+  id: string;
+  versionId: string;
+  loaderType: string;
+  loaderVersion: string;
+  loaderName: string;
+  installFabricApi: boolean;
+  displayName: string;
+  status: 'queued' | 'running' | 'done' | 'error';
+  percent: number;
+  message: string;
+  finalVersionId?: string;
+  error?: string;
+}
+
+const downloadTasks: DownloadTask[] = [];
+let activeDownloadTask: DownloadTask | null = null;
+let queueRunning: boolean = false;
+let queueTaskSeq: number = 0;
+let lastProgressAt: number = Date.now();
+let lastProgressBytes: number = 0;
+let lastProgressLabel: string = '';
+let chartReady: boolean = false;
+
+export function hasQueuedDownloads(): boolean {
+  return downloadTasks.some((t: DownloadTask) => t.status === 'queued');
+}
+
+function taskListEl(): HTMLElement | null {
+  return document.getElementById('download-task-list');
+}
+
+function taskStateText(task: DownloadTask): string {
+  if (task.status === 'queued') return '等待中';
+  if (task.status === 'done') return '完成';
+  if (task.status === 'error') return task.error ? `失败：${task.error}` : '失败';
+  return task.message || '下载中…';
+}
+
+function updateTaskRow(task: DownloadTask): void {
+  const list = taskListEl();
+  if (!list) return;
+  const row: HTMLElement | null = list.querySelector(`[data-task-id="${task.id}"]`) as HTMLElement | null;
+  if (!row) return;
+  row.dataset.status = task.status;
+  const stateEl: HTMLElement | null = row.querySelector('.download-task-state') as HTMLElement | null;
+  if (stateEl) stateEl.textContent = taskStateText(task);
+  const fill: HTMLElement | null = row.querySelector('.download-task-fill') as HTMLElement | null;
+  if (fill) fill.style.width = `${task.status === 'done' ? 100 : task.percent}%`;
+}
+
+function renderDownloadTasks(): void {
+  const list = taskListEl();
+  if (!list) return;
+  if (downloadTasks.length === 0) {
+    list.classList.add('hidden');
+    list.innerHTML = '';
+    return;
+  }
+  list.classList.remove('hidden');
+  list.innerHTML = '';
+
+  for (const task of downloadTasks) {
+    const row: HTMLDivElement = document.createElement('div');
+    row.className = 'download-task';
+    row.dataset.taskId = task.id;
+    row.dataset.status = task.status;
+
+    const head: HTMLDivElement = document.createElement('div');
+    head.className = 'download-task-head';
+
+    const name: HTMLSpanElement = document.createElement('span');
+    name.className = 'download-task-name';
+    name.textContent = task.displayName;
+
+    const state: HTMLSpanElement = document.createElement('span');
+    state.className = 'download-task-state';
+    state.textContent = taskStateText(task);
+
+    head.appendChild(name);
+    head.appendChild(state);
+
+    if (task.status === 'queued') {
+      const remove: HTMLButtonElement = document.createElement('button');
+      remove.className = 'download-task-remove';
+      remove.type = 'button';
+      remove.textContent = '×';
+      remove.title = '移出队列';
+      remove.addEventListener('click', (e: Event) => {
+        e.stopPropagation();
+        const index: number = downloadTasks.findIndex((t: DownloadTask) => t.id === task.id);
+        if (index >= 0 && downloadTasks[index].status === 'queued') {
+          downloadTasks.splice(index, 1);
+          renderDownloadTasks();
+        }
+      });
+      head.appendChild(remove);
+    }
+
+    const bar: HTMLDivElement = document.createElement('div');
+    bar.className = 'download-task-bar';
+    const fill: HTMLDivElement = document.createElement('div');
+    fill.className = 'download-task-fill';
+    fill.style.width = `${task.status === 'done' ? 100 : task.percent}%`;
+    bar.appendChild(fill);
+
+    row.appendChild(head);
+    row.appendChild(bar);
+    list.appendChild(row);
+  }
+}
+
+function prepareDownloadPanel(): void {
+  void loadChartJs().then(() => {
+    if (!chartReady) {
+      initChart();
+      chartReady = true;
+    }
+    resetChart();
+  });
+  if (downloadPanel) downloadPanel.classList.remove('hidden');
+}
+
+async function runDownloadTask(task: DownloadTask): Promise<void> {
+  activeDownloadTask = task;
+  task.status = 'running';
+  task.percent = 0;
+  task.message = '准备下载…';
+  lastProgressAt = Date.now();
+  lastProgressBytes = 0;
+  lastProgressLabel = '';
+  renderDownloadTasks();
+
+  prepareDownloadPanel();
+
+  const downloadStatusEl: HTMLElement | null = document.getElementById('download-status');
+  const cancelBtn: HTMLElement | null = document.getElementById('cancel-download-btn');
+  if (cancelBtn) {
+    cancelBtn.textContent = '取消当前下载';
+    cancelBtn.classList.remove('complete');
+    (cancelBtn as HTMLButtonElement).disabled = false;
+  }
+  if (downloadStatusEl) downloadStatusEl.textContent = `开始下载 ${task.displayName}…`;
+  setStatus(`开始下载 ${task.displayName}…`);
+
+  try {
+    const maxConcurrent: number = getMaxConcurrentFromSettings();
+    const result: any = task.loaderType
+      ? await window.gpcl.downloadWithModLoader(task.versionId, task.loaderType, task.loaderVersion, maxConcurrent, { installFabricApi: task.installFabricApi })
+      : await window.gpcl.downloadVersion(task.versionId, maxConcurrent);
+
+    if (result && result.success) {
+      task.status = 'done';
+      task.percent = 100;
+      task.finalVersionId = result.finalVersionId || task.versionId;
+      task.message = '完成';
+      updateTaskRow(task);
+
+      await recordVersionDownload(task.finalVersionId);
+      showToast('下载完成', `${task.displayName} 已准备就绪`, 'success', 'download-complete');
+      if (result.fabricApiError) {
+        showToast('Fabric API 未装上', result.fabricApiError, 'warning', 'fabric-api-failed');
+      } else if (Array.isArray(result.fabricApiFiles) && result.fabricApiFiles.length > 0) {
+        task.message = '完成 · 已带 Fabric API';
+      }
+      await loadVersions();
+      renderVersionSelectList();
+      if (downloadStatusEl) downloadStatusEl.textContent = `下载完成：${task.displayName}`;
+      setStatus(`下载完成：${task.displayName}`, 'success');
+      setTimeout(() => {
+        const index: number = downloadTasks.findIndex((t: DownloadTask) => t.id === task.id);
+        if (index >= 0 && downloadTasks[index].status === 'done') {
+          downloadTasks.splice(index, 1);
+          renderDownloadTasks();
+        }
+      }, 8000);
+    } else {
+      task.status = 'error';
+      task.error = result?.error || '未知错误';
+      updateTaskRow(task);
+      showToast('下载失败', `${task.displayName}：${task.error}`, 'error', 'download-error');
+      if (downloadStatusEl) downloadStatusEl.textContent = `下载失败：${task.error}`;
+      setStatus(`下载失败：${task.error}`, 'error');
+    }
+  } catch (e: any) {
+    task.status = 'error';
+    task.error = e.message || String(e);
+    updateTaskRow(task);
+    showToast('下载出错', task.error, 'error', 'download-error');
+    if (downloadStatusEl) downloadStatusEl.textContent = `下载出错：${task.error}`;
+    setStatus('下载出错', 'error');
+  } finally {
+    activeDownloadTask = null;
+    updateTaskRow(task);
+    if (cancelBtn) {
+      const hasMore: boolean = downloadTasks.some((t: DownloadTask) => t.status === 'queued');
+      if (!hasMore) {
+        const cancelled: boolean = task.status === 'error' && /取消/.test(task.error || '');
+        cancelBtn.textContent = cancelled ? '已取消' : '下载完成';
+        cancelBtn.classList.add('complete');
+        (cancelBtn as HTMLButtonElement).disabled = true;
+      } else {
+        cancelBtn.textContent = '取消当前下载';
+        (cancelBtn as HTMLButtonElement).disabled = false;
+      }
+    }
+  }
+}
+
+async function processDownloadQueue(): Promise<void> {
+  if (queueRunning) return;
+  queueRunning = true;
+  try {
+    while (true) {
+      const task: DownloadTask | undefined = downloadTasks.find((t: DownloadTask) => t.status === 'queued');
+      if (!task) break;
+      await runDownloadTask(task);
+    }
+  } finally {
+    queueRunning = false;
+    renderDownloadTasks();
+  }
+}
+
 export async function startDownload(versionId: string): Promise<void> {
-  if (!versionId) { setStatus('请先选择要下载的版本', 'error'); return; }
+  if (!versionId) {
+    setStatus('请先选择要下载的版本', 'error');
+    return;
+  }
 
-  const installed: boolean = await isVersionInstalled(versionId);
-
-  let selectedModLoader: string | null = null;
-  let selectedModLoaderVersion: string | null = null;
-  let modLoaderName: string = '';
-  
+  let loaderType: string = '';
+  let loaderVersion: string = '';
+  let loaderName: string = '';
   for (const [loader, state] of Object.entries(modLoaderState) as [string, any][]) {
     if (state.selectedVersionId) {
-      selectedModLoader = loader;
-      selectedModLoaderVersion = state.selectedVersionId;
-      modLoaderName = getLoaderDisplayName(loader);
+      loaderType = loader;
+      loaderVersion = state.selectedVersionId;
+      loaderName = getLoaderDisplayName(loader);
       break;
     }
   }
 
-  if (detailDownloadBtn) detailDownloadBtn.disabled = true;
-  await loadChartJs();
-  initChart();
-  resetChart();
-
-  if (downloadPanel) downloadPanel.classList.remove('hidden');
-  
-  hideVersionDetail();
-  showPage('download');
-
-  const scrollContainer: HTMLElement | null = document.querySelector('.main-content') as HTMLElement | null;
-  if (scrollContainer) {
-    scrollContainer.scrollTop = 0;
+  const duplicate: boolean = downloadTasks.some((t: DownloadTask) =>
+    (t.status === 'queued' || t.status === 'running') && t.versionId === versionId && t.loaderType === loaderType);
+  if (duplicate) {
+    showToast('已经在队列里了', `${loaderName || 'Minecraft'} ${versionId}`, 'info', 'download-duplicate');
+    return;
   }
 
-  const downloadStatusEl: HTMLElement | null = document.getElementById('download-status');
-  const filenameEl: HTMLElement | null = document.getElementById('download-filename');
-  const cancelBtn: HTMLElement | null = document.getElementById('cancel-download-btn');
-
-  if (cancelBtn) {
-    cancelBtn.textContent = '取消下载';
-    cancelBtn.classList.remove('complete');
-    (cancelBtn as HTMLButtonElement).disabled = false;
-  }
-
-  let displayName: string = `Minecraft ${versionId}`;
-  if (selectedModLoader) {
-    displayName = `${modLoaderName} ${versionId}`;
-  }
-
-  if (downloadStatusEl) downloadStatusEl.textContent = `开始下载 ${displayName} ...`;
-  if (filenameEl) filenameEl.textContent = `正在下载: ${displayName}`;
-
-  window.gpcl.removeAllListeners();
-
-  window.gpcl.onConfirmCloseWhileDownloading(async (): Promise<void> => {
-    const result: boolean = await showDialog({
-      type: 'confirm',
-      title: '确认关闭',
-      message: '当前正在下载中，关闭会停止下载并清理已下载的文件。确定要关闭吗？如有不完整的"libraries"需自行清理。'
-    });
-
-    if (result) {
-      if (window.gpcl && window.gpcl.confirmCloseDownload) {
-        await window.gpcl.confirmCloseDownload();
-      }
-    } else {
-      if (window.gpcl && window.gpcl.cancelClose) {
-        await window.gpcl.cancelClose();
-      }
-    }
+  const fabricApiAuto: HTMLInputElement | null = document.getElementById('fabric-api-auto') as HTMLInputElement | null;
+  const displayName: string = loaderType ? `${loaderName} ${versionId}` : `Minecraft ${versionId}`;
+  downloadTasks.push({
+    id: `task-${++queueTaskSeq}`,
+    versionId,
+    loaderType,
+    loaderVersion,
+    loaderName,
+    installFabricApi: fabricApiAuto ? fabricApiAuto.checked : true,
+    displayName,
+    status: 'queued',
+    percent: 0,
+    message: '等待中'
   });
 
-  let lastTime: number = Date.now();
-  let lastBytes: number = 0;
-  let lastLabel: string = '';
+  renderDownloadTasks();
+  hideVersionDetail();
+  showPage('download');
+  const versionTab: HTMLButtonElement | null = document.getElementById('download-tab-versions') as HTMLButtonElement | null;
+  if (versionTab) versionTab.click();
+  const scrollContainer: HTMLElement | null = document.querySelector('.main-content') as HTMLElement | null;
+  if (scrollContainer) scrollContainer.scrollTop = 0;
+
+  if (!queueRunning) void processDownloadQueue();
+}
+
+
+function registerDownloadListeners(): void {
+  if (!window.gpcl) return;
 
   window.gpcl.onDownloadProgress((data: any): void => {
+    const task: DownloadTask | null = activeDownloadTask;
+    if (!task) return;
+
     const currentTime: number = Date.now();
-    const timeDiff: number = (currentTime - lastTime) / 1000;
+    const timeDiff: number = (currentTime - lastProgressAt) / 1000;
 
-    const currentSpeedEl: HTMLElement | null = document.getElementById('current-speed');
-    const peakSpeedEl: HTMLElement | null = document.getElementById('peak-speed');
-    const progressFillEl: HTMLElement | null = document.getElementById('progress-fill');
-    const progressTextEl: HTMLElement | null = document.getElementById('progress-text');
-
-    if (data.label && data.label !== lastLabel) {
-      lastLabel = data.label;
-      lastBytes = 0;
-      lastTime = currentTime;
+    if (data.label && data.label !== lastProgressLabel) {
+      lastProgressLabel = data.label;
+      lastProgressBytes = 0;
+      lastProgressAt = currentTime;
     }
 
     if (timeDiff >= 0.5 && data.bytesDownloaded !== undefined) {
-      const bytesDiff: number = data.bytesDownloaded - lastBytes;
-      if (bytesDiff < 0) {
-        lastBytes = data.bytesDownloaded;
-        lastTime = currentTime;
-        return;
+      const bytesDiff: number = data.bytesDownloaded - lastProgressBytes;
+      if (bytesDiff >= 0) {
+        const speedBps: number = Math.max(0, (bytesDiff * 8) / timeDiff / 1000000);
+        const currentSpeedEl: HTMLElement | null = document.getElementById('current-speed');
+        const peakSpeedEl: HTMLElement | null = document.getElementById('peak-speed');
+        if (currentSpeedEl) currentSpeedEl.textContent = speedBps.toFixed(2) + ' Mbps';
+        if (speedBps > peakSpeed) {
+          setPeakSpeed(speedBps);
+          if (peakSpeedEl) peakSpeedEl.textContent = peakSpeed.toFixed(2) + ' Mbps';
+        }
+        updateChart(speedBps);
+        lastProgressAt = currentTime;
+        lastProgressBytes = data.bytesDownloaded;
       }
-      const speedBps: number = Math.max(0, (bytesDiff * 8) / timeDiff / 1000000);
-
-      if (currentSpeedEl) currentSpeedEl.textContent = speedBps.toFixed(2) + ' Mbps';
-
-      if (speedBps > peakSpeed) {
-        setPeakSpeed(speedBps);
-        if (peakSpeedEl) peakSpeedEl.textContent = peakSpeed.toFixed(2) + ' Mbps';
-      }
-
-      updateChart(speedBps);
-
-      lastTime = currentTime;
-      lastBytes = data.bytesDownloaded;
     }
 
-    const percent: number = data.percent || 0;
-    if (progressFillEl) progressFillEl.style.width = percent + '%';
-    if (progressTextEl) progressTextEl.textContent = percent.toFixed(1) + '%';
-
-    if (data.label && filenameEl) {
-      filenameEl.textContent = data.label;
-    }
-
-    if (downloadStatusEl) downloadStatusEl.textContent = `正在下载 ${versionId}: ${percent.toFixed(1)}%`;
-
-    if (menuDownload) menuDownload.classList.add('active');
-    if (data.percent >= 100 && menuDownload) {
-      menuDownload.classList.remove('active');
-    }
+    task.percent = Number(data.percent) || 0;
+    task.message = data.label ? `下载 ${data.label}` : '下载中…';
+    updateTaskRow(task);
   });
 
-  try {
-    const maxConcurrent: number = getMaxConcurrentFromSettings();
-    let result: any;
-    
-    if (selectedModLoader) {
-      
-      result = await window.gpcl.downloadWithModLoader(
-        versionId, 
-        selectedModLoader, 
-        selectedModLoaderVersion,
-        maxConcurrent
-      );
-    } else {
-      
-      result = await window.gpcl.downloadVersion(versionId, maxConcurrent);
-    }
-    
-    if (result.success) {
-      
-      await recordVersionDownload(result.finalVersionId || versionId);
-      
-      const finalDisplayName: string = selectedModLoader 
-        ? `${modLoaderName} ${versionId}` 
-        : `Minecraft ${versionId}`;
-      
-      setStatus('下载完成', 'success');
-      if (downloadStatusEl) downloadStatusEl.textContent = `下载完成: ${finalDisplayName}`;
-      const progressFillEl: HTMLElement | null = document.getElementById('progress-fill');
-      const progressTextEl: HTMLElement | null = document.getElementById('progress-text');
-      if (progressFillEl) progressFillEl.style.width = '100%';
-      if (progressTextEl) progressTextEl.textContent = '100%';
-      showToast('下载完成', `${finalDisplayName} 已准备就绪`, 'success', 'download-complete');
-      await loadVersions();
-      
-      renderVersionSelectList();
-      
-      if (cancelBtn) {
-        cancelBtn.textContent = '下载完成';
-        cancelBtn.classList.add('complete');
-        (cancelBtn as HTMLButtonElement).disabled = true;
-      }
-    } else {
-      setStatus(`下载失败: ${result.error}`, 'error');
-      if (downloadStatusEl) downloadStatusEl.textContent = `下载失败: ${result.error}`;
-    }
-  } catch (err: any) {
-    setStatus('下载出错', 'error');
-    if (downloadStatusEl) downloadStatusEl.textContent = `下载出错: ${err.message || err}`;
-    showToast('下载出错', err.message || String(err), 'error', 'download-error');
+  if (window.gpcl.onInstallStage) {
+    window.gpcl.onInstallStage((data: any): void => {
+      if (!activeDownloadTask || !data?.message) return;
+      activeDownloadTask.message = data.message;
+      updateTaskRow(activeDownloadTask);
+      const downloadStatusEl: HTMLElement | null = document.getElementById('download-status');
+      if (downloadStatusEl) downloadStatusEl.textContent = data.message;
+      setStatus(data.message);
+    });
   }
-
-  if (detailDownloadBtn) detailDownloadBtn.disabled = false;
 }
+
+registerDownloadListeners();
 
 
 export function handleGameClosed(code: number): void {

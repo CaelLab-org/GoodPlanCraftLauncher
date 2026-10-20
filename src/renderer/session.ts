@@ -15,9 +15,7 @@ export let msAuthData: { uuid: string; username: string; accessToken: string } |
 
 
 export async function initGameDir(): Promise<string | null> {
-  if (!GAME_DIR) {
-    GAME_DIR = await window.gpcl.getGameDir();
-  }
+  GAME_DIR = await window.gpcl.getGameDir();
   return GAME_DIR;
 }
 

@@ -10,8 +10,9 @@ import { app, ipcMain, shell } from 'electron';
 import fs from 'fs';
 import path from 'path';
 
-import { APP_VERSION, BASE_DIR, GAME_DIR, LOG_FILE, cleanupExpiredLogs, initPaths, parseIni, setBaseDir, writeLog } from './config';
+import { APP_VERSION, BASE_DIR, GAME_DIR, LOG_FILE, cleanupExpiredLogs, initGameDirFromSettings, initPaths, parseIni, setBaseDir, writeLog } from './config';
 import { createGPCLShortcut, createWindow, mainWindow } from './shell';
+import { initUpdateState, installPendingUpdateOnRestart } from './update';
 import { isDeveloperMode, setIsDeveloperMode } from './state';
 
 import './auth';
@@ -19,9 +20,9 @@ import './download';
 import './game';
 import './java';
 import './modloader';
+import './mods';
 import './player';
 import './startup-anim';
-import './update';
 // __IMPORTS_END__
 
 process.env.TZ = 'Asia/Shanghai';
@@ -112,6 +113,8 @@ setBaseDir(app.getPath('userData'));
   }
 
   initPaths();
+  initGameDirFromSettings();
+  initUpdateState();
   cleanupExpiredLogs();
   
   try {
@@ -148,6 +151,10 @@ ipcMain.handle('get-game-dir', () => {
 
 ipcMain.handle('restart-app', () => {
   writeLog('[重启] 正在重启应用...');
+  if (installPendingUpdateOnRestart()) {
+    app.quit();
+    return;
+  }
   app.relaunch();
   app.exit();
 });

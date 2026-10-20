@@ -34,6 +34,29 @@
       </div>
     </div>
 
+    <div id="update-widget" class="update-widget hidden">
+      <button id="update-widget-btn" class="update-widget-btn" type="button" aria-label="更新">
+        <span id="update-widget-icon" class="icon icon-download"></span>
+      </button>
+      <div id="update-popover" class="update-popover hidden">
+        <button id="update-popover-close" class="update-popover-close" type="button" aria-label="关闭">
+          <span class="icon icon-close"></span>
+        </button>
+        <div class="update-popover-heading"><span id="update-popover-heading-text">发现新版本</span> <span id="update-popover-version" class="update-popover-version"></span></div>
+        <div id="update-popover-title" class="update-popover-title hidden"></div>
+        <div id="update-popover-log" class="update-popover-log hidden"></div>
+        <div class="update-popover-progress-block">
+          <div id="update-progress" class="update-progress hidden">
+            <div id="update-progress-fill" class="update-progress-fill"></div>
+          </div>
+          <div id="update-status-text" class="update-status-text"></div>
+        </div>
+        <div class="update-popover-actions">
+          <button id="update-install-btn" class="update-action-primary" type="button" disabled>立即下载</button>
+        </div>
+      </div>
+    </div>
+
     <main class="main-content">
       <div class="container">
         <div class="header">
@@ -101,10 +124,26 @@
                   
                   <div class="setting-item">
                     <div class="setting-info">
+                      <div class="setting-label">版本文件夹</div>
+                      <div class="setting-desc">打开此版本所在的版本文件夹</div>
+                    </div>
+                    <button class="setting-btn" id="version-open-folder-btn">打开</button>
+                  </div>
+
+                  <div class="setting-item hidden" id="version-mod-folder-item">
+                    <div class="setting-info">
                       <div class="setting-label">Mod 文件夹</div>
-                      <div class="setting-desc">打开此版本的 mods 文件夹</div>
+                      <div class="setting-desc">打开此版本实际使用的 mods 文件夹</div>
                     </div>
                     <button class="setting-btn" id="version-open-mods-btn">打开</button>
+                  </div>
+
+                  <div class="setting-item hidden" id="version-shader-folder-item">
+                    <div class="setting-info">
+                      <div class="setting-label">光影文件夹</div>
+                      <div class="setting-desc">打开此版本实际使用的 shaderpacks 文件夹</div>
+                    </div>
+                    <button class="setting-btn" id="version-open-shaders-btn">打开</button>
                   </div>
                   
                   <div class="setting-item">
@@ -199,6 +238,7 @@
                 <h3 class="version-panel-title">版本选择</h3>
                 <div id="version-count" class="version-count">加载中...</div>
               </div>
+              <button id="local-install-btn" class="version-import-btn" type="button">导入本地版本</button>
               <div id="launch-version-list" class="version-list-container">
                 <div class="version-list-loading">正在扫描本地版本...</div>
               </div>
@@ -243,7 +283,14 @@
         <div id="download-page" class="download-page hidden">
           <div class="download-header">
             <h3>下载</h3>
-            <button id="refresh-btn-page" class="refresh-btn hidden">刷新版本列表</button>
+            <div class="download-header-actions">
+              <button id="refresh-btn-page" class="refresh-btn hidden">刷新版本列表</button>
+            </div>
+          </div>
+
+          <div class="download-tabs">
+            <button id="download-tab-versions" class="download-tab active" type="button">游戏版本</button>
+            <button id="download-tab-mods" class="download-tab" type="button">模组</button>
           </div>
 
           <div id="download-panel" class="download-status-panel hidden">
@@ -279,6 +326,36 @@
           </div>
 
           <div id="download-status" class="status-message"></div>
+          <div id="download-task-list" class="download-task-list hidden"></div>
+
+          <div id="mod-download-section" class="mod-download-section hidden">
+            <div class="mod-search-row">
+              <input id="mod-search-input" class="mod-search-input" type="text" placeholder="搜索模组；也可以粘贴 CurseForge 项目链接">
+              <button id="mod-search-btn" class="mod-search-btn" type="button">搜索</button>
+            </div>
+            <div class="mod-filter-row">
+              <select id="mod-game-version" class="mod-select"></select>
+              <select id="mod-loader" class="mod-select">
+                <option value="">全部加载器</option>
+                <option value="fabric">Fabric</option>
+                <option value="forge">Forge</option>
+                <option value="neoforge">NeoForge</option>
+                <option value="quilt">Quilt</option>
+              </select>
+              <select id="mod-source" class="mod-select">
+                <option value="both" selected>全部来源</option>
+                <option value="modrinth">Modrinth</option>
+                <option value="curseforge">CurseForge</option>
+              </select>
+            </div>
+            <div id="mod-status" class="status-message"></div>
+            <div id="mod-results" class="mod-results"></div>
+            <div id="mod-detail" class="mod-detail hidden">
+              <button id="mod-detail-back" class="detail-back-btn" type="button"><span class="icon icon-arrow-left"></span> 返回搜索结果</button>
+              <div id="mod-detail-head" class="mod-detail-head"></div>
+              <div id="mod-detail-versions" class="mod-detail-versions"></div>
+            </div>
+          </div>
 
           <div id="version-list-section" class="version-list-section">
             <div class="version-list-header">
@@ -308,7 +385,7 @@
                 </div>
               </div>
               <div class="detail-options" id="mod-loader-options">
-                <div class="detail-option-card" id="forge-option" data-loader="forge" style="display:none">
+                <div class="detail-option-card" id="forge-option" data-loader="forge">
                   <div class="detail-option-header">
                     <div class="detail-option-left">
                       <span class="detail-option-icon icon icon-gear" ></span>
@@ -329,7 +406,7 @@
                   </div>
                 </div>
 
-                <div class="detail-option-card" id="fabric-option" data-loader="fabric" style="display:none">
+                <div class="detail-option-card" id="fabric-option" data-loader="fabric">
                   <div class="detail-option-header">
                     <div class="detail-option-left">
                       <span class="detail-option-icon icon icon-thread" ></span>
@@ -347,6 +424,10 @@
                     <div class="detail-option-loading" id="fabric-loading">正在检测可用版本...</div>
                     <div class="detail-option-versions hidden" id="fabric-versions"></div>
                     <div class="detail-option-error hidden" id="fabric-error">该版本暂不支持 Fabric</div>
+                    <label class="detail-option-auto">
+                      <input type="checkbox" id="fabric-api-auto" checked>
+                      <span>同时安装 Fabric API（推荐）</span>
+                    </label>
                   </div>
                 </div>
 
@@ -628,6 +709,54 @@
                         </label>
                       </div>
                     </div>
+
+                    <div class="setting-row">
+                      <div class="setting-left">
+                        <div class="setting-label">自动设置游戏语言</div>
+                        <div class="setting-desc">每次启动前把游戏语言改成下面选定的值；关掉就完全不动游戏里的设置</div>
+                      </div>
+                      <div class="setting-control">
+                        <label class="switch">
+                          <input type="checkbox" id="settings-auto-language" checked>
+                          <span class="slider"></span>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="setting-row" id="game-language-row">
+                      <div class="setting-left">
+                        <div class="setting-label">游戏语言</div>
+                        <div class="setting-desc">启动前写入游戏的 options.txt，进游戏后就是这里选的语言</div>
+                      </div>
+                      <div class="setting-control">
+                        <div class="custom-select" data-select-id="settings-game-language">
+                          <div class="custom-select-trigger">
+                            <span class="custom-select-value">中文（中国大陆）</span>
+                            <span class="custom-select-arrow icon icon-chevron"></span>
+                          </div>
+                          <div class="custom-select-dropdown custom-select-dropdown--scroll">
+                            <div class="custom-select-option selected" data-value="zh_cn">中文（中国大陆）</div>
+                            <div class="custom-select-option" data-value="zh_tw">繁體中文（台灣）</div>
+                            <div class="custom-select-option" data-value="zh_hk">繁體中文（香港）</div>
+                            <div class="custom-select-option" data-value="en_us">English (US)</div>
+                            <div class="custom-select-option" data-value="en_gb">English (UK)</div>
+                            <div class="custom-select-option" data-value="ja_jp">日本語</div>
+                            <div class="custom-select-option" data-value="ko_kr">한국어</div>
+                            <div class="custom-select-option" data-value="fr_fr">Français</div>
+                            <div class="custom-select-option" data-value="de_de">Deutsch</div>
+                            <div class="custom-select-option" data-value="ru_ru">Русский</div>
+                            <div class="custom-select-option" data-value="es_es">Español (España)</div>
+                            <div class="custom-select-option" data-value="es_mx">Español (México)</div>
+                            <div class="custom-select-option" data-value="pt_br">Português (Brasil)</div>
+                            <div class="custom-select-option" data-value="it_it">Italiano</div>
+                            <div class="custom-select-option" data-value="pl_pl">Polski</div>
+                            <div class="custom-select-option" data-value="tr_tr">Türkçe</div>
+                            <div class="custom-select-option" data-value="vi_vn">Tiếng Việt</div>
+                            <div class="custom-select-option" data-value="th_th">ไทย</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
                   <div class="setting-card setting-card--group">
@@ -882,6 +1011,59 @@
                         </div>
                       </div>
                     </div>
+
+                    <div class="setting-row">
+                      <div class="setting-left">
+                        <div class="setting-label">自定义文件镜像</div>
+                        <div class="setting-desc">填镜像根地址（如 https://bmclapi2.bangbang93.com），留空使用默认 BMCLAPI</div>
+                      </div>
+                      <div class="setting-control setting-control-column">
+                        <input type="text" id="settings-custom-file-mirror" class="setting-input" placeholder="https://bmclapi2.bangbang93.com">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="setting-card setting-card--group">
+                    <div class="setting-card-head">
+                      <span class="setting-card-icon"><span class="icon icon-save"></span></span>
+                      <div>
+                        <div class="setting-card-title">游戏目录</div>
+                        <div class="setting-card-desc">版本、库、资源和模组都放在这里；切换后不会自动搬迁已有文件</div>
+                      </div>
+                    </div>
+
+                    <div class="setting-row">
+                      <div class="setting-left">
+                        <div class="setting-label">安装位置</div>
+                        <div class="setting-desc" id="settings-install-dir-label">--</div>
+                      </div>
+                      <div class="setting-control setting-control-column">
+                        <div class="install-dir-actions">
+                          <button id="settings-install-dir-change" class="settings-action-btn" type="button">更改目录</button>
+                          <button id="settings-install-dir-reset" class="settings-action-btn settings-action-btn-secondary" type="button">恢复默认</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="setting-card setting-card--group">
+                    <div class="setting-card-head">
+                      <span class="setting-card-icon"><span class="icon icon-box"></span></span>
+                      <div>
+                        <div class="setting-card-title">模组来源</div>
+                        <div class="setting-card-desc">CurseForge 官方接口需要 API Key；镜像不可用时会自动改用它</div>
+                      </div>
+                    </div>
+
+                    <div class="setting-row">
+                      <div class="setting-left">
+                        <div class="setting-label">CurseForge API Key</div>
+                        <div class="setting-desc">可选。没有 Key 时只能走公共镜像，镜像维护期间会搜不到 CurseForge</div>
+                      </div>
+                      <div class="setting-control setting-control-column">
+                        <input type="text" id="settings-curseforge-key" class="setting-input" placeholder="留空则只使用 Modrinth + 镜像">
+                      </div>
+                    </div>
                   </div>
 
                   <div class="setting-card setting-card--group">
@@ -1128,6 +1310,18 @@
                           </label>
                         </div>
                       </div>
+                      <div class="setting-row setting-row-indent">
+                        <div class="setting-left">
+                          <div class="setting-label">自动安装更新</div>
+                          <div class="setting-desc">发现新版本后在后台下载，退出启动器时自动安装</div>
+                        </div>
+                        <div class="setting-control">
+                          <label class="switch">
+                            <input type="checkbox" id="auto-update" checked>
+                            <span class="slider"></span>
+                          </label>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
@@ -1362,6 +1556,25 @@
         <button id="crash-dialog-ok" class="dialog-btn dialog-btn-primary" type="button">确定</button>
         <button id="crash-dialog-log" class="dialog-btn dialog-btn-secondary" type="button">查看日志</button>
         <button id="crash-dialog-export" class="dialog-btn dialog-btn-secondary" type="button">导出错误报告</button>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="mod-target-overlay" class="mod-target-overlay hidden">
+    <div class="mod-target-dialog">
+      <div class="mod-target-header">
+        <h3>安装到哪个版本？</h3>
+        <button id="mod-target-close" class="mod-target-close" type="button" aria-label="关闭"><span class="icon icon-close"></span></button>
+      </div>
+      <div id="mod-target-file" class="mod-target-file"></div>
+      <div id="mod-target-list" class="mod-target-list"></div>
+      <div class="mod-target-actions">
+        <button id="mod-target-browse" class="mod-target-btn" type="button">选择文件夹…</button>
+        <div class="mod-target-actions-right">
+          <button id="mod-target-cancel" class="mod-target-btn" type="button">取消</button>
+          <button id="mod-target-confirm" class="mod-target-btn primary" type="button">安装</button>
+        </div>
       </div>
     </div>
   </div>

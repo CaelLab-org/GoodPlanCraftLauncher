@@ -445,6 +445,11 @@ body.light-mode .custom-select-dropdown {
   transform: translateY(0);
 }
 
+.custom-select-dropdown--scroll {
+  max-height: 260px;
+  overflow-y: auto;
+}
+
 .username-history.open-up {
   top: auto;
   bottom: calc(100% + 6px);
@@ -4130,4 +4135,944 @@ body:has(#game-monitor.active) .container {
 
 .page-enter {
   animation: pageEnter 0.26s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.update-widget {
+  position: fixed;
+  top: 64px;
+  right: 18px;
+  z-index: 119;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  animation: updateWidgetIn 0.22s ease-out;
+}
+
+.update-widget-btn {
+  --update-progress: 0;
+  position: relative;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--border-medium);
+  background: var(--bg-card);
+  color: var(--accent-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.24);
+  transition: transform 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.update-widget-btn:hover {
+  background: var(--bg-card-hover);
+  color: var(--accent-secondary);
+  transform: translateY(-1px);
+}
+
+.update-widget-btn::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: conic-gradient(var(--accent-primary) calc(var(--update-progress) * 1%), transparent 0);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2.5px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2.5px));
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.update-widget.downloading .update-widget-btn::after {
+  opacity: 1;
+}
+
+.update-widget.ready .update-widget-btn {
+  background: var(--accent-primary);
+  border-color: transparent;
+  color: var(--bg-primary);
+}
+
+.update-widget.ready .update-widget-btn:hover {
+  background: var(--accent-secondary);
+  color: var(--bg-primary);
+}
+
+.update-widget.failed .update-widget-btn {
+  color: var(--warning);
+  border-color: rgba(255, 167, 38, 0.45);
+}
+
+.update-popover {
+  position: relative;
+  width: 330px;
+  max-height: calc(70vh / var(--app-zoom) - 80px);
+  overflow-y: auto;
+  padding: 14px;
+  border: 1px solid var(--border-medium);
+  border-radius: 12px;
+  background: var(--bg-secondary);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.35);
+  animation: updatePopoverIn 0.16s ease-out;
+}
+
+.update-popover-heading {
+  padding-right: 26px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-title);
+}
+
+.update-popover-version {
+  margin-left: 2px;
+  color: var(--accent-primary);
+}
+
+.update-popover-title {
+  margin-top: 5px;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+
+.update-popover-log {
+  margin-top: 10px;
+  max-height: 190px;
+  overflow-y: auto;
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+
+.update-popover-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.update-popover-close:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
+}
+
+.update-popover-progress-block {
+  margin-top: 12px;
+}
+
+.update-progress {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--bg-input);
+  overflow: hidden;
+}
+
+.update-progress-fill {
+  width: 0;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--accent-primary);
+  transition: width 0.2s ease;
+}
+
+.update-status-text {
+  margin-top: 7px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-tertiary);
+}
+
+.update-popover-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.update-action-primary {
+  flex: 1;
+  padding: 9px 12px;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, opacity 0.15s ease;
+}
+
+.update-action-primary:hover:not(:disabled) {
+  background: var(--accent-secondary);
+}
+
+.update-action-primary:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+body.light-mode .update-widget-btn {
+  box-shadow: 0 6px 18px rgba(11, 127, 184, 0.18);
+}
+
+body.light-mode .update-popover {
+  box-shadow: 0 18px 44px rgba(11, 60, 110, 0.18);
+}
+
+@keyframes updateWidgetIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes updatePopoverIn {
+  from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+
+/* 下载页：版本 / 模组分区 */
+.download-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.download-tabs {
+  display: flex;
+  gap: 6px;
+  margin: 0 0 14px;
+  padding: 4px;
+  width: fit-content;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+}
+
+.download-tab {
+  padding: 6px 18px;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.download-tab:hover {
+  color: var(--text-primary);
+  background: var(--bg-card-hover);
+}
+
+.download-tab.active {
+  color: var(--bg-primary);
+  background: var(--accent-primary);
+}
+
+/* 模组下载 */
+.mod-search-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.mod-search-input {
+  flex: 1;
+  padding: 9px 12px;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-size: 13px;
+  outline: none;
+}
+
+.mod-search-input:focus {
+  border-color: var(--accent-primary);
+}
+
+.mod-search-btn {
+  padding: 9px 22px;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mod-search-btn:hover {
+  background: var(--accent-secondary);
+}
+
+.mod-filter-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.mod-select {
+  padding: 7px 10px;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-size: 12px;
+  outline: none;
+  cursor: pointer;
+}
+
+.mod-results {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mod-card {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  background: var(--bg-card);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.mod-card:hover {
+  border-color: var(--border-accent);
+  background: var(--bg-card-hover);
+}
+
+.mod-card-icon {
+  width: 46px;
+  height: 46px;
+  flex: 0 0 46px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: var(--bg-input);
+}
+
+.mod-card-body {
+  min-width: 0;
+  flex: 1;
+}
+
+.mod-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-title);
+}
+
+.mod-source-tag {
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: var(--bg-input);
+}
+
+.mod-card-desc {
+  margin-top: 4px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.mod-card-meta {
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.mod-detail-head {
+  display: flex;
+  gap: 14px;
+  padding: 14px;
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  background: var(--bg-card);
+  margin-bottom: 12px;
+}
+
+.mod-detail-head img {
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  object-fit: cover;
+  background: var(--bg-input);
+}
+
+.mod-detail-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-title);
+}
+
+.mod-detail-desc {
+  margin-top: 6px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.mod-version-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  background: var(--bg-card);
+  margin-bottom: 8px;
+}
+
+.mod-version-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.mod-version-name {
+  font-size: 13px;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mod-version-meta {
+  margin-top: 3px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.mod-install-btn {
+  padding: 6px 14px;
+  border: 1px solid var(--accent-primary);
+  border-radius: 7px;
+  background: transparent;
+  color: var(--accent-primary);
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.mod-install-btn:hover:not(:disabled) {
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+}
+
+.mod-install-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.mod-empty {
+  padding: 28px 12px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.install-dir-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.settings-action-btn {
+  padding: 7px 14px;
+  border: 1px solid var(--accent-primary);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--accent-primary);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.settings-action-btn:hover {
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+}
+
+.settings-action-btn-secondary {
+  border-color: var(--border-medium);
+  color: var(--text-secondary);
+}
+
+.settings-action-btn-secondary:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
+}
+
+.detail-option-auto {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 2px 2px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.detail-option-auto input {
+  cursor: pointer;
+}
+
+.version-import-btn {
+  margin: 0 0 12px;
+  padding: 7px 14px;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.version-import-btn:hover {
+  border-color: var(--border-accent);
+  color: var(--text-primary);
+  background: var(--bg-card-hover);
+}
+
+#mod-target-version {
+  max-width: 240px;
+}
+
+.mod-link-hint {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* 模组区：搜索、结果、详情、目标选择 */
+.mod-download-section {
+  padding-bottom: 12px;
+}
+
+.mod-search-row {
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.mod-search-input {
+  height: 40px;
+  padding: 0 14px;
+  font-size: 13px;
+  border-radius: 10px;
+}
+
+.mod-search-btn {
+  height: 40px;
+  padding: 0 24px;
+  border-radius: 10px;
+}
+
+.mod-filter-row {
+  gap: 10px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.mod-select {
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+#mod-status {
+  min-height: 18px;
+  margin-bottom: 10px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+#mod-status[data-type="error"] { color: var(--error); }
+#mod-status[data-type="success"] { color: var(--success); }
+
+.mod-results {
+  gap: 10px;
+}
+
+.mod-card {
+  padding: 14px;
+  border-radius: 12px;
+  gap: 14px;
+}
+
+.mod-card-icon {
+  width: 52px;
+  height: 52px;
+  flex: 0 0 52px;
+  border-radius: 10px;
+}
+
+.mod-card-title {
+  font-size: 14.5px;
+}
+
+.mod-card-desc {
+  margin-top: 5px;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.mod-card-meta {
+  margin-top: 7px;
+  font-size: 11px;
+}
+
+.mod-detail-head {
+  padding: 16px;
+  border-radius: 12px;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.mod-detail-head img {
+  width: 72px;
+  height: 72px;
+  border-radius: 12px;
+}
+
+.mod-detail-info {
+  min-width: 0;
+  flex: 1;
+}
+
+.mod-detail-title {
+  font-size: 17px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.mod-detail-meta {
+  margin-top: 5px;
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.mod-detail-desc {
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.mod-version-heading {
+  margin: 16px 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.mod-version-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mod-version-row {
+  margin-bottom: 0;
+  padding: 11px 13px;
+  border-radius: 10px;
+}
+
+.mod-version-row:hover {
+  border-color: var(--border-accent);
+}
+
+.mod-version-name {
+  font-size: 12.5px;
+}
+
+.mod-install-btn {
+  padding: 7px 16px;
+  border-radius: 8px;
+}
+
+/* 安装目标选择弹窗 */
+.mod-target-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 220;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(4, 10, 22, 0.55);
+  backdrop-filter: blur(2px);
+}
+
+body.light-mode .mod-target-overlay {
+  background: rgba(13, 40, 70, 0.28);
+}
+
+.mod-target-dialog {
+  width: min(600px, 94vw);
+  max-height: 82vh;
+  display: flex;
+  flex-direction: column;
+  padding: 18px;
+  border: 1px solid var(--border-medium);
+  border-radius: 14px;
+  background: var(--bg-secondary);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+
+.mod-target-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.mod-target-header h3 {
+  margin: 0;
+  font-size: 16px;
+  color: var(--text-title);
+}
+
+.mod-target-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.mod-target-close:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
+}
+
+.mod-target-file {
+  margin: 10px 0 12px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  word-break: break-all;
+}
+
+.mod-target-list {
+  flex: 1;
+  min-height: 90px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-right: 4px;
+}
+
+.mod-target-item {
+  padding: 11px 13px;
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  background: var(--bg-card);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.mod-target-item:hover {
+  background: var(--bg-card-hover);
+}
+
+.mod-target-item.selected {
+  border-color: var(--accent-primary);
+  background: var(--bg-card-hover);
+}
+
+.mod-target-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-title);
+}
+
+.mod-target-meta {
+  margin-top: 3px;
+  font-size: 11.5px;
+  color: var(--text-secondary);
+}
+
+.mod-target-notes {
+  margin-top: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.mod-target-notes span {
+  padding: 2px 7px;
+  border-radius: 5px;
+  font-size: 10.5px;
+  color: var(--warning);
+  background: rgba(255, 167, 38, 0.12);
+}
+
+.mod-target-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.mod-target-actions-right {
+  display: flex;
+  gap: 8px;
+}
+
+.mod-target-btn {
+  padding: 8px 16px;
+  border: 1px solid var(--border-medium);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.mod-target-btn:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
+}
+
+.mod-target-btn.primary {
+  border-color: var(--accent-primary);
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  font-weight: 600;
+}
+
+.mod-target-btn.primary:hover:not(:disabled) {
+  background: var(--accent-secondary);
+}
+
+.mod-target-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* 下载任务队列 */
+.download-task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 10px 0 14px;
+}
+
+.download-task {
+  padding: 10px 12px;
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  background: var(--bg-card);
+}
+
+.download-task[data-status="running"] {
+  border-color: var(--border-accent);
+}
+
+.download-task[data-status="done"] {
+  opacity: 0.72;
+}
+
+.download-task[data-status="error"] {
+  border-color: rgba(239, 83, 80, 0.4);
+}
+
+.download-task-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.download-task-name {
+  flex: 1;
+  min-width: 0;
+  font-size: 12.5px;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.download-task-state {
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  max-width: 55%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.download-task[data-status="done"] .download-task-state { color: var(--success); }
+.download-task[data-status="error"] .download-task-state { color: var(--error); }
+
+.download-task-remove {
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.download-task-remove:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
+}
+
+.download-task-bar {
+  height: 3px;
+  margin-top: 8px;
+  border-radius: 3px;
+  background: var(--bg-input);
+  overflow: hidden;
+}
+
+.download-task-fill {
+  height: 100%;
+  width: 0;
+  border-radius: 3px;
+  background: var(--accent-primary);
+  transition: width 0.2s ease;
+}
+
+.download-task[data-status="done"] .download-task-fill { background: var(--success); }
+.download-task[data-status="error"] .download-task-fill { background: var(--error); }
+
+.mod-version-hint {
+  margin: -2px 0 8px;
+  font-size: 11px;
+  color: var(--text-muted);
 }

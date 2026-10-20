@@ -13,7 +13,7 @@ import os from 'os';
 import path from 'path';
 import { spawn, spawnSync } from 'child_process';
 
-import { DEFAULT_SETTINGS, GAME_DIR, LOG_FILE, computeAutoMemoryMB, loadSettings, writeLog } from './config';
+import { APP_VERSION, DEFAULT_SETTINGS, GAME_DIR, LOG_FILE, computeAutoMemoryMB, getVersionGameDir, loadSettings, writeLog } from './config';
 import { generateLaunchDisplayName } from './download';
 import { downloadAndInstallJava, ensureJavaRuntime, getJavaVersionFromVersionData } from './java';
 import { mainWindow, trimWorkingSets } from './shell';
@@ -589,13 +589,15 @@ export function resolveInheritsFrom(vd: any, gameDir: string): any {
   }
   merged.libraries = Array.from(libMap.values());
   
-  if (resolvedParent.arguments?.game || vd.arguments?.game) {
+  if (resolvedParent.arguments || vd.arguments) {
     if (!merged.arguments) merged.arguments = {};
-    const parentGame: any[] = (resolvedParent.arguments?.game || []).filter((a: any) => typeof a === 'string');
-    const childGame: any[] = (vd.arguments?.game || []);
-    const childStrings: Set<string> = new Set(childGame.filter((a: any) => typeof a === 'string'));
-    const mergedGame: any[] = parentGame.filter((a: any) => !childStrings.has(a)).concat(childGame);
-    merged.arguments.game = mergedGame;
+    for (const key of ['game', 'jvm']) {
+      const parentArgs: any[] = resolvedParent.arguments?.[key] || [];
+      const childArgs: any[] = vd.arguments?.[key] || [];
+      if (parentArgs.length === 0 && childArgs.length === 0) continue;
+      const childStrings: Set<string> = new Set(childArgs.filter((a: any) => typeof a === 'string'));
+      merged.arguments[key] = parentArgs.filter((a: any) => typeof a !== 'string' || !childStrings.has(a)).concat(childArgs);
+    }
   }
   
   writeLog(`[启动] 已解析 inheritsFrom: ${vd.inheritsFrom} -> 合并 ${merged.libraries?.length || 0} 个库`);
@@ -624,10 +626,14 @@ export const G1GC_ARGS: string[] = [
 ];
 
 
-export function buildLaunchArgs(vd: any, gameDir: string, versionId: string, username: string, windowMode: string, memoryMB: number | null, serverIp: string | null, authInfo?: { uuid: string; accessToken: string; userType: string }, launchOptions?: { jvmArgsRaw?: string; gcPreset?: string; windowSize?: string; windowWidth?: number; windowHeight?: number }): any {
+export function buildLaunchArgs(vd: any, rootDir: string, gameDir: string, versionId: string, username: string, windowMode: string, memoryMB: number | null, serverIp: string | null, authInfo?: { uuid: string; accessToken: string; userType: string }, launchOptions?: { jvmArgsRaw?: string; gcPreset?: string; windowSize?: string; windowWidth?: number; windowHeight?: number }): any {
   const cp: string[] = [];
   
-  const clientJar: string = path.join(gameDir, 'versions', versionId, `${versionId}.jar`);
+  const ownJar: string = path.join(rootDir, 'versions', versionId, `${versionId}.jar`);
+  const parentJar: string = vd.inheritsFrom
+    ? path.join(rootDir, 'versions', vd.inheritsFrom, `${vd.inheritsFrom}.jar`)
+    : '';
+  const clientJar: string = fs.existsSync(ownJar) ? ownJar : (parentJar && fs.existsSync(parentJar) ? parentJar : ownJar);
   if (fs.existsSync(clientJar)) {
     cp.push(clientJar);
   }
@@ -637,7 +643,7 @@ export function buildLaunchArgs(vd: any, gameDir: string, versionId: string, use
     if (!checkLibraryRules(lib.rules)) continue;
     
     if (lib.downloads?.artifact?.path) {
-      const libPath: string = path.join(gameDir, 'libraries', lib.downloads.artifact.path);
+      const libPath: string = path.join(rootDir, 'libraries', lib.downloads.artifact.path);
       if (fs.existsSync(libPath)) {
         cp.push(libPath);
       } else {
@@ -647,7 +653,7 @@ export function buildLaunchArgs(vd: any, gameDir: string, versionId: string, use
     }
     
     if (lib.downloads?.classifiers?.['natives-windows']?.path) {
-      const nativePath: string = path.join(gameDir, 'libraries', lib.downloads.classifiers['natives-windows'].path);
+      const nativePath: string = path.join(rootDir, 'libraries', lib.downloads.classifiers['natives-windows'].path);
       if (fs.existsSync(nativePath)) {
         cp.push(nativePath);
       } else {
@@ -660,8 +666,12 @@ export function buildLaunchArgs(vd: any, gameDir: string, versionId: string, use
     writeLog(`[启动] 警告: ${missingLibs} 个库文件缺失`);
   }
 
-  const nativesDir: string = path.join(gameDir, 'versions', versionId, 'natives');
-  const assetsDir: string = path.join(gameDir, 'assets');
+  const ownNatives: string = path.join(rootDir, 'versions', versionId, 'natives');
+  const parentNatives: string = vd.inheritsFrom ? path.join(rootDir, 'versions', vd.inheritsFrom, 'natives') : '';
+  const nativesDir: string = fs.existsSync(ownNatives) || !parentNatives || !fs.existsSync(parentNatives)
+    ? ownNatives
+    : parentNatives;
+  const assetsDir: string = path.join(rootDir, 'assets');
 
   const jvmArgs: string[] = [];
 
@@ -696,8 +706,33 @@ export function buildLaunchArgs(vd: any, gameDir: string, versionId: string, use
     auth_session: authInfo?.accessToken || 'offline',
     user_type: authInfo?.userType || 'legacy',
     user_properties: '{}',
-    version_type: 'GPCL'
+    version_type: 'GPCL',
+    classpath_separator: ';',
+    library_directory: path.join(rootDir, 'libraries'),
+    natives_directory: nativesDir,
+    launcher_name: 'GPCL',
+    launcher_version: APP_VERSION
   };
+
+  if (Array.isArray(vd.arguments?.jvm)) {
+    let skipNext: boolean = false;
+    for (const raw of vd.arguments.jvm) {
+      let value: any = raw;
+      if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
+        if (!checkLibraryRules(raw.rules)) continue;
+        value = raw.value;
+      }
+      const values: any[] = Array.isArray(value) ? value : [value];
+      for (const item of values) {
+        if (typeof item !== 'string') continue;
+        if (skipNext) { skipNext = false; continue; }
+        if (item === '-cp' || item === '-classpath') { skipNext = true; continue; }
+        if (item.startsWith('-cp=') || item.startsWith('-Djava.library.path=')) continue;
+        jvmArgs.push(parseMCArguments(item, vars));
+      }
+    }
+    writeLog(`[启动] 已合并版本 JVM 参数: ${vd.arguments.jvm.length} 项`);
+  }
 
   let gameArgs: string[] = [];
 
@@ -781,6 +816,31 @@ export function buildLaunchArgs(vd: any, gameDir: string, versionId: string, use
 
 
 
+export function applyGameLanguage(gameDir: string, langCode: string): void {
+  const file: string = path.join(gameDir, 'options.txt');
+  try {
+    const text: string = fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : '';
+    const newline: string = text.includes('\r\n') ? '\r\n' : '\n';
+    const lines: string[] = text ? text.split(/\r?\n/) : [];
+    while (lines.length > 0 && lines[lines.length - 1] === '') lines.pop();
+
+    const entry: string = `lang:${langCode}`;
+    const index: number = lines.findIndex((line: string) => line.startsWith('lang:'));
+    if (index >= 0) {
+      if (lines[index] === entry) return;
+      lines[index] = entry;
+    } else {
+      lines.push(entry);
+    }
+
+    fs.writeFileSync(file, lines.join(newline) + newline, 'utf8');
+    writeLog(`[游戏语言] 已设置 ${entry}`);
+  } catch (e: any) {
+    writeLog(`[游戏语言] 设置失败: ${e.message}`);
+  }
+}
+
+
 ipcMain.handle('launch-minecraft', async (_, opt: any) => {
   try {
     
@@ -788,7 +848,9 @@ ipcMain.handle('launch-minecraft', async (_, opt: any) => {
     
     const { versionId, username, gameDir: rawGameDir, windowMode } = opt;
     
-    const gameDir: string = rawGameDir ? path.resolve(rawGameDir) : GAME_DIR;
+    const rootDir: string = rawGameDir ? path.resolve(rawGameDir) : GAME_DIR;
+    const gameDir: string = getVersionGameDir(versionId, rootDir);
+    if (!fs.existsSync(gameDir)) fs.mkdirSync(gameDir, { recursive: true });
     
     const mode: string = windowMode || 'windowed';
     writeLog(`启动游戏：玩家 ${username}，版本 ${versionId}，目录: ${gameDir}，窗口模式: ${mode}`);
@@ -798,14 +860,14 @@ ipcMain.handle('launch-minecraft', async (_, opt: any) => {
       return { success: false, error: '启动已取消', cancelled: true };
     }
     
-    const jsonPath: string = path.join(gameDir, 'versions', versionId, `${versionId}.json`);
+    const jsonPath: string = path.join(rootDir, 'versions', versionId, `${versionId}.json`);
     if (!fs.existsSync(jsonPath)) {
       writeLog(`启动游戏失败：版本 ${versionId} 未下载`);
       return { success: false, error: '请先下载游戏' };
     }
 
     const vd_raw: any = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
-    const vd: any = resolveInheritsFrom(vd_raw, gameDir);
+    const vd: any = resolveInheritsFrom(vd_raw, rootDir);
     const javaVersion: string = getJavaVersionFromVersionData(vd);
 
     if (launchCancelFlag) {
@@ -819,7 +881,7 @@ ipcMain.handle('launch-minecraft', async (_, opt: any) => {
     let serverIp: string | null = null;
 
     try {
-      const versionConfigPath: string = path.join(gameDir, 'versions', versionId, 'gpcl', 'config.json');
+      const versionConfigPath: string = path.join(rootDir, 'versions', versionId, 'gpcl', 'config.json');
       if (fs.existsSync(versionConfigPath)) {
         const versionSettings: any = JSON.parse(fs.readFileSync(versionConfigPath, 'utf8'));
 
@@ -918,7 +980,7 @@ ipcMain.handle('launch-minecraft', async (_, opt: any) => {
     const authInfo: any = opt.authUuid && opt.authAccessToken
       ? { uuid: opt.authUuid, accessToken: opt.authAccessToken, userType: opt.authUserType || 'msa' }
       : undefined;
-    const { jvmArgs, gameArgs, mainClass } = buildLaunchArgs(vd, gameDir, versionId, username, actualWindowMode, memoryMB, serverIp, authInfo, {
+    const { jvmArgs, gameArgs, mainClass } = buildLaunchArgs(vd, rootDir, gameDir, versionId, username, actualWindowMode, memoryMB, serverIp, authInfo, {
       jvmArgsRaw: settings.game?.jvmArgs,
       gcPreset: settings.game?.gcPreset,
       windowSize: settings.game?.windowSize,
@@ -955,6 +1017,15 @@ ipcMain.handle('launch-minecraft', async (_, opt: any) => {
     if (settings.game?.optimizeBeforeLaunch) {
       writeLog('[启动] 启动前执行内存优化...');
       await trimWorkingSets();
+    }
+
+    if (settings.game?.autoLanguage === true) {
+      const langCode: string = String(settings.game.language || 'zh_cn').trim();
+      if (/^[a-z]{2,3}(_[a-z]{2,4})?$/.test(langCode)) {
+        applyGameLanguage(gameDir, langCode);
+      } else {
+        writeLog(`[游戏语言] 语言代码无效，跳过: ${langCode}`);
+      }
     }
 
     let proc: any;

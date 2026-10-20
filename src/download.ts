@@ -7,11 +7,11 @@
 
 
 // __IMPORTS_BEGIN__
-import { BrowserWindow, ipcMain, net } from 'electron';
+import { BrowserWindow, dialog, ipcMain, net } from 'electron';
 import fs from 'fs';
 import path from 'path';
 
-import { APP_VERSION, CACHE_DIR, GAME_DIR, formatTimestamp, loadSettings, writeLog } from './config';
+import { APP_VERSION, CACHE_DIR, GAME_DIR, formatTimestamp, loadSettings, markVersionIsolated, writeLog } from './config';
 import { installVersionWithModLoader } from './modloader';
 import { mainWindow } from './shell';
 import { MAX_CONCURRENT, activeDownloads, completedDownloadFiles, currentDownloadPath, currentDownloadType, currentDownloadVersion, downloadQueue, isDownloading, isJavaDownloading, setActiveDownloads, setCompletedDownloadFiles, setCurrentDownloadPath, setCurrentDownloadType, setCurrentDownloadVersion, setDownloadQueue, setIsDownloading, setIsJavaDownloading, setMaxConcurrent, setShouldCancelDownload, setTotalDownloadFiles, shouldCancelDownload, totalDownloadFiles } from './state';
@@ -135,6 +135,7 @@ let versionSourcePolicy: DownloadSourcePolicy = 'auto';
 let speedLimitBytes: number = 0;
 let speedTokens: number = 0;
 let speedLastRefill: number = Date.now();
+let customFileMirror: string = '';
 
 function normalizeSourcePolicy(value: any): DownloadSourcePolicy {
   return value === 'mirror-first' || value === 'official-first' || value === 'official-only' ? value : 'auto';
@@ -145,6 +146,7 @@ export function loadDownloadSettings(): void {
     const settings: any = loadSettings();
     fileSourcePolicy = normalizeSourcePolicy(settings.download?.fileSource);
     versionSourcePolicy = normalizeSourcePolicy(settings.download?.versionSource);
+    customFileMirror = String(settings.download?.customFileMirror || '').trim().replace(/\/+$/, '');
     setDownloadSpeedLimit(Number(settings.download?.speedLimit) || 0);
   } catch {}
 }
@@ -170,24 +172,24 @@ async function consumeDownloadTokens(bytes: number): Promise<void> {
   }
 }
 
-function mirrorUrlFor(url: string): string | null {
+export function mirrorUrlFor(url: string, base: string = 'https://bmclapi2.bangbang93.com'): string | null {
   try {
     const parsed: URL = new URL(url);
     if (['piston-meta.mojang.com', 'launchermeta.mojang.com', 'launcher.mojang.com', 'piston-data.mojang.com'].includes(parsed.hostname)) {
-      return `https://bmclapi2.bangbang93.com${parsed.pathname}${parsed.search}`;
+      return `${base}${parsed.pathname}${parsed.search}`;
     }
-    if (parsed.hostname === 'libraries.minecraft.net' || parsed.hostname === 'maven.minecraftforge.net') {
-      return `https://bmclapi2.bangbang93.com/maven${parsed.pathname}${parsed.search}`;
+    if (['libraries.minecraft.net', 'maven.minecraftforge.net', 'maven.fabricmc.net', 'maven.neoforged.net'].includes(parsed.hostname)) {
+      return `${base}/maven${parsed.pathname}${parsed.search}`;
     }
     if (parsed.hostname === 'resources.download.minecraft.net') {
-      return `https://bmclapi2.bangbang93.com/assets${parsed.pathname}${parsed.search}`;
+      return `${base}/assets${parsed.pathname}${parsed.search}`;
     }
   } catch {}
   return null;
 }
 
 function buildSourceUrls(url: string, policy: DownloadSourcePolicy, extraMirror?: string): string[] {
-  const mirror: string | null = extraMirror || mirrorUrlFor(url);
+  const mirror: string | null = (customFileMirror ? mirrorUrlFor(url, customFileMirror) : null) || extraMirror || mirrorUrlFor(url);
   if (!mirror) return [url];
   if (policy === 'official-only') return [url];
   if (policy === 'mirror-first') return [mirror, url];
@@ -382,7 +384,7 @@ async function downloadFileOnce(url: string, dest: string, label: string, timeou
           if (res2.statusCode >= 300 && res2.statusCode < 400 && res2.headers.location) {
             writeLog(`[下载] ${label} 重定向到: ${res2.headers.location}`);
             file.end(() => {
-              downloadFileOnce(res2.headers.location, dest, label, timeoutMs).then(resolve).catch(reject);
+              downloadFileOnce(new URL(res2.headers.location, url).toString(), dest, label, timeoutMs).then(resolve).catch(reject);
             });
             return;
           }
@@ -431,6 +433,11 @@ async function downloadFileOnce(url: string, dest: string, label: string, timeou
             }
           });
           res2.on('end', () => {
+            if (loaded === 0) {
+              try { file.destroy(); } catch {}
+              reject(new Error('下载内容为空'));
+              return;
+            }
             file.end();
             writeLog(`[下载] ${label} 下载完成，实际大小: ${loaded} bytes`);
             resolve();
@@ -463,7 +470,7 @@ async function downloadFileOnce(url: string, dest: string, label: string, timeou
         if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
           writeLog(`[下载] ${label} 重定向到: ${res.headers.location}`);
           file.end(() => {
-            downloadFileOnce(res.headers.location, dest, label, timeoutMs).then(resolve).catch(reject);
+            downloadFileOnce(new URL(res.headers.location, url).toString(), dest, label, timeoutMs).then(resolve).catch(reject);
           });
           return;
         }
@@ -512,6 +519,11 @@ async function downloadFileOnce(url: string, dest: string, label: string, timeou
           }
         });
         res.on('end', () => {
+          if (loaded === 0) {
+            try { file.destroy(); } catch {}
+            fallbackToHttps(new Error('下载内容为空'));
+            return;
+          }
           file.end();
           writeLog(`[下载] ${label} 下载完成，实际大小: ${loaded} bytes`);
           resolve();
@@ -581,7 +593,8 @@ setTotalDownloadFiles(0);
 setCompletedDownloadFiles(0);
 
     const versionDir2: string = path.join(GAME_DIR, 'versions', versionId);
-    if (!fs.existsSync(versionDir2)) fs.mkdirSync(versionDir2, { recursive: true });
+    const versionExisted: boolean = fs.existsSync(versionDir2);
+    if (!versionExisted) fs.mkdirSync(versionDir2, { recursive: true });
 
     const versionJsonPath: string = path.join(versionDir2, versionId + '.json');
     const versionJarPath: string = path.join(versionDir2, versionId + '.jar');
@@ -708,6 +721,7 @@ setCompletedDownloadFiles(0);
     }
 
     writeLog(`下载完成：${versionId}`);
+    if (!versionExisted) markVersionIsolated(GAME_DIR, versionId);
 
     updateVersionLastPlayed(versionId, targetDir);
     
@@ -876,8 +890,165 @@ ipcMain.handle('get-version-manifest', async () => {
 ipcMain.handle('download-version', (event: any, versionId: string, maxConcurrent: number, downloadPath: string) => installVersion(versionId, maxConcurrent, downloadPath));
 
 
-ipcMain.handle('download-with-modloader', (event: any, versionId: string, loaderType: string, loaderVersion: string, maxConcurrent: number) => 
-  installVersionWithModLoader(versionId, loaderType, loaderVersion, maxConcurrent));
+ipcMain.handle('select-version-folder', async () => {
+  if (!mainWindow) return null;
+  const result = await dialog.showOpenDialog(mainWindow, { title: '选择版本文件夹', properties: ['openDirectory'] });
+  return result.canceled || result.filePaths.length === 0 ? null : result.filePaths[0];
+});
+
+
+ipcMain.handle('select-version-archive', async () => {
+  if (!mainWindow) return null;
+  const result = await dialog.showOpenDialog(mainWindow, {
+    title: '选择版本压缩包',
+    properties: ['openFile'],
+    filters: [{ name: '压缩包', extensions: ['zip', 'jar'] }]
+  });
+  return result.canceled || result.filePaths.length === 0 ? null : result.filePaths[0];
+});
+
+
+function findVersionJson(dir: string): { file: string; data: any } | null {
+  let entries: fs.Dirent[] = [];
+  try { entries = fs.readdirSync(dir, { withFileTypes: true }); } catch { return null; }
+  const candidates: string[] = entries
+    .filter((e: fs.Dirent) => e.isFile() && e.name.endsWith('.json'))
+    .map((e: fs.Dirent) => path.join(dir, e.name));
+  const baseName: string = path.basename(dir);
+  const ordered: string[] = candidates.sort((a: string, b: string) => {
+    const aPreferred: number = path.basename(a) === `${baseName}.json` ? 0 : 1;
+    const bPreferred: number = path.basename(b) === `${baseName}.json` ? 0 : 1;
+    return aPreferred - bPreferred;
+  });
+  for (const file of ordered) {
+    try {
+      const data: any = JSON.parse(fs.readFileSync(file, 'utf8'));
+      if (data && typeof data === 'object' && (data.id || data.inheritsFrom || data.libraries || data.mainClass || data.arguments || data.minecraftArguments)) {
+        if (data.id || data.mainClass || data.arguments || data.minecraftArguments || data.inheritsFrom) {
+          return { file, data };
+        }
+      }
+    } catch {}
+  }
+  return null;
+}
+
+
+function copyDirectory(src: string, dest: string): void {
+  fs.mkdirSync(dest, { recursive: true });
+  for (const entry of fs.readdirSync(src, { withFileTypes: true })) {
+    if (entry.name === 'CancelDownload.txt') continue;
+    const from: string = path.join(src, entry.name);
+    const to: string = path.join(dest, entry.name);
+    if (entry.isDirectory()) {
+      copyDirectory(from, to);
+    } else if (entry.isFile()) {
+      fs.copyFileSync(from, to);
+    }
+  }
+}
+
+
+function importVersionFolder(srcDir: string): any {
+  const found = findVersionJson(srcDir);
+  if (!found) {
+    return { success: false, error: '这个文件夹里没有找到版本 JSON，请选择包含 <版本名>.json 的版本文件夹' };
+  }
+
+  const rawId: string = String(found.data.id || path.basename(srcDir));
+  const versionId: string = rawId.replace(/[<>:"/\\|?*\x00-\x1f]/g, '_');
+  if (!versionId) return { success: false, error: '无法确定版本名' };
+
+  const versionsDir: string = path.join(GAME_DIR, 'versions');
+  const dest: string = path.join(versionsDir, versionId);
+  if (fs.existsSync(dest)) {
+    return { success: false, error: `版本 ${versionId} 已存在，请先删除后再导入` };
+  }
+
+  fs.mkdirSync(versionsDir, { recursive: true });
+  copyDirectory(srcDir, dest);
+
+  const jsonPath: string = path.join(dest, `${versionId}.json`);
+  if (!fs.existsSync(jsonPath)) {
+    const copied: string = path.join(dest, path.basename(found.file));
+    if (fs.existsSync(copied) && copied !== jsonPath) fs.copyFileSync(copied, jsonPath);
+  }
+
+  for (const sub of ['libraries', 'assets']) {
+    const from: string = path.join(srcDir, sub);
+    if (fs.existsSync(from)) {
+      copyDirectory(from, path.join(GAME_DIR, sub));
+      writeLog(`[本地安装] 已合并 ${sub} 目录`);
+    }
+  }
+
+  writeLog(`[本地安装] 已导入版本 ${versionId} 到 ${dest}`);
+  return { success: true, versionId };
+}
+
+
+ipcMain.handle('install-local-version', async (_, sourcePath: string) => {
+  try {
+    if (!sourcePath || !fs.existsSync(sourcePath)) {
+      return { success: false, error: '路径不存在' };
+    }
+    const stat = fs.statSync(sourcePath);
+    if (stat.isDirectory()) {
+      return importVersionFolder(sourcePath);
+    }
+
+    const ext: string = path.extname(sourcePath).toLowerCase();
+    if (ext !== '.zip' && ext !== '.jar') {
+      return { success: false, error: '只支持版本文件夹或 .zip / .jar 压缩包' };
+    }
+
+    const tempDir: string = path.join(GAME_DIR, 'temp', `import-${Date.now()}`);
+    fs.mkdirSync(tempDir, { recursive: true });
+    try {
+      const AdmZip: any = require('adm-zip');
+      new AdmZip(sourcePath).extractAllTo(tempDir, true);
+
+      const manifestPath: string = path.join(tempDir, 'manifest.json');
+      if (fs.existsSync(manifestPath)) {
+        try {
+          const manifest: any = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+          if (manifest && manifest.minecraft) {
+            return { success: false, error: '这是整合包，当前版本暂不支持导入整合包' };
+          }
+        } catch {}
+      }
+
+      const findVersionFolder = (root: string, depth: number): string | null => {
+        const found = findVersionJson(root);
+        if (found && path.basename(found.file) === `${path.basename(root)}.json`) return root;
+        if (depth <= 0) return null;
+        let entries: fs.Dirent[] = [];
+        try { entries = fs.readdirSync(root, { withFileTypes: true }); } catch { return null; }
+        for (const entry of entries) {
+          if (!entry.isDirectory()) continue;
+          const child: string = path.join(root, entry.name);
+          const hit: string | null = findVersionFolder(child, depth - 1);
+          if (hit) return hit;
+        }
+        return null;
+      };
+
+      let versionDir: string | null = findVersionFolder(tempDir, 3);
+      if (!versionDir && findVersionJson(tempDir)) versionDir = tempDir;
+      if (!versionDir) return { success: false, error: '压缩包里没有找到版本文件夹（需要包含 <版本名>.json）' };
+      return importVersionFolder(versionDir);
+    } finally {
+      try { fs.rmSync(tempDir, { recursive: true, force: true }); } catch {}
+    }
+  } catch (e: any) {
+    writeLog(`[本地安装] 失败: ${e.message}`);
+    return { success: false, error: e.message };
+  }
+});
+
+
+ipcMain.handle('download-with-modloader', (event: any, versionId: string, loaderType: string, loaderVersion: string, maxConcurrent: number, options?: any) => 
+  installVersionWithModLoader(versionId, loaderType, loaderVersion, maxConcurrent, options));
 
 
 ipcMain.handle('get-version-config', (event: any, versionId: string) => readVersionConfig(versionId));

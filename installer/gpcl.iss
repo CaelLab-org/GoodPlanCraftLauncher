@@ -57,6 +57,7 @@ WizardStyle=dynamic includetitlebar
 Compression=lzma2/max
 SolidCompression=yes
 CloseApplications=yes
+RestartApplications=no
 VersionInfoCompany={#AppPublisher}
 VersionInfoDescription={#AppName} Setup
 VersionInfoVersion={#VersionInfoVersion}
@@ -87,10 +88,16 @@ Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#AppExeName}"; Tasks: deskto
 
 [Run]
 Filename: "{app}\{#AppExeName}"; Description: "{cm:LaunchProgram,{#AppName}}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\{#AppExeName}"; Flags: nowait; Check: RelaunchAfterSilentInstall
 
 [Code]
 var
   OldInstallDir: String;
+
+function RelaunchAfterSilentInstall: Boolean;
+begin
+  Result := WizardSilent and (ExpandConstant('{param:RELAUNCH|0}') = '1');
+end;
 
 function OldNsKey: String;
 begin
@@ -102,14 +109,40 @@ begin
   Result := RegKeyExists(HKEY_CURRENT_USER, OldNsKey);
 end;
 
+function OpenProcess(dwDesiredAccess: Cardinal; bInheritHandle: Boolean; dwProcessId: Cardinal): Cardinal;
+  external 'OpenProcess@kernel32.dll stdcall';
+function WaitForSingleObject(hHandle: Cardinal; dwMilliseconds: Cardinal): Cardinal;
+  external 'WaitForSingleObject@kernel32.dll stdcall';
+function CloseHandle(hObject: Cardinal): Boolean;
+  external 'CloseHandle@kernel32.dll stdcall';
+
+// Waits for the launcher (passed as /WAITPID=) to finish exiting before touching
+// its files. Restart Manager cannot reliably close an Electron process that is
+// already in its quit sequence, so the launcher spawns Setup and then exits.
+procedure WaitForLauncherExit;
+var
+  WaitPid: Integer;
+  ProcHandle: Cardinal;
+begin
+  WaitPid := StrToIntDef(ExpandConstant('{param:WAITPID|0}'), 0);
+  if WaitPid <= 0 then Exit;
+  ProcHandle := OpenProcess($00100000, False, WaitPid);
+  if ProcHandle <> 0 then
+  begin
+    WaitForSingleObject(ProcHandle, 120000);
+    CloseHandle(ProcHandle);
+  end;
+end;
+
 function InitializeSetup: Boolean;
 begin
   Result := True;
+  WaitForLauncherExit;
   if OldNsInstallPresent then
     RegQueryStringValue(HKEY_CURRENT_USER, 'Software\{#OldNsGuid}', 'InstallLocation', OldInstallDir)
   else if RegKeyExists(HKEY_LOCAL_MACHINE, 'Software\Microsoft\Windows\CurrentVersion\Uninstall\{#OldNsGuid}') then
   begin
-    MsgBox(ExpandConstant('{cm:AllUsersBlocked}'), mbCriticalError, MB_OK);
+    SuppressibleMsgBox(ExpandConstant('{cm:AllUsersBlocked}'), mbCriticalError, MB_OK, IDOK);
     Result := False;
   end;
 end;

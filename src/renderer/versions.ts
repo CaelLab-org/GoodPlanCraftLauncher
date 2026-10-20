@@ -282,6 +282,7 @@ export let selectedVersionId: string | null = null;
 
 export let modLoaderState: any = {
   forge: { available: false, versions: [], selected: null, expanded: false, selectedVersionId: null },
+  fabric: { available: false, versions: [], selected: null, expanded: false, selectedVersionId: null },
   optifine: { available: false, versions: [], selected: null, expanded: false, selectedVersionId: null }
 };
 
@@ -322,16 +323,34 @@ export async function checkAllModLoaders(mcVersion: string): Promise<void> {
   
   modLoaderState = {
     forge: { available: false, versions: [], selected: null, expanded: false, selectedVersionId: null },
+    fabric: { available: false, versions: [], selected: null, expanded: false, selectedVersionId: null },
     optifine: { available: false, versions: [], selected: null, expanded: false, selectedVersionId: null }
   };
 
-  const forgeResult = await checkForgeAvailability(mcVersion);
+  const [forgeResult, fabricResult, optifineResult] = await Promise.all([
+    checkForgeAvailability(mcVersion),
+    checkFabricAvailability(mcVersion),
+    checkOptiFineAvailability(mcVersion)
+  ]);
   modLoaderState.forge = { ...modLoaderState.forge, ...forgeResult };
-
-  const optifineResult = await checkOptiFineAvailability(mcVersion);
+  modLoaderState.fabric = { ...modLoaderState.fabric, ...fabricResult };
   modLoaderState.optifine = { ...modLoaderState.optifine, ...optifineResult };
 
   updateModLoaderUI();
+}
+
+
+export async function checkFabricAvailability(mcVersion: string): Promise<{ available: boolean; versions: any[] }> {
+  try {
+    const result = await window.gpcl.getFabricVersions(mcVersion);
+    if (result.success) {
+      return { available: result.versions.length > 0, versions: result.versions };
+    }
+    return { available: false, versions: [] };
+  } catch (e: any) {
+    console.error('检测 Fabric 可用性失败:', e);
+    return { available: false, versions: [] };
+  }
 }
 
 
@@ -490,6 +509,7 @@ export function bindModLoaderEvents(): void {
 export function resetModLoaderState(): void {
   modLoaderState = {
     forge: { available: false, versions: [], selected: null, expanded: false, selectedVersionId: null },
+    fabric: { available: false, versions: [], selected: null, expanded: false, selectedVersionId: null },
     optifine: { available: false, versions: [], selected: null, expanded: false, selectedVersionId: null }
   };
 

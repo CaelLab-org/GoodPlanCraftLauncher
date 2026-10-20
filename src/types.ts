@@ -63,23 +63,37 @@ export interface GPCLApi {
   restartApp(): Promise<void>;
   readJsonFile(subPath: string, fileName: string): Promise<any>;
   writeJsonFile(subPath: string, fileName: string, data: any): Promise<void>;
+  selectVersionFolder(): Promise<string | null>;
+  selectVersionArchive(): Promise<string | null>;
+  installLocalVersion(sourcePath: string): Promise<any>;
   getForgeVersions(mcVersion: string): Promise<any>;
   getFabricVersions(mcVersion: string): Promise<any>;
   getOptiFineVersions(mcVersion: string): Promise<any>;
-  downloadWithModLoader(versionId: string, loaderType: string, loaderVersion: string, maxConcurrent: number): Promise<any>;
+  downloadWithModLoader(versionId: string, loaderType: string, loaderVersion: string, maxConcurrent: number, options?: { installFabricApi?: boolean }): Promise<any>;
   getVersionConfig(versionId: string): Promise<any>;
   getVersionDisplayName(versionId: string): Promise<string>;
   getLaunchDisplayName(versionId: string): Promise<string>;
+
+  modsSearch(options: ModSearchOptions): Promise<any>;
+  modsVersions(options: any): Promise<any>;
+  modsInstall(options: ModInstallOptions): Promise<any>;
+  modsInstallDirect(options: { url: string; fileName: string; targetVersionId?: string; targetDir?: string }): Promise<any>;
+  curseforgeLookup(options: { slug: string; gameVersion: string; loader: string; preferGameVersion?: string }): Promise<any>;
+  getModsDir(versionId?: string): Promise<string>;
+  getVersionInfo(versionId: string): Promise<any>;
+  listInstalledVersions(): Promise<any>;
+  onModDownloadProgress(callback: (data: any) => void): void;
+  onInstallStage(callback: (data: any) => void): void;
   getMemoryUsage(): Promise<number>;
   optimizeMemory(): Promise<{ beforeMB: number; afterMB: number; freedMB: number }>;
   getSystemMemory(): Promise<{ totalMB: number; freeMB: number; autoMemoryMB: number }>;
   getLicenseText(): Promise<string>;
   getRuntimeInfo(): Promise<{ appVersion: string; electron: string; chrome: string; node: string; platform: string }>;
-  downloadUpdate(version: string): Promise<any>;
+  downloadUpdate(version: string, manual?: boolean): Promise<any>;
   cancelUpdateDownload(): Promise<void>;
-  verifyUpdateSHA1(filePath: string): Promise<boolean>;
-  executeUpdateInstaller(installerPath: string): Promise<void>;
-  setUpdateShutdownHook(installerPath: string): Promise<void>;
+  installUpdate(installerPath: string, relaunch: boolean): Promise<any>;
+  setUpdateShutdownHook(installerPath: string, relaunch?: boolean): Promise<any>;
+  getUpdateState(): Promise<any>;
   onUpdateDownloadProgress(callback: (data: any) => void): void;
   removeAllListeners(): void;
 
@@ -106,6 +120,10 @@ export interface GameSettings {
   windowWidth: number;
   windowHeight: number;
   optimizeBeforeLaunch: boolean;
+  /** 启动前把游戏语言改成 language 指定的值 */
+  autoLanguage: boolean;
+  /** Minecraft 语言代码，如 zh_cn */
+  language: string;
 }
 
 export interface AppearanceSettings {
@@ -125,10 +143,17 @@ export interface DownloadSettings {
   fileSource: string;
   versionSource: string;
   speedLimit: number;
+  /** 自定义游戏目录，留空使用启动器默认目录 */
+  installDir: string;
+  /** 自定义下载镜像根地址，留空使用 BMCLAPI */
+  customFileMirror: string;
+  /** CurseForge 官方 API Key，镜像不可用时使用 */
+  curseForgeApiKey: string;
 }
 
 export interface AdvancedSettings {
   autoCheckUpdate: boolean;
+  autoUpdate: boolean;
   preventMultipleLaunch: boolean;
   autoClearLogs: boolean;
   logRetentionValue: number;
@@ -217,7 +242,10 @@ export interface DialogOptions {
   type?: string;
   title?: string;
   message?: string;
+  detail?: string;
   buttons?: string[];
+  defaultId?: number;
+  cancelId?: number;
   confirmText?: string;
   cancelText?: string;
 }
@@ -226,6 +254,25 @@ export interface VersionInfo {
   id: string;
   type: string;
   time: string;
+}
+
+export interface ModSearchOptions {
+  source: 'modrinth' | 'curseforge' | 'both';
+  query: string;
+  gameVersion: string;
+  loader: string;
+  offset?: number;
+  limit?: number;
+}
+
+export interface ModInstallOptions {
+  source: 'modrinth' | 'curseforge';
+  projectId: string;
+  versionId?: string;
+  targetVersionId?: string;
+  targetDir?: string;
+  gameVersion: string;
+  loader: string;
 }
 
 export interface ModLoaderState {

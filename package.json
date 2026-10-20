@@ -1,6 +1,6 @@
 {
   "name": "gpcl",
-  "version": "1.5.2",
+  "version": "1.6.0",
   "description": "GoodPlanCraftLauncher",
   "main": "main.js",
   "scripts": {

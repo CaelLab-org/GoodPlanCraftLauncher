@@ -187,7 +187,9 @@ export async function loadSettings(): Promise<any> {
         windowSize: 'default',
         windowWidth: 854,
         windowHeight: 480,
-        optimizeBeforeLaunch: false
+        optimizeBeforeLaunch: false,
+        autoLanguage: true,
+        language: 'zh_cn'
       },
       appearance: {
         theme: 'light',
@@ -203,10 +205,14 @@ export async function loadSettings(): Promise<any> {
         customJavaMirror: '',
         fileSource: 'auto',
         versionSource: 'auto',
-        speedLimit: 0
+        speedLimit: 0,
+        installDir: '',
+        customFileMirror: '',
+        curseForgeApiKey: ''
       },
       advanced: {
         autoCheckUpdate: true,
+        autoUpdate: true,
         preventMultipleLaunch: true,
         autoClearLogs: true,
         logRetentionValue: 7,
@@ -392,6 +398,8 @@ export async function initLaunchSettings(): Promise<void> {
   const heightInput: HTMLInputElement | null = document.getElementById('settings-window-height') as HTMLInputElement | null;
   const visibilityGroup: HTMLElement | null = document.getElementById('settings-launcher-visibility');
   const keepTitle: HTMLInputElement | null = document.getElementById('settings-keep-window-title') as HTMLInputElement | null;
+  const autoLanguage: HTMLInputElement | null = document.getElementById('settings-auto-language') as HTMLInputElement | null;
+  const languageRow: HTMLElement | null = document.getElementById('game-language-row');
   const jvmArgs: HTMLTextAreaElement | null = document.getElementById('settings-jvm-args') as HTMLTextAreaElement | null;
 
   const toggleCustomRow = (value: string): void => {
@@ -407,6 +415,10 @@ export async function initLaunchSettings(): Promise<void> {
     await saveGameSetting({ processPriority: value });
   });
 
+  initCustomSelect('settings-game-language', async (value: string): Promise<void> => {
+    await saveGameSetting({ language: value });
+  });
+
   initCustomSelect('settings-gc-preset', async (value: string): Promise<void> => {
     await saveGameSetting({ gcPreset: value });
   });
@@ -419,8 +431,21 @@ export async function initLaunchSettings(): Promise<void> {
   if (heightInput) heightInput.value = String(settings.game?.windowHeight || 480);
   setCustomSelectValue('settings-process-priority', settings.game?.processPriority || 'normal');
   setCustomSelectValue('settings-gc-preset', settings.game?.gcPreset || 'default');
+  setCustomSelectValue('settings-game-language', settings.game?.language || 'zh_cn');
   if (jvmArgs) jvmArgs.value = settings.game?.jvmArgs || '';
   if (keepTitle) keepTitle.checked = settings.game?.keepWindowTitle === true;
+
+  if (autoLanguage) {
+    const syncLanguageRow = (enabled: boolean): void => {
+      languageRow?.classList.toggle('hidden', !enabled);
+    };
+    autoLanguage.checked = settings.game?.autoLanguage !== false;
+    syncLanguageRow(autoLanguage.checked);
+    autoLanguage.addEventListener('change', async (): Promise<void> => {
+      syncLanguageRow(autoLanguage.checked);
+      await saveGameSetting({ autoLanguage: autoLanguage.checked });
+    });
+  }
 
   if (visibilityGroup) {
     const stored: string = settings.game?.launcherVisibility || 'keep';
@@ -465,6 +490,23 @@ export async function initLaunchSettings(): Promise<void> {
 export async function initDownloadSettings(): Promise<void> {
   const speedSlider: HTMLInputElement | null = document.getElementById('settings-speed-limit') as HTMLInputElement | null;
   const speedLabel: HTMLElement | null = document.getElementById('settings-speed-limit-value');
+  const mirrorInput: HTMLInputElement | null = document.getElementById('settings-custom-file-mirror') as HTMLInputElement | null;
+  const curseForgeKey: HTMLInputElement | null = document.getElementById('settings-curseforge-key') as HTMLInputElement | null;
+  const installDirLabel: HTMLElement | null = document.getElementById('settings-install-dir-label');
+  const installDirChange: HTMLElement | null = document.getElementById('settings-install-dir-change');
+  const installDirReset: HTMLElement | null = document.getElementById('settings-install-dir-reset');
+
+  const refreshInstallDirLabel = (custom: string): void => {
+    if (!installDirLabel) return;
+    installDirLabel.textContent = custom ? custom : '默认目录（启动器数据目录下的 .minecraft）';
+  };
+
+  const saveDownloadField = async (patch: Record<string, any>): Promise<void> => {
+    const settings = await loadSettings();
+    settings.download = settings.download || {} as any;
+    Object.assign(settings.download, patch);
+    await window.gpcl.saveSettings(settings);
+  };
 
   const updateSpeedLabel = (): void => {
     if (!speedSlider || !speedLabel) return;
@@ -489,6 +531,54 @@ export async function initDownloadSettings(): Promise<void> {
   const settings = await loadSettings();
   setCustomSelectValue('settings-file-source', settings.download?.fileSource || 'auto');
   setCustomSelectValue('settings-version-source', settings.download?.versionSource || 'auto');
+
+  if (mirrorInput) {
+    mirrorInput.value = settings.download?.customFileMirror || '';
+    mirrorInput.addEventListener('change', async (): Promise<void> => {
+      await saveDownloadField({ customFileMirror: mirrorInput.value.trim() });
+      showToast('已保存下载镜像', mirrorInput.value.trim() || '已恢复默认镜像', 'success', 'mirror-saved');
+    });
+  }
+
+  if (curseForgeKey) {
+    curseForgeKey.value = settings.download?.curseForgeApiKey || '';
+    curseForgeKey.addEventListener('change', async (): Promise<void> => {
+      await saveDownloadField({ curseForgeApiKey: curseForgeKey.value.trim() });
+      showToast('已保存 CurseForge Key', curseForgeKey.value.trim() ? '搜索时会优先使用官方接口' : '已清空', 'success', 'cf-key-saved');
+    });
+  }
+
+  refreshInstallDirLabel(settings.download?.installDir || '');
+
+  if (installDirChange) {
+    installDirChange.addEventListener('click', async (): Promise<void> => {
+      const dir: string | null = await window.gpcl.selectDirectory();
+      if (!dir) return;
+
+      const confirmResult: any = await window.gpcl.showMessageDialog({
+        type: 'warning',
+        title: '切换游戏目录',
+        message: `要把游戏目录切换到 ${dir} 吗？`,
+        detail: '新下载的版本、库、资源和模组都会放在这里。已有文件不会自动搬迁，旧目录里的版本切换后不会显示。',
+        buttons: ['切换', '取消'],
+        defaultId: 0,
+        cancelId: 1
+      });
+      if ((confirmResult?.response ?? 1) !== 0) return;
+
+      await saveDownloadField({ installDir: dir });
+      refreshInstallDirLabel(dir);
+      showToast('游戏目录已切换', dir, 'success', 'install-dir-changed');
+    });
+  }
+
+  if (installDirReset) {
+    installDirReset.addEventListener('click', async (): Promise<void> => {
+      await saveDownloadField({ installDir: '' });
+      refreshInstallDirLabel('');
+      showToast('已恢复默认目录', '新下载会放回启动器数据目录', 'info', 'install-dir-reset');
+    });
+  }
 
   if (speedSlider) {
     speedSlider.value = String(settings.download?.speedLimit || 0);

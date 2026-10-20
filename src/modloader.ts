@@ -7,15 +7,35 @@
 
 
 // __IMPORTS_BEGIN__
-import { app, ipcMain } from 'electron';
+import { BrowserWindow, app, ipcMain } from 'electron';
 import fs from 'fs';
 import path from 'path';
 
-import { GAME_DIR, writeLog } from './config';
-import { installVersion, updateVersionLastPlayed } from './download';
+import { GAME_DIR, getVersionGameDir, markVersionIsolated, writeLog } from './config';
+import { downloadFile, fetchText, installVersion, mirrorUrlFor, updateVersionLastPlayed } from './download';
 import { ensureJavaRuntime, findJavaExecutable, getJavaRuntimeDir, getJavaVersionForMCVersion } from './java';
+import { installModrinthProjectTo } from './mods';
 import { shouldCancelDownload } from './state';
 // __IMPORTS_END__
+
+function writeStage(message: string): void {
+  writeLog(`[安装] ${message}`);
+  for (const win of BrowserWindow.getAllWindows()) {
+    win.webContents.send('install-stage', { message });
+  }
+}
+
+function javaMajorVersion(javaPath: string): Promise<number> {
+  return new Promise<number>((resolve) => {
+    const { execFile } = require('child_process');
+    execFile(javaPath, ['-version'], { timeout: 8000, windowsHide: true }, (error: any, stdout: string, stderr: string) => {
+      const text: string = `${stdout || ''}
+${stderr || ''}`;
+      const match: RegExpMatchArray | null = text.match(/version "(?:1\.)?(\d+)/);
+      resolve(match ? parseInt(match[1], 10) : 0);
+    });
+  });
+}
 
 ipcMain.handle('get-forge-versions', async (_, mcVersion: string) => {
   try {
@@ -24,6 +44,17 @@ ipcMain.handle('get-forge-versions', async (_, mcVersion: string) => {
     return { success: true, versions };
   } catch (e: any) {
     writeLog(`[Forge] 获取版本列表失败: ${e.message}`);
+    return { success: false, error: e.message, versions: [] };
+  }
+});
+
+
+ipcMain.handle('get-fabric-versions', async (_, mcVersion: string) => {
+  try {
+    const versions: any[] = await fetchFabricVersions(mcVersion);
+    return { success: true, versions };
+  } catch (e: any) {
+    writeLog(`[Fabric] 获取版本列表失败: ${e.message}`);
     return { success: false, error: e.message, versions: [] };
   }
 });
@@ -110,6 +141,79 @@ export function compareVersions(v1: string, v2: string): number {
 }
 
 
+export async function fetchFabricVersions(mcVersion: string): Promise<any[]> {
+  const url: string = `https://meta.fabricmc.net/v2/versions/loader/${encodeURIComponent(mcVersion)}`;
+  const mirror: string = `https://bmclapi2.bangbang93.com/fabric-meta/v2/versions/loader/${encodeURIComponent(mcVersion)}`;
+  const raw: string = await fetchText(url, [mirror, url]);
+  const list: any[] = JSON.parse(raw);
+  if (!Array.isArray(list)) throw new Error('Fabric 版本列表格式异常');
+
+  const versions: any[] = list
+    .filter((item: any) => item && item.loader && item.loader.version)
+    .map((item: any) => ({
+      id: item.loader.version,
+      name: `Fabric ${item.loader.version}${item.loader.stable === false ? ' (测试)' : ''}`,
+      version: item.loader.version,
+      mcVersion
+    }));
+
+  const top: any[] = versions.slice(0, 20);
+  const firstStable: any = top.find((v: any) => !v.name.includes('(测试)'));
+  if (firstStable) firstStable.name += ' (推荐)';
+  writeLog(`[Fabric] 找到 ${versions.length} 个版本 for MC ${mcVersion}，显示前 ${top.length} 个`);
+  return top;
+}
+
+
+function mavenPath(name: string): string | null {
+  const parts: string[] = String(name || '').split(':');
+  if (parts.length < 3) return null;
+  const [group, artifact, version] = parts;
+  const classifier: string = parts[3] ? `-${parts[3]}` : '';
+  return `${group.replace(/\./g, '/')}/${artifact}/${version}/${artifact}-${version}${classifier}.jar`;
+}
+
+
+export async function installFabric(mcVersion: string, loaderVersion: string): Promise<string> {
+  const profileUrl: string = `https://meta.fabricmc.net/v2/versions/loader/${encodeURIComponent(mcVersion)}/${encodeURIComponent(loaderVersion)}/profile/json`;
+  const mirrorUrl: string = `https://bmclapi2.bangbang93.com/fabric-meta/v2/versions/loader/${encodeURIComponent(mcVersion)}/${encodeURIComponent(loaderVersion)}/profile/json`;
+  const raw: string = await fetchText(profileUrl, [mirrorUrl, profileUrl]);
+  const profile: any = JSON.parse(raw);
+
+  const versionId: string = String(profile.id || `fabric-loader-${loaderVersion}-${mcVersion}`);
+  const versionDir: string = path.join(GAME_DIR, 'versions', versionId);
+  if (!fs.existsSync(versionDir)) fs.mkdirSync(versionDir, { recursive: true });
+
+  for (const lib of profile.libraries || []) {
+    if (!lib.name || lib.downloads?.artifact?.path) continue;
+    const libPath: string = mavenPath(lib.name) || '';
+    if (!libPath) continue;
+    const base: string = String(lib.url || 'https://maven.fabricmc.net/').replace(/\/?$/, '/');
+    lib.downloads = lib.downloads || {};
+    lib.downloads.artifact = { path: libPath, url: base + libPath, size: lib.size || 0 };
+  }
+
+  fs.writeFileSync(path.join(versionDir, `${versionId}.json`), JSON.stringify(profile, null, 2), 'utf8');
+
+  for (const lib of profile.libraries || []) {
+    const artifact: any = lib.downloads?.artifact;
+    if (!artifact?.path) continue;
+    const dest: string = path.join(GAME_DIR, 'libraries', artifact.path);
+    if (fs.existsSync(dest) && fs.statSync(dest).size > 0) continue;
+    if (fs.existsSync(dest)) fs.unlinkSync(dest);
+    const fullUrl: string = artifact.url;
+    const sources: string[] = [];
+    const mirrored: string | null = mirrorUrlFor(fullUrl);
+    if (mirrored) sources.push(mirrored);
+    sources.push(fullUrl);
+    await downloadFile(fullUrl, dest, `库: ${lib.name}`, sources);
+  }
+
+  writeLog(`[Fabric] 安装完成: ${versionId}`);
+  return versionId;
+}
+
+
 export async function fetchOptiFineVersions(mcVersion: string): Promise<any[]> {
   return new Promise<any[]>((resolve, reject) => {
     const https = require('https');
@@ -132,6 +236,8 @@ export async function fetchOptiFineVersions(mcVersion: string): Promise<any[]> {
                 name: `OptiFine ${v.type}_${v.patch}${isPreview ? ' (预览)' : ''}`,
                 version: `${v.type}_${v.patch}`,
                 filename: v.filename,
+                type: v.type,
+                patch: v.patch,
                 mcVersion: v.mcversion,
                 isPreview
               };
@@ -162,7 +268,7 @@ export async function fetchOptiFineVersions(mcVersion: string): Promise<any[]> {
 }
 
 
-export async function installVersionWithModLoader(versionId: string, loaderType: string, loaderVersion: string, maxConcurrent: number): Promise<any> {
+export async function installVersionWithModLoader(versionId: string, loaderType: string, loaderVersion: string, maxConcurrent: number, options?: { installFabricApi?: boolean }): Promise<any> {
   try {
     writeLog(`[模组加载器] 开始下载: ${loaderType} ${loaderVersion} for MC ${versionId}`);
 
@@ -176,6 +282,8 @@ export async function installVersionWithModLoader(versionId: string, loaderType:
     let finalVersionId: string;
     if (loaderType === 'forge') {
       finalVersionId = await installForge(versionId, loaderVersion);
+    } else if (loaderType === 'fabric') {
+      finalVersionId = await installFabric(versionId, loaderVersion);
     } else if (loaderType === 'optifine') {
       finalVersionId = await installOptiFine(versionId, loaderVersion);
     } else {
@@ -183,9 +291,22 @@ export async function installVersionWithModLoader(versionId: string, loaderType:
     }
     
     writeLog(`[模组加载器] 安装完成: ${finalVersionId}`);
+    markVersionIsolated(GAME_DIR, finalVersionId);
 
     updateVersionLastPlayed(finalVersionId);
-    
+
+    if (loaderType === 'fabric' && options?.installFabricApi !== false) {
+      const modsDir: string = path.join(getVersionGameDir(finalVersionId), 'mods');
+      try {
+        const apiResult: any = await installModrinthProjectTo('P7dR8mSH', versionId, 'fabric', modsDir);
+        writeLog(`[Fabric] Fabric API 已安装: ${(apiResult.files || []).join(', ') || '已存在'}`);
+        return { success: true, finalVersionId, fabricApiFiles: apiResult.files, modsDir };
+      } catch (e: any) {
+        writeLog(`[Fabric] Fabric API 自动安装失败: ${e.message}`);
+        return { success: true, finalVersionId, fabricApiError: e.message, modsDir };
+      }
+    }
+
     return { success: true, finalVersionId };
     
   } catch (e: any) {
@@ -215,7 +336,7 @@ export function downloadFileHttps(url: string, dest: string): Promise<void> {
         }
       }, (res: any) => {
         if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-          doRequest(res.headers.location);
+          doRequest(new URL(res.headers.location, reqUrl).toString());
           return;
         }
         if (res.statusCode !== 200) {
@@ -233,56 +354,6 @@ export function downloadFileHttps(url: string, dest: string): Promise<void> {
 }
 
 
-export function downloadInstaller(url: string, dest: string): Promise<void> {
-  return new Promise<void>((resolve, reject) => {
-    const { execFile } = require('child_process');
-    const dir: string = path.dirname(dest);
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    
-    if (fs.existsSync(dest)) fs.unlinkSync(dest);
-    
-    writeLog(`[Forge] 使用 PowerShell 下载安装器`);
-    
-    const psScript: string = `
-      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-      $ProgressPreference = 'SilentlyContinue'
-      Invoke-WebRequest -Uri '${url}' -OutFile '${dest}' -UseBasicParsing
-      if (Test-Path '${dest}') {
-        $size = (Get-Item '${dest}').Length
-        Write-Output "OK:$size"
-      } else {
-        Write-Error "Download failed"
-        exit 1
-      }
-    `;
-    
-    execFile('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', psScript], {
-      timeout: 120000,
-      encoding: 'utf8'
-    }, (error: any, stdout: string, stderr: string) => {
-      if (error) {
-        writeLog(`[Forge] PowerShell 下载失败: ${error.message}`);
-        if (stderr) writeLog(`[Forge] stderr: ${stderr}`);
-        if (fs.existsSync(dest)) fs.unlinkSync(dest);
-        reject(new Error(`下载失败: ${stderr || error.message}`));
-        return;
-      }
-      
-      const output: string = (stdout || '').trim();
-      if (output.startsWith('OK:')) {
-        const size: number = parseInt(output.substring(3), 10);
-        writeLog(`[Forge] 安装器下载完成: ${size} bytes`);
-        resolve();
-      } else {
-        writeLog(`[Forge] 下载输出: ${output}`);
-        if (fs.existsSync(dest)) fs.unlinkSync(dest);
-        reject(new Error('下载失败'));
-      }
-    });
-  });
-}
-
-
 export async function installForge(mcVersion: string, forgeVersion: string): Promise<any> {
   writeLog(`[Forge] 安装: MC ${mcVersion}, Forge ${forgeVersion}`);
   
@@ -290,6 +361,9 @@ export async function installForge(mcVersion: string, forgeVersion: string): Pro
   if (!fs.existsSync(versionDir)) {
     throw new Error(`原版版本 ${mcVersion} 不存在`);
   }
+
+  const versionsDir: string = path.join(GAME_DIR, 'versions');
+  const preExistingVersions: Set<string> = new Set(fs.existsSync(versionsDir) ? fs.readdirSync(versionsDir) : []);
 
   const fullForgeVersionId: string = forgeVersion.includes('-') ? forgeVersion : `${mcVersion}-${forgeVersion}`;
   writeLog(`[Forge] 完整版本ID: ${fullForgeVersionId}`);
@@ -302,7 +376,10 @@ export async function installForge(mcVersion: string, forgeVersion: string): Pro
   }
   
   writeLog(`[Forge] 下载安装器: ${installerUrl}`);
-  await downloadInstaller(installerUrl, installerPath);
+  writeStage('正在下载 Forge 安装器…');
+  if (fs.existsSync(installerPath)) fs.unlinkSync(installerPath);
+  const installerMirror: string | null = mirrorUrlFor(installerUrl);
+  await downloadFile(installerUrl, installerPath, 'Forge 安装器', installerMirror ? [installerMirror, installerUrl] : [installerUrl]);
   
   if (shouldCancelDownload) {
     if (fs.existsSync(installerPath)) fs.unlinkSync(installerPath);
@@ -355,77 +432,104 @@ export async function installForge(mcVersion: string, forgeVersion: string): Pro
     writeLog(`[Forge] 文件内容开头: ${firstBytes}`);
   }
   
-  const { execFile } = require('child_process');
-  
-  writeLog(`[Forge] 查看安装器帮助信息...`);
-  const helpResult: any = await new Promise<any>((resolve) => {
-    const child = execFile(javaPath!, [
-      '-jar', installerPath,
-      '--help'
-    ], {
-      timeout: 10000,
-      windowsHide: true,
-      maxBuffer: 1024 * 1024
-    }, (error: any, stdout: string, stderr: string) => {
-      resolve({ stdout: stdout || '', stderr: stderr || '', error });
-    });
-  });
-  
-  if (helpResult.stdout) writeLog(`[Forge] 帮助输出:\n${helpResult.stdout}`);
-  if (helpResult.stderr) writeLog(`[Forge] 帮助错误:\n${helpResult.stderr}`);
-  
-  const argFormats: string[][] = [
-    ['--installClient'],
-    ['--installServer'],
-    ['-installClient'],
-    ['-installServer'],
-    ['--install', 'client'],
-    ['client']
-  ];
-  
-  let success: boolean = false;
-  for (const args of argFormats) {
-    writeLog(`[Forge] 尝试参数: ${args.join(' ')}`);
-    
-    try {
-      await new Promise<void>((resolve, reject) => {
-        const child = execFile(javaPath!, [
-          '-jar', installerPath,
-          ...args
-        ], {
-          cwd: GAME_DIR,
-          timeout: 300000,
-          windowsHide: true,
-          maxBuffer: 10 * 1024 * 1024
-        }, (error: any, stdout: string, stderr: string) => {
-          if (stdout) writeLog(`[Forge] stdout: ${stdout}`);
-          if (stderr) writeLog(`[Forge] stderr: ${stderr}`);
-          
-          if (error) {
-            reject(new Error(`Forge 安装器执行失败: ${stderr || stdout || error.message}`));
-          } else {
-            writeLog(`[Forge] 安装器执行成功`);
-            resolve();
-          }
-        });
-        
-        child.on('error', (err: any) => {
-          reject(new Error(`Java 进程启动失败: ${err.message}`));
-        });
-      });
-      
-      success = true;
-      break;
-    } catch (e: any) {
-      writeLog(`[Forge] 参数 ${args.join(' ')} 失败: ${e.message}`);
-    }
+  const requiredJava: number = parseInt(getJavaVersionForMCVersion(mcVersion), 10) || 8;
+  const actualJava: number = await javaMajorVersion(javaPath);
+  writeLog(`[Forge] Java 版本: ${actualJava}，需要 ${requiredJava}`);
+  if (actualJava > 0 && actualJava < requiredJava) {
+    if (fs.existsSync(installerPath)) fs.unlinkSync(installerPath);
+    throw new Error(`这个 Forge 版本需要 Java ${requiredJava}，当前找到的是 Java ${actualJava}。请先在下载页安装 Java ${requiredJava} 再试`);
   }
-  
+
+  const profilesPath: string = path.join(GAME_DIR, 'launcher_profiles.json');
+  let profilesBackup: string | null = null;
+  if (fs.existsSync(profilesPath)) {
+    try { profilesBackup = fs.readFileSync(profilesPath, 'utf8'); } catch {}
+  } else {
+    fs.writeFileSync(profilesPath, JSON.stringify({ profiles: {} }, null, 2), 'utf8');
+  }
+
+  const restoreProfiles = (): void => {
+    try {
+      if (profilesBackup !== null) {
+        fs.writeFileSync(profilesPath, profilesBackup, 'utf8');
+      } else if (fs.existsSync(profilesPath)) {
+        fs.unlinkSync(profilesPath);
+      }
+    } catch {}
+  };
+
+  writeStage('正在安装 Forge，下载依赖库可能需要几分钟…');
+  let output: string = '';
+  let success: boolean = false;
+  let lastStageAt: number = 0;
+
+  try {
+    await new Promise<void>((resolve, reject) => {
+      const { spawn } = require('child_process');
+      const child = spawn(javaPath!, [
+        '-Djava.awt.headless=true',
+        '-jar', installerPath,
+        '--installClient'
+      ], {
+        cwd: GAME_DIR,
+        windowsHide: true,
+        env: { ...process.env }
+      });
+
+      const timer: any = setTimeout(() => {
+        try { child.kill(); } catch {}
+        reject(new Error('Forge 安装超时（15 分钟）'));
+      }, 15 * 60 * 1000);
+
+      const watch: any = setInterval(() => {
+        if (shouldCancelDownload) {
+          try { child.kill(); } catch {}
+        }
+      }, 1000);
+
+      const collect = (chunk: any): void => {
+        const text: string = chunk.toString();
+        output += text;
+        if (output.length > 1024 * 1024) output = output.slice(-1024 * 1024);
+        for (const line of text.split(/\r?\n/)) {
+          if (line.trim()) writeLog(`[Forge] ${line}`);
+        }
+      };
+
+      child.stdout.on('data', collect);
+      child.stderr.on('data', collect);
+      child.on('error', (err: any) => {
+        clearTimeout(timer);
+        clearInterval(watch);
+        reject(new Error(`Java 进程启动失败: ${err.message}`));
+      });
+      child.on('close', (code: number | null) => {
+        clearTimeout(timer);
+        clearInterval(watch);
+        if (shouldCancelDownload) {
+          reject(new Error('下载已取消'));
+        } else if (code === 0) {
+          success = true;
+          resolve();
+        } else {
+          reject(new Error(`Forge 安装器退出码 ${code}: ${output.slice(-400) || '没有输出'}`));
+        }
+      });
+    });
+  } finally {
+    restoreProfiles();
+  }
+
+  restoreProfiles();
+
   if (fs.existsSync(installerPath)) fs.unlinkSync(installerPath);
   
   if (success) {
-    writeLog(`[Forge] 安装完成`);
-    return;
+    const newVersions: string[] = (fs.existsSync(versionsDir) ? fs.readdirSync(versionsDir) : [])
+      .filter((name: string) => !preExistingVersions.has(name));
+    const installed: string | undefined = newVersions.find((name: string) => name.toLowerCase().includes('forge')) || newVersions[0];
+    writeLog(`[Forge] 安装完成${installed ? `: ${installed}` : ''}`);
+    return installed || fullForgeVersionId;
   }
   
   throw new Error('Forge 安装器执行失败: 所有参数格式都失败');
@@ -461,38 +565,70 @@ export function resolveOptiFineDownloadUrl(adloadxUrl: string): Promise<string> 
 
 export async function installOptiFine(mcVersion: string, optifineFilename: string): Promise<string> {
   writeLog(`[OptiFine] 安装: MC ${mcVersion}, 文件 ${optifineFilename}`);
-  
+
   const versionDir: string = path.join(GAME_DIR, 'versions', mcVersion);
   if (!fs.existsSync(versionDir)) {
     throw new Error(`原版版本 ${mcVersion} 不存在`);
   }
-  
-  const adloadxUrl: string = `https://optifine.net/adloadx?f=${optifineFilename}`;
+
+  let type: string = '';
+  let patch: string = '';
+  try {
+    const list: any[] = await fetchOptiFineVersions(mcVersion);
+    const hit: any = list.find((v: any) => v.id === optifineFilename);
+    if (hit?.type && hit?.patch) {
+      type = hit.type;
+      patch = hit.patch;
+    }
+  } catch (e: any) {
+    writeLog(`[OptiFine] 版本列表读取失败，改用文件名解析: ${e.message}`);
+  }
+  if (!type || !patch) {
+    const clean: string = optifineFilename.replace(/\.jar$/i, '').replace(/^preview_/i, '');
+    const parts: string[] = clean.split('_');
+    const mcIndex: number = parts.findIndex((p: string) => /^\d+\.\d+/.test(p));
+    const rest: string[] = mcIndex >= 0 ? parts.slice(mcIndex + 1) : parts;
+    patch = rest.length ? rest[rest.length - 1] : '';
+    type = rest.length > 1 ? rest.slice(0, -1).join('_') : '';
+  }
+
   const installerPath: string = path.join(GAME_DIR, 'temp', optifineFilename);
-  
   if (!fs.existsSync(path.dirname(installerPath))) {
     fs.mkdirSync(path.dirname(installerPath), { recursive: true });
   }
-  
-  writeLog(`[OptiFine] 解析下载链接: ${adloadxUrl}`);
-  const realUrl: string = await resolveOptiFineDownloadUrl(adloadxUrl);
-  writeLog(`[OptiFine] 下载安装器: ${realUrl}`);
-  await downloadFileHttps(realUrl, installerPath);
-  
+
+  let downloaded: boolean = false;
+  if (type && patch) {
+    const mirrorUrl: string = `https://bmclapi2.bangbang93.com/optifine/${encodeURIComponent(mcVersion)}/${encodeURIComponent(type)}/${encodeURIComponent(patch)}`;
+    try {
+      writeLog(`[OptiFine] 从 BMCLAPI 下载: ${mirrorUrl}`);
+      await downloadFileHttps(mirrorUrl, installerPath);
+      downloaded = true;
+    } catch (e: any) {
+      writeLog(`[OptiFine] BMCLAPI 下载失败: ${e.message}`);
+    }
+  }
+
+  if (!downloaded) {
+    const adloadxUrl: string = `https://optifine.net/adloadx?f=${encodeURIComponent(optifineFilename)}`;
+    writeLog(`[OptiFine] 解析官方下载链接: ${adloadxUrl}`);
+    const realUrl: string = await resolveOptiFineDownloadUrl(adloadxUrl);
+    writeLog(`[OptiFine] 下载安装器: ${realUrl}`);
+    await downloadFileHttps(realUrl, installerPath);
+  }
+
   if (shouldCancelDownload) {
     if (fs.existsSync(installerPath)) fs.unlinkSync(installerPath);
     throw new Error('下载已取消');
   }
-  
+
   const fileMagic: Buffer = fs.readFileSync(installerPath).slice(0, 4);
   writeLog(`[OptiFine] 文件头: ${fileMagic.toString('hex')}`);
   if (fileMagic[0] !== 0x50 || fileMagic[1] !== 0x4B) {
     if (fs.existsSync(installerPath)) fs.unlinkSync(installerPath);
     throw new Error('下载的文件不是有效的 JAR 文件，可能镜像源异常');
   }
-  
-  writeLog(`[OptiFine] 运行安装器（静默模式）`);
-  
+
   const javaVersion: string = getJavaVersionForMCVersion(mcVersion);
   let javaPath: string | null = null;
   const runtimeDir: string = getJavaRuntimeDir(javaVersion);
@@ -507,86 +643,50 @@ export async function installOptiFine(mcVersion: string, optifineFilename: strin
     throw new Error('未找到 Java 运行时，请先安装 Java');
   }
   writeLog(`[OptiFine] 使用 Java: ${javaPath}`);
-  
-  const defaultMinecraftDir: string = path.join(app.getPath('appData'), '.minecraft');
-  const launcherProfilesPath: string = path.join(defaultMinecraftDir, 'launcher_profiles.json');
-  const defaultVersionsDir: string = path.join(defaultMinecraftDir, 'versions');
-  const defaultLibsDir: string = path.join(defaultMinecraftDir, 'libraries');
-  let backupProfiles: string | null = null;
-  let createdProfiles: boolean = false;
-  let tempVanillaDir: string | null = null;
-  let preExistingVersions: Set<string> = new Set();
-  let preExistingLibs: Set<string> = new Set();
-  let optifineVersionId: string | null = null;
-  
+
+  const srcJar: string = path.join(versionDir, `${mcVersion}.jar`);
+  const clientJar: string = path.join(versionDir, 'client.jar');
+  if (fs.existsSync(srcJar) && !fs.existsSync(clientJar)) {
+    fs.copyFileSync(srcJar, clientJar);
+  }
+
+  const versionsDir: string = path.join(GAME_DIR, 'versions');
+  const preExistingVersions: Set<string> = new Set(fs.existsSync(versionsDir) ? fs.readdirSync(versionsDir) : []);
+
+  const homeDir: string = path.join(GAME_DIR, 'temp', `optifine-home-${Date.now()}`);
+  const homeMcDir: string = path.join(homeDir, '.minecraft');
+  const profilesPath: string = path.join(GAME_DIR, 'launcher_profiles.json');
+  let profilesBackup: string | null = null;
+  let linked: boolean = false;
+
   try {
-    if (!fs.existsSync(defaultMinecraftDir)) {
-      fs.mkdirSync(defaultMinecraftDir, { recursive: true });
+    fs.mkdirSync(homeDir, { recursive: true });
+    try {
+      fs.symlinkSync(GAME_DIR, homeMcDir, 'junction');
+      linked = true;
+    } catch (e: any) {
+      writeLog(`[OptiFine] 无法创建目录链接，改用临时复制: ${e.message}`);
     }
-    
-    if (fs.existsSync(defaultVersionsDir)) {
-      preExistingVersions = new Set(fs.readdirSync(defaultVersionsDir));
+
+    if (fs.existsSync(profilesPath)) {
+      try { profilesBackup = fs.readFileSync(profilesPath, 'utf8'); } catch {}
+    } else {
+      fs.writeFileSync(profilesPath, JSON.stringify({ profiles: {} }, null, 2), 'utf8');
     }
-    if (fs.existsSync(defaultLibsDir)) {
-      const collectLibs = (dir: string): void => {
-        for (const item of fs.readdirSync(dir)) {
-          const p: string = path.join(dir, item);
-          if (fs.statSync(p).isDirectory()) collectLibs(p);
-          else preExistingLibs.add(p);
-        }
-      };
-      collectLibs(defaultLibsDir);
-    }
-    
-    if (fs.existsSync(launcherProfilesPath)) {
-      backupProfiles = fs.readFileSync(launcherProfilesPath, 'utf8');
-    }
-    
-    const profiles: any = {
-      profiles: {
-        GPCL: {
-          type: 'custom',
-          gameDir: GAME_DIR,
-          lastVersionId: mcVersion
-        }
-      }
-    };
-    fs.writeFileSync(launcherProfilesPath, JSON.stringify(profiles, null, 2), 'utf8');
-    createdProfiles = true;
-    writeLog(`[OptiFine] 已创建 launcher_profiles.json（临时）`);
-    
-    const srcVersionDir: string = path.join(GAME_DIR, 'versions', mcVersion);
-    tempVanillaDir = path.join(defaultMinecraftDir, 'versions', mcVersion);
-    if (!fs.existsSync(tempVanillaDir)) {
-      fs.mkdirSync(tempVanillaDir, { recursive: true });
-    }
-    const srcJar: string = path.join(srcVersionDir, `${mcVersion}.jar`);
-    const dstJar: string = path.join(tempVanillaDir, `${mcVersion}.jar`);
-    if (fs.existsSync(srcJar) && !fs.existsSync(dstJar)) {
-      fs.copyFileSync(srcJar, dstJar);
-      writeLog(`[OptiFine] 临时复制: ${mcVersion}.jar`);
-    }
-    const dstClientJar: string = path.join(tempVanillaDir, 'client.jar');
-    if (fs.existsSync(srcJar) && !fs.existsSync(dstClientJar)) {
-      fs.copyFileSync(srcJar, dstClientJar);
-      writeLog(`[OptiFine] 临时复制: client.jar`);
-    }
-    const srcJson: string = path.join(srcVersionDir, `${mcVersion}.json`);
-    const dstJson: string = path.join(tempVanillaDir, `${mcVersion}.json`);
-    if (fs.existsSync(srcJson) && !fs.existsSync(dstJson)) {
-      fs.copyFileSync(srcJson, dstJson);
-      writeLog(`[OptiFine] 临时复制: ${mcVersion}.json`);
-    }
-    writeLog(`[OptiFine] 已将原版 ${mcVersion} 文件临时复制到默认目录`);
-    
+
     const { execFile } = require('child_process');
-    
     await new Promise<void>((resolve, reject) => {
-      const child = execFile(javaPath!, ['-jar', installerPath, '-install'], {
-        cwd: defaultMinecraftDir,
-        timeout: 120000,
+      const child = execFile(javaPath!, [
+        '-Duser.home=' + homeDir,
+        '-Djava.awt.headless=true',
+        '-cp', installerPath,
+        'optifine.Installer'
+      ], {
+        cwd: homeDir,
+        timeout: 180000,
         windowsHide: true,
-        maxBuffer: 10 * 1024 * 1024
+        maxBuffer: 10 * 1024 * 1024,
+        env: { ...process.env, APPDATA: homeDir }
       }, (error: any, stdout: string, stderr: string) => {
         if (stdout) writeLog(`[OptiFine] stdout: ${stdout}`);
         if (stderr) writeLog(`[OptiFine] stderr: ${stderr}`);
@@ -600,120 +700,31 @@ export async function installOptiFine(mcVersion: string, optifineFilename: strin
       child.on('error', (err: any) => reject(new Error(`Java 进程启动失败: ${err.message}`)));
     });
   } finally {
-    if (createdProfiles) {
-      if (backupProfiles !== null) {
-        fs.writeFileSync(launcherProfilesPath, backupProfiles, 'utf8');
-      } else if (fs.existsSync(launcherProfilesPath)) {
-        fs.unlinkSync(launcherProfilesPath);
-      }
-      writeLog(`[OptiFine] 已清理 launcher_profiles.json`);
+    if (profilesBackup !== null) {
+      try { fs.writeFileSync(profilesPath, profilesBackup, 'utf8'); } catch {}
+    } else if (fs.existsSync(profilesPath)) {
+      try { fs.unlinkSync(profilesPath); } catch {}
     }
-    
-    try {
-      if (fs.existsSync(defaultVersionsDir)) {
-        const postVersions: string[] = fs.readdirSync(defaultVersionsDir);
-        const newVersions: string[] = postVersions.filter((v: string) => !preExistingVersions.has(v));
-        
-        if (newVersions.length > 0) {
-          const ofVersion: string = newVersions.find((v: string) => v.toLowerCase().includes('optifine')) || newVersions[0];
-          optifineVersionId = ofVersion;
-          
-          const srcDir: string = path.join(defaultVersionsDir, ofVersion);
-          const dstDir: string = path.join(GAME_DIR, 'versions', ofVersion);
-          
-          if (!fs.existsSync(dstDir)) fs.mkdirSync(dstDir, { recursive: true });
-          
-          for (const item of fs.readdirSync(srcDir)) {
-            const srcPath: string = path.join(srcDir, item);
-            const dstPath: string = path.join(dstDir, item);
-            if (fs.statSync(srcPath).isDirectory()) {
-              const copySubDir = (s: string, d: string): void => {
-                if (!fs.existsSync(d)) fs.mkdirSync(d, { recursive: true });
-                for (const sub of fs.readdirSync(s)) {
-                  const sp: string = path.join(s, sub);
-                  const dp: string = path.join(d, sub);
-                  if (fs.statSync(sp).isDirectory()) copySubDir(sp, dp);
-                  else if (!fs.existsSync(dp)) fs.copyFileSync(sp, dp);
-                }
-              };
-              copySubDir(srcPath, dstPath);
-            } else if (!fs.existsSync(dstPath)) {
-              fs.copyFileSync(srcPath, dstPath);
-            }
-          }
-          writeLog(`[OptiFine] 已将版本 ${ofVersion} 复制到 GPCL 目录`);
-          
-          const ofJsonPath: string = path.join(dstDir, `${ofVersion}.json`);
-          if (fs.existsSync(ofJsonPath)) {
-            const ofVd: any = JSON.parse(fs.readFileSync(ofJsonPath, 'utf8'));
-            for (const lib of ofVd.libraries || []) {
-              if (lib.name && !lib.downloads?.artifact?.path) {
-                const parts: string[] = lib.name.split(':');
-                if (parts.length >= 3) {
-                  const libPath: string = parts[0].replace(/\./g, '/') + '/' + parts[1] + '/' + parts[2] + '/' + parts[1] + '-' + parts[2] + '.jar';
-                  const srcLib: string = path.join(defaultLibsDir, libPath);
-                  const dstLib: string = path.join(GAME_DIR, 'libraries', libPath);
-                  if (fs.existsSync(srcLib) && !fs.existsSync(dstLib)) {
-                    fs.mkdirSync(path.dirname(dstLib), { recursive: true });
-                    fs.copyFileSync(srcLib, dstLib);
-                    writeLog(`[OptiFine] 复制库: ${libPath}`);
-                  }
-                  if (!lib.downloads) lib.downloads = {};
-                  if (!lib.downloads.artifact) {
-                    lib.downloads.artifact = { path: libPath, url: '', size: 0 };
-                  }
-                }
-              }
-            }
-            fs.writeFileSync(ofJsonPath, JSON.stringify(ofVd, null, 2), 'utf8');
-          }
-        }
+    if (linked) {
+      try { fs.unlinkSync(homeMcDir); } catch {
+        try { fs.rmdirSync(homeMcDir); } catch {}
       }
-      
-      if (tempVanillaDir && fs.existsSync(tempVanillaDir)) {
-        const rmDir = (dir: string): void => {
-          if (!fs.existsSync(dir)) return;
-          for (const item of fs.readdirSync(dir)) {
-            const p: string = path.join(dir, item);
-            if (fs.statSync(p).isDirectory()) rmDir(p);
-            else fs.unlinkSync(p);
-          }
-          fs.rmdirSync(dir);
-        };
-        rmDir(tempVanillaDir);
-      }
-      
-      if (optifineVersionId) {
-        const ofInstalledDir: string = path.join(defaultVersionsDir, optifineVersionId);
-        if (fs.existsSync(ofInstalledDir)) {
-          const rmDir = (dir: string): void => {
-            if (!fs.existsSync(dir)) return;
-            for (const item of fs.readdirSync(dir)) {
-              const p: string = path.join(dir, item);
-              if (fs.statSync(p).isDirectory()) rmDir(p);
-              else fs.unlinkSync(p);
-            }
-            fs.rmdirSync(dir);
-          };
-          rmDir(ofInstalledDir);
-        }
-      }
-      
-      writeLog(`[OptiFine] 已清理临时文件`);
-    } catch (e: any) {
-      writeLog(`[OptiFine] 后处理出错: ${e.message}`);
+    }
+    try { fs.rmSync(homeDir, { recursive: true, force: true }); } catch {}
+    if (fs.existsSync(installerPath)) {
+      try { fs.unlinkSync(installerPath); } catch {}
     }
   }
-  
-  if (fs.existsSync(installerPath)) fs.unlinkSync(installerPath);
-  
-  if (optifineVersionId) {
-    writeLog(`[OptiFine] 安装完成: ${optifineVersionId}`);
-    return optifineVersionId;
+
+  const newVersions: string[] = (fs.existsSync(versionsDir) ? fs.readdirSync(versionsDir) : [])
+    .filter((name: string) => !preExistingVersions.has(name));
+  const installed: string | undefined = newVersions.find((name: string) => name.toLowerCase().includes('optifine')) || newVersions[0];
+  if (installed) {
+    writeLog(`[OptiFine] 安装完成: ${installed}`);
+    return installed;
   }
-  
-  const optifineFilenameBase: string = optifineFilename.replace('.jar', '');
-  const fallbackId: string = `${mcVersion}-${optifineFilenameBase.split('_').slice(1).join('_')}`;
+
+  const fallbackId: string = `${mcVersion}-OptiFine_${type}${patch ? `_${patch}` : ''}`.replace(/_+$/, '');
   writeLog(`[OptiFine] 安装完成(fallback): ${fallbackId}`);
   return fallbackId;
 }

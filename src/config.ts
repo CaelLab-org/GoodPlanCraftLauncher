@@ -16,10 +16,10 @@ import path from 'path';
 export function computeAutoMemoryMB(totalBytes: number = os.totalmem(), freeBytes: number = os.freemem()): number {
   const totalMB: number = Math.floor(totalBytes / (1024 * 1024));
   const freeMB: number = Math.floor(freeBytes / (1024 * 1024));
-  const target: number = Math.floor((totalMB * 0.3) / 1024) * 1024;
-  const available: number = Math.max(0, freeMB - 2048);
-  const capped: number = Math.floor(available / 512) * 512;
-  return Math.max(1024, Math.min(8192, target, capped));
+  const target: number = Math.min(8192, Math.max(2048, Math.floor((totalMB * 0.3) / 1024) * 1024));
+  const headroom: number = Math.max(2048, freeMB - 1024);
+  const capped: number = Math.floor(headroom / 512) * 512;
+  return Math.min(target, capped);
 }
 
 export function getSystemMemoryInfo(): { totalMB: number; freeMB: number; autoMemoryMB: number } {
@@ -86,7 +86,9 @@ export const DEFAULT_SETTINGS = {
     windowSize: 'default',
     windowWidth: 854,
     windowHeight: 480,
-    optimizeBeforeLaunch: false
+    optimizeBeforeLaunch: false,
+    autoLanguage: true,
+    language: 'zh_cn'
   },
   appearance: {
     theme: 'light',
@@ -102,10 +104,14 @@ export const DEFAULT_SETTINGS = {
     customJavaMirror: '',
     fileSource: 'auto',
     versionSource: 'auto',
-    speedLimit: 0
+    speedLimit: 0,
+    installDir: '',
+    customFileMirror: '',
+    curseForgeApiKey: ''
   },
   advanced: {
     autoCheckUpdate: true,
+    autoUpdate: true,
     preventMultipleLaunch: true,
     autoClearLogs: true,
     logRetentionValue: 7,
@@ -242,18 +248,57 @@ export function initPaths(): void {
   }
 
   fs.writeFileSync(LOG_FILE, '\uFEFF', 'utf8');
+}
 
-  // 启动时清理上次下载的更新安装包
+
+export function resolveGameDir(installDir?: string): string {
+  const custom: string = String(installDir === undefined ? (currentSettings?.download?.installDir || '') : installDir).trim();
+  return custom ? path.resolve(custom) : path.join(BASE_DIR, '.minecraft');
+}
+
+
+export function markVersionIsolated(root: string, versionId: string): void {
   try {
-    if (fs.existsSync(UPDATA_DIR)) {
-      const files = fs.readdirSync(UPDATA_DIR);
-      for (const file of files) {
-        if (file.startsWith('GPCL-') && file.endsWith('-Setup.exe')) {
-          fs.unlinkSync(path.join(UPDATA_DIR, file));
-        }
-      }
-    }
-  } catch (e) {}
+    const dir: string = path.join(root, 'versions', versionId, 'gpcl');
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, 'isolated'), '1', 'utf8');
+  } catch (e: any) {
+    writeLog(`[版本隔离] 写入标记失败: ${e.message}`);
+  }
+}
+
+
+export function isVersionIsolated(versionId: string, root: string = GAME_DIR): boolean {
+  const versionDir: string = path.join(root, 'versions', versionId);
+  return fs.existsSync(path.join(versionDir, 'gpcl', 'isolated'))
+    || fs.existsSync(path.join(versionDir, 'mods'))
+    || fs.existsSync(path.join(versionDir, 'saves'));
+}
+
+
+export function getVersionGameDir(versionId: string, root: string = GAME_DIR): string {
+  return isVersionIsolated(versionId, root) ? path.join(root, 'versions', versionId) : root;
+}
+
+
+export function initGameDirFromSettings(): void {
+  currentSettings = loadSettings();
+  applyInstallDir();
+}
+
+
+export function applyInstallDir(): void {
+  const next: string = resolveGameDir();
+  try {
+    if (!fs.existsSync(next)) fs.mkdirSync(next, { recursive: true });
+  } catch (e: any) {
+    writeLog(`游戏目录不可用，保持原目录: ${next} - ${e.message}`);
+    return;
+  }
+  if (GAME_DIR !== next) {
+    GAME_DIR = next;
+    writeLog(`游戏目录已切换: ${GAME_DIR}`);
+  }
 }
 
 
@@ -355,6 +400,7 @@ ipcMain.handle('get-settings', () => {
 ipcMain.handle('save-settings', (_: any, settings: any) => {
   currentSettings = mergeWithDefaults(settings);
   const success: boolean = saveSettings(currentSettings);
+  applyInstallDir();
   return { success, settings: currentSettings };
 });
 
@@ -362,6 +408,7 @@ ipcMain.handle('save-settings', (_: any, settings: any) => {
 ipcMain.handle('reset-settings', () => {
   currentSettings = JSON.parse(JSON.stringify(DEFAULT_SETTINGS));
   const success: boolean = saveSettings(currentSettings);
+  applyInstallDir();
   return { success, settings: currentSettings };
 });
 

@@ -20,19 +20,21 @@ declare global {
 // __IMPORTS_BEGIN__
 import { cancelDownloadBtn, detailDownloadBtn, downloadPanel, getCustomSelectValue, initCustomSelect, launchBtn, menuLaunch, setCustomSelectValue, setStatus, showDialog, showToast, usernameHistoryBtn, usernameInput } from './dom';
 import { bindJavaInstallButtons, initJavaVersionStatus, saveJavaMirrorSettings, updateJavaInstallStatus } from './java-panel';
-import { hideLaunchAnimation, launchGame, launchTipFrequency, setLaunchTipFrequency } from './launch';
+import { hasQueuedDownloads, hideLaunchAnimation, launchGame, launchTipFrequency, setLaunchTipFrequency } from './launch';
 import { refreshGameMonitor } from './monitor';
 import { currentPage, showPage, switchSettingsTab } from './nav';
 import { closeUsernameHistory, playerHistory, setPlayerHistory } from './player';
 import { msAuthData, setMsAuthData } from './session';
 import { applyScale, initScale, initTheme, loadSettings, updateSettingsBadge } from './settings';
-import { allNewerVersions, checkForUpdates, isUpdateDownloadActive, renderUpdateVersionCards, startUpdateDownload, updateAvailable } from './update';
+import { allNewerVersions, autoDownloadUpdate, checkForUpdates, installReadyUpdate, isUpdateDownloadActive, renderUpdateVersionCards, showUpdateStartupNotice, startUpdateDownload, updateAvailable } from './update';
+import { initUpdateBadge } from './update-badge';
 import { bindModLoaderEvents, loadRemoteVersions, loadVersions, renderVersionSelectList, selectedVersionId } from './versions';
 
 import './chart';
 import './dom';
 import './java-panel';
 import './launch';
+import './mods';
 import './monitor';
 import './nav';
 import './player';
@@ -149,9 +151,13 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
     if (result) {
       if (window.gpcl && window.gpcl.cancelDownloadOnly) {
         await window.gpcl.cancelDownloadOnly();
-        if (downloadPanel) downloadPanel.classList.add('hidden');
-        if (detailDownloadBtn) detailDownloadBtn.disabled = false;
-        showToast('已取消', '下载已取消，文件已清理', 'info');
+        if (!hasQueuedDownloads()) {
+          if (downloadPanel) downloadPanel.classList.add('hidden');
+          if (detailDownloadBtn) detailDownloadBtn.disabled = false;
+          showToast('已取消', '下载已取消，文件已清理', 'info');
+        } else {
+          showToast('已取消当前任务', '队列里的任务会继续下载', 'info');
+        }
       }
     }
   });
@@ -175,7 +181,24 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
     });
   }
 
-  checkForUpdates(true);
+  initUpdateBadge({
+    onDownload: async (version: string): Promise<void> => {
+      showPage('download');
+      await startUpdateDownload(version);
+    },
+    onInstall: (): void => { installReadyUpdate(); }
+  });
+
+  (async (): Promise<void> => {
+    await showUpdateStartupNotice();
+    const settings = await loadSettings();
+    if (settings.advanced?.autoCheckUpdate === false) return;
+    await checkForUpdates(true);
+    if (updateAvailable && allNewerVersions.length > 0 && settings.advanced?.autoUpdate !== false) {
+      const newest = allNewerVersions[allNewerVersions.length - 1];
+      await autoDownloadUpdate(newest.version);
+    }
+  })();
 
   const checkUpdateBtn: HTMLElement | null = document.getElementById('check-update-btn');
   if (checkUpdateBtn) {
@@ -231,6 +254,7 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
   const goDownloadBtn: HTMLElement | null = document.getElementById('go-download-btn');
 
   const autoCheckUpdateEl: HTMLInputElement | null = document.getElementById('auto-check-update') as HTMLInputElement | null;
+  const autoUpdateEl: HTMLInputElement | null = document.getElementById('auto-update') as HTMLInputElement | null;
 
   const preventMultipleLaunchEl: HTMLInputElement | null = document.getElementById('prevent-multiple-launch') as HTMLInputElement | null;
 
@@ -356,6 +380,19 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
       settings.advanced.autoCheckUpdate = autoCheckUpdateEl.checked;
       await gpcl.saveSettings(settings);
       updateSettingsBadge();
+    });
+  }
+
+  if (autoUpdateEl) {
+    (async (): Promise<void> => {
+      const settings = await loadSettings();
+      autoUpdateEl.checked = settings.advanced?.autoUpdate !== false;
+    })();
+
+    autoUpdateEl.addEventListener('change', async (): Promise<void> => {
+      const settings = await loadSettings();
+      settings.advanced.autoUpdate = autoUpdateEl.checked;
+      await gpcl.saveSettings(settings);
     });
   }
 
@@ -583,6 +620,7 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
   });
 
   let currentVersionForSettings: string | null = null;
+  let currentVersionInfo: any = null;
   
   const versionSettingsBtn: HTMLElement | null = document.getElementById('version-settings');
   const versionSettingsPanel: HTMLElement | null = document.getElementById('version-settings-panel');
@@ -667,7 +705,17 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
     if (!versionSettingsPanel) return;
     
     currentVersionForSettings = versionId;
+    currentVersionInfo = null;
     if (versionSettingsTitle) versionSettingsTitle.textContent = `版本设置 - ${versionId}`;
+
+    try {
+      const infoResult: any = await window.gpcl.getVersionInfo(versionId);
+      if (infoResult?.success) currentVersionInfo = infoResult.info;
+    } catch {}
+    const modFolderItem: HTMLElement | null = document.getElementById('version-mod-folder-item');
+    const shaderFolderItem: HTMLElement | null = document.getElementById('version-shader-folder-item');
+    modFolderItem?.classList.toggle('hidden', !currentVersionInfo?.hasModLoader);
+    shaderFolderItem?.classList.toggle('hidden', !currentVersionInfo?.hasOptiFine);
     
     if (versionSelectPanel) versionSelectPanel.classList.add('hidden');
     if (statusElement) statusElement.style.display = 'none';
@@ -701,6 +749,7 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
       }
       if (statusElement) statusElement.style.display = '';
       currentVersionForSettings = null;
+      currentVersionInfo = null;
     }, 300);
   }
   
@@ -759,18 +808,24 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
     });
   }
 
+  const openVersionFolder = async (kind: 'version' | 'mods' | 'shaders'): Promise<void> => {
+    if (!currentVersionInfo) return;
+    const target: string = kind === 'version'
+      ? currentVersionInfo.versionDir
+      : kind === 'mods'
+        ? currentVersionInfo.modsDir
+        : currentVersionInfo.shaderpacksDir;
+    if (target) await window.gpcl.openFolder(target);
+  };
+
+  const versionOpenFolderBtn: HTMLElement | null = document.getElementById('version-open-folder-btn');
+  if (versionOpenFolderBtn) versionOpenFolderBtn.addEventListener('click', () => void openVersionFolder('version'));
+
   const versionOpenModsBtn: HTMLElement | null = document.getElementById('version-open-mods-btn');
-  if (versionOpenModsBtn) {
-    versionOpenModsBtn.addEventListener('click', async (): Promise<void> => {
-      if (currentVersionForSettings && window.gpcl && window.gpcl.getGameDir) {
-        const gameDir: string = await window.gpcl.getGameDir();
-        if (gameDir) {
-          const modsPath: string = gameDir + '\\versions\\' + currentVersionForSettings + '\\mods';
-          window.gpcl.openFolder(modsPath);
-        }
-      }
-    });
-  }
+  if (versionOpenModsBtn) versionOpenModsBtn.addEventListener('click', () => void openVersionFolder('mods'));
+
+  const versionOpenShadersBtn: HTMLElement | null = document.getElementById('version-open-shaders-btn');
+  if (versionOpenShadersBtn) versionOpenShadersBtn.addEventListener('click', () => void openVersionFolder('shaders'));
 
   initCustomSelect('version-memory', () => {
     saveCurrentVersionSettings();

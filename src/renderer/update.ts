@@ -10,6 +10,7 @@
 import { initChart, loadChartJs, resetChart, updateChart } from './chart';
 import { setStatus, showDialog, showToast } from './dom';
 import { updateSettingsBadge } from './settings';
+import { setUpdateBadgeAvailable, setUpdateBadgeDownloading, setUpdateBadgeFailed, setUpdateBadgeProgress, setUpdateBadgeReady, showUpdateBadge } from './update-badge';
 // __IMPORTS_END__
 
 export let isUpdateDownloadActive: boolean = false;
@@ -22,6 +23,10 @@ export let latestVersionLog: string | null = null;
 export let updateAvailable: boolean = false;
 
 export let allNewerVersions: any[] = [];
+
+let readyInstallerPath: string | null = null;
+
+let readyVersionInMemory: string | null = null;
 
 
 export async function getCurrentVersion(): Promise<string> {
@@ -127,10 +132,14 @@ export async function checkForUpdates(silent: boolean = false): Promise<void> {
       }
     }
     
-    if (updateAvailable && silent) {
+    if (updateAvailable) {
       const newest = allNewerVersions[allNewerVersions.length - 1];
-      const titlePart: string = newest.title ? ` "${newest.title}"` : '';
-      showToast('发现新版本', `GPCL ${newest.version}${titlePart} 已发布`, 'warning', 'update-available');
+      if (readyVersionInMemory && readyVersionInMemory !== newest.version) {
+        readyVersionInMemory = null;
+        readyInstallerPath = null;
+        setUpdateBadgeAvailable();
+      }
+      showUpdateBadge(newest.version, newest.title, newest.log);
     }
     
     await updateSettingsBadge();
@@ -147,20 +156,94 @@ export async function checkForUpdates(silent: boolean = false): Promise<void> {
   }
 }
 
-// ===== 应用内更新下载 =====
+
+async function installNow(installerPath: string): Promise<void> {
+  const result = await window.gpcl.installUpdate(installerPath, true);
+  if (result && result.success) {
+    showToast('正在更新', '启动器即将关闭并安装新版本...', 'info');
+    setTimeout((): void => {
+      if (window.gpcl.closeWindow) window.gpcl.closeWindow();
+    }, 800);
+  } else {
+    showToast('执行失败', (result && result.error) || '无法启动安装程序', 'error');
+  }
+}
 
 
-export async function startUpdateDownload(version: string): Promise<void> {
+export async function installReadyUpdate(): Promise<void> {
+  if (!readyInstallerPath) {
+    try {
+      const state: any = await window.gpcl.getUpdateState();
+      readyInstallerPath = (state && state.readyInstallerPath) || null;
+    } catch (e: any) {}
+  }
+  if (readyInstallerPath) await installNow(readyInstallerPath);
+}
+
+
+export async function showUpdateStartupNotice(): Promise<void> {
+  try {
+    if (!window.gpcl || !window.gpcl.getUpdateState) return;
+    const state: any = await window.gpcl.getUpdateState();
+    if (!state || !state.success) return;
+
+    if (state.justUpdatedTo) {
+      showToast('更新完成', `GoodPlanCraftLauncher 已更新到 ${state.justUpdatedTo}`, 'success');
+    }
+
+    if (state.readyInstallerPath && state.readyVersion) {
+      readyInstallerPath = state.readyInstallerPath;
+      readyVersionInMemory = state.readyVersion;
+      showUpdateBadge(state.readyVersion, '', '');
+      setUpdateBadgeReady();
+    }
+
+    const failure: any = state.pendingFailure;
+    if (!failure || !failure.installerPath) return;
+
+    const attempts: number = failure.attempts || 0;
+    if (attempts >= 3) {
+      const openSite: boolean = await showDialog({
+        type: 'warning',
+        title: '更新未完成',
+        message: `更新已经尝试 ${attempts} 次仍未完成，当前版本仍是 ${state.currentVersion}。\n建议到官网重新下载安装包。`,
+        confirmText: '打开官网',
+        cancelText: '稍后'
+      });
+      if (openSite && window.gpcl.openExternal) {
+        window.gpcl.openExternal('https://gamets.caellab.com/gpcl/');
+      }
+      return;
+    }
+
+    const retry: boolean = await showDialog({
+      type: 'warning',
+      title: '上次更新未完成',
+      message: `上次更新没有完成，当前仍是 ${state.currentVersion}。\n可以直接重试安装，游戏和设置不会受影响。`,
+      confirmText: '重试安装',
+      cancelText: '稍后'
+    });
+    if (retry) await installNow(failure.installerPath);
+  } catch (e: any) {
+    console.error('[更新] 读取更新状态失败:', e);
+  }
+}
+
+
+async function runUpdateDownload(version: string, manual: boolean): Promise<void> {
   if (!window.gpcl || !window.gpcl.downloadUpdate) {
     showToast('更新失败', '更新功能不可用', 'error');
     return;
   }
 
-  isUpdateDownloadActive = true;
+  if (readyInstallerPath && readyVersionInMemory === version) {
+    setUpdateBadgeReady();
+    if (manual) await installNow(readyInstallerPath);
+    return;
+  }
 
-  await loadChartJs();
-  initChart();
-  resetChart();
+  isUpdateDownloadActive = manual;
+  setUpdateBadgeDownloading(0);
 
   const downloadPanelEl: HTMLElement | null = document.getElementById('download-panel');
   const filenameEl: HTMLElement | null = document.getElementById('download-filename');
@@ -169,143 +252,148 @@ export async function startUpdateDownload(version: string): Promise<void> {
   const progressText: HTMLElement | null = document.getElementById('progress-text');
   const cancelBtn: HTMLElement | null = document.getElementById('cancel-download-btn');
 
-  if (downloadPanelEl) downloadPanelEl.classList.remove('hidden');
-  if (filenameEl) filenameEl.textContent = `正在下载: GPCL ${version} 安装程序`;
-  if (downloadStatusEl) downloadStatusEl.textContent = `正在下载 GPCL ${version} ...`;
-  if (progressFill) progressFill.style.width = '0%';
-  if (progressText) progressText.textContent = '0%';
-  if (cancelBtn) {
-    cancelBtn.textContent = '取消下载';
-    cancelBtn.classList.remove('complete');
-    (cancelBtn as HTMLButtonElement).disabled = false;
-  }
+  if (manual) {
+    await loadChartJs();
+    initChart();
+    resetChart();
 
-  if (window.gpcl.onUpdateDownloadProgress) {
-    let lastTime: number = 0;
-    let lastBytes: number = 0;
-    let peakSpeedInner: number = 0;
+    if (downloadPanelEl) downloadPanelEl.classList.remove('hidden');
+    if (filenameEl) filenameEl.textContent = `正在下载: GPCL ${version} 安装程序`;
+    if (downloadStatusEl) downloadStatusEl.textContent = `正在下载 GPCL ${version} ...`;
+    if (progressFill) progressFill.style.width = '0%';
+    if (progressText) progressText.textContent = '0%';
+    if (cancelBtn) {
+      cancelBtn.textContent = '取消下载';
+      cancelBtn.classList.remove('complete');
+      (cancelBtn as HTMLButtonElement).disabled = false;
+    }
 
-    window.gpcl.onUpdateDownloadProgress((data: any): void => {
-      const percent: number = data.percent || 0;
-      if (progressFill) progressFill.style.width = percent + '%';
-      if (progressText) progressText.textContent = percent.toFixed(1) + '%';
-      if (downloadStatusEl) downloadStatusEl.textContent = `正在下载 GPCL ${version}: ${percent.toFixed(1)}%`;
+    if (window.gpcl.onUpdateDownloadProgress) {
+      let lastTime: number = 0;
+      let lastBytes: number = 0;
+      let peakSpeedInner: number = 0;
 
-      const currentSpeedEl: HTMLElement | null = document.getElementById('current-speed');
-      const peakSpeedEl: HTMLElement | null = document.getElementById('peak-speed');
-      if (data.bytesDownloaded && data.totalBytes) {
-        const now: number = Date.now();
-        if (lastTime > 0 && now > lastTime) {
-          const timeDiff: number = (now - lastTime) / 1000;
-          if (timeDiff >= 0.5) {
-            const bytesDiff: number = data.bytesDownloaded - lastBytes;
-            if (bytesDiff >= 0) {
-              const speedBps: number = Math.max(0, (bytesDiff * 8) / timeDiff / 1000000);
-              if (currentSpeedEl) currentSpeedEl.textContent = speedBps.toFixed(2) + ' Mbps';
-              if (speedBps > peakSpeedInner) {
-                peakSpeedInner = speedBps;
-                if (peakSpeedEl) peakSpeedEl.textContent = peakSpeedInner.toFixed(2) + ' Mbps';
+      window.gpcl.onUpdateDownloadProgress((data: any): void => {
+        const percent: number = data.percent || 0;
+        setUpdateBadgeProgress(percent);
+        if (progressFill) progressFill.style.width = percent + '%';
+        if (progressText) progressText.textContent = percent.toFixed(1) + '%';
+        if (downloadStatusEl) {
+          downloadStatusEl.textContent = percent >= 100
+            ? '下载完成，正在校验安装包...'
+            : `正在下载 GPCL ${version}: ${percent.toFixed(1)}%`;
+        }
+
+        const currentSpeedEl: HTMLElement | null = document.getElementById('current-speed');
+        const peakSpeedEl: HTMLElement | null = document.getElementById('peak-speed');
+        if (data.bytesDownloaded && data.totalBytes) {
+          const now: number = Date.now();
+          if (lastTime > 0 && now > lastTime) {
+            const timeDiff: number = (now - lastTime) / 1000;
+            if (timeDiff >= 0.5) {
+              const bytesDiff: number = data.bytesDownloaded - lastBytes;
+              if (bytesDiff >= 0) {
+                const speedBps: number = Math.max(0, (bytesDiff * 8) / timeDiff / 1000000);
+                if (currentSpeedEl) currentSpeedEl.textContent = speedBps.toFixed(2) + ' Mbps';
+                if (speedBps > peakSpeedInner) {
+                  peakSpeedInner = speedBps;
+                  if (peakSpeedEl) peakSpeedEl.textContent = peakSpeedInner.toFixed(2) + ' Mbps';
+                }
+                updateChart(speedBps);
               }
-              updateChart(speedBps);
+              lastTime = now;
+              lastBytes = data.bytesDownloaded;
             }
+          } else {
             lastTime = now;
             lastBytes = data.bytesDownloaded;
           }
-        } else {
-          lastTime = now;
-          lastBytes = data.bytesDownloaded;
         }
+      });
+    }
+
+    const handleCancel = async (): Promise<void> => {
+      if (window.gpcl.cancelUpdateDownload) {
+        await window.gpcl.cancelUpdateDownload();
       }
+      if (downloadPanelEl) downloadPanelEl.classList.add('hidden');
+      if (downloadStatusEl) downloadStatusEl.textContent = '下载已取消';
+      showToast('已取消', '更新下载已取消', 'info');
+      if (cancelBtn) cancelBtn.onclick = null;
+    };
+    if (cancelBtn) {
+      cancelBtn.onclick = handleCancel as any;
+    }
+  } else if (window.gpcl.onUpdateDownloadProgress) {
+    window.gpcl.onUpdateDownloadProgress((data: any): void => {
+      setUpdateBadgeProgress(data.percent || 0);
     });
   }
 
-  const handleCancel = async (): Promise<void> => {
-    if (window.gpcl.cancelUpdateDownload) {
-      await window.gpcl.cancelUpdateDownload();
-    }
-    if (downloadPanelEl) downloadPanelEl.classList.add('hidden');
-    if (downloadStatusEl) downloadStatusEl.textContent = '下载已取消';
-    showToast('已取消', '更新下载已取消', 'info');
-    if (cancelBtn) cancelBtn.removeEventListener('click', handleCancel);
-  };
-  if (cancelBtn) {
-    cancelBtn.onclick = handleCancel as any;
-  }
-
   try {
-    const result = await window.gpcl.downloadUpdate(version);
+    const result: any = await window.gpcl.downloadUpdate(version, manual);
 
     if (result.success) {
-      if (downloadStatusEl) downloadStatusEl.textContent = '下载完成，正在校验...';
-      if (progressFill) progressFill.style.width = '100%';
-      if (progressText) progressText.textContent = '100%';
-
-      const verifyResult = await window.gpcl.verifyUpdateSHA1(result.filePath);
-      let sha1Ok: boolean = verifyResult.success;
-      let sha1Message: string = '下载完成';
-
-      if (!sha1Ok) {
-        const proceed: boolean = await showDialog({
-          type: 'warning',
-          title: '文件校验异常',
-          message: `SHA1校验未通过：${verifyResult.error || '无法获取校验信息'}\n\n文件可能不完整或已损坏，是否仍要继续安装？`,
-          confirmText: '继续安装',
-          cancelText: '取消'
-        });
-        if (!proceed) {
-          if (downloadPanelEl) downloadPanelEl.classList.add('hidden');
-          showToast('已取消', '更新安装已取消', 'info');
-          return;
+      if (manual) {
+        if (downloadStatusEl) downloadStatusEl.textContent = '校验通过，正在安装...';
+        if (progressFill) progressFill.style.width = '100%';
+        if (progressText) progressText.textContent = '100%';
+        if (cancelBtn) {
+          cancelBtn.textContent = '下载完成';
+          cancelBtn.classList.add('complete');
+          (cancelBtn as HTMLButtonElement).disabled = true;
+          cancelBtn.onclick = null;
         }
-        sha1Message = '校验异常，已跳过';
-      } else {
-        sha1Message = '下载完成，校验通过';
-      }
-
-      if (downloadStatusEl) downloadStatusEl.textContent = sha1Message + '，准备安装...';
-      if (cancelBtn) {
-        cancelBtn.textContent = '下载完成';
-        cancelBtn.classList.add('complete');
-        (cancelBtn as HTMLButtonElement).disabled = true;
-        cancelBtn.onclick = null;
-      }
-
-      const userConfirmed: boolean = await showDialog({
-        type: 'confirm',
-        title: '更新就绪',
-        message: 'GoodPlanCraftLauncher 已经准备好全新的开始，接下来需要重新启动，是否继续？',
-        confirmText: '继续更新',
-        cancelText: '稍后'
-      });
-
-      if (userConfirmed) {
         if (downloadPanelEl) downloadPanelEl.classList.add('hidden');
-        const execResult = await window.gpcl.executeUpdateInstaller(result.filePath);
-        if (execResult.success) {
-          showToast('正在更新', '启动器即将关闭并开始安装...', 'info');
-          setTimeout(() => {
-            if (window.gpcl.closeWindow) window.gpcl.closeWindow();
-          }, 1000);
+        readyInstallerPath = result.filePath;
+        readyVersionInMemory = version;
+        setUpdateBadgeReady();
+        await installNow(result.filePath);
+      } else {
+        const hookResult: any = await window.gpcl.setUpdateShutdownHook(result.filePath, false);
+        if (hookResult && hookResult.success) {
+          readyInstallerPath = result.filePath;
+          readyVersionInMemory = version;
+          setUpdateBadgeReady();
         } else {
-          showToast('执行失败', execResult.error || '无法启动安装程序', 'error');
+          console.error('[更新] 设置关闭安装失败:', hookResult && hookResult.error);
+          setUpdateBadgeFailed((hookResult && hookResult.error) || '无法准备安装');
         }
-      } else {
-        await window.gpcl.setUpdateShutdownHook(result.filePath);
-        if (downloadPanelEl) downloadPanelEl.classList.add('hidden');
-        showToast('已记住', '关闭启动器时将自动执行更新', 'info');
       }
     } else if (result.cancelled) {
-      if (downloadPanelEl) downloadPanelEl.classList.add('hidden');
-      if (downloadStatusEl) downloadStatusEl.textContent = '下载已取消';
+      setUpdateBadgeAvailable();
+      if (manual) {
+        if (downloadPanelEl) downloadPanelEl.classList.add('hidden');
+        if (downloadStatusEl) downloadStatusEl.textContent = '下载已取消';
+      }
     } else {
       throw new Error(result.error || '下载失败');
     }
   } catch (err: any) {
-    if (downloadStatusEl) downloadStatusEl.textContent = `下载失败: ${err.message}`;
-    showToast('更新下载失败', err.message, 'error');
-    if (cancelBtn) {
-      (cancelBtn as HTMLButtonElement).disabled = true;
-      cancelBtn.onclick = null;
+    setUpdateBadgeFailed(err.message);
+    if (manual && downloadStatusEl) downloadStatusEl.textContent = `下载失败: ${err.message}`;
+    if (manual) {
+      if (cancelBtn) {
+        (cancelBtn as HTMLButtonElement).disabled = true;
+        cancelBtn.onclick = null;
+      }
+      if (/校验/.test(err.message)) {
+        const retry: boolean = await showDialog({
+          type: 'warning',
+          title: '更新包校验失败',
+          message: '下载的安装包校验未通过，可能没有下载完整，是否重新下载？',
+          confirmText: '重新下载',
+          cancelText: '取消'
+        });
+        if (retry) {
+          isUpdateDownloadActive = false;
+          await runUpdateDownload(version, true);
+          return;
+        }
+      }
+      showToast('更新下载失败', err.message, 'error');
+    } else {
+      console.error('[更新] 后台下载失败:', err.message);
     }
   } finally {
     isUpdateDownloadActive = false;
@@ -313,5 +401,11 @@ export async function startUpdateDownload(version: string): Promise<void> {
 }
 
 
-// ===== 应用内更新下载结束 =====
+export async function startUpdateDownload(version: string): Promise<void> {
+  await runUpdateDownload(version, true);
+}
 
+
+export async function autoDownloadUpdate(version: string): Promise<void> {
+  await runUpdateDownload(version, false);
+}
