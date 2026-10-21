@@ -1,0 +1,190 @@
+<!--
+ Copyright (c) 2026 Yunyun(云云) By 虚舟实验室(CaelLab) / CaelLabGameTS
+ Licensed under the CaelLab BY-SA Code License, Version 3
+ or any later version. https://www.caellab.com/license/cbs-v3.txt
+ Source: https://github.com/CaelLab-org/GoodPlanCraftLauncher
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>游戏崩溃了怎么办 - GoodPlanCraftLauncher</title>
+    <meta name="description" content="GoodPlanCraftLauncher 崩溃处理：导出错误报告、查看日志、常见崩溃原因和求助方式。">
+    <meta name="author" content="CaelLabGameTS">
+    <meta name="theme-color" content="#f6fafd">
+    <link rel="icon" type="image/png" href="../../icon.png">
+    <link rel="stylesheet" href="../../style.css?v=00g74i77">
+    <link rel="stylesheet" href="../help.css?v=h7r2m4xk">
+</head>
+<body>
+
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="https://gamets.caellab.com" class="logo">
+                <img src="/logo.png" alt="GameTS">
+            </a>
+            <ul class="nav-links">
+                <li><a href="../../#features">功能</a></li>
+                <li><a href="../../#screenshots">界面</a></li>
+                <li><a href="../../#download">下载</a></li>
+                <li><a href="../../#opensource">开源</a></li>
+                <li><a href="../../#history">历史版本</a></li>
+                <li><a href="../../#download" class="nav-cta">&#9660; 下载 GPCL</a></li>
+            </ul>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="打开菜单" aria-expanded="false">&#9776;</button>
+        </div>
+    </nav>
+    <div class="mobile-panel" id="mobilePanel">
+        <a href="../../#features">功能</a>
+        <a href="../../#screenshots">界面</a>
+        <a href="../../#download">下载</a>
+        <a href="../../#opensource">开源</a>
+        <a href="../../#history">历史版本</a>
+        <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener">GitHub 源码</a>
+    </div>
+
+    <main class="help-wrap">
+        <div class="help-crumb"><a href="/gpcl/">GoodPlanCraftLauncher</a> / <a href="/gpcl/help/">帮助</a> / 游戏崩溃</div>
+        <h1 class="help-title">游戏崩溃了怎么办</h1>
+        <p class="help-lead">崩溃窗口本身通常看不出原因。先导出错误报告，再按下面的顺序排查。</p>
+
+        <div class="help-article">
+            <div class="help-note">
+                <b>先做一件事：</b>点崩溃弹窗上的「导出错误报告」，把生成的 zip 保存下来。报告里有崩溃报告、游戏日志、启动器日志和系统信息，排查基本都靠它。
+            </div>
+
+            <h2>1. 导出错误报告</h2>
+            <p>崩溃弹窗上就有这个按钮。选一个位置保存，GPCL 会打包：</p>
+            <ul>
+                <li>崩溃报告（如果有）</li>
+                <li>最近一次游戏日志</li>
+                <li>启动器日志和启动参数</li>
+                <li>系统内存、Java 和操作系统信息</li>
+            </ul>
+            <p>报告里的 <code>--accessToken</code> 已经打码，可以直接发出去。不要只发崩溃窗口的截图。</p>
+
+            <h2>2. 自己先看日志</h2>
+            <p>弹窗上的「查看日志」会打开游戏进程的输出。重点看最底部，以及搜这几个词：</p>
+            <ul>
+                <li><code>Exception</code>、<code>Caused by</code>：真正的异常通常在第一个 <code>Caused by</code> 后面。</li>
+                <li><code>OutOfMemoryError</code>：内存不够。</li>
+                <li><code>UnsupportedClassVersionError</code>：Java 版本和游戏版本对不上。</li>
+                <li><code>NoSuchMethodError</code>、<code>ClassNotFoundException</code>：多半是模组和游戏版本、加载器版本不匹配。</li>
+            </ul>
+
+            <h2>3. 常见原因</h2>
+            <table class="help-table">
+                <thead>
+                    <tr><th>现象</th><th>常见原因</th><th>怎么处理</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>一启动就退出，日志里有 <code>UnsupportedClassVersionError</code></td>
+                        <td>Java 版本不对</td>
+                        <td>让 GPCL 自动补 Java；或在设置里换 Java 镜像源后重新安装。</td>
+                    </tr>
+                    <tr>
+                        <td>加载到一半卡死或闪退，日志里有 <code>OutOfMemoryError</code></td>
+                        <td>分配内存不够，或模组太多</td>
+                        <td>设置 → 游戏 → 内存分配里调大；不要超过物理内存。</td>
+                    </tr>
+                    <tr>
+                        <td>加载模组时崩，日志里出现模组名</td>
+                        <td>模组版本不对、缺前置、两个模组冲突</td>
+                        <td>先只装这个模组试；确认它支持的 MC 版本和加载器版本。</td>
+                    </tr>
+                    <tr>
+                        <td>窗口还没出来就退出，有 <code>GLFW error</code></td>
+                        <td>显卡驱动过旧，或 OpenGL 不支持</td>
+                        <td>更新显卡驱动；笔记本确认游戏用的是独显。</td>
+                    </tr>
+                    <tr>
+                        <td>进服务器被踢，提示 <code>Invalid session</code></td>
+                        <td>正版登录过期，或账号没有这个版本的授权</td>
+                        <td>重新登录正版；确认账号确实拥有该版本。</td>
+                    </tr>
+                    <tr>
+                        <td>进世界或加载资源包时崩</td>
+                        <td>存档、资源包或光影包损坏</td>
+                        <td>先新建一个世界试；把存档备份出来再处理。</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>4. 先排除这三件事</h2>
+            <ol>
+                <li>关掉所有模组、资源包和光影，裸启动一次。能进就是模组那边的问题。</li>
+                <li>换一个原版版本启动。能进就是当前版本或它的模组组合有问题。</li>
+                <li>新建一个世界。能进就是原来的存档坏了。</li>
+            </ol>
+
+            <h2>5. 求助</h2>
+            <p>发邮件时附上错误报告，再写清楚：游戏版本、装了什么模组、崩溃前做了什么、能不能稳定复现。</p>
+            <div class="help-links">
+                <a class="help-link" href="mailto:gamets@caellab.com">gamets@caellab.com</a>
+                <a class="help-link" href="https://forum.xmuer.online" target="_blank" rel="noopener">官方论坛</a>
+                <a class="help-link" href="/gpcl/help/">帮助中心</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <a href="https://gamets.caellab.com" class="logo">
+                    <img src="/logo.png" alt="GameTS">
+                </a>
+                <p>虚舟实验室旗下独立游戏开发与工具团队。探未来之境，载无界新生。</p>
+            </div>
+            <div class="footer-links">
+                <h4>项目</h4>
+                <ul>
+                    <li><a href="/gpcl/">GoodPlanCraftLauncher</a></li>
+                    <li><a href="/gpcl/help/">帮助中心</a></li>
+                    <li><a href="/areyouok/">Are You OK?</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>社区</h4>
+                <ul>
+                    <li><a href="https://forum.xmuer.online" target="_blank" rel="noopener">官方论坛</a></li>
+                    <li><a href="mailto:gamets@caellab.com">gamets@caellab.com</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>开源</h4>
+                <ul>
+                    <li><a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener">GitHub</a></li>
+                    <li><a href="https://www.caellab.com/license/cbs-v3" target="_blank">许可证</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 GameTS by <a href="https://www.caellab.com/" target="_blank" class="footer-inline-link">CaelLab（虚舟实验室）</a>. All rights reserved.</p>
+            <p>GoodPlanCraftLauncher 为第三方开源工具，与 <a href="https://www.minecraft.net/" target="_blank" rel="noopener" class="footer-inline-link">Mojang Studios</a>、<a href="https://www.microsoft.com/" target="_blank" rel="noopener" class="footer-inline-link">Microsoft</a>、<a href="https://www.xbox.com/" target="_blank" rel="noopener" class="footer-inline-link">Xbox</a> 无任何官方关联。Minecraft 为 Mojang Studios 注册商标，使用本启动器需持有有效的 Minecraft 正版授权。</p>
+            <p>开源许可证：<a href="https://www.caellab.com/license/cbs-v3" target="_blank" class="footer-inline-link">CaelLab BY-SA Code License v3</a> | Open Source on <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener" class="footer-inline-link">GitHub</a></p>
+        </div>
+    </footer>
+
+    <script>
+        var navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', function() {
+            navbar.classList.toggle('scrolled', window.scrollY > 40);
+        }, { passive: true });
+
+        var mobileBtn = document.getElementById('mobileMenuBtn');
+        var mobilePanel = document.getElementById('mobilePanel');
+        mobileBtn.addEventListener('click', function() {
+            var open = mobilePanel.classList.toggle('open');
+            mobileBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+        mobilePanel.querySelectorAll('a').forEach(function(a) {
+            a.addEventListener('click', function() {
+                mobilePanel.classList.remove('open');
+                mobileBtn.setAttribute('aria-expanded', 'false');
+            });
+        });
+    </script>
+</body>
+</html>

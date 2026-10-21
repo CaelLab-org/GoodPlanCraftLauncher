@@ -1,0 +1,107 @@
+/*
+ * Copyright (c) 2026 Yunyun(云云) By 虚舟实验室(CaelLab) / CaelLabGameTS
+ * Licensed under the CaelLab BY-SA Code License, Version 3
+ * or any later version. https://www.caellab.com/license/cbs-v3.txt
+ * Source: https://github.com/CaelLab-org/GoodPlanCraftLauncher
+ */
+
+/* ===== 更新日志页 ===== */
+.cl-page { background: var(--bg); }
+
+.cl-hero {
+    padding: calc(var(--nav-h) + 56px) 0 8px;
+    background: linear-gradient(180deg, #e6f3fd 0%, #f1f8fd 46%, var(--bg) 100%);
+}
+.cl-hero .container { max-width: 780px; }
+
+.cl-back {
+    display: inline-block;
+    margin-bottom: 22px;
+    color: var(--text-2);
+    font-size: 0.86rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+.cl-back:hover { color: var(--accent); }
+
+.cl-hero h1 {
+    font-size: clamp(1.8rem, 3.8vw, 2.4rem);
+    font-weight: 800;
+    letter-spacing: -0.6px;
+    margin-bottom: 12px;
+}
+.cl-intro { color: var(--text-2); font-size: 1.02rem; }
+.cl-note {
+    margin-top: 10px;
+    color: var(--text-3);
+    font-size: 0.84rem;
+    line-height: 1.7;
+}
+
+.cl-index {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 26px;
+}
+.cl-index a {
+    padding: 4px 11px;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--text-2);
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: color 0.2s ease, border-color 0.2s ease;
+}
+.cl-index a:hover { color: var(--accent); border-color: rgba(11, 127, 184, 0.4); }
+
+.cl-history { padding: 40px 0 84px; }
+.cl-history .timeline-item { padding-bottom: 34px; }
+.cl-history .timeline-item:last-child { padding-bottom: 0; }
+.cl-history .version-info { margin-bottom: 10px; }
+
+.cl-download {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+}
+.cl-dl-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: var(--accent);
+    color: var(--accent-contrast);
+    border-radius: var(--radius-sm);
+    font-size: 0.86rem;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 6px 16px -8px rgba(11, 127, 184, 0.7);
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+.cl-dl-btn:hover { background: var(--accent-hover); transform: translateY(-1px); }
+.cl-file {
+    color: var(--text-3);
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    word-break: break-all;
+}
+.cl-unavailable {
+    padding: 6px 12px;
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--radius-sm);
+    color: var(--text-3);
+    font-size: 0.8rem;
+}
+
+@media (max-width: 768px) {
+    .cl-hero { padding-top: calc(var(--nav-h) + 40px); }
+    .cl-history { padding: 30px 0 64px; }
+    .cl-history .timeline-item { padding-bottom: 28px; }
+}

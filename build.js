@@ -125,9 +125,13 @@ function copyStatic() {
 
   // 生成 dist/package.json
   const pkg = require('./package.json');
+  // electron-builder 读的是 dist/package.json：缺 description / author 会报警告，
+  // 而且 author 决定产物 exe 的 CompanyName 字段
   const distPkg = {
     name: pkg.name,
     version: pkg.version,
+    description: pkg.description,
+    author: pkg.author,
     main: 'main.js',
     type: 'commonjs',
   };

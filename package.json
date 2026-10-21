@@ -1,7 +1,7 @@
 {
   "name": "gpcl",
   "version": "1.7.2",
-  "description": "GoodPlanCraftLauncher",
+  "description": "Minecraft 启动器",
   "main": "main.js",
   "scripts": {
     "build-ts": "node build.js",
@@ -16,7 +16,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "CaelLab",
   "license": "SEE LICENSE IN LICENSE",
   "type": "commonjs",
   "devDependencies": {

@@ -1,0 +1,603 @@
+<!--
+ Copyright (c) 2026 Yunyun(云云) By 虚舟实验室(CaelLab) / CaelLabGameTS
+ Licensed under the CaelLab BY-SA Code License, Version 3
+ or any later version. https://www.caellab.com/license/cbs-v3.txt
+ Source: https://github.com/CaelLab-org/GoodPlanCraftLauncher
+ Project: https://gamets.caellab.com/gpcl/
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GoodPlanCraftLauncher</title>
+  <link rel="stylesheet" href="app.css?v=00g74i77">
+</head>
+<body>
+  <div class="stage" id="stage">
+    <div class="app-root">
+      <div class="app-layout">
+        <div class="titlebar">
+          <div class="titlebar-left"><div class="title">GPCL</div></div>
+          <div class="titlebar-center">
+            <nav class="menu-bar">
+              <ul class="menu">
+                <li id="menu-launch" class="menu-item active"><span class="menu-icon icon icon-play"></span>启动</li>
+                <li id="menu-download" class="menu-item"><span class="menu-icon icon icon-download"></span>下载</li>
+                <li id="menu-settings" class="menu-item"><span class="menu-icon icon icon-gear"></span>设置</li>
+              </ul>
+            </nav>
+          </div>
+          <div class="window-controls">
+            <button class="min-btn" type="button" aria-label="最小化"><span class="icon icon-minimize"></span></button>
+            <button class="close-btn" type="button" aria-label="关闭"><span class="icon icon-close"></span></button>
+          </div>
+        </div>
+
+        <main class="main-content">
+          <div class="container">
+
+            <div id="launch-page" class="page">
+              <div class="launch-panel">
+                <div class="launch-sidebar">
+                  <div class="auth-tabs">
+                    <button class="auth-tab auth-tab-disabled" type="button" disabled>
+                      <span class="auth-label"><span class="icon icon-diamond"></span> 正版</span>
+                    </button>
+                    <button class="auth-tab auth-tab-active" type="button">
+                      <span class="auth-label"><span class="icon icon-user"></span> 离线</span>
+                    </button>
+                  </div>
+
+                  <div class="skin-container">
+                    <div class="skin-wrapper">
+                      <img src="skin/Alex.png" alt="皮肤" class="skin-image">
+                    </div>
+                    <div class="skin-reflection"></div>
+                  </div>
+
+                  <div class="username-input-group">
+                    <div class="username-field">
+                      <input type="text" id="username" class="username-input" value="GPCL_Player" autocomplete="off" spellcheck="false">
+                      <button id="username-history-btn" class="username-history-btn" type="button" aria-label="最近使用的名字"><span class="icon icon-chevron"></span></button>
+                      <div id="username-history" class="username-history hidden"></div>
+                    </div>
+                  </div>
+
+                  <button id="launch-btn" class="launch-button">
+                    <span class="launch-text"><span class="icon icon-play"></span> 开始游戏</span>
+                  </button>
+
+                  <div id="selected-version-display" class="selected-version-display hidden">
+                    <span>将启动:</span>
+                    <span id="selected-version-text">-</span>
+                  </div>
+
+                  <div class="launch-footer">
+                    <button id="version-select-btn" class="footer-btn" type="button"><span>版本选择</span></button>
+                  </div>
+                </div>
+
+                <div class="launch-content">
+                  <div id="version-select-panel" class="version-select-panel">
+                    <div class="version-panel-header">
+                      <h3 class="version-panel-title">版本选择</h3>
+                      <div id="version-count" class="version-count">已安装 2 个</div>
+                    </div>
+                    <div id="launch-version-list" class="version-list-container"></div>
+                    <div id="selected-version-info" class="selected-version-info">
+                      <span class="selected-version-label">已选择:</span>
+                      <span id="selected-version-name" class="selected-version-name">-</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div id="game-monitor" class="game-monitor">
+                  <div class="game-monitor-header">
+                    <span id="game-monitor-dot" class="game-monitor-dot"></span>
+                    <span id="game-monitor-state" class="game-monitor-state">未运行</span>
+                  </div>
+                  <div class="game-monitor-body">
+                    <div class="game-monitor-row"><span class="game-monitor-label">版本</span><span id="mon-version" class="game-monitor-value">-</span></div>
+                    <div class="game-monitor-row"><span class="game-monitor-label">PID</span><span id="mon-pid" class="game-monitor-value">-</span></div>
+                    <div class="game-monitor-row"><span class="game-monitor-label">时长</span><span id="mon-uptime" class="game-monitor-value">-</span></div>
+                    <div class="game-monitor-row"><span class="game-monitor-label">内存</span><span id="mon-memory" class="game-monitor-value">-</span></div>
+                  </div>
+                  <div class="game-monitor-actions">
+                    <button id="mon-log-btn" class="game-monitor-btn" type="button">查看日志</button>
+                    <button id="mon-stop-btn" class="game-monitor-btn game-monitor-btn-danger" type="button">结束游戏</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="download-page" class="page hidden">
+              <div class="download-header"><h3>下载</h3></div>
+
+              <div id="download-panel" class="download-status-panel hidden">
+                <div class="download-stats">
+                  <div class="chart-container"><canvas id="speedChart" width="640" height="300"></canvas></div>
+                  <div class="progress-section">
+                    <div class="speed-info">
+                      <div class="speed-item"><span class="speed-label">当前</span><span id="current-speed" class="speed-value">0.00 Mbps</span></div>
+                      <div class="speed-item"><span class="speed-label">峰值</span><span id="peak-speed" class="speed-value">0.00 Mbps</span></div>
+                    </div>
+                    <div class="progress-bar-wrapper">
+                      <div class="progress-bar-bg"><div id="progress-fill" class="progress-bar-fill"></div></div>
+                      <div id="progress-text" class="progress-text">0%</div>
+                    </div>
+                    <div id="download-filename" class="download-filename">文件名</div>
+                    <button id="cancel-download-btn" class="cancel-download-btn" type="button">取消下载</button>
+                  </div>
+                </div>
+              </div>
+
+              <div id="version-list-section" class="version-list-section">
+                <div class="version-list-header">
+                  <h4 class="section-title">游戏版本</h4>
+                  <span id="version-count-label" class="version-count-label">共 6 个</span>
+                </div>
+                <div id="version-list" class="version-list-container"></div>
+              </div>
+
+              <div id="version-detail-page" class="version-detail-page hidden">
+                <button id="detail-back-btn" class="detail-back-btn" type="button"><span class="icon icon-arrow-left"></span> 返回列表</button>
+                <div class="detail-content">
+                  <div class="detail-header">
+                    <div class="detail-version-id" id="detail-version-id">-</div>
+                    <div class="detail-version-type" id="detail-version-type">正式版</div>
+                  </div>
+                  <div class="detail-info-grid">
+                    <div class="detail-info-item"><span class="detail-info-label">版本类型</span><span class="detail-info-value" id="detail-type-label">-</span></div>
+                    <div class="detail-info-item"><span class="detail-info-label">发布时间</span><span class="detail-info-value" id="detail-release-time">-</span></div>
+                  </div>
+                  <div class="detail-options" id="mod-loader-options"></div>
+                  <button id="detail-download-btn" class="detail-download-btn" type="button">下载</button>
+                </div>
+              </div>
+            </div>
+
+            <div id="settings-page" class="page hidden">
+              <div class="settings-page">
+                <div class="settings-sidebar">
+                  <ul class="settings-sidebar-menu">
+                    <li class="settings-sidebar-item active" data-tab="game"><span class="icon icon-gamepad"></span><span>游戏</span></li>
+                    <li class="settings-sidebar-item" data-tab="appearance"><span class="icon icon-palette"></span><span>外观</span></li>
+                    <li class="settings-sidebar-item" data-tab="download"><span class="icon icon-download"></span><span>下载</span></li>
+                    <li class="settings-sidebar-item" data-tab="advanced"><span class="icon icon-sliders"></span><span>高级</span></li>
+                  </ul>
+                </div>
+                <div class="settings-content">
+                  <div class="settings-content-panel active" data-panel="game">
+                    <h2 class="settings-group-title">游戏设置</h2>
+                    <p class="settings-group-desc">内存、窗口和启动方式</p>
+
+                    <div class="setting-card setting-card--group">
+                      <div class="setting-card-head">
+                        <span class="setting-card-icon"><span class="icon icon-thread"></span></span>
+                        <div>
+                          <div class="setting-card-title">内存分配</div>
+                          <div class="setting-card-desc">自动模式会根据电脑内存给系统留出空间</div>
+                        </div>
+                      </div>
+                      <div class="setting-row">
+                        <div class="setting-left">
+                          <div class="setting-label">分配方式</div>
+                          <div class="setting-desc">由 GPCL 自动控制，或手动指定上限</div>
+                        </div>
+                        <div class="setting-control">
+                          <div class="segmented" id="demo-memory-mode">
+                            <label><input type="radio" name="demo-memory-mode" value="auto" checked><span>自动</span></label>
+                            <label><input type="radio" name="demo-memory-mode" value="custom"><span>自定义</span></label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="setting-row hidden" id="demo-memory-custom-row">
+                        <div class="setting-left">
+                          <div class="setting-label">自定义上限</div>
+                          <div class="setting-desc">拖动选择分配给游戏的最大内存</div>
+                        </div>
+                        <div class="setting-control setting-control-slider">
+                          <input type="range" id="demo-memory-slider" class="range-input" min="1" max="16" step="1" value="4" disabled>
+                          <span class="range-value" id="demo-memory-value">4 GB</span>
+                        </div>
+                      </div>
+                      <div class="memory-usage">
+                        <div class="memory-usage-head"><span>系统内存（已用 / 总计）</span><span>9.1 GB / 16.0 GB</span></div>
+                        <div class="memory-usage-track"><div class="memory-usage-used" style="width:57%"></div></div>
+                        <div class="memory-usage-foot"><span>当前可用 6.9 GB</span><span>GPCL 将分配 <b id="demo-memory-alloc">4.0 GB（自动）</b></span></div>
+                      </div>
+                    </div>
+
+                    <div class="setting-card setting-card--group">
+                      <div class="setting-card-head">
+                        <span class="setting-card-icon"><span class="icon icon-gamepad"></span></span>
+                        <div>
+                          <div class="setting-card-title">显示</div>
+                          <div class="setting-card-desc">窗口模式和标题</div>
+                        </div>
+                      </div>
+                      <div class="setting-row">
+                        <div class="setting-left">
+                          <div class="setting-label">窗口模式</div>
+                          <div class="setting-desc">设置游戏启动时的窗口模式</div>
+                        </div>
+                        <div class="setting-control">
+                          <div class="custom-select" data-select-id="window-mode">
+                            <div class="custom-select-trigger"><span class="custom-select-value">窗口</span><span class="custom-select-arrow icon icon-chevron"></span></div>
+                            <div class="custom-select-dropdown">
+                              <div class="custom-select-option" data-value="fullscreen">全屏</div>
+                              <div class="custom-select-option selected" data-value="windowed">窗口</div>
+                              <div class="custom-select-option" data-value="borderless">无边框窗口</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="setting-row">
+                        <div class="setting-left">
+                          <div class="setting-label">游戏窗口标题</div>
+                          <div class="setting-desc">支持 {mc_version}、{time} 等魔术字</div>
+                        </div>
+                        <div class="setting-control">
+                          <input type="text" id="window-title" class="setting-input" value="Minecraft {mc_version} (GPCL)" spellcheck="false">
+                        </div>
+                      </div>
+                      <div class="setting-row">
+                        <div class="setting-left">
+                          <div class="setting-label">尽量保持该名称</div>
+                          <div class="setting-desc">关闭时只在窗口出现后校正 20 秒</div>
+                        </div>
+                        <div class="setting-control">
+                          <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="setting-card setting-card--group">
+                      <div class="setting-card-head">
+                        <span class="setting-card-icon"><span class="icon icon-sliders"></span></span>
+                        <div>
+                          <div class="setting-card-title">启动行为</div>
+                          <div class="setting-card-desc">游戏进程和启动器窗口</div>
+                        </div>
+                      </div>
+                      <div class="setting-row">
+                        <div class="setting-left">
+                          <div class="setting-label">进程优先级</div>
+                          <div class="setting-desc">让游戏更积极地抢 CPU</div>
+                        </div>
+                        <div class="setting-control">
+                          <div class="custom-select" data-select-id="priority">
+                            <div class="custom-select-trigger"><span class="custom-select-value">中（默认）</span><span class="custom-select-arrow icon icon-chevron"></span></div>
+                            <div class="custom-select-dropdown">
+                              <div class="custom-select-option" data-value="low">低</div>
+                              <div class="custom-select-option selected" data-value="normal">中（默认）</div>
+                              <div class="custom-select-option" data-value="high">高</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="setting-row">
+                        <div class="setting-left">
+                          <div class="setting-label">启动器可见性</div>
+                          <div class="setting-desc">游戏启动后怎么处理启动器窗口</div>
+                        </div>
+                        <div class="setting-control">
+                          <div class="segmented">
+                            <label><input type="radio" name="demo-visibility" value="keep" checked><span>保持不变</span></label>
+                            <label><input type="radio" name="demo-visibility" value="minimize"><span>最小化</span></label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="settings-content-panel" data-panel="appearance">
+                    <h2 class="settings-group-title">外观设置</h2>
+                    <p class="settings-group-desc">主题、缩放和启动时的显示</p>
+
+                    <div class="setting-card setting-card--group">
+                      <div class="setting-card-head">
+                        <span class="setting-card-icon"><span class="icon icon-palette"></span></span>
+                        <div>
+                          <div class="setting-card-title">外观</div>
+                          <div class="setting-card-desc">启动器本身的显示方式</div>
+                        </div>
+                      </div>
+                      <div class="setting-row">
+                        <div class="setting-left">
+                          <div class="setting-label">主题模式</div>
+                          <div class="setting-desc">选择启动器主题</div>
+                        </div>
+                        <div class="setting-control">
+                          <div class="segmented" id="demo-theme">
+                            <label><input type="radio" name="demo-theme" value="dark"><span>深色</span></label>
+                            <label><input type="radio" name="demo-theme" value="light" checked><span>浅色</span></label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="setting-row">
+                        <div class="setting-left">
+                          <div class="setting-label">界面缩放</div>
+                          <div class="setting-desc">调整界面元素大小</div>
+                        </div>
+                        <div class="setting-control">
+                          <div class="custom-select" data-select-id="scale">
+                            <div class="custom-select-trigger"><span class="custom-select-value">100% (默认)</span><span class="custom-select-arrow icon icon-chevron"></span></div>
+                            <div class="custom-select-dropdown">
+                              <div class="custom-select-option" data-value="85">85%</div>
+                              <div class="custom-select-option selected" data-value="100">100% (默认)</div>
+                              <div class="custom-select-option" data-value="110">110%</div>
+                              <div class="custom-select-option" data-value="125">125%</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="setting-card setting-card--group">
+                      <div class="setting-card-head">
+                        <span class="setting-card-icon"><span class="icon icon-play"></span></span>
+                        <div>
+                          <div class="setting-card-title">启动显示</div>
+                          <div class="setting-card-desc">进入游戏前的动画和提示</div>
+                        </div>
+                      </div>
+                      <div class="setting-row">
+                        <div class="setting-left">
+                          <div class="setting-label">播放启动动画</div>
+                          <div class="setting-desc">启动游戏时显示方块与镐子动画</div>
+                        </div>
+                        <div class="setting-control"><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+                      </div>
+                      <div class="setting-row">
+                        <div class="setting-left">
+                          <div class="setting-label">启动小知识</div>
+                          <div class="setting-desc">启动游戏时显示一条 Minecraft 小知识</div>
+                        </div>
+                        <div class="setting-control">
+                          <div class="custom-select" data-select-id="tip">
+                            <div class="custom-select-trigger"><span class="custom-select-value">偶尔（1/3）</span><span class="custom-select-arrow icon icon-chevron"></span></div>
+                            <div class="custom-select-dropdown">
+                              <div class="custom-select-option" data-value="off">从不显示</div>
+                              <div class="custom-select-option selected" data-value="rare">偶尔（1/3）</div>
+                              <div class="custom-select-option" data-value="always">每次显示</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="settings-content-panel" data-panel="download">
+                    <h2 class="settings-group-title">下载设置</h2>
+                    <p class="settings-group-desc">下载源、并发和速度</p>
+
+                    <div class="setting-card setting-card--group">
+                      <div class="setting-card-head">
+                        <span class="setting-card-icon"><span class="icon icon-download"></span></span>
+                        <div>
+                          <div class="setting-card-title">下载源</div>
+                          <div class="setting-card-desc">官方源和 BMCLAPI 镜像的优先顺序</div>
+                        </div>
+                      </div>
+                      <div class="setting-row">
+                        <div class="setting-left">
+                          <div class="setting-label">文件下载源</div>
+                          <div class="setting-desc">客户端、资源文件和依赖库</div>
+                        </div>
+                        <div class="setting-control">
+                          <div class="custom-select" data-select-id="file-source">
+                            <div class="custom-select-trigger"><span class="custom-select-value">优先官方，缓慢时换镜像</span><span class="custom-select-arrow icon icon-chevron"></span></div>
+                            <div class="custom-select-dropdown">
+                              <div class="custom-select-option selected" data-value="auto">优先官方，缓慢时换镜像</div>
+                              <div class="custom-select-option" data-value="mirror-first">尽量使用镜像源</div>
+                              <div class="custom-select-option" data-value="official-first">优先使用官方源</div>
+                              <div class="custom-select-option" data-value="official-only">尽量使用官方源</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="setting-row">
+                        <div class="setting-left">
+                          <div class="setting-label">版本列表源</div>
+                          <div class="setting-desc">版本清单、版本 JSON 和资源索引</div>
+                        </div>
+                        <div class="setting-control">
+                          <div class="custom-select" data-select-id="version-source">
+                            <div class="custom-select-trigger"><span class="custom-select-value">优先官方，缓慢时换镜像</span><span class="custom-select-arrow icon icon-chevron"></span></div>
+                            <div class="custom-select-dropdown">
+                              <div class="custom-select-option selected" data-value="auto">优先官方，缓慢时换镜像</div>
+                              <div class="custom-select-option" data-value="mirror-first">尽量使用镜像源</div>
+                              <div class="custom-select-option" data-value="official-first">优先使用官方源</div>
+                              <div class="custom-select-option" data-value="official-only">尽量使用官方源</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="setting-card setting-card--group">
+                      <div class="setting-card-head">
+                        <span class="setting-card-icon"><span class="icon icon-thread"></span></span>
+                        <div>
+                          <div class="setting-card-title">速度</div>
+                          <div class="setting-card-desc">并发连接数和总下载速度上限</div>
+                        </div>
+                      </div>
+                      <div class="setting-row">
+                        <div class="setting-left">
+                          <div class="setting-label">最大线程数</div>
+                          <div class="setting-desc">小文件较多时提高并发能加快下载</div>
+                        </div>
+                        <div class="setting-control setting-control-slider">
+                          <input type="range" id="demo-threads" class="range-input" min="1" max="128" step="1" value="64">
+                          <span class="range-value" id="demo-threads-value">64</span>
+                        </div>
+                      </div>
+                      <div class="setting-row">
+                        <div class="setting-left">
+                          <div class="setting-label">速度限制</div>
+                          <div class="setting-desc">所有下载任务共享这个上限，0 表示不限速</div>
+                        </div>
+                        <div class="setting-control setting-control-slider">
+                          <input type="range" id="demo-speed" class="range-input" min="0" max="20" step="1" value="0">
+                          <span class="range-value" id="demo-speed-value">不限速</span>
+                        </div>
+                      </div>
+                      <div class="setting-row">
+                        <div class="setting-left">
+                          <div class="setting-label">Java 镜像源</div>
+                          <div class="setting-desc">Java 运行时单独使用这个镜像</div>
+                        </div>
+                        <div class="setting-control">
+                          <div class="custom-select" data-select-id="java-mirror">
+                            <div class="custom-select-trigger"><span class="custom-select-value">清华大学镜像（推荐）</span><span class="custom-select-arrow icon icon-chevron"></span></div>
+                            <div class="custom-select-dropdown">
+                              <div class="custom-select-option selected" data-value="tsinghua">清华大学镜像（推荐）</div>
+                              <div class="custom-select-option" data-value="nju">南京大学镜像</div>
+                              <div class="custom-select-option" data-value="huawei">华为云镜像</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="settings-content-panel" data-panel="advanced">
+                    <h2 class="settings-group-title">高级设置</h2>
+                    <p class="settings-group-desc">启动行为、日志和 Java 参数</p>
+
+                    <div class="setting-card setting-card--group">
+                      <div class="setting-card-head">
+                        <span class="setting-card-icon"><span class="icon icon-gear"></span></span>
+                        <div>
+                          <div class="setting-card-title">启动与日志</div>
+                          <div class="setting-card-desc">启动器自身的行为</div>
+                        </div>
+                      </div>
+                      <div class="setting-row">
+                        <div class="setting-left">
+                          <div class="setting-label">防止多次启动</div>
+                          <div class="setting-desc">开启后将阻止启动器重复运行</div>
+                        </div>
+                        <div class="setting-control"><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+                      </div>
+                      <div class="setting-row">
+                        <div class="setting-left">
+                          <div class="setting-label">自动清除日志</div>
+                          <div class="setting-desc">启动时自动清理过期的日志文件</div>
+                        </div>
+                        <div class="setting-control"><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+                      </div>
+                    </div>
+
+                    <div class="setting-card setting-card--group">
+                      <div class="setting-card-head">
+                        <span class="setting-card-icon"><span class="icon icon-bolt"></span></span>
+                        <div>
+                          <div class="setting-card-title">Java 高级</div>
+                          <div class="setting-card-desc">不懂就不要改，错误参数会让游戏起不来</div>
+                        </div>
+                      </div>
+                      <div class="setting-row setting-row-stack">
+                        <div class="setting-left">
+                          <div class="setting-label">自定义 JVM 参数</div>
+                          <div class="setting-desc">空格分隔，支持引号；留空使用默认参数</div>
+                        </div>
+                        <div class="setting-control-column">
+                          <textarea class="setting-input setting-textarea" rows="3" placeholder="-XX:+UseG1GC" spellcheck="false"></textarea>
+                        </div>
+                      </div>
+                      <div class="setting-row">
+                        <div class="setting-left">
+                          <div class="setting-label">内存管理</div>
+                          <div class="setting-desc">G1GC 调优会追加一组常用的垃圾回收参数</div>
+                        </div>
+                        <div class="setting-control">
+                          <div class="custom-select" data-select-id="gc">
+                            <div class="custom-select-trigger"><span class="custom-select-value">默认</span><span class="custom-select-arrow icon icon-chevron"></span></div>
+                            <div class="custom-select-dropdown">
+                              <div class="custom-select-option selected" data-value="default">默认</div>
+                              <div class="custom-select-option" data-value="g1gc">G1GC 调优</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </main>
+      </div>
+
+      <div class="toast-container" id="toast-container"></div>
+
+      <div id="launch-animation-overlay" class="launch-animation-overlay hidden">
+        <div class="launch-animation-content">
+          <div class="pickaxe-container">
+            <div class="pickaxe">
+              <svg viewBox="0 0 64 64" width="80" height="80" aria-hidden="true">
+                <rect x="22" y="28" width="4" height="32" fill="#8D6E63"/>
+                <rect x="21" y="28" width="2" height="32" fill="#A1887F"/>
+                <rect x="27" y="28" width="1" height="32" fill="#6D4C41"/>
+                <rect x="20" y="24" width="10" height="4" fill="#006064"/>
+                <rect x="18" y="18" width="10" height="6" fill="#00838F"/>
+                <rect x="16" y="12" width="6" height="6" fill="#0097A7"/>
+                <polygon points="24,20 54,10 54,25 24,30" fill="#4DD0E1"/>
+                <polygon points="24,30 54,25 54,35 24,38" fill="#26C6DA"/>
+                <polygon points="24,20 54,10 39,5" fill="#80DEEA"/>
+                <polygon points="54,10 59,15 54,25" fill="#00ACC1"/>
+                <polygon points="24,20 24,30 19,25" fill="#00BCD4"/>
+              </svg>
+            </div>
+            <div class="block-container">
+              <div class="block" id="break-block">
+                <svg viewBox="0 0 64 64" width="60" height="60" aria-hidden="true">
+                  <rect x="2" y="2" width="60" height="60" fill="#3E3E3E" stroke="#2a2a2a" stroke-width="2"/>
+                  <rect x="6" y="6" width="12" height="12" fill="#4a4a4a"/>
+                  <rect x="22" y="8" width="10" height="8" fill="#353535"/>
+                  <rect x="40" y="4" width="14" height="10" fill="#484848"/>
+                  <rect x="4" y="24" width="16" height="14" fill="#424242"/>
+                  <rect x="26" y="20" width="12" height="12" fill="#383838"/>
+                  <rect x="44" y="18" width="10" height="14" fill="#454545"/>
+                  <rect x="6" y="42" width="14" height="10" fill="#3a3a3a"/>
+                  <rect x="24" y="38" width="18" height="12" fill="#404040"/>
+                  <rect x="46" y="36" width="12" height="16" fill="#464646"/>
+                  <rect x="8" y="54" width="10" height="8" fill="#393939"/>
+                  <rect x="24" y="52" width="14" height="10" fill="#434343"/>
+                  <rect x="42" y="54" width="16" height="8" fill="#474747"/>
+                </svg>
+              </div>
+              <div class="particles" id="break-particles"></div>
+            </div>
+          </div>
+          <div class="launch-status">
+            <div id="launch-status-text" class="status-text">正在启动游戏...</div>
+            <div class="progress-bar-container"><div id="launch-progress-fill" class="progress-bar-fill"></div></div>
+            <div id="launch-version-info" class="launch-version-info"></div>
+          </div>
+          <button id="launch-cancel-btn" class="launch-cancel-btn" type="button">取消启动</button>
+          <div id="launch-tip-card" class="launch-tip-card hidden">
+            <div class="launch-tip-header"><span class="launch-tip-icon icon icon-bulb"></span><span class="launch-tip-label">你知道吗？</span></div>
+            <div id="launch-tip-text" class="launch-tip-text"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="log-overlay" class="dialog-overlay hidden">
+        <div class="dialog-box">
+          <div class="dialog-header"><span class="icon icon-file"></span><h3 class="dialog-title">游戏日志</h3></div>
+          <div class="dialog-body"><div class="log-view" id="log-view"></div></div>
+          <div class="dialog-footer"><button class="dialog-btn dialog-btn-primary" id="log-close" type="button">关闭</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="versions.js?v=00g74i77"></script>
+  <script src="app.js?v=00g74i77"></script>
+</body>
+</html>
