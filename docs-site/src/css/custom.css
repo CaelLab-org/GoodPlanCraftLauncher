@@ -1,0 +1,66 @@
+/* 配色跟官网（gamets.caellab.com/gpcl）接同一套值：
+   亮色是 #f6fafd 底 + #0b7fb8 主色，暗色是启动器那套深蓝（#0d1425 / #17223c / #4fc3f7）。
+   Infima 全靠 --ifm-* 变量，这里只做映射，不改组件结构。 */
+
+:root {
+  --ifm-color-primary: #0b7fb8;
+  --ifm-color-primary-dark: #0a6ba0;
+  --ifm-color-primary-darker: #085a87;
+  --ifm-color-primary-darkest: #074a6f;
+  --ifm-color-primary-light: #2a94c9;
+  --ifm-color-primary-lighter: #4fa8d4;
+  --ifm-color-primary-lightest: #8cc6e2;
+
+  --ifm-background-color: #f6fafd;
+  --ifm-background-surface-color: #ffffff;
+  --ifm-footer-background-color: #eaf3fb;
+  --ifm-font-color-base: #132a41;
+  --ifm-font-color-secondary: #4b6a89;
+  --ifm-code-background: #eaf3fb;
+  --ifm-code-font-size: 90%;
+  --ifm-global-radius: 8px;
+
+  --ifm-font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+  --ifm-font-family-monospace: "Cascadia Code", "JetBrains Mono", Consolas,
+    "Courier New", monospace;
+
+  --ifm-toc-border-color: #dfe9f2;
+  --ifm-color-emphasis-300: #dfe9f2;
+  --ifm-color-emphasis-200: #eaf3fb;
+}
+
+[data-theme='dark'] {
+  --ifm-color-primary: #4fc3f7;
+  --ifm-color-primary-dark: #29b6f6;
+  --ifm-color-primary-darker: #1aaef4;
+  --ifm-color-primary-darkest: #0b96d8;
+  --ifm-color-primary-light: #75cff9;
+  --ifm-color-primary-lighter: #8bd7fa;
+  --ifm-color-primary-lightest: #b7e8fd;
+
+  --ifm-background-color: #0d1425;
+  --ifm-background-surface-color: #121b30;
+  --ifm-footer-background-color: #121b30;
+  --ifm-navbar-background-color: #0d1425;
+  --ifm-font-color-base: #e8eef8;
+  --ifm-font-color-secondary: #9fb0c9;
+  --ifm-code-background: #1a2540;
+  --ifm-toc-border-color: #1e2a49;
+  --ifm-hr-border-color: #1e2a49;
+  --ifm-color-emphasis-300: #1e2a49;
+  --ifm-color-emphasis-200: #17223c;
+  --ifm-color-emphasis-100: #121b30;
+  --ifm-menu-color-background-active: rgba(79, 195, 247, 0.12);
+}
+
+/* 官网和启动器都是紧凑一点的排版，正文别拉太宽 */
+.markdown {
+  line-height: 1.75;
+}
+
+/* 表格行多的时候允许横向滚动，别把页面撑破 */
+.markdown table {
+  display: block;
+  overflow-x: auto;
+}

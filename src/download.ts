@@ -1,8 +1,9 @@
 /*
  * Copyright (c) 2026 Yunyun(云云) By 虚舟实验室(CaelLab) / CaelLabGameTS
- * Licensed under the CaelLab BY-SA Code License, Version 2.0
- * or any later version. https://www.caellab.com/license/bysa-code-v2.txt
+ * Licensed under the CaelLab BY-SA Code License, Version 3
+ * or any later version. https://www.caellab.com/license/cbs-v3.txt
  * Source: https://github.com/CaelLab-org/GoodPlanCraftLauncher
+ * Project: https://gamets.caellab.com/gpcl/
  */
 
 
@@ -289,6 +290,18 @@ export async function fetchText(url: string, sources?: string[]): Promise<string
 }
 
 
+let overallProgressMode: boolean = false;
+
+export function setOverallProgressMode(value: boolean): void {
+  overallProgressMode = value;
+}
+
+function progressPercent(filePercent: number): number {
+  if (!overallProgressMode || totalDownloadFiles <= 1) return filePercent;
+  return Math.min(100, Math.floor((completedDownloadFiles / totalDownloadFiles) * 100));
+}
+
+
 export async function downloadWithPool(sources: string[], dest: string, label: string): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     downloadQueue.push({ sources, dest, label, resolve, reject });
@@ -335,7 +348,7 @@ export async function downloadFile(url: string, dest: string, label: string, sou
       for (const w of BrowserWindow.getAllWindows()) {
         w.webContents.send('download-progress', {
           label,
-          percent: 100,
+          percent: progressPercent(100),
           current: completedDownloadFiles,
           total: totalDownloadFiles
         });
@@ -419,7 +432,7 @@ async function downloadFileOnce(url: string, dest: string, label: string, timeou
             for (const w of BrowserWindow.getAllWindows()) {
               w.webContents.send('download-progress', {
                 label,
-                percent: p,
+                percent: progressPercent(p),
                 bytesDownloaded: loaded,
                 current: completedDownloadFiles,
                 total: totalDownloadFiles
@@ -438,9 +451,15 @@ async function downloadFileOnce(url: string, dest: string, label: string, timeou
               reject(new Error('下载内容为空'));
               return;
             }
-            file.end();
-            writeLog(`[下载] ${label} 下载完成，实际大小: ${loaded} bytes`);
-            resolve();
+            if (total > 0 && loaded < total) {
+              try { file.destroy(); } catch {}
+              reject(new Error(`下载不完整 (${loaded}/${total} bytes)`));
+              return;
+            }
+            file.end(() => {
+              writeLog(`[下载] ${label} 下载完成，实际大小: ${loaded} bytes`);
+              resolve();
+            });
           });
           res2.on('error', (err2: any) => {
             file.destroy();
@@ -505,7 +524,7 @@ async function downloadFileOnce(url: string, dest: string, label: string, timeou
           for (const w of BrowserWindow.getAllWindows()) {
             w.webContents.send('download-progress', {
               label,
-              percent: p,
+              percent: progressPercent(p),
               bytesDownloaded: loaded,
               current: completedDownloadFiles,
               total: totalDownloadFiles
@@ -524,9 +543,15 @@ async function downloadFileOnce(url: string, dest: string, label: string, timeou
             fallbackToHttps(new Error('下载内容为空'));
             return;
           }
-          file.end();
-          writeLog(`[下载] ${label} 下载完成，实际大小: ${loaded} bytes`);
-          resolve();
+          if (total > 0 && loaded < total) {
+            try { file.destroy(); } catch {}
+            fallbackToHttps(new Error(`下载不完整 (${loaded}/${total} bytes)`));
+            return;
+          }
+          file.end(() => {
+            writeLog(`[下载] ${label} 下载完成，实际大小: ${loaded} bytes`);
+            resolve();
+          });
         });
         res.on('error', (err: any) => {
           fallbackToHttps(err);
@@ -902,7 +927,7 @@ ipcMain.handle('select-version-archive', async () => {
   const result = await dialog.showOpenDialog(mainWindow, {
     title: '选择版本压缩包',
     properties: ['openFile'],
-    filters: [{ name: '压缩包', extensions: ['zip', 'jar'] }]
+    filters: [{ name: '压缩包', extensions: ['zip', 'jar', 'mrpack'] }]
   });
   return result.canceled || result.filePaths.length === 0 ? null : result.filePaths[0];
 });
@@ -998,8 +1023,21 @@ ipcMain.handle('install-local-version', async (_, sourcePath: string) => {
     }
 
     const ext: string = path.extname(sourcePath).toLowerCase();
-    if (ext !== '.zip' && ext !== '.jar') {
-      return { success: false, error: '只支持版本文件夹或 .zip / .jar 压缩包' };
+    if (ext !== '.zip' && ext !== '.jar' && ext !== '.mrpack') {
+      return { success: false, error: '只支持版本文件夹或 .zip / .jar / .mrpack 压缩包' };
+    }
+
+    const packPeek: any = require('adm-zip');
+    let packEntries: string[] = [];
+    try { packEntries = new packPeek(sourcePath).getEntries().map((entry: any) => String(entry.entryName)); } catch {}
+    const packEntry: string | undefined = packEntries.find((name: string) => {
+      const depth: number = name.split('/').filter(Boolean).length;
+      return depth <= 2 && /(^|\/)(modrinth\.index\.json|manifest\.json)$/i.test(name);
+    });
+    if (packEntry) {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const { installModpack } = require('./modpack');
+      return installModpack({ archivePath: sourcePath });
     }
 
     const tempDir: string = path.join(GAME_DIR, 'temp', `import-${Date.now()}`);
@@ -1007,16 +1045,6 @@ ipcMain.handle('install-local-version', async (_, sourcePath: string) => {
     try {
       const AdmZip: any = require('adm-zip');
       new AdmZip(sourcePath).extractAllTo(tempDir, true);
-
-      const manifestPath: string = path.join(tempDir, 'manifest.json');
-      if (fs.existsSync(manifestPath)) {
-        try {
-          const manifest: any = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
-          if (manifest && manifest.minecraft) {
-            return { success: false, error: '这是整合包，当前版本暂不支持导入整合包' };
-          }
-        } catch {}
-      }
 
       const findVersionFolder = (root: string, depth: number): string | null => {
         const found = findVersionJson(root);

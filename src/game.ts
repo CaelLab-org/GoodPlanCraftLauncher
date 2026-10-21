@@ -1,8 +1,9 @@
 /*
  * Copyright (c) 2026 Yunyun(云云) By 虚舟实验室(CaelLab) / CaelLabGameTS
- * Licensed under the CaelLab BY-SA Code License, Version 2.0
- * or any later version. https://www.caellab.com/license/bysa-code-v2.txt
+ * Licensed under the CaelLab BY-SA Code License, Version 3
+ * or any later version. https://www.caellab.com/license/cbs-v3.txt
  * Source: https://github.com/CaelLab-org/GoodPlanCraftLauncher
+ * Project: https://gamets.caellab.com/gpcl/
  */
 
 
@@ -13,12 +14,11 @@ import os from 'os';
 import path from 'path';
 import { spawn, spawnSync } from 'child_process';
 
-import { APP_VERSION, DEFAULT_SETTINGS, GAME_DIR, LOG_FILE, computeAutoMemoryMB, getVersionGameDir, loadSettings, writeLog } from './config';
+import { APP_VERSION, DEFAULT_SETTINGS, GAME_DIR, computeAutoMemoryMB, getVersionGameDir, loadSettings, writeLog } from './config';
+import { CrashRecord, buildErrorReport, analyzeCrash, listCrashArtifacts } from './crash-report';
 import { generateLaunchDisplayName } from './download';
 import { downloadAndInstallJava, ensureJavaRuntime, getJavaVersionFromVersionData } from './java';
 import { mainWindow, trimWorkingSets } from './shell';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const AdmZip = require('adm-zip');
 // __IMPORTS_END__
 
 export let launchCancelFlag: boolean = false;
@@ -39,6 +39,8 @@ export interface GameSession {
   javaPath: string | null;
   args: string[];
   titleContext: any;
+  /** 这个会话自己的输出尾巴，崩溃时导出报告用（多个游戏并存时不能读全局的） */
+  output: string;
 }
 
 
@@ -449,25 +451,6 @@ export function finishGameSession(exitCode: number | null, crashInfo: any): void
   }
 
   resetGameState();
-}
-
-
-export function listCrashArtifacts(gameDir: string): Set<string> {
-  const found: Set<string> = new Set();
-  try {
-    const reportDir: string = path.join(gameDir, 'crash-reports');
-    if (fs.existsSync(reportDir)) {
-      for (const name of fs.readdirSync(reportDir)) {
-        if (name.startsWith('crash-') && name.endsWith('.txt')) found.add(path.join(reportDir, name));
-      }
-    }
-  } catch {}
-  try {
-    for (const name of fs.readdirSync(gameDir)) {
-      if (/^hs_err_pid\d+\.log$/.test(name)) found.add(path.join(gameDir, name));
-    }
-  } catch {}
-  return found;
 }
 
 
@@ -1063,6 +1046,7 @@ ipcMain.handle('launch-minecraft', async (_, opt: any) => {
       gameDir: gameDir,
       javaPath: java,
       args: maskLaunchArgs(args),
+      output: '',
       titleContext: {
         mcVersion: generateLaunchDisplayName(versionId),
         mcId: versionId,
@@ -1082,10 +1066,17 @@ ipcMain.handle('launch-minecraft', async (_, opt: any) => {
 
     let stdoutData: string = '';
     let stderrData: string = '';
+    const captureOutput = (text: string): void => {
+      pushGameLog(text);
+      const session: GameSession | undefined = gameSessions.get(proc.pid);
+      if (!session) return;
+      session.output += text;
+      if (session.output.length > GAME_LOG_KEEP_BYTES) session.output = session.output.slice(-GAME_LOG_KEEP_BYTES);
+    };
     proc.stdout?.on('data', (d: any) => {
       const text: string = d.toString();
       stdoutData += text;
-      pushGameLog(text);
+      captureOutput(text);
       if (mainWindow) {
         mainWindow.webContents.send('game-log', text);
       }
@@ -1100,7 +1091,7 @@ ipcMain.handle('launch-minecraft', async (_, opt: any) => {
     proc.stderr?.on('data', (d: any) => {
       const text: string = d.toString();
       stderrData += text;
-      pushGameLog(text);
+      captureOutput(text);
       if (mainWindow) {
         mainWindow.webContents.send('game-log', text);
       }
@@ -1135,11 +1126,16 @@ ipcMain.handle('launch-minecraft', async (_, opt: any) => {
       const crashInfo: any = crash ? {
         exitCode: code,
         versionId: session.versionId,
+        versionName: generateLaunchDisplayName(session.versionId),
         username: session.username,
         startedAt: session.startedAt,
         durationSec: Math.round((Date.now() - session.startedAt) / 1000),
         crashReport: crash.crashReport,
-        reason: crash.reason
+        reason: crash.reason,
+        gameDir: session.gameDir,
+        javaPath: session.javaPath,
+        args: session.args,
+        output: session.output
       } : null;
       if (crash) {
         writeLog(`[崩溃] 判定为崩溃，原因: ${crash.reason}，报告: ${crash.crashReport || '无'}`);
@@ -1291,9 +1287,9 @@ ipcMain.handle('get-game-log-tail', () => {
 
 // 「查看日志」直接打开日志文件（游戏自己的 logs/latest.log），不是自制的查看窗口
 
-ipcMain.handle('open-game-log', async () => {
+ipcMain.handle('open-game-log', async (_: any, targetDir?: string) => {
   try {
-    const gameDir: string = currentGameGameDir || GAME_DIR;
+    const gameDir: string = targetDir || currentGameGameDir || GAME_DIR;
     const logFile: string = path.join(gameDir, 'logs', 'latest.log');
     if (fs.existsSync(logFile)) {
       const err: string = await shell.openPath(logFile);
@@ -1332,13 +1328,41 @@ ipcMain.handle('stop-game', async () => {
 });
 
 
+function crashRecordFromInfo(info: any): CrashRecord {
+  return {
+    exitCode: info && info.exitCode !== undefined ? info.exitCode : null,
+    versionId: (info && info.versionId) || currentGameVersionId || 'unknown',
+    versionName: (info && info.versionName) || '',
+    username: (info && info.username) || currentGameUsername || '',
+    startedAt: (info && info.startedAt) || currentGameStartedAt || 0,
+    durationSec: info && info.durationSec !== undefined ? info.durationSec : null,
+    crashReport: (info && info.crashReport) || null,
+    reason: (info && info.reason) || 'unknown',
+    gameDir: (info && info.gameDir) || currentGameGameDir || GAME_DIR,
+    javaPath: (info && info.javaPath) || currentGameJavaPath || null,
+    args: (info && Array.isArray(info.args)) ? info.args : currentGameArgs,
+    output: (info && typeof info.output === 'string') ? info.output : currentGameLog
+  };
+}
+
+
+ipcMain.handle('analyze-crash', (_: any, info: any) => {
+  try {
+    return { success: true, analysis: analyzeCrash(crashRecordFromInfo(info)) };
+  } catch (e: any) {
+    writeLog(`[错误报告] 分析失败: ${e.message}`);
+    return { success: false, error: e.message };
+  }
+});
+
+
 ipcMain.handle('export-error-report', async (_: any, info: any) => {
   try {
     if (!mainWindow) return { success: false, error: '窗口不可用' };
 
-    const versionId: string = (info && info.versionId) || currentGameVersionId || 'unknown';
+    const record: CrashRecord = crashRecordFromInfo(info);
     const stamp: string = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
-    const fileName: string = `GPCL-error-report-${versionId}-${stamp}.zip`.replace(/[\\/:*?"<>|]/g, '_');
+    const fileName: string = `GPCL-错误报告-${record.versionId}-${stamp}.zip`.replace(/[\\/:*?"<>|]/g, '_');
 
     let defaultDir: string = app.getPath('downloads');
     try { if (!fs.existsSync(defaultDir)) defaultDir = app.getPath('documents'); } catch {}
@@ -1350,81 +1374,11 @@ ipcMain.handle('export-error-report', async (_: any, info: any) => {
     });
     if (target.canceled || !target.filePath) return { success: false, cancelled: true };
 
-    const zip = new AdmZip();
-    const entries: string[] = [];
-    const addText = (entry: string, content: string): void => {
-      zip.addFile(entry, Buffer.from(content, 'utf8'));
-      entries.push(entry);
-    };
-    const addDisk = (abs: string, entry: string): void => {
-      try {
-        if (fs.existsSync(abs) && fs.statSync(abs).isFile()) {
-          zip.addFile(entry, fs.readFileSync(abs));
-          entries.push(entry);
-        }
-      } catch (e: any) { writeLog(`[错误报告] 打包 ${abs} 失败: ${e.message}`); }
-    };
-
-    const gameDir: string = currentGameGameDir || GAME_DIR;
-    const startedAt: number = (info && info.startedAt) || currentGameStartedAt || 0;
-    const report: string | null = (info && info.crashReport) || null;
-
-    if (report) addDisk(report, `crash-reports/${path.basename(report)}`);
-    for (const file of listCrashArtifacts(gameDir)) {
-      if (file === report) continue;
-      try {
-        if (startedAt > 0 && fs.statSync(file).mtimeMs >= startedAt - 5000) {
-          addDisk(file, `crash-reports/${path.basename(file)}`);
-        }
-      } catch {}
-    }
-
-    addDisk(path.join(gameDir, 'logs', 'latest.log'), 'minecraft-logs/latest.log');
-    try {
-      const logDir: string = path.join(gameDir, 'logs');
-      const logs: string[] = fs.readdirSync(logDir).filter((f: string) => /\.log(\.gz)?$/.test(f)).sort();
-      for (const name of logs.slice(-3)) addDisk(path.join(logDir, name), `minecraft-logs/${name}`);
-    } catch {}
-
-    if (LOG_FILE) addDisk(LOG_FILE, `launcher-logs/${path.basename(LOG_FILE)}`);
-    addText('game-output.log', currentGameLog || '(没有捕获到游戏输出)');
-
-    const cpus: any[] = os.cpus();
-    const gb = (bytes: number): string => (bytes / 1024 / 1024 / 1024).toFixed(1);
-    const durationSec: number | null = (info && info.durationSec) || (currentGameStartedAt ? Math.round((Date.now() - currentGameStartedAt) / 1000) : null);
-    const systemInfo: string = [
-      'GoodPlanCraftLauncher 错误报告',
-      `生成时间: ${new Date().toLocaleString('zh-CN')}`,
-      '',
-      '[启动器]',
-      `版本: ${app.getVersion()}`,
-      `Electron ${process.versions.electron} / Chromium ${process.versions.chrome} / Node ${process.versions.node}`,
-      '',
-      '[系统]',
-      `系统: ${os.type()} ${os.release()} (${os.arch()})`,
-      `CPU: ${cpus[0]?.model || '未知'} × ${cpus.length}`,
-      `内存: 总计 ${gb(os.totalmem())} GB / 可用 ${gb(os.freemem())} GB`,
-      '',
-      '[游戏]',
-      `版本: ${versionId}`,
-      `玩家名: ${(info && info.username) || currentGameUsername || '未知'}`,
-      `Java: ${currentGameJavaPath || '未知'}`,
-      `启动时间: ${startedAt ? new Date(startedAt).toLocaleString('zh-CN') : '未知'}`,
-      `运行时长: ${durationSec === null ? '未知' : `${durationSec} 秒`}`,
-      `退出码: ${info && info.exitCode !== undefined && info.exitCode !== null ? info.exitCode : '未知'}`,
-      `崩溃判定: ${(info && info.reason) || '未知'}`,
-      `崩溃报告: ${report || '无'}`,
-      '',
-      '[启动参数（accessToken 已打码）]',
-      currentGameArgs.join('\n') || '未知'
-    ].join('\n');
-    addText('system-info.txt', systemInfo);
-
-    zip.writeZip(target.filePath);
-    writeLog(`[错误报告] 已导出到 ${target.filePath}，包含 ${entries.length} 个文件`);
+    const result: any = await buildErrorReport(record, target.filePath);
+    writeLog(`[错误报告] 已导出到 ${target.filePath}，包含 ${result.files} 个文件，${result.causes} 条分析结果`);
 
     try { shell.showItemInFolder(target.filePath); } catch {}
-    return { success: true, filePath: target.filePath, files: entries.length };
+    return { success: true, filePath: target.filePath, files: result.files, causes: result.causes };
   } catch (e: any) {
     writeLog(`[错误报告] 导出失败: ${e.message}`);
     return { success: false, error: e.message };

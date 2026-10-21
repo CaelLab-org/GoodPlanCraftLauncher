@@ -1,8 +1,9 @@
 /*
  * Copyright (c) 2026 Yunyun(云云) By 虚舟实验室(CaelLab) / CaelLabGameTS
- * Licensed under the CaelLab BY-SA Code License, Version 2.0
- * or any later version. https://www.caellab.com/license/bysa-code-v2.txt
- * Source: https://github.com/yunyun-3782/GoodPlanCraftLauncher
+ * Licensed under the CaelLab BY-SA Code License, Version 3
+ * or any later version. https://www.caellab.com/license/cbs-v3.txt
+ * Source: https://github.com/CaelLab-org/GoodPlanCraftLauncher
+ * Project: https://gamets.caellab.com/gpcl/
  */
 
 
@@ -282,6 +283,7 @@ export let selectedVersionId: string | null = null;
 
 export let modLoaderState: any = {
   forge: { available: false, versions: [], selected: null, expanded: false, selectedVersionId: null },
+  neoforge: { available: false, versions: [], selected: null, expanded: false, selectedVersionId: null },
   fabric: { available: false, versions: [], selected: null, expanded: false, selectedVersionId: null },
   optifine: { available: false, versions: [], selected: null, expanded: false, selectedVersionId: null }
 };
@@ -291,8 +293,9 @@ export const MOD_LOADER_COMPATIBILITY: Record<string, string[]> = {
   
   forge: ['fabric'],
   fabric: ['forge'],
+  neoforge: ['fabric'],
   
-  optifine: ['forge', 'fabric']
+  optifine: ['forge', 'fabric', 'neoforge']
 };
 
 
@@ -323,20 +326,37 @@ export async function checkAllModLoaders(mcVersion: string): Promise<void> {
   
   modLoaderState = {
     forge: { available: false, versions: [], selected: null, expanded: false, selectedVersionId: null },
+    neoforge: { available: false, versions: [], selected: null, expanded: false, selectedVersionId: null },
     fabric: { available: false, versions: [], selected: null, expanded: false, selectedVersionId: null },
     optifine: { available: false, versions: [], selected: null, expanded: false, selectedVersionId: null }
   };
 
-  const [forgeResult, fabricResult, optifineResult] = await Promise.all([
+  const [forgeResult, neoForgeResult, fabricResult, optifineResult] = await Promise.all([
     checkForgeAvailability(mcVersion),
+    checkNeoForgeAvailability(mcVersion),
     checkFabricAvailability(mcVersion),
     checkOptiFineAvailability(mcVersion)
   ]);
   modLoaderState.forge = { ...modLoaderState.forge, ...forgeResult };
+  modLoaderState.neoforge = { ...modLoaderState.neoforge, ...neoForgeResult };
   modLoaderState.fabric = { ...modLoaderState.fabric, ...fabricResult };
   modLoaderState.optifine = { ...modLoaderState.optifine, ...optifineResult };
 
   updateModLoaderUI();
+}
+
+
+export async function checkNeoForgeAvailability(mcVersion: string): Promise<{ available: boolean; versions: any[] }> {
+  try {
+    const result = await window.gpcl.getNeoForgeVersions(mcVersion);
+    if (result.success) {
+      return { available: result.versions.length > 0, versions: result.versions };
+    }
+    return { available: false, versions: [] };
+  } catch (e: any) {
+    console.error('检测 NeoForge 可用性失败:', e);
+    return { available: false, versions: [] };
+  }
 }
 
 
@@ -464,6 +484,7 @@ export function updateIncompatibilityUI(): void {
 export function getLoaderDisplayName(loader: string): string {
   const names: Record<string, string> = {
     forge: 'Forge',
+    neoforge: 'NeoForge',
     fabric: 'Fabric',
     optifine: 'OptiFine'
   };
@@ -509,6 +530,7 @@ export function bindModLoaderEvents(): void {
 export function resetModLoaderState(): void {
   modLoaderState = {
     forge: { available: false, versions: [], selected: null, expanded: false, selectedVersionId: null },
+    neoforge: { available: false, versions: [], selected: null, expanded: false, selectedVersionId: null },
     fabric: { available: false, versions: [], selected: null, expanded: false, selectedVersionId: null },
     optifine: { available: false, versions: [], selected: null, expanded: false, selectedVersionId: null }
   };

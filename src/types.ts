@@ -22,9 +22,10 @@ export interface GPCLApi {
   deletePlayerName(name: string): Promise<PlayerNames>;
   getGameStatus(): Promise<GameStatus>;
   getGameLogTail(): Promise<string>;
-  openGameLog(): Promise<any>;
+  openGameLog(gameDir?: string): Promise<any>;
   stopGame(): Promise<any>;
   exportErrorReport(info: CrashInfo | null): Promise<any>;
+  analyzeCrash(info: CrashInfo | null): Promise<any>;
   onGameStatus(callback: (status: GameStatus) => void): void;
   onGameCrashed(callback: (info: CrashInfo) => void): void;
   showMessageDialog(options: DialogOptions): Promise<any>;
@@ -68,6 +69,7 @@ export interface GPCLApi {
   installLocalVersion(sourcePath: string): Promise<any>;
   getForgeVersions(mcVersion: string): Promise<any>;
   getFabricVersions(mcVersion: string): Promise<any>;
+  getNeoForgeVersions(mcVersion: string): Promise<any>;
   getOptiFineVersions(mcVersion: string): Promise<any>;
   downloadWithModLoader(versionId: string, loaderType: string, loaderVersion: string, maxConcurrent: number, options?: { installFabricApi?: boolean }): Promise<any>;
   getVersionConfig(versionId: string): Promise<any>;
@@ -76,8 +78,10 @@ export interface GPCLApi {
 
   modsSearch(options: ModSearchOptions): Promise<any>;
   modsVersions(options: any): Promise<any>;
+  modsProjectInfo(options: { source: 'modrinth' | 'curseforge'; ids: string[]; gameVersion: string; loader: string }): Promise<any>;
   modsInstall(options: ModInstallOptions): Promise<any>;
-  modsInstallDirect(options: { url: string; fileName: string; targetVersionId?: string; targetDir?: string }): Promise<any>;
+  modsInstallDirect(options: { url: string; fileName: string; targetVersionId?: string; targetDir?: string; projectType?: ResourceProjectType }): Promise<any>;
+  modpackInstall(options: { source: 'modrinth' | 'curseforge'; projectId: string; versionId?: string; gameVersion?: string; instanceName?: string; maxConcurrent?: number }): Promise<any>;
   curseforgeLookup(options: { slug: string; gameVersion: string; loader: string; preferGameVersion?: string }): Promise<any>;
   getModsDir(versionId?: string): Promise<string>;
   getVersionInfo(versionId: string): Promise<any>;
@@ -225,11 +229,17 @@ export interface GameStatus {
 export interface CrashInfo {
   exitCode: number | null;
   versionId: string | null;
+  versionName?: string;
   username: string | null;
   startedAt: number | null;
   durationSec: number | null;
   crashReport: string | null;
   reason: string;
+  /** 崩溃现场快照：导出报告时当前会话可能已经被清掉了 */
+  gameDir?: string;
+  javaPath?: string | null;
+  args?: string[];
+  output?: string;
 }
 
 /** 玩家名与最近使用过的名字 */
@@ -256,11 +266,14 @@ export interface VersionInfo {
   time: string;
 }
 
+export type ResourceProjectType = 'mod' | 'shader' | 'resourcepack' | 'modpack';
+
 export interface ModSearchOptions {
   source: 'modrinth' | 'curseforge' | 'both';
   query: string;
   gameVersion: string;
   loader: string;
+  projectType?: ResourceProjectType;
   offset?: number;
   limit?: number;
 }
@@ -273,10 +286,12 @@ export interface ModInstallOptions {
   targetDir?: string;
   gameVersion: string;
   loader: string;
+  projectType?: ResourceProjectType;
 }
 
 export interface ModLoaderState {
   forge: { versions: any[]; loading: boolean; error: boolean; expanded: boolean; selected: string | null };
+  neoforge: { versions: any[]; loading: boolean; error: boolean; expanded: boolean; selected: string | null };
   optifine: { versions: any[]; loading: boolean; error: boolean; expanded: boolean; selected: string | null };
   fabric: { versions: any[]; loading: boolean; error: boolean; expanded: boolean; selected: string | null };
 }

@@ -1,13 +1,14 @@
 /*
  * Copyright (c) 2026 Yunyun(云云) By 虚舟实验室(CaelLab) / CaelLabGameTS
- * Licensed under the CaelLab BY-SA Code License, Version 2.0
- * or any later version. https://www.caellab.com/license/bysa-code-v2.txt
- * Source: https://github.com/yunyun-3782/GoodPlanCraftLauncher
+ * Licensed under the CaelLab BY-SA Code License, Version 3
+ * or any later version. https://www.caellab.com/license/cbs-v3.txt
+ * Source: https://github.com/CaelLab-org/GoodPlanCraftLauncher
+ * Project: https://gamets.caellab.com/gpcl/
  */
 
 
 // __IMPORTS_BEGIN__
-import { crashDialogDetail, crashDialogExport, crashDialogHelpLink, crashDialogLog, crashDialogOk, crashDialogOverlay, gameMonitor, gameMonitorDot, gameMonitorLogBtn, gameMonitorMemory, gameMonitorPid, gameMonitorState, gameMonitorStopBtn, gameMonitorUptime, gameMonitorVersion, showDialog, showFloatNotification, showToast } from './dom';
+import { crashDialogAnalysis, crashDialogDetail, crashDialogExport, crashDialogHelpLink, crashDialogLog, crashDialogOk, crashDialogOverlay, gameMonitor, gameMonitorDot, gameMonitorLogBtn, gameMonitorMemory, gameMonitorPid, gameMonitorState, gameMonitorStopBtn, gameMonitorUptime, gameMonitorVersion, showDialog, showFloatNotification, showToast } from './dom';
 // __IMPORTS_END__
 
 export let gameRunning: boolean = false;
@@ -161,9 +162,124 @@ export function formatCrashMeta(info: any): string {
 }
 
 
+let currentCrashAnalysis: any = null;
+
+let crashAnalysisToken: number = 0;
+
+let crashAnalysisReady: boolean = false;
+
+
+function renderCrashAnalysisLoading(): void {
+  if (!crashDialogAnalysis) return;
+  crashDialogAnalysis.textContent = '';
+  const loading: HTMLDivElement = document.createElement('div');
+  loading.className = 'crash-analysis-loading';
+  loading.textContent = '正在分析日志…';
+  crashDialogAnalysis.appendChild(loading);
+}
+
+
+function renderCrashAnalysis(analysis: any): void {
+  if (!crashDialogAnalysis) return;
+  crashDialogAnalysis.textContent = '';
+  const causes: any[] = analysis && Array.isArray(analysis.causes) ? analysis.causes : [];
+
+  if (!causes.length) {
+    const note: HTMLDivElement = document.createElement('div');
+    note.className = 'crash-analysis-note';
+    note.textContent = '没有从日志里找到明确原因。可以点「查看日志」自己看一眼，或导出错误报告发给帮助你的人。';
+    crashDialogAnalysis.appendChild(note);
+    return;
+  }
+
+  const heading: HTMLDivElement = document.createElement('div');
+  heading.className = 'crash-analysis-heading';
+  heading.textContent = 'GPCL 从日志里找到的线索';
+  crashDialogAnalysis.appendChild(heading);
+
+  const list: HTMLDivElement = document.createElement('div');
+  list.className = 'crash-analysis-list';
+  for (const cause of causes.slice(0, 2)) {
+    const card: HTMLDivElement = document.createElement('div');
+    card.className = 'crash-cause';
+    const title: HTMLDivElement = document.createElement('div');
+    title.className = 'crash-cause-title';
+    title.textContent = `${cause.title || '未知原因'}${cause.confidence === 'suspect' ? '（推测）' : ''}`;
+    const detail: HTMLDivElement = document.createElement('div');
+    detail.className = 'crash-cause-detail';
+    detail.textContent = String(cause.detail || '');
+    card.appendChild(title);
+    card.appendChild(detail);
+    list.appendChild(card);
+  }
+  crashDialogAnalysis.appendChild(list);
+
+  if (causes.length > 2) {
+    const more: HTMLDivElement = document.createElement('div');
+    more.className = 'crash-analysis-note';
+    more.textContent = `还有 ${causes.length - 2} 条线索，点「查看详情」查看。`;
+    crashDialogAnalysis.appendChild(more);
+  }
+}
+
+
+function formatCrashDetail(analysis: any): string {
+  const lines: string[] = [];
+  const causes: any[] = analysis && Array.isArray(analysis.causes) ? analysis.causes : [];
+  if (causes.length) {
+    lines.push('分析结果：');
+    causes.forEach((cause: any, index: number): void => {
+      lines.push(`${index + 1}. ${cause.title || '未知原因'}${cause.confidence === 'suspect' ? '（推测）' : ''}`);
+      for (const line of String(cause.detail || '').split('\n')) lines.push(`   ${line}`);
+      if (cause.evidence) {
+        for (const line of String(cause.evidence).split('\n')) lines.push(`   证据：${line}`);
+      }
+      lines.push('');
+    });
+  } else {
+    lines.push('没有从日志里找到明确原因。');
+    lines.push('');
+  }
+  lines.push(formatCrashMeta(currentCrashInfo));
+  if (analysis && Array.isArray(analysis.errorLines) && analysis.errorLines.length) {
+    lines.push('');
+    lines.push('日志里的错误行：');
+    for (const line of analysis.errorLines.slice(-8)) lines.push(`  ${line}`);
+  }
+  if (analysis && Array.isArray(analysis.analyzedFiles) && analysis.analyzedFiles.length) {
+    lines.push('');
+    lines.push('已分析的日志：');
+    for (const file of analysis.analyzedFiles) {
+      lines.push(`  ${String(file).split(/[\\/]/).pop()}`);
+    }
+  }
+  return lines.join('\n');
+}
+
+
 export function showCrashDialog(info: any): void {
   currentCrashInfo = info || {};
+  currentCrashAnalysis = null;
+  crashAnalysisReady = false;
+  renderCrashAnalysisLoading();
   if (crashDialogOverlay) crashDialogOverlay.classList.remove('hidden');
+
+  const token: number = ++crashAnalysisToken;
+  if (!window.gpcl || !window.gpcl.analyzeCrash) {
+    crashAnalysisReady = true;
+    renderCrashAnalysis(null);
+    return;
+  }
+  window.gpcl.analyzeCrash(currentCrashInfo).then((result: any): void => {
+    if (token !== crashAnalysisToken) return;
+    currentCrashAnalysis = result && result.success ? result.analysis : null;
+    crashAnalysisReady = true;
+    renderCrashAnalysis(currentCrashAnalysis);
+  }).catch((): void => {
+    if (token !== crashAnalysisToken) return;
+    crashAnalysisReady = true;
+    renderCrashAnalysis(null);
+  });
 }
 
 
@@ -173,9 +289,9 @@ export function hideCrashDialog(): void {
 
 // 「查看日志」= 打开日志文件本身（游戏目录 logs/latest.log），不做应用内查看器
 
-export async function openGameLogFile(): Promise<void> {
+export async function openGameLogFile(gameDir?: string): Promise<void> {
   if (!window.gpcl || !window.gpcl.openGameLog) return;
-  const result: any = await window.gpcl.openGameLog();
+  const result: any = await window.gpcl.openGameLog(gameDir);
   if (result && result.success) {
     showToast('已打开日志', (result.opened || '').split(/[\\/]/).pop() || 'logs', 'info', 'log-opened');
   } else {
@@ -220,13 +336,16 @@ if (crashDialogOk) {
 if (crashDialogDetail) {
   crashDialogDetail.addEventListener('click', (e: Event): void => {
     e.preventDefault();
-    void showDialog({ type: 'info', title: '错误详情', message: formatCrashMeta(currentCrashInfo) });
+    const message: string = crashAnalysisReady ? formatCrashDetail(currentCrashAnalysis) : '正在分析日志，稍等一下再看。';
+    void showDialog({ type: 'info', title: '错误详情', message });
   });
 }
 
 
 if (crashDialogLog) {
-  crashDialogLog.addEventListener('click', (): void => { void openGameLogFile(); });
+  crashDialogLog.addEventListener('click', (): void => {
+    void openGameLogFile(currentCrashInfo && currentCrashInfo.gameDir);
+  });
 }
 
 
@@ -239,7 +358,7 @@ if (crashDialogExport) {
     try {
       const result: any = await window.gpcl.exportErrorReport(currentCrashInfo);
       if (result && result.success) {
-        showToast('错误报告已导出', '请把整个压缩包发给帮助你的人', 'success', 'report-exported');
+        showToast('错误报告已导出', '已包含分析结果、Mod 列表和各份日志，请把整个压缩包发给帮助你的人', 'success', 'report-exported');
       } else if (result && result.cancelled) {
         showToast('已取消导出', '', 'info', 'report-export-cancelled');
       } else {
@@ -259,7 +378,7 @@ if (crashDialogHelpLink) {
   crashDialogHelpLink.addEventListener('click', (e: Event): void => {
     e.preventDefault();
     if (window.gpcl && window.gpcl.openExternal) {
-      window.gpcl.openExternal('https://gamets.caellab.com/gpcl/help/mc-game/');
+      window.gpcl.openExternal('https://gamets.caellab.com/gpcl/docs/mc-game/');
     }
   });
 }

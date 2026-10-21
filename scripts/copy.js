@@ -3,6 +3,7 @@
  * Licensed under the CaelLab BY-SA Code License, Version 3
  * or any later version. https://www.caellab.com/license/cbs-v3.txt
  * Source: https://github.com/CaelLab-org/GoodPlanCraftLauncher
+ * Project: https://gamets.caellab.com/gpcl/
  */
 
 const fs = require('fs');

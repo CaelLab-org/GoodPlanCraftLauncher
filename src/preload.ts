@@ -1,8 +1,9 @@
 /*
  * Copyright (c) 2026 Yunyun(云云) By 虚舟实验室(CaelLab) / CaelLabGameTS
- * Licensed under the CaelLab BY-SA Code License, Version 2.0
- * or any later version. https://www.caellab.com/license/bysa-code-v2.txt
+ * Licensed under the CaelLab BY-SA Code License, Version 3
+ * or any later version. https://www.caellab.com/license/cbs-v3.txt
  * Source: https://github.com/CaelLab-org/GoodPlanCraftLauncher
+ * Project: https://gamets.caellab.com/gpcl/
  */
 
 import { contextBridge, ipcRenderer } from 'electron';
@@ -38,9 +39,10 @@ const gpclApi: GPCLApi = {
 
   getGameStatus: () => ipcRenderer.invoke('get-game-status'),
   getGameLogTail: () => ipcRenderer.invoke('get-game-log-tail'),
-  openGameLog: () => ipcRenderer.invoke('open-game-log'),
+  openGameLog: (gameDir?: string) => ipcRenderer.invoke('open-game-log', gameDir),
   stopGame: () => ipcRenderer.invoke('stop-game'),
   exportErrorReport: (info) => ipcRenderer.invoke('export-error-report', info),
+  analyzeCrash: (info) => ipcRenderer.invoke('analyze-crash', info),
   onGameStatus: (callback) => {
     ipcRenderer.on('game-status', (_event, status) => callback(status));
   },
@@ -104,6 +106,7 @@ const gpclApi: GPCLApi = {
   installLocalVersion: (sourcePath: string) => ipcRenderer.invoke('install-local-version', sourcePath),
   getForgeVersions: (mcVersion: string) => ipcRenderer.invoke('get-forge-versions', mcVersion),
   getFabricVersions: (mcVersion: string) => ipcRenderer.invoke('get-fabric-versions', mcVersion),
+  getNeoForgeVersions: (mcVersion: string) => ipcRenderer.invoke('get-neoforge-versions', mcVersion),
   getOptiFineVersions: (mcVersion: string) => ipcRenderer.invoke('get-optifine-versions', mcVersion),
   downloadWithModLoader: (versionId: string, loaderType: string, loaderVersion: string, maxConcurrent: number, options?: any) =>
     ipcRenderer.invoke('download-with-modloader', versionId, loaderType, loaderVersion, maxConcurrent, options),
@@ -114,8 +117,10 @@ const gpclApi: GPCLApi = {
 
   modsSearch: (options) => ipcRenderer.invoke('mods-search', options),
   modsVersions: (options) => ipcRenderer.invoke('mods-versions', options),
+  modsProjectInfo: (options) => ipcRenderer.invoke('mods-project-info', options),
   modsInstall: (options) => ipcRenderer.invoke('mods-install', options),
   modsInstallDirect: (options) => ipcRenderer.invoke('mods-install-direct', options),
+  modpackInstall: (options) => ipcRenderer.invoke('modpack-install', options),
   curseforgeLookup: (options) => ipcRenderer.invoke('mods-curseforge-lookup', options),
   getModsDir: (versionId?: string) => ipcRenderer.invoke('get-mods-dir', versionId),
   getVersionInfo: (versionId: string) => ipcRenderer.invoke('get-version-info', versionId),

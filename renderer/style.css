@@ -3,6 +3,7 @@
  * Licensed under the CaelLab BY-SA Code License, Version 3
  * or any later version. https://www.caellab.com/license/cbs-v3.txt
  * Source: https://github.com/CaelLab-org/GoodPlanCraftLauncher
+ * Project: https://gamets.caellab.com/gpcl/
  */
 
 * {
@@ -2452,6 +2453,16 @@ select {
   color: var(--text-secondary);
 }
 
+.about-text a {
+  color: var(--accent-primary);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--border-accent);
+}
+
+.about-text a:hover {
+  color: var(--accent-secondary);
+}
+
 .about-links {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -3322,6 +3333,7 @@ body.light-mode .update-card-log {
   color: var(--text-secondary);
   line-height: 1.6;
   margin: 0;
+  white-space: pre-line;
 }
 
 .dialog-footer {
@@ -3958,8 +3970,66 @@ body:has(#game-monitor.active) .container {
   color: var(--text-muted);
 }
 
+.crash-dialog-box .dialog-body {
+  max-height: calc(100vh / var(--app-zoom) - 220px);
+  overflow-y: auto;
+}
+
 .crash-dialog-box .dialog-body p + p {
   margin-top: 10px;
+}
+
+.crash-dialog-analysis {
+  margin-top: 12px;
+}
+
+.crash-dialog-analysis + .dialog-message {
+  margin-top: 10px;
+}
+
+.crash-analysis-heading {
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.crash-analysis-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.crash-cause {
+  padding: 9px 12px;
+  border: 1px solid var(--border-light);
+  border-left: 3px solid var(--error);
+  border-radius: 6px;
+  background: var(--bg-input);
+}
+
+.crash-cause-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.crash-cause-detail {
+  margin-top: 4px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.crash-analysis-note {
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.crash-analysis-loading {
+  font-size: 12px;
+  color: var(--text-muted);
 }
 
 
@@ -4881,6 +4951,35 @@ body.light-mode .mod-target-overlay {
   word-break: break-all;
 }
 
+.modpack-name-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.modpack-name-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 9px 12px;
+  border: 1px solid var(--border-medium);
+  border-radius: 9px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 13px;
+  outline: none;
+}
+
+.modpack-name-input:focus {
+  border-color: var(--accent-primary);
+}
+
+.modpack-name-note {
+  margin: 10px 0 14px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
 .mod-target-list {
   flex: 1;
   min-height: 90px;
@@ -5074,5 +5173,209 @@ body.light-mode .mod-target-overlay {
 .mod-version-hint {
   margin: -2px 0 8px;
   font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* 模组详情：PCL 风格 */
+.mod-detail-cn {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-title);
+}
+
+.mod-detail-en {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+.mod-detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.mod-detail-action {
+  padding: 7px 16px;
+  border: 1px solid var(--border-medium);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.mod-detail-action:hover {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+  background: var(--bg-card-hover);
+}
+
+.mod-mc-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 5px;
+  margin: 14px 0;
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  background: var(--bg-card);
+}
+
+.mod-mc-tab {
+  padding: 5px 14px;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.mod-mc-tab:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
+}
+
+.mod-mc-tab.active {
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  font-weight: 600;
+}
+
+.mod-mc-section {
+  margin-bottom: 10px;
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  background: var(--bg-card);
+  overflow: hidden;
+}
+
+.mod-mc-section-head {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 15px;
+  border: none;
+  background: transparent;
+  color: var(--text-title);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mod-mc-section-head:hover {
+  background: var(--bg-card-hover);
+}
+
+.mod-mc-chevron {
+  font-size: 12px;
+  color: var(--text-muted);
+  transition: transform 0.15s ease;
+}
+
+.mod-mc-chevron.expanded {
+  transform: rotate(180deg);
+}
+
+.mod-mc-section-body {
+  padding: 0 15px 15px;
+}
+
+.mod-deps-block {
+  padding-top: 4px;
+}
+
+.mod-deps-title {
+  margin: 4px 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.mod-deps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mod-deps-empty {
+  padding: 6px 2px 12px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.mod-dep-card {
+  display: flex;
+  gap: 12px;
+  padding: 11px 12px;
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  background: var(--bg-secondary);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.mod-dep-card:hover {
+  border-color: var(--border-accent);
+  background: var(--bg-card-hover);
+}
+
+.mod-dep-card img {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: var(--bg-input);
+}
+
+.mod-dep-info {
+  min-width: 0;
+  flex: 1;
+}
+
+.mod-dep-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-title);
+}
+
+.mod-dep-tag {
+  padding: 1px 6px;
+  margin-left: 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: var(--bg-input);
+}
+
+.mod-dep-desc {
+  margin-top: 3px;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--text-secondary);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.mod-dep-meta {
+  margin-top: 4px;
+  font-size: 10.5px;
+  color: var(--text-muted);
+}
+
+.mod-mc-section-body .mod-version-heading {
+  margin-top: 14px;
+}
+
+.mod-card-en {
+  font-size: 11px;
+  font-weight: 400;
   color: var(--text-muted);
 }

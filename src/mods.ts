@@ -1,8 +1,9 @@
 /*
  * Copyright (c) 2026 Yunyun(云云) By 虚舟实验室(CaelLab) / CaelLabGameTS
- * Licensed under the CaelLab BY-SA Code License, Version 2.0
- * or any later version. https://www.caellab.com/license/bysa-code-v2.txt
+ * Licensed under the CaelLab BY-SA Code License, Version 3
+ * or any later version. https://www.caellab.com/license/cbs-v3.txt
  * Source: https://github.com/CaelLab-org/GoodPlanCraftLauncher
+ * Project: https://gamets.caellab.com/gpcl/
  */
 
 
@@ -17,11 +18,31 @@ import { GAME_DIR, getVersionGameDir, isVersionIsolated, loadSettings, markVersi
 // __IMPORTS_END__
 
 export type ModSource = 'modrinth' | 'curseforge';
+export type ResourceProjectType = 'mod' | 'shader' | 'resourcepack' | 'modpack';
 
 const MODRINTH_BASE: string = 'https://api.modrinth.com/v2';
 const CURSEFORGE_MIRROR: string = 'https://mod.mcimirror.top/curseforge/v1';
 const CURSEFORGE_OFFICIAL: string = 'https://api.curseforge.com/v1';
 const USER_AGENT: string = 'GoodPlanCraftLauncher (github.com/CaelLab-org/GoodPlanCraftLauncher)';
+
+const CURSEFORGE_CLASS_IDS: Record<ResourceProjectType, number> = {
+  mod: 6,
+  modpack: 4471,
+  shader: 6552,
+  resourcepack: 12
+};
+
+function normalizeProjectType(value: any): ResourceProjectType {
+  if (value === 'shader' || value === 'resourcepack' || value === 'modpack') return value;
+  return 'mod';
+}
+
+function resourceSubdir(projectType: ResourceProjectType): string {
+  if (projectType === 'shader') return 'shaderpacks';
+  if (projectType === 'resourcepack') return 'resourcepacks';
+  if (projectType === 'modpack') return '';
+  return 'mods';
+}
 
 const CURSEFORGE_LOADERS: Record<string, number> = {
   forge: 1,
@@ -69,7 +90,8 @@ export function describeVersion(versionId: string): any {
     versionDir,
     gameDir,
     modsDir: path.join(gameDir, 'mods'),
-    shaderpacksDir: path.join(gameDir, 'shaderpacks')
+    shaderpacksDir: path.join(gameDir, 'shaderpacks'),
+    resourcepacksDir: path.join(gameDir, 'resourcepacks')
   };
 }
 
@@ -119,12 +141,19 @@ function getCurseForgeSettings(): { bases: string[]; apiKey: string } {
 }
 
 
-function requestJson(url: string, headers: Record<string, string> = {}, redirectsLeft: number = 3, timeoutMs: number = 20000): Promise<any> {
+function requestJson(url: string, headers: Record<string, string> = {}, redirectsLeft: number = 3, timeoutMs: number = 20000, method: string = 'GET', requestBody: any = null): Promise<any> {
   return new Promise<any>((resolve, reject) => {
     const proto: any = url.startsWith('https') ? https : http;
-    const req: any = proto.get(url, {
+    const payload: string | null = requestBody === null ? null : JSON.stringify(requestBody);
+    const sendHeaders: Record<string, string> = { 'User-Agent': USER_AGENT, 'Accept': 'application/json', ...headers };
+    if (payload !== null) {
+      sendHeaders['Content-Type'] = 'application/json';
+      sendHeaders['Content-Length'] = String(Buffer.byteLength(payload));
+    }
+    const req: any = proto.request(url, {
+      method,
       timeout: timeoutMs,
-      headers: { 'User-Agent': USER_AGENT, 'Accept': 'application/json', ...headers }
+      headers: sendHeaders
     }, (res: any) => {
       const status: number = res.statusCode || 0;
       if (status >= 300 && status < 400 && res.headers.location && redirectsLeft > 0) {
@@ -150,17 +179,18 @@ function requestJson(url: string, headers: Record<string, string> = {}, redirect
     });
     req.on('timeout', () => { req.destroy(); reject(new Error('请求超时')); });
     req.on('error', reject);
+    req.end(payload === null ? undefined : payload);
   });
 }
 
 
-async function curseForgeRequest(pathname: string): Promise<any> {
+export async function curseForgeApi(pathname: string, options?: { method?: string; body?: any }): Promise<any> {
   const { bases, apiKey } = getCurseForgeSettings();
   let lastError: any = null;
   for (const base of bases) {
     try {
       const headers: Record<string, string> = base === CURSEFORGE_OFFICIAL ? { 'x-api-key': apiKey } : {};
-      const data: any = await requestJson(`${base}${pathname}`, headers);
+      const data: any = await requestJson(`${base}${pathname}`, headers, 3, 30000, options?.method || 'GET', options?.body ?? null);
       curseForgeBase = base;
       return data;
     } catch (e: any) {
@@ -263,20 +293,20 @@ async function chineseModNameToEnglish(query: string): Promise<string | null> {
 }
 
 
-function modrinthFacets(gameVersion: string, loader: string): string {
-  const facets: string[][] = [['project_type:mod']];
+function modrinthFacets(projectType: ResourceProjectType, gameVersion: string, loader: string): string {
+  const facets: string[][] = [[`project_type:${projectType}`]];
   if (gameVersion) facets.push([`versions:${gameVersion}`]);
-  if (loader) facets.push([`categories:${loader}`]);
+  if (loader && projectType === 'mod') facets.push([`categories:${loader}`]);
   return encodeURIComponent(JSON.stringify(facets));
 }
 
 
-async function searchModrinth(query: string, gameVersion: string, loader: string, offset: number, limit: number): Promise<{ items: any[]; total: number }> {
+async function searchModrinth(projectType: ResourceProjectType, query: string, gameVersion: string, loader: string, offset: number, limit: number): Promise<{ items: any[]; total: number }> {
   const params: string[] = [
     `limit=${limit}`,
     `offset=${offset}`,
     `index=${query ? 'relevance' : 'downloads'}`,
-    `facets=${modrinthFacets(gameVersion, loader)}`
+    `facets=${modrinthFacets(projectType, gameVersion, loader)}`
   ];
   if (query) params.push(`query=${encodeURIComponent(query)}`);
   const data: any = await requestJson(`${MODRINTH_BASE}/search?${params.join('&')}`);
@@ -296,10 +326,10 @@ async function searchModrinth(query: string, gameVersion: string, loader: string
 }
 
 
-async function searchCurseForge(query: string, gameVersion: string, loader: string, offset: number, limit: number): Promise<{ items: any[]; total: number }> {
+async function searchCurseForge(projectType: ResourceProjectType, query: string, gameVersion: string, loader: string, offset: number, limit: number): Promise<{ items: any[]; total: number }> {
   const params: string[] = [
     'gameId=432',
-    'classId=6',
+    `classId=${CURSEFORGE_CLASS_IDS[projectType]}`,
     'sortField=2',
     'sortOrder=desc',
     `pageSize=${limit}`,
@@ -307,9 +337,9 @@ async function searchCurseForge(query: string, gameVersion: string, loader: stri
   ];
   if (query) params.push(`searchFilter=${encodeURIComponent(query)}`);
   if (gameVersion) params.push(`gameVersion=${encodeURIComponent(gameVersion)}`);
-  if (loader && CURSEFORGE_LOADERS[loader]) params.push(`modLoaderType=${CURSEFORGE_LOADERS[loader]}`);
+  if (loader && projectType === 'mod' && CURSEFORGE_LOADERS[loader]) params.push(`modLoaderType=${CURSEFORGE_LOADERS[loader]}`);
 
-  const data: any = await curseForgeRequest(`/mods/search?${params.join('&')}`);
+  const data: any = await curseForgeApi(`/mods/search?${params.join('&')}`);
   const items: any[] = (data.data || []).map((mod: any) => ({
     source: 'curseforge',
     id: String(mod.id),
@@ -327,10 +357,11 @@ async function searchCurseForge(query: string, gameVersion: string, loader: stri
 
 ipcMain.handle('mods-search', async (_, options: any) => {
   const source: string = options?.source || 'modrinth';
+  const projectType: ResourceProjectType = normalizeProjectType(options?.projectType);
   const rawQuery: string = String(options?.query || '').trim();
   let query: string = rawQuery;
   let translatedTo: string = '';
-  if (/[一-鿿]/.test(rawQuery)) {
+  if (projectType === 'mod' && /[一-鿿]/.test(rawQuery)) {
     const english: string | null = await chineseModNameToEnglish(rawQuery);
     if (english) {
       query = english;
@@ -348,7 +379,7 @@ ipcMain.handle('mods-search', async (_, options: any) => {
 
   if (source === 'modrinth' || source === 'both') {
     try {
-      const result = await searchModrinth(query, gameVersion, loader, offset, limit);
+      const result = await searchModrinth(projectType, query, gameVersion, loader, offset, limit);
       results.push(...result.items);
       total += result.total;
     } catch (e: any) {
@@ -359,7 +390,7 @@ ipcMain.handle('mods-search', async (_, options: any) => {
 
   if (source === 'curseforge' || source === 'both') {
     try {
-      const result = await searchCurseForge(query, gameVersion, loader, offset, limit);
+      const result = await searchCurseForge(projectType, query, gameVersion, loader, offset, limit);
       results.push(...result.items);
       total += result.total;
     } catch (e: any) {
@@ -400,6 +431,7 @@ async function modrinthVersions(projectId: string, gameVersion: string, loader: 
     return {
       source: 'modrinth',
       id: version.id,
+      projectId: version.project_id || projectId,
       name: version.name || version.version_number,
       versionNumber: version.version_number,
       gameVersions: version.game_versions || [],
@@ -423,7 +455,7 @@ async function curseForgeFiles(projectId: string, gameVersion: string, loader: s
   const params: string[] = ['pageSize=50'];
   if (gameVersion) params.push(`gameVersion=${encodeURIComponent(gameVersion)}`);
   if (loader && CURSEFORGE_LOADERS[loader]) params.push(`modLoaderType=${CURSEFORGE_LOADERS[loader]}`);
-  const data: any = await curseForgeRequest(`/mods/${encodeURIComponent(projectId)}/files?${params.join('&')}`);
+  const data: any = await curseForgeApi(`/mods/${encodeURIComponent(projectId)}/files?${params.join('&')}`);
   if (!Array.isArray(data?.data)) throw new Error('CurseForge 文件列表格式异常');
 
   return data.data.map((file: any) => ({
@@ -464,9 +496,10 @@ function sortForVersion(versions: any[], preferGameVersion: string): any[] {
 
 ipcMain.handle('mods-versions', async (_, options: any) => {
   const source: string = options?.source === 'curseforge' ? 'curseforge' : 'modrinth';
+  const projectType: ResourceProjectType = normalizeProjectType(options?.projectType);
   const projectId: string = String(options?.projectId || '').trim();
   const gameVersion: string = String(options?.gameVersion || '').trim();
-  const loader: string = String(options?.loader || '').trim().toLowerCase();
+  const loader: string = projectType === 'mod' ? String(options?.loader || '').trim().toLowerCase() : '';
   const preferGameVersion: string = String(options?.preferGameVersion || '').trim();
   if (!projectId) return { success: false, error: '缺少项目 ID', versions: [] };
 
@@ -561,13 +594,110 @@ ipcMain.handle('mods-curseforge-lookup', async (_, options: any) => {
 });
 
 
+const projectInfoCache: Map<string, any> = new Map();
+const projectVersionsCache: Map<string, any[]> = new Map();
+
+
+async function modrinthProjectInfo(projectId: string, gameVersion: string, loader: string): Promise<any> {
+  const projectKey: string = `modrinth:${projectId}`;
+  let data: any = projectInfoCache.get(projectKey);
+  if (!data) {
+    data = await requestJson(`https://api.modrinth.com/v2/project/${encodeURIComponent(projectId)}`);
+    projectInfoCache.set(projectKey, data);
+  }
+
+  const versionKey: string = `modrinth:${projectId}:${gameVersion}:${loader}`;
+  let list: any[] | undefined = projectVersionsCache.get(versionKey);
+  if (!list) {
+    list = await modrinthVersions(projectId, gameVersion, loader);
+    projectVersionsCache.set(versionKey, list);
+  }
+  const latest: any = list[0];
+
+  return {
+    id: String(data.id),
+    source: 'modrinth',
+    slug: data.slug || '',
+    title: data.title || projectId,
+    description: data.description || '',
+    iconUrl: data.icon_url || '',
+    downloads: data.downloads || 0,
+    categories: data.categories || [],
+    updatedAt: data.updated || '',
+    resolvedVersion: latest?.versionNumber || '',
+    resolvedFileName: latest?.fileName || ''
+  };
+}
+
+
+async function curseForgeProjectInfo(projectId: string, gameVersion: string, loader: string): Promise<any> {
+  const projectKey: string = `curseforge:${projectId}`;
+  let data: any = projectInfoCache.get(projectKey);
+  if (!data) {
+    const response: any = await curseForgeApi(`/mods/${encodeURIComponent(projectId)}`);
+    data = response?.data;
+    if (!data) throw new Error('CurseForge 项目不存在');
+    projectInfoCache.set(projectKey, data);
+  }
+
+  const versionKey: string = `curseforge:${projectId}:${gameVersion}:${loader}`;
+  let list: any[] | undefined = projectVersionsCache.get(versionKey);
+  if (!list) {
+    list = await curseForgeFiles(projectId, gameVersion, loader);
+    projectVersionsCache.set(versionKey, list);
+  }
+  const latest: any = list[0];
+
+  return {
+    id: String(data.id),
+    source: 'curseforge',
+    slug: data.slug || '',
+    title: data.name || projectId,
+    description: data.summary || '',
+    iconUrl: data.logo?.thumbnailUrl || data.logo?.url || '',
+    downloads: data.downloadCount || 0,
+    categories: (data.categories || []).map((c: any) => (typeof c === 'string' ? c : c.name)).filter(Boolean),
+    updatedAt: data.dateModified || '',
+    resolvedVersion: latest?.versionNumber || '',
+    resolvedFileName: latest?.fileName || ''
+  };
+}
+
+
+ipcMain.handle('mods-project-info', async (_, options: any) => {
+  const source: string = options?.source === 'curseforge' ? 'curseforge' : 'modrinth';
+  const ids: string[] = Array.isArray(options?.ids) ? options.ids.map((id: any) => String(id)).filter(Boolean).slice(0, 20) : [];
+  const gameVersion: string = String(options?.gameVersion || '').trim();
+  const loader: string = String(options?.loader || '').trim().toLowerCase();
+  if (ids.length === 0) return { success: true, projects: [] };
+
+  const unique: string[] = Array.from(new Set(ids));
+  const projects: any[] = [];
+  for (const id of unique) {
+    try {
+      const info: any = source === 'curseforge'
+        ? await curseForgeProjectInfo(id, gameVersion, loader)
+        : await modrinthProjectInfo(id, gameVersion, loader);
+      projects.push(info);
+    } catch (e: any) {
+      writeLog(`[模组] 读取前置信息失败 (${source}/${id}): ${e.message}`);
+    }
+  }
+  return { success: true, projects };
+});
+
+
 ipcMain.handle('mods-install-direct', async (_, options: any) => {
   const targetVersionId: string = String(options?.targetVersionId || '').trim();
   const targetDir: string = String(options?.targetDir || '').trim();
+  const projectType: ResourceProjectType = normalizeProjectType(options?.projectType);
   const url: string = String(options?.url || '');
   const fileName: string = path.basename(String(options?.fileName || ''));
   if (!targetVersionId && !targetDir) return { success: false, error: '请选择安装到哪个版本或目录' };
-  if (!fileName || !fileName.toLowerCase().endsWith('.jar')) return { success: false, error: '文件类型不正确' };
+  const lower: string = fileName.toLowerCase();
+  if (!fileName || (projectType === 'mod' ? !lower.endsWith('.jar') : !/\.(zip|jar)$/.test(lower))) {
+    return { success: false, error: '文件类型不正确' };
+  }
 
   let host: string = '';
   try { host = new URL(url).hostname.toLowerCase(); } catch {}
@@ -575,28 +705,29 @@ ipcMain.handle('mods-install-direct', async (_, options: any) => {
     return { success: false, error: '不支持这个下载地址' };
   }
 
-  let modsDir: string;
+  const subdir: string = resourceSubdir(projectType);
+  let targetFolder: string;
   if (targetDir) {
-    modsDir = path.join(path.resolve(targetDir), 'mods');
+    targetFolder = path.join(path.resolve(targetDir), subdir);
   } else {
-    if (!isVersionIsolated(targetVersionId)) {
+    if (projectType === 'mod' && !isVersionIsolated(targetVersionId)) {
       markVersionIsolated(GAME_DIR, targetVersionId);
       writeLog(`[模组] 已为目标版本 ${targetVersionId} 启用版本隔离`);
     }
-    modsDir = path.join(getVersionGameDir(targetVersionId), 'mods');
+    targetFolder = path.join(getVersionGameDir(targetVersionId), subdir);
   }
-  const dest: string = path.join(modsDir, fileName);
+  const dest: string = path.join(targetFolder, fileName);
 
   try {
     if (fs.existsSync(dest)) {
-      return { success: true, files: [], skipped: [fileName], modsDir, targetVersionId, targetDir };
+      return { success: true, files: [], skipped: [fileName], modsDir: targetFolder, targetVersionId, targetDir };
     }
     await downloadToFile(url, dest, fileName);
-    writeLog(`[模组] 链接安装完成: ${fileName} -> ${modsDir}`);
-    return { success: true, files: [fileName], skipped: [], modsDir, targetVersionId, targetDir, direct: true };
+    writeLog(`[模组] 链接安装完成: ${fileName} -> ${targetFolder}`);
+    return { success: true, files: [fileName], skipped: [], modsDir: targetFolder, targetVersionId, targetDir, direct: true };
   } catch (e: any) {
     writeLog(`[模组] 链接安装失败: ${e.message}`);
-    return { success: false, error: e.message, modsDir, targetVersionId, targetDir };
+    return { success: false, error: e.message, modsDir: targetFolder, targetVersionId, targetDir };
   }
 });
 
@@ -680,6 +811,7 @@ async function resolveModrinthVersion(projectId: string, gameVersion: string, lo
     const file: any = modrinthFile(data);
     return {
       id: data.id,
+      projectId: data.project_id || projectId,
       fileName: file?.fileName || '',
       downloadUrl: file?.url || '',
       dependencies: (data.dependencies || []).map((dep: any) => ({
@@ -697,7 +829,7 @@ async function resolveModrinthVersion(projectId: string, gameVersion: string, lo
 
 async function resolveCurseForgeVersion(projectId: string, gameVersion: string, loader: string, versionId?: string): Promise<any> {
   if (versionId) {
-    const data: any = await curseForgeRequest(`/mods/${encodeURIComponent(projectId)}/files/${encodeURIComponent(versionId)}`);
+    const data: any = await curseForgeApi(`/mods/${encodeURIComponent(projectId)}/files/${encodeURIComponent(versionId)}`);
     const file: any = data?.data;
     if (!file) throw new Error('找不到指定的 CurseForge 文件');
     return {
@@ -715,10 +847,64 @@ async function resolveCurseForgeVersion(projectId: string, gameVersion: string, 
 }
 
 
-async function installProjectTo(source: string, projectId: string, versionId: string, gameVersion: string, loader: string, modsDir: string): Promise<any> {
+const projectSlugCache: Map<string, string> = new Map();
+
+
+export async function resolveProjectFile(source: string, projectId: string, versionId: string, gameVersion: string, loader: string): Promise<{ fileName: string; downloadUrl: string }> {
+  const resolved: any = source === 'curseforge'
+    ? await resolveCurseForgeVersion(projectId, gameVersion, loader, versionId || undefined)
+    : await resolveModrinthVersion(projectId, gameVersion, loader, versionId || undefined);
+  if (!resolved?.downloadUrl || !resolved?.fileName) {
+    throw new Error('文件没有可用的下载地址（作者可能关闭了第三方下载）');
+  }
+  return { fileName: String(resolved.fileName), downloadUrl: String(resolved.downloadUrl) };
+}
+
+async function modrinthProjectSlug(projectId: string): Promise<string> {
+  const cached: string | undefined = projectSlugCache.get(projectId);
+  if (cached) return cached;
+  try {
+    const data: any = await requestJson(`https://api.modrinth.com/v2/project/${encodeURIComponent(projectId)}`);
+    const slug: string = String(data?.slug || '');
+    if (slug) projectSlugCache.set(projectId, slug);
+    return slug;
+  } catch {
+    return '';
+  }
+}
+
+
+function normalizedName(text: string): string {
+  return text.toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
+
+function cleanupOldProjectFiles(targetDir: string, slug: string, keepFileName: string, extension: string): void {
+  if (!slug || !fs.existsSync(targetDir)) return;
+  const variants: string[] = [normalizedName(slug)];
+  const stripped: string = slug.replace(/-(api|mod|lib|library)$/i, '');
+  if (stripped !== slug && stripped.length > 6) variants.push(normalizedName(stripped));
+
+  const keep: string = keepFileName.toLowerCase();
+  for (const file of fs.readdirSync(targetDir)) {
+    if (!file.toLowerCase().endsWith(extension)) continue;
+    if (file.toLowerCase() === keep) continue;
+    const normalized: string = normalizedName(file);
+    if (variants.some((v: string) => v && normalized.startsWith(v))) {
+      try {
+        fs.unlinkSync(path.join(targetDir, file));
+        writeLog(`[模组] 清理旧版本: ${file}`);
+      } catch {}
+    }
+  }
+}
+
+
+async function installProjectTo(source: string, projectType: ResourceProjectType, projectId: string, versionId: string, gameVersion: string, loader: string, targetDir: string): Promise<any> {
   const files: string[] = [];
   const skipped: string[] = [];
   const visited: Set<string> = new Set();
+  const extension: string = projectType === 'mod' ? '.jar' : '.zip';
 
   const walk = async (pid: string, vid: string, depth: number): Promise<void> => {
     if (depth > 3) return;
@@ -733,14 +919,23 @@ async function installProjectTo(source: string, projectId: string, versionId: st
       throw new Error('文件没有可用的下载地址（作者可能关闭了第三方下载）');
     }
 
-    const dest: string = path.join(modsDir, path.basename(resolved.fileName));
-    if (fs.existsSync(dest)) {
+    const dest: string = path.join(targetDir, path.basename(resolved.fileName));
+    const destOk: boolean = fs.existsSync(dest) && fs.statSync(dest).size > 1024;
+    if (destOk) {
       skipped.push(resolved.fileName);
     } else {
-      writeLog(`[模组] 下载 ${resolved.fileName} -> ${modsDir}`);
+      if (fs.existsSync(dest)) fs.unlinkSync(dest);
+      writeLog(`[模组] 下载 ${resolved.fileName} -> ${targetDir}`);
       await downloadToFile(resolved.downloadUrl, dest, resolved.fileName);
       files.push(resolved.fileName);
     }
+
+    if (source === 'modrinth' && resolved.projectId) {
+      const slug: string = await modrinthProjectSlug(resolved.projectId);
+      cleanupOldProjectFiles(targetDir, slug, path.basename(resolved.fileName), extension);
+    }
+
+    if (projectType !== 'mod') return;
 
     for (const dep of resolved.dependencies || []) {
       if (dep.type !== 'required') continue;
@@ -757,12 +952,13 @@ async function installProjectTo(source: string, projectId: string, versionId: st
 
 export async function installModrinthProjectTo(projectId: string, gameVersion: string, loader: string, modsDir: string): Promise<any> {
   if (!fs.existsSync(modsDir)) fs.mkdirSync(modsDir, { recursive: true });
-  return installProjectTo('modrinth', projectId, '', gameVersion, loader, modsDir);
+  return installProjectTo('modrinth', 'mod', projectId, '', gameVersion, loader, modsDir);
 }
 
 
 ipcMain.handle('mods-install', async (_, options: any) => {
   const source: string = options?.source === 'curseforge' ? 'curseforge' : 'modrinth';
+  const projectType: ResourceProjectType = normalizeProjectType(options?.projectType);
   const projectId: string = String(options?.projectId || '').trim();
   const versionId: string = String(options?.versionId || '').trim();
   const targetVersionId: string = String(options?.targetVersionId || '').trim();
@@ -770,26 +966,35 @@ ipcMain.handle('mods-install', async (_, options: any) => {
   const gameVersion: string = String(options?.gameVersion || '').trim();
   const loader: string = String(options?.loader || '').trim().toLowerCase();
   if (!projectId) return { success: false, error: '缺少项目 ID' };
+  if (projectType === 'modpack') return { success: false, error: '整合包请用「安装整合包」按钮' };
   if (!targetVersionId && !targetDir) return { success: false, error: '请选择安装到哪个版本或目录' };
 
-  let modsDir: string;
+  const subdir: string = resourceSubdir(projectType);
+  let targetFolder: string;
+  let depGameVersion: string = gameVersion;
+  let depLoader: string = projectType === 'mod' ? loader : '';
   if (targetDir) {
-    modsDir = path.join(path.resolve(targetDir), 'mods');
+    targetFolder = path.join(path.resolve(targetDir), subdir);
   } else {
-    if (!isVersionIsolated(targetVersionId)) {
+    if (projectType === 'mod' && !isVersionIsolated(targetVersionId)) {
       markVersionIsolated(GAME_DIR, targetVersionId);
       writeLog(`[模组] 已为目标版本 ${targetVersionId} 启用版本隔离`);
     }
-    modsDir = path.join(getVersionGameDir(targetVersionId), 'mods');
+    targetFolder = path.join(getVersionGameDir(targetVersionId), subdir);
+    const targetInfo: any = describeVersion(targetVersionId);
+    depGameVersion = targetInfo.mcVersion || gameVersion;
+    if (projectType === 'mod') {
+      depLoader = (targetInfo.loaders || [])[0] || (targetInfo.hasOptiFine ? '' : loader);
+    }
   }
 
   try {
-    const result: any = await installProjectTo(source, projectId, versionId, gameVersion, loader, modsDir);
-    writeLog(`[模组] 安装完成: ${result.files.join(', ') || '全部已存在'} -> ${modsDir}`);
-    return { success: true, files: result.files, skipped: result.skipped, modsDir, targetVersionId, targetDir };
+    const result: any = await installProjectTo(source, projectType, projectId, versionId, depGameVersion, depLoader, targetFolder);
+    writeLog(`[模组] 安装完成: ${result.files.join(', ') || '全部已存在'} -> ${targetFolder}`);
+    return { success: true, files: result.files, skipped: result.skipped, modsDir: targetFolder, targetVersionId, targetDir };
   } catch (e: any) {
     writeLog(`[模组] 安装失败: ${e.message}`);
-    return { success: false, error: e.message, modsDir, targetVersionId, targetDir };
+    return { success: false, error: e.message, modsDir: targetFolder, targetVersionId, targetDir };
   }
 });
 

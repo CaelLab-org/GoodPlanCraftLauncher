@@ -1,8 +1,9 @@
 /*
  * Copyright (c) 2026 Yunyun(云云) By 虚舟实验室(CaelLab) / CaelLabGameTS
- * Licensed under the CaelLab BY-SA Code License, Version 2.0
- * or any later version. https://www.caellab.com/license/bysa-code-v2.txt
- * Source: https://github.com/yunyun-3782/GoodPlanCraftLauncher
+ * Licensed under the CaelLab BY-SA Code License, Version 3
+ * or any later version. https://www.caellab.com/license/cbs-v3.txt
+ * Source: https://github.com/CaelLab-org/GoodPlanCraftLauncher
+ * Project: https://gamets.caellab.com/gpcl/
  */
 
 
@@ -449,6 +450,7 @@ interface DownloadTask {
   message: string;
   finalVersionId?: string;
   error?: string;
+  modpack?: { source: 'modrinth' | 'curseforge'; projectId: string; versionId: string; gameVersion: string; instanceName: string };
 }
 
 const downloadTasks: DownloadTask[] = [];
@@ -583,14 +585,16 @@ async function runDownloadTask(task: DownloadTask): Promise<void> {
 
   try {
     const maxConcurrent: number = getMaxConcurrentFromSettings();
-    const result: any = task.loaderType
-      ? await window.gpcl.downloadWithModLoader(task.versionId, task.loaderType, task.loaderVersion, maxConcurrent, { installFabricApi: task.installFabricApi })
-      : await window.gpcl.downloadVersion(task.versionId, maxConcurrent);
+    const result: any = task.modpack
+      ? await window.gpcl.modpackInstall({ ...task.modpack, maxConcurrent })
+      : task.loaderType
+        ? await window.gpcl.downloadWithModLoader(task.versionId, task.loaderType, task.loaderVersion, maxConcurrent, { installFabricApi: task.installFabricApi })
+        : await window.gpcl.downloadVersion(task.versionId, maxConcurrent);
 
     if (result && result.success) {
       task.status = 'done';
       task.percent = 100;
-      task.finalVersionId = result.finalVersionId || task.versionId;
+      task.finalVersionId = result.finalVersionId || result.instanceName || task.versionId;
       task.message = '完成';
       updateTaskRow(task);
 
@@ -600,6 +604,9 @@ async function runDownloadTask(task: DownloadTask): Promise<void> {
         showToast('Fabric API 未装上', result.fabricApiError, 'warning', 'fabric-api-failed');
       } else if (Array.isArray(result.fabricApiFiles) && result.fabricApiFiles.length > 0) {
         task.message = '完成 · 已带 Fabric API';
+      }
+      if (task.modpack && Number(result.skipped) > 0) {
+        showToast('部分文件已跳过', `${result.skipped} 个可选文件或服务器端文件没有下载`, 'info', 'modpack-skipped');
       }
       await loadVersions();
       renderVersionSelectList();
@@ -659,6 +666,30 @@ async function processDownloadQueue(): Promise<void> {
     renderDownloadTasks();
   }
 }
+
+export function startModpackInstall(options: { source: 'modrinth' | 'curseforge'; projectId: string; versionId: string; gameVersion: string; instanceName: string }): void {
+  downloadTasks.push({
+    id: `task-${++queueTaskSeq}`,
+    versionId: options.instanceName,
+    loaderType: '',
+    loaderVersion: '',
+    loaderName: '整合包',
+    installFabricApi: false,
+    displayName: `整合包：${options.instanceName}`,
+    status: 'queued',
+    percent: 0,
+    message: '等待中',
+    modpack: options
+  });
+
+  renderDownloadTasks();
+  showPage('download');
+  const scrollContainer: HTMLElement | null = document.querySelector('.main-content') as HTMLElement | null;
+  if (scrollContainer) scrollContainer.scrollTop = 0;
+
+  if (!queueRunning) void processDownloadQueue();
+}
+
 
 export async function startDownload(versionId: string): Promise<void> {
   if (!versionId) {

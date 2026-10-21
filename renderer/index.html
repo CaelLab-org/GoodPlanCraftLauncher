@@ -3,6 +3,7 @@
  Licensed under the CaelLab BY-SA Code License, Version 3
  or any later version. https://www.caellab.com/license/cbs-v3.txt
  Source: https://github.com/CaelLab-org/GoodPlanCraftLauncher
+ Project: https://gamets.caellab.com/gpcl/
 -->
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -24,7 +25,7 @@
             <li id="menu-launch" class="menu-item"><span class="menu-icon icon icon-play" ></span>启动</li>
             <li id="menu-download" class="menu-item"><span class="menu-icon icon icon-download" ></span>下载</li>
             <li id="menu-settings" class="menu-item"><span class="menu-icon icon icon-gear" ></span>设置</li>
-            <li id="menu-more" class="menu-item"><span class="menu-icon icon icon-more" ></span>更多</li>
+            <li id="menu-more" class="menu-item hidden"><span class="menu-icon icon icon-more" ></span>更多</li>
           </ul>
         </nav>
       </div>
@@ -291,6 +292,9 @@
           <div class="download-tabs">
             <button id="download-tab-versions" class="download-tab active" type="button">游戏版本</button>
             <button id="download-tab-mods" class="download-tab" type="button">模组</button>
+            <button id="download-tab-shaders" class="download-tab" type="button">光影</button>
+            <button id="download-tab-resourcepacks" class="download-tab" type="button">资源包</button>
+            <button id="download-tab-modpacks" class="download-tab" type="button">整合包</button>
           </div>
 
           <div id="download-panel" class="download-status-panel hidden">
@@ -403,6 +407,27 @@
                     <div class="detail-option-loading" id="forge-loading">正在检测可用版本...</div>
                     <div class="detail-option-versions hidden" id="forge-versions"></div>
                     <div class="detail-option-error hidden" id="forge-error">该版本暂不支持 Forge</div>
+                  </div>
+                </div>
+
+                <div class="detail-option-card" id="neoforge-option" data-loader="neoforge">
+                  <div class="detail-option-header">
+                    <div class="detail-option-left">
+                      <span class="detail-option-icon icon icon-loader" ></span>
+                      <div class="detail-option-text">
+                        <span class="detail-option-name">NeoForge</span>
+                        <span class="detail-option-desc">NeoForge 模组加载器</span>
+                      </div>
+                    </div>
+                    <div class="detail-option-right">
+                      <span class="detail-option-badge" id="neoforge-badge">检测中...</span>
+                      <span class="detail-option-arrow icon icon-chevron" ></span>
+                    </div>
+                  </div>
+                  <div class="detail-option-content hidden" id="neoforge-content">
+                    <div class="detail-option-loading" id="neoforge-loading">正在检测可用版本...</div>
+                    <div class="detail-option-versions hidden" id="neoforge-versions"></div>
+                    <div class="detail-option-error hidden" id="neoforge-error">该版本暂不支持 NeoForge</div>
                   </div>
                 </div>
 
@@ -945,7 +970,7 @@
                       </div>
                       <div class="setting-control">
                         <label class="switch">
-                          <input type="checkbox" id="enable-more" checked>
+                          <input type="checkbox" id="enable-more">
                           <span class="slider"></span>
                         </label>
                       </div>
@@ -1340,7 +1365,7 @@
                         <span class="icon icon-mail"></span>
                         <span><b>邮箱</b><small>gamets@caellab.com</small></span>
                       </a>
-                      <a class="about-link" href="https://gamets.caellab.com/gpcl/help/">
+                      <a class="about-link" href="https://gamets.caellab.com/gpcl/docs/">
                         <span class="icon icon-book"></span>
                         <span><b>帮助</b><small>安装、登录、Java 和模组</small></span>
                       </a>
@@ -1360,7 +1385,7 @@
 
                   <div class="setting-card about-section">
                     <h3 class="about-section-title">许可证</h3>
-                    <p class="about-text">CaelLab BY-SA Code License, Version 3（或任何更新版本）。完整条款随程序保存在本地，下面可以直接展开。</p>
+                    <p class="about-text">CaelLab BY-SA Code License, Version 3（或任何更新版本）。完整条款随程序保存在本地，下面可以直接展开。项目主页：<a href="https://gamets.caellab.com/gpcl/" target="_blank" rel="noopener">gamets.caellab.com/gpcl</a>。</p>
                     <details class="license-details" id="license-details">
                       <summary>查看许可证原文 <span class="icon icon-chevron"></span></summary>
                       <pre class="license-text" id="license-text">许可证加载中…</pre>
@@ -1545,11 +1570,12 @@
       </div>
       <div class="dialog-body">
         <p class="dialog-message">很抱歉，你的游戏出现了一些问题……</p>
+        <div id="crash-dialog-analysis" class="crash-dialog-analysis"></div>
         <p class="dialog-message">如果要寻求帮助，请向他人发送错误报告文件，而不是发送这个窗口的截图。</p>
         <p class="dialog-message crash-dialog-more"><a href="#" id="crash-dialog-detail">查看详情</a></p>
         <div class="crash-dialog-help">
           <span class="crash-dialog-help-label">GPCL 帮助文档</span>
-          <a href="https://gamets.caellab.com/gpcl/help/mc-game/" id="crash-dialog-help-link" class="crash-dialog-help-url">gamets.caellab.com/gpcl/help/mc-game/</a>
+          <a href="https://gamets.caellab.com/gpcl/docs/mc-game/" id="crash-dialog-help-link" class="crash-dialog-help-url">gamets.caellab.com/gpcl/docs/mc-game/</a>
         </div>
       </div>
       <div class="dialog-footer">
@@ -1574,6 +1600,25 @@
         <div class="mod-target-actions-right">
           <button id="mod-target-cancel" class="mod-target-btn" type="button">取消</button>
           <button id="mod-target-confirm" class="mod-target-btn primary" type="button">安装</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="modpack-name-overlay" class="mod-target-overlay hidden">
+    <div class="mod-target-dialog">
+      <div class="mod-target-header">
+        <h3>安装整合包</h3>
+        <button id="modpack-name-close" class="mod-target-close" type="button" aria-label="关闭"><span class="icon icon-close"></span></button>
+      </div>
+      <div id="modpack-name-file" class="mod-target-file"></div>
+      <label class="modpack-name-label" for="modpack-name-input">实例名称</label>
+      <input id="modpack-name-input" class="modpack-name-input" type="text" maxlength="64" spellcheck="false">
+      <div class="modpack-name-note">会新建一个版本，游戏、模组和存档都放在它自己的文件夹里。重名会自动加序号。</div>
+      <div class="mod-target-actions">
+        <div class="mod-target-actions-right">
+          <button id="modpack-name-cancel" class="mod-target-btn" type="button">取消</button>
+          <button id="modpack-name-confirm" class="mod-target-btn primary" type="button">开始安装</button>
         </div>
       </div>
     </div>

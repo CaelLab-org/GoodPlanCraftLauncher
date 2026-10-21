@@ -1,8 +1,9 @@
 /*
  * Copyright (c) 2026 Yunyun(云云) By 虚舟实验室(CaelLab) / CaelLabGameTS
- * Licensed under the CaelLab BY-SA Code License, Version 2.0
- * or any later version. https://www.caellab.com/license/bysa-code-v2.txt
- * Source: https://github.com/yunyun-3782/GoodPlanCraftLauncher
+ * Licensed under the CaelLab BY-SA Code License, Version 3
+ * or any later version. https://www.caellab.com/license/cbs-v3.txt
+ * Source: https://github.com/CaelLab-org/GoodPlanCraftLauncher
+ * Project: https://gamets.caellab.com/gpcl/
  */
 
 
@@ -101,12 +102,19 @@ if (settingsNumInput) {
 export function updateMoreMenuVisibility(enabled: boolean): void {
   const menuMoreEl: HTMLElement | null = document.getElementById('menu-more');
   if (menuMoreEl) {
-    menuMoreEl.style.display = enabled ? '' : 'none';
+    menuMoreEl.classList.toggle('hidden', !enabled);
   }
 }
 
 
 if (enableMoreEl) {
+  (async (): Promise<void> => {
+    const settings = await loadSettings();
+    const enabled: boolean = settings.appearance?.enableMore === true;
+    enableMoreEl.checked = enabled;
+    updateMoreMenuVisibility(enabled);
+  })();
+
   enableMoreEl.addEventListener('change', async (e: Event): Promise<void> => {
     const enabled: boolean = (e.target as HTMLInputElement).checked;
     updateMoreMenuVisibility(enabled);
@@ -197,7 +205,7 @@ export async function loadSettings(): Promise<any> {
         playStartupAnimation: true,
         skipSplash: false,
         tipFrequency: 'rare',
-        enableMore: true
+        enableMore: false
       },
       download: {
         maxConcurrent: 64,

@@ -14,7 +14,7 @@
 - **登录**：离线登录与微软正版登录，可随时切换
 - **崩溃处理**：游戏异常退出时说明原因，一键导出错误报告（崩溃报告 + 日志 + 系统信息，token 已打码）
 - **运行中面板**：游戏启动后右侧显示版本、PID、时长、内存与实时日志，可随时结束游戏
-- **自定义窗口标题**：支持 `{mc_version}`、`{time}` 等魔术字，详见[说明页](https://gamets.caellab.com/gpcl/help/magic-words/)
+- **自定义窗口标题**：支持 `{mc_version}`、`{time}` 等魔术字，详见[说明页](https://gamets.caellab.com/gpcl/docs/magic-words/)
 - 深色 / 浅色主题、启动动画、最多 128 线程并发下载
 
 ## 下载
@@ -43,8 +43,8 @@ npm run build-prod   # 出安装包 → release/GPCL-<版本>-Setup.exe 与 GPCL
 
 ## 文档
 
-- [游戏崩溃了怎么办](https://gamets.caellab.com/gpcl/help/mc-game/)：导出错误报告、看日志、常见崩溃原因
-- [魔术字（替换标记）](https://gamets.caellab.com/gpcl/help/magic-words/)：窗口标题里能用的占位符
+- [游戏崩溃了怎么办](https://gamets.caellab.com/gpcl/docs/mc-game/)：导出错误报告、看日志、常见崩溃原因
+- [魔术字（替换标记）](https://gamets.caellab.com/gpcl/docs/magic-words/)：窗口标题里能用的占位符
 
 ## 反馈
 
@@ -67,6 +67,9 @@ npm run build-prod   # 出安装包 → release/GPCL-<版本>-Setup.exe 与 GPCL
 
 完整条款见 [LICENSE](LICENSE)，权威原文在 [caellab.com/license/cbs-v3.txt](https://www.caellab.com/license/cbs-v3.txt)。
 
+Copyright (c) 2026 Yunyun(云云) By 虚舟实验室(CaelLab) / CaelLabGameTS
+项目主页：<https://gamets.caellab.com/gpcl/>
+
 > **版本说明**：本项目在 v1.4.4 及更早版本发布时采用的是该许可证的 Version 1.0，此后至本次更新前采用 Version 2.0。按当时版本获得副本的使用者，其权利仍适用获得时对应的版本；自此之后发布的版本适用 Version 3 或任何更新版本。
 
 ## 常见问题
@@ -81,7 +84,7 @@ A：目前只有 Windows 10 / 11 64 位。是否支持 macOS 或 Linux 要看后
 A：在启动界面直接切换，不用重启启动器。
 
 **Q：游戏崩溃了，怎么让别人帮我？**
-A：用崩溃弹窗里的「导出错误报告」，把生成的压缩包发出去。**别只发截图** —— 截图里没有日志。细节见[帮助页](https://gamets.caellab.com/gpcl/help/mc-game/)。
+A：用崩溃弹窗里的「导出错误报告」，把生成的压缩包发出去。**别只发截图** —— 截图里没有日志。细节见[帮助页](https://gamets.caellab.com/gpcl/docs/mc-game/)。
 
 ## 作者
 

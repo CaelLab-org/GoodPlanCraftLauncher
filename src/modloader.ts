@@ -1,8 +1,9 @@
 /*
  * Copyright (c) 2026 Yunyun(云云) By 虚舟实验室(CaelLab) / CaelLabGameTS
- * Licensed under the CaelLab BY-SA Code License, Version 2.0
- * or any later version. https://www.caellab.com/license/bysa-code-v2.txt
+ * Licensed under the CaelLab BY-SA Code License, Version 3
+ * or any later version. https://www.caellab.com/license/cbs-v3.txt
  * Source: https://github.com/CaelLab-org/GoodPlanCraftLauncher
+ * Project: https://gamets.caellab.com/gpcl/
  */
 
 
@@ -55,6 +56,17 @@ ipcMain.handle('get-fabric-versions', async (_, mcVersion: string) => {
     return { success: true, versions };
   } catch (e: any) {
     writeLog(`[Fabric] 获取版本列表失败: ${e.message}`);
+    return { success: false, error: e.message, versions: [] };
+  }
+});
+
+
+ipcMain.handle('get-neoforge-versions', async (_, mcVersion: string) => {
+  try {
+    const versions: any[] = await fetchNeoForgeVersions(mcVersion);
+    return { success: true, versions };
+  } catch (e: any) {
+    writeLog(`[NeoForge] 获取版本列表失败: ${e.message}`);
     return { success: false, error: e.message, versions: [] };
   }
 });
@@ -161,6 +173,57 @@ export async function fetchFabricVersions(mcVersion: string): Promise<any[]> {
   const firstStable: any = top.find((v: any) => !v.name.includes('(测试)'));
   if (firstStable) firstStable.name += ' (推荐)';
   writeLog(`[Fabric] 找到 ${versions.length} 个版本 for MC ${mcVersion}，显示前 ${top.length} 个`);
+  return top;
+}
+
+
+const NEOFORGE_LIST_URLS: Record<string, string> = {
+  neoforge: 'https://maven.neoforged.net/api/maven/versions/releases/net/neoforged/neoforge',
+  forge: 'https://maven.neoforged.net/api/maven/versions/releases/net/neoforged/forge'
+};
+
+const NEOFORGE_LIST_MIRRORS: Record<string, string> = {
+  neoforge: 'https://bmclapi2.bangbang93.com/neoforge/meta/api/maven/details/releases/net/neoforged/neoforge',
+  forge: 'https://bmclapi2.bangbang93.com/neoforge/meta/api/maven/details/releases/net/neoforged/forge'
+};
+
+
+export async function fetchNeoForgeVersions(mcVersion: string): Promise<any[]> {
+  const legacy: boolean = mcVersion === '1.20.1';
+  const parts: string[] = mcVersion.split('.');
+  const minor: number = parseInt(parts[1], 10) || 0;
+  const patch: number = parseInt(parts[2], 10) || 0;
+  const prefix: string = legacy ? '1.20.1-' : `${minor}.${patch}.`;
+
+  const packageName: string = legacy ? 'forge' : 'neoforge';
+  const raw: string = await fetchText(NEOFORGE_LIST_URLS[packageName], [
+    NEOFORGE_LIST_MIRRORS[packageName],
+    NEOFORGE_LIST_URLS[packageName]
+  ]);
+
+  const names: Set<string> = new Set(
+    raw.match(/(?:1\.20\.1-)?\d+\.\d+\.\d+(?:-(?:beta|alpha)(?:\.\d+)?)?(?:\+snapshot-\d+)?/g) || []
+  );
+
+  const versions: any[] = [];
+  for (const name of names) {
+    if (!name.startsWith(prefix)) continue;
+    const isBeta: boolean = /-(beta|alpha)/.test(name);
+    const numeric: string = legacy ? name.slice(prefix.length) : name;
+    versions.push({
+      id: name,
+      name: `NeoForge ${name}${isBeta ? ' (测试)' : ''}`,
+      version: name,
+      numeric,
+      mcVersion
+    });
+  }
+
+  versions.sort((a: any, b: any) => compareVersions(b.numeric, a.numeric));
+  const top: any[] = versions.slice(0, 20);
+  const firstStable: any = top.find((v: any) => !v.name.includes('(测试)'));
+  if (firstStable) firstStable.name += ' (推荐)';
+  writeLog(`[NeoForge] 找到 ${versions.length} 个版本 for MC ${mcVersion}，显示前 ${top.length} 个`);
   return top;
 }
 
@@ -282,6 +345,8 @@ export async function installVersionWithModLoader(versionId: string, loaderType:
     let finalVersionId: string;
     if (loaderType === 'forge') {
       finalVersionId = await installForge(versionId, loaderVersion);
+    } else if (loaderType === 'neoforge') {
+      finalVersionId = await installNeoForge(versionId, loaderVersion);
     } else if (loaderType === 'fabric') {
       finalVersionId = await installFabric(versionId, loaderVersion);
     } else if (loaderType === 'optifine') {
@@ -355,8 +420,45 @@ export function downloadFileHttps(url: string, dest: string): Promise<void> {
 
 
 export async function installForge(mcVersion: string, forgeVersion: string): Promise<any> {
-  writeLog(`[Forge] 安装: MC ${mcVersion}, Forge ${forgeVersion}`);
-  
+  const fullForgeVersionId: string = forgeVersion.includes('-') ? forgeVersion : `${mcVersion}-${forgeVersion}`;
+  writeLog(`[Forge] 安装: MC ${mcVersion}, Forge ${forgeVersion}（完整版本 ${fullForgeVersionId}）`);
+  const installerUrl: string = `https://maven.minecraftforge.net/net/minecraftforge/forge/${fullForgeVersionId}/forge-${fullForgeVersionId}-installer.jar`;
+  const installed: string = await installForgeLike({
+    mcVersion,
+    installerUrl,
+    installerFileName: `forge-${fullForgeVersionId}-installer.jar`,
+    label: 'Forge',
+    versionIdHints: ['forge']
+  });
+  return installed || fullForgeVersionId;
+}
+
+
+export async function installNeoForge(mcVersion: string, neoForgeVersion: string): Promise<any> {
+  let apiName: string = neoForgeVersion.trim();
+  if (mcVersion === '1.20.1' && !/^1\.20\.1-/.test(apiName)) apiName = `1.20.1-${apiName}`;
+  const packageName: string = /^1\.\d+\.\d+-/.test(apiName) ? 'forge' : 'neoforge';
+  writeLog(`[NeoForge] 安装: MC ${mcVersion}, NeoForge ${apiName}（maven 包 ${packageName}）`);
+  const installerUrl: string = `https://maven.neoforged.net/releases/net/neoforged/${packageName}/${apiName}/${packageName}-${apiName}-installer.jar`;
+  return installForgeLike({
+    mcVersion,
+    installerUrl,
+    installerFileName: `${packageName}-${apiName}-installer.jar`,
+    label: 'NeoForge',
+    versionIdHints: ['neoforge', 'forge']
+  }).then((installed: string) => installed || `neoforge-${apiName}`);
+}
+
+
+async function installForgeLike(options: {
+  mcVersion: string;
+  installerUrl: string;
+  installerFileName: string;
+  label: string;
+  versionIdHints: string[];
+}): Promise<string> {
+  const { mcVersion, installerUrl, installerFileName, label, versionIdHints } = options;
+
   const versionDir: string = path.join(GAME_DIR, 'versions', mcVersion);
   if (!fs.existsSync(versionDir)) {
     throw new Error(`原版版本 ${mcVersion} 不存在`);
@@ -365,79 +467,82 @@ export async function installForge(mcVersion: string, forgeVersion: string): Pro
   const versionsDir: string = path.join(GAME_DIR, 'versions');
   const preExistingVersions: Set<string> = new Set(fs.existsSync(versionsDir) ? fs.readdirSync(versionsDir) : []);
 
-  const fullForgeVersionId: string = forgeVersion.includes('-') ? forgeVersion : `${mcVersion}-${forgeVersion}`;
-  writeLog(`[Forge] 完整版本ID: ${fullForgeVersionId}`);
+  const installerPath: string = path.join(GAME_DIR, 'temp', installerFileName);
 
-  const installerUrl: string = `https://maven.minecraftforge.net/net/minecraftforge/forge/${fullForgeVersionId}/forge-${fullForgeVersionId}-installer.jar`;
-  const installerPath: string = path.join(GAME_DIR, 'temp', `forge-${fullForgeVersionId}-installer.jar`);
-  
   if (!fs.existsSync(path.dirname(installerPath))) {
     fs.mkdirSync(path.dirname(installerPath), { recursive: true });
   }
-  
-  writeLog(`[Forge] 下载安装器: ${installerUrl}`);
-  writeStage('正在下载 Forge 安装器…');
+
+  writeLog(`[${label}] 下载安装器: ${installerUrl}`);
+  writeStage(`正在下载 ${label} 安装器…`);
   if (fs.existsSync(installerPath)) fs.unlinkSync(installerPath);
-  const installerMirror: string | null = mirrorUrlFor(installerUrl);
-  await downloadFile(installerUrl, installerPath, 'Forge 安装器', installerMirror ? [installerMirror, installerUrl] : [installerUrl]);
-  
+  const installerSources: string[] = [];
+  if (label === 'NeoForge') {
+    installerSources.push(installerUrl.replace('https://maven.neoforged.net/releases/', 'https://bmclapi2.bangbang93.com/maven/'));
+  } else {
+    const installerMirror: string | null = mirrorUrlFor(installerUrl);
+    if (installerMirror) installerSources.push(installerMirror);
+  }
+  installerSources.push(installerUrl);
+  await downloadFile(installerUrl, installerPath, `${label} 安装器`, installerSources);
+
   if (shouldCancelDownload) {
     if (fs.existsSync(installerPath)) fs.unlinkSync(installerPath);
     throw new Error('下载已取消');
   }
-  
-  writeLog(`[Forge] 运行安装器`);
-  
+
+  writeLog(`[${label}] 运行安装器`);
+
   const javaVersion: string = getJavaVersionForMCVersion(mcVersion);
-  writeLog(`[Forge] MC ${mcVersion} 需要 Java ${javaVersion}`);
-  
+  writeLog(`[${label}] MC ${mcVersion} 需要 Java ${javaVersion}`);
+
   let javaPath: string | null = null;
-  
+
   const runtimeDir: string = getJavaRuntimeDir(javaVersion);
   if (fs.existsSync(runtimeDir)) {
     javaPath = findJavaExecutable(runtimeDir);
   }
-  
+
   if (!javaPath) {
     const ensuredPath: string | null = await ensureJavaRuntime(javaVersion);
     if (ensuredPath) {
       javaPath = ensuredPath;
     }
   }
-  
+
   if (!javaPath) {
     javaPath = findJava();
   }
-  
+
   if (!javaPath) {
     fs.unlinkSync(installerPath);
     throw new Error('未找到 Java 运行时，请安装 Java 8 或更高版本');
   }
-  
-  writeLog(`[Forge] 使用 Java: ${javaPath}`);
-  
+
+  writeLog(`[${label}] 使用 Java: ${javaPath}`);
+
   const installerStat = fs.statSync(installerPath);
-  writeLog(`[Forge] 安装器文件大小: ${installerStat.size} bytes`);
-  
+  writeLog(`[${label}] 安装器文件大小: ${installerStat.size} bytes`);
+
   if (installerStat.size < 100000) {
     if (fs.existsSync(installerPath)) fs.unlinkSync(installerPath);
-    throw new Error(`Forge 安装器文件过小 (${installerStat.size} bytes)，可能下载失败`);
+    throw new Error(`${label} 安装器文件过小 (${installerStat.size} bytes)，可能下载失败`);
   }
-  
+
   const jarMagic: Buffer = fs.readFileSync(installerPath).slice(0, 4);
-  writeLog(`[Forge] 安装器文件头: ${jarMagic.toString('hex')}`);
+  writeLog(`[${label}] 安装器文件头: ${jarMagic.toString('hex')}`);
   if (jarMagic[0] !== 0x50 || jarMagic[1] !== 0x4B) {
-    writeLog(`[Forge] 警告: 文件不是有效的 ZIP/JAR 格式`);
+    writeLog(`[${label}] 警告: 文件不是有效的 ZIP/JAR 格式`);
     const firstBytes: string = fs.readFileSync(installerPath, { encoding: 'utf8' }).slice(0, 200);
-    writeLog(`[Forge] 文件内容开头: ${firstBytes}`);
+    writeLog(`[${label}] 文件内容开头: ${firstBytes}`);
   }
-  
+
   const requiredJava: number = parseInt(getJavaVersionForMCVersion(mcVersion), 10) || 8;
   const actualJava: number = await javaMajorVersion(javaPath);
-  writeLog(`[Forge] Java 版本: ${actualJava}，需要 ${requiredJava}`);
+  writeLog(`[${label}] Java 版本: ${actualJava}，需要 ${requiredJava}`);
   if (actualJava > 0 && actualJava < requiredJava) {
     if (fs.existsSync(installerPath)) fs.unlinkSync(installerPath);
-    throw new Error(`这个 Forge 版本需要 Java ${requiredJava}，当前找到的是 Java ${actualJava}。请先在下载页安装 Java ${requiredJava} 再试`);
+    throw new Error(`这个 ${label} 版本需要 Java ${requiredJava}，当前找到的是 Java ${actualJava}。请先在下载页安装 Java ${requiredJava} 再试`);
   }
 
   const profilesPath: string = path.join(GAME_DIR, 'launcher_profiles.json');
@@ -458,10 +563,9 @@ export async function installForge(mcVersion: string, forgeVersion: string): Pro
     } catch {}
   };
 
-  writeStage('正在安装 Forge，下载依赖库可能需要几分钟…');
+  writeStage(`正在安装 ${label}，下载依赖库可能需要几分钟…`);
   let output: string = '';
   let success: boolean = false;
-  let lastStageAt: number = 0;
 
   try {
     await new Promise<void>((resolve, reject) => {
@@ -478,7 +582,7 @@ export async function installForge(mcVersion: string, forgeVersion: string): Pro
 
       const timer: any = setTimeout(() => {
         try { child.kill(); } catch {}
-        reject(new Error('Forge 安装超时（15 分钟）'));
+        reject(new Error(`${label} 安装超时（15 分钟）`));
       }, 15 * 60 * 1000);
 
       const watch: any = setInterval(() => {
@@ -492,7 +596,7 @@ export async function installForge(mcVersion: string, forgeVersion: string): Pro
         output += text;
         if (output.length > 1024 * 1024) output = output.slice(-1024 * 1024);
         for (const line of text.split(/\r?\n/)) {
-          if (line.trim()) writeLog(`[Forge] ${line}`);
+          if (line.trim()) writeLog(`[${label}] ${line}`);
         }
       };
 
@@ -512,7 +616,7 @@ export async function installForge(mcVersion: string, forgeVersion: string): Pro
           success = true;
           resolve();
         } else {
-          reject(new Error(`Forge 安装器退出码 ${code}: ${output.slice(-400) || '没有输出'}`));
+          reject(new Error(`${label} 安装器退出码 ${code}: ${output.slice(-400) || '没有输出'}`));
         }
       });
     });
@@ -523,16 +627,20 @@ export async function installForge(mcVersion: string, forgeVersion: string): Pro
   restoreProfiles();
 
   if (fs.existsSync(installerPath)) fs.unlinkSync(installerPath);
-  
+
   if (success) {
     const newVersions: string[] = (fs.existsSync(versionsDir) ? fs.readdirSync(versionsDir) : [])
       .filter((name: string) => !preExistingVersions.has(name));
-    const installed: string | undefined = newVersions.find((name: string) => name.toLowerCase().includes('forge')) || newVersions[0];
-    writeLog(`[Forge] 安装完成${installed ? `: ${installed}` : ''}`);
-    return installed || fullForgeVersionId;
+    let installed: string | undefined;
+    for (const hint of versionIdHints) {
+      installed = newVersions.find((name: string) => name.toLowerCase().includes(hint));
+      if (installed) break;
+    }
+    writeLog(`[${label}] 安装完成${installed ? `: ${installed}` : ''}`);
+    return installed || '';
   }
-  
-  throw new Error('Forge 安装器执行失败: 所有参数格式都失败');
+
+  throw new Error(`${label} 安装器执行失败: 所有参数格式都失败`);
 }
 
 

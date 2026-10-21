@@ -62,15 +62,15 @@ VersionInfoCompany={#AppPublisher}
 VersionInfoDescription={#AppName} Setup
 VersionInfoVersion={#VersionInfoVersion}
 VersionInfoTextVersion={#AppVersion}
-VersionInfoCopyright=Copyright (C) 2026 Yunyun(云云) by CaelLab
+VersionInfoCopyright=Copyright (C) 2026 Yunyun(云云) by CaelLab, https://gamets.caellab.com/gpcl/
 
 [Languages]
 Name: "chinesesimplified"; MessagesFile: "lang\ChineseSimplified.isl"
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [CustomMessages]
-chinesesimplified.WelcomeExtra={#AppName} 是一款轻量高效的 Minecraft 启动器，支持正版登录、版本管理与 Forge / Fabric / OptiFine 一键安装。由虚舟实验室（CaelLab）开发并维护，以 CaelLab BY-SA Code License v3 开源。
-english.WelcomeExtra={#AppName} is a lightweight Minecraft launcher with account login, version management and one-click Forge / Fabric / OptiFine installs. Developed and maintained by CaelLab, released under the CaelLab BY-SA Code License v3.
+chinesesimplified.WelcomeExtra={#AppName} 是一款轻量高效的 Minecraft 启动器，支持正版登录、版本管理与 Forge / Fabric / OptiFine 一键安装。由虚舟实验室（CaelLab）开发并维护，以 CaelLab BY-SA Code License v3 开源。项目主页：{#AppURL}
+english.WelcomeExtra={#AppName} is a lightweight Minecraft launcher with account login, version management and one-click Forge / Fabric / OptiFine installs. Developed and maintained by CaelLab, released under the CaelLab BY-SA Code License v3. Project page: {#AppURL}
 chinesesimplified.UpgradeNotice=检测到本机已有的 {#AppName}（旧安装器安装）。将就地升级：安装目录不变，你的游戏版本和设置都会保留。
 english.UpgradeNotice=An existing {#AppName} installation was found. Setup will upgrade it in place: same folder, your versions and settings are kept.
 chinesesimplified.AllUsersBlocked=检测到为「所有用户」安装的旧版本。请先在 Windows 的「设置 → 应用」里卸载它，再运行本安装程序。

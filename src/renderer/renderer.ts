@@ -1,8 +1,9 @@
 /*
  * Copyright (c) 2026 Yunyun(云云) By 虚舟实验室(CaelLab) / CaelLabGameTS
- * Licensed under the CaelLab BY-SA Code License, Version 2.0
- * or any later version. https://www.caellab.com/license/bysa-code-v2.txt
- * Source: https://github.com/yunyun-3782/GoodPlanCraftLauncher
+ * Licensed under the CaelLab BY-SA Code License, Version 3
+ * or any later version. https://www.caellab.com/license/cbs-v3.txt
+ * Source: https://github.com/CaelLab-org/GoodPlanCraftLauncher
+ * Project: https://gamets.caellab.com/gpcl/
  */
 
 
@@ -303,7 +304,7 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
     windowTitleHelp.addEventListener('click', (e: Event): void => {
       e.preventDefault();
       if (window.gpcl && window.gpcl.openExternal) {
-        window.gpcl.openExternal('https://gamets.caellab.com/gpcl/help/magic-words/');
+        window.gpcl.openExternal('https://gamets.caellab.com/gpcl/docs/magic-words/');
       }
     });
   }
