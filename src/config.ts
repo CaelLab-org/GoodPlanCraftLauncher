@@ -97,7 +97,8 @@ export const DEFAULT_SETTINGS = {
     playStartupAnimation: true,
     skipSplash: false,
     tipFrequency: 'rare',
-    enableMore: false
+    enableMore: false,
+    avatarSize: 50
   },
   download: {
     maxConcurrent: 64,

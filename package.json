@@ -1,12 +1,12 @@
 {
   "name": "gpcl",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "GoodPlanCraftLauncher",
   "main": "main.js",
   "scripts": {
     "build-ts": "node build.js",
-    "start": "npm run build-ts && electron dist/",
-    "start:dev": "npm run build-ts && electron dist/",
+    "start": "chcp 65001 >nul && npm run build-ts && electron dist/",
+    "start:dev": "chcp 65001 >nul && npm run build-ts && electron dist/",
     "pack": "npm run build-ts && electron-builder --win --dir --publish=never",
     "installer": "node scripts/build-installer.mjs",
     "build-prod": "npm run pack && node scripts/build-installer.mjs",

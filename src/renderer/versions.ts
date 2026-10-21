@@ -8,7 +8,7 @@
 
 
 // __IMPORTS_BEGIN__
-import { detailBackBtn, detailDownloadBtn, icon, setStatus, showToast, versionCountLabel, versionDetailPage, versionListContainer, versionListSection, versionSelect } from './dom';
+import { detailBackBtn, detailDownloadBtn, escapeHtml, icon, setStatus, showToast, versionCountLabel, versionDetailPage, versionListContainer, versionListSection, versionSelect } from './dom';
 import { startDownload } from './launch';
 // __IMPORTS_END__
 
@@ -154,6 +154,49 @@ export async function recordVersionDownload(versionId: string): Promise<void> {
 }
 
 
+let versionSearchTerm: string = '';
+let lastVersionListSignature: string = '';
+const versionInfoCache: Map<string, any> = new Map();
+
+async function getVersionInfoCached(versionId: string): Promise<any> {
+  if (versionInfoCache.has(versionId)) return versionInfoCache.get(versionId);
+  let info: any = null;
+  try {
+    if (window.gpcl && typeof window.gpcl.getVersionInfo === 'function') {
+      const result: any = await window.gpcl.getVersionInfo(versionId);
+      if (result?.success) info = result.info;
+    }
+  } catch {}
+  versionInfoCache.set(versionId, info);
+  return info;
+}
+
+function versionSubTags(info: any, versionId: string): string {
+  const tags: string[] = [];
+  const mcVersion: string = String(info?.mcVersion || '');
+  if (mcVersion && mcVersion !== versionId) tags.push(`MC ${mcVersion}`);
+
+  const loaders: string[] = Array.isArray(info?.loaders) ? info.loaders : [];
+  const loaderName: string = loaders.includes('neoforge') ? 'NeoForge'
+    : loaders.includes('forge') ? 'Forge'
+      : loaders.includes('fabric') ? 'Fabric'
+        : loaders.includes('quilt') ? 'Quilt'
+          : info?.hasOptiFine ? 'OptiFine' : '原版';
+  tags.push(loaderName);
+
+  return tags.map((tag: string) => `<span class="version-item-tag">${tag}</span>`).join('');
+}
+
+function formatRelativeTime(lastTime: number): string {
+  if (!lastTime) return '';
+  const date: Date = new Date(lastTime);
+  const diff: number = Date.now() - date.getTime();
+  if (diff < 60000) return '刚刚';
+  if (diff < 3600000) return `${Math.floor(diff / 60000)} 分钟前`;
+  if (diff < 86400000) return `${Math.floor(diff / 3600000)} 小时前`;
+  return `${date.getMonth() + 1}/${date.getDate()}`;
+}
+
 export async function renderVersionSelectList(): Promise<void> {
   const container: HTMLElement | null = document.getElementById('launch-version-list');
   const countEl: HTMLElement | null = document.getElementById('version-count');
@@ -176,6 +219,7 @@ export async function renderVersionSelectList(): Promise<void> {
     if (!versions || versions.length === 0) {
       container.innerHTML = '<div class="version-list-empty">暂无已安装的版本</div>';
       if (countEl) countEl.textContent = '0 个版本';
+      lastVersionListSignature = '';
       return;
     }
 
@@ -184,42 +228,51 @@ export async function renderVersionSelectList(): Promise<void> {
       const timeB: number = history[b]?.lastLaunch || history[b]?.downloadTime || 0;
       return timeB - timeA;
     });
-    
+
+    // 每 2 秒会重新扫描一次；内容没变就别重建 DOM，否则滚动位置会被顶回顶部
+    const signature: string = [
+      versions.join('\u0000'),
+      JSON.stringify(history),
+      versionSearchTerm
+    ].join('\u0001');
+    if (signature === lastVersionListSignature) return;
+    lastVersionListSignature = signature;
+
+    const query: string = versionSearchTerm.trim().toLowerCase();
+    const visible: string[] = query
+      ? versions.filter((versionId: string) => versionId.toLowerCase().includes(query))
+      : versions;
+
     container.innerHTML = '';
-    
-    versions.forEach((versionId: string, index: number) => {
+
+    if (visible.length === 0) {
+      container.innerHTML = `<div class="version-list-empty">没有匹配「${escapeHtml(versionSearchTerm.trim())}」的版本</div>`;
+    }
+
+    const infos: any[] = await Promise.all(visible.map((versionId: string) => getVersionInfoCached(versionId)));
+
+    visible.forEach((versionId: string, index: number) => {
+      const info: any = infos[index];
       const item: HTMLDivElement = document.createElement('div');
       item.className = 'version-item';
       item.dataset.versionId = versionId;
 
-      const itemIcon: string = index === 0 && (history[versionId]?.lastLaunch || history[versionId]?.downloadTime)
-        ? icon('star')
-        : icon('box');
-
       const lastTime: number = history[versionId]?.lastLaunch || history[versionId]?.downloadTime;
-      let timeText: string = '';
-      if (lastTime) {
-        const date: Date = new Date(lastTime);
-        const now: Date = new Date();
-        const diff: number = now.getTime() - date.getTime();
-        
-        if (diff < 60000) {
-          timeText = '刚刚';
-        } else if (diff < 3600000) {
-          timeText = `${Math.floor(diff / 60000)} 分钟前`;
-        } else if (diff < 86400000) {
-          timeText = `${Math.floor(diff / 3600000)} 小时前`;
-        } else {
-          timeText = `${date.getMonth() + 1}/${date.getDate()}`;
-        }
-      }
-      
+      const timeText: string = formatRelativeTime(lastTime);
+      const itemIcon: string = index === 0 && lastTime ? icon('star') : icon('box');
+
       item.innerHTML = `
         <span class="version-item-icon">${itemIcon}</span>
-        <span class="version-item-id">${versionId}</span>
-        <span class="version-item-time">${timeText}</span>
+        <span class="version-item-main">
+          <span class="version-item-id"></span>
+          <span class="version-item-sub">${versionSubTags(info, versionId)}${timeText ? `<span class="version-item-time">${timeText}</span>` : ''}</span>
+        </span>
+        <span class="version-item-check icon icon-check"></span>
       `;
-      
+
+      const idEl: HTMLElement | null = item.querySelector('.version-item-id');
+      if (idEl) idEl.textContent = versionId;
+
       item.addEventListener('click', () => {
         selectVersion(versionId);
       });
@@ -227,10 +280,18 @@ export async function renderVersionSelectList(): Promise<void> {
       container.appendChild(item);
     });
     
-    if (countEl) countEl.textContent = `${versions.length} 个版本`;
+    if (countEl) {
+      countEl.textContent = query
+        ? `${visible.length} / ${versions.length} 个版本`
+        : `${versions.length} 个版本`;
+    }
 
     if (!selectedVersionId && versions.length > 0) {
       selectVersion(versions[0]);
+    } else if (selectedVersionId) {
+      container.querySelectorAll('.version-item').forEach((item: Element) => {
+        item.classList.toggle('selected', (item as HTMLElement).dataset.versionId === selectedVersionId);
+      });
     }
   } catch (err: any) {
     container.innerHTML = '<div class="version-list-empty">加载版本列表失败</div>';
@@ -239,10 +300,28 @@ export async function renderVersionSelectList(): Promise<void> {
 }
 
 
+const versionSearchInput: HTMLInputElement | null = document.getElementById('launch-version-search') as HTMLInputElement | null;
+if (versionSearchInput) {
+  versionSearchInput.addEventListener('input', () => {
+    versionSearchTerm = versionSearchInput.value;
+    lastVersionListSignature = '';
+    void renderVersionSelectList();
+  });
+  versionSearchInput.addEventListener('keydown', (event: KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      versionSearchInput.value = '';
+      versionSearchTerm = '';
+      lastVersionListSignature = '';
+      void renderVersionSelectList();
+    }
+  });
+}
+
+
 export function selectVersion(versionId: string): void {
   selectedVersionId = versionId;
 
-  const items: NodeListOf<Element> = document.querySelectorAll('.version-item');
+  const items: NodeListOf<Element> = document.querySelectorAll('#launch-version-list .version-item');
   items.forEach((item: Element) => {
     item.classList.toggle('selected', (item as HTMLElement).dataset.versionId === versionId);
   });

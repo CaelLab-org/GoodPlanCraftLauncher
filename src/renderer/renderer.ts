@@ -43,6 +43,7 @@ import './session';
 import './settings';
 import './update';
 import './versions';
+import './avatar';
 // __IMPORTS_END__
 
 if (launchBtn) launchBtn.addEventListener('click', launchGame);
@@ -622,8 +623,10 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
 
   let currentVersionForSettings: string | null = null;
   let currentVersionInfo: any = null;
+  let versionListWasOpen: boolean = false;
   
   const versionSettingsBtn: HTMLElement | null = document.getElementById('version-settings');
+  const versionSelectBtn: HTMLElement | null = document.getElementById('version-select');
   const versionSettingsPanel: HTMLElement | null = document.getElementById('version-settings-panel');
   const versionSettingsBackBtn: HTMLElement | null = document.getElementById('version-settings-back-btn');
   const versionSettingsTitle: HTMLElement | null = document.getElementById('version-settings-title');
@@ -694,12 +697,14 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
     if (saveTimeout) clearTimeout(saveTimeout);
     saveTimeout = setTimeout(async (): Promise<void> => {
       const success: boolean = await saveVersionSettings(currentVersionForSettings!, settings);
-      if (success) {
-        showToast('保存成功', `版本 ${currentVersionForSettings} 的设置已保存`, 'success');
-      } else {
+      if (!success) {
         showToast('保存失败', '无法保存版本设置', 'error');
       }
     }, 300);
+  }
+  
+  function setVersionListOpen(open: boolean): void {
+    if (versionSelectPanel) versionSelectPanel.classList.toggle('hidden', !open);
   }
   
   async function showVersionSettingsPanel(versionId: string): Promise<void> {
@@ -718,6 +723,7 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
     modFolderItem?.classList.toggle('hidden', !currentVersionInfo?.hasModLoader);
     shaderFolderItem?.classList.toggle('hidden', !currentVersionInfo?.hasOptiFine);
     
+    versionListWasOpen = !!versionSelectPanel && !versionSelectPanel.classList.contains('hidden');
     if (versionSelectPanel) versionSelectPanel.classList.add('hidden');
     if (statusElement) statusElement.style.display = 'none';
     
@@ -748,6 +754,7 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
         versionSettingsPanel.classList.add('hidden');
         versionSettingsPanel.classList.remove('slide-out');
       }
+      setVersionListOpen(versionListWasOpen);
       if (statusElement) statusElement.style.display = '';
       currentVersionForSettings = null;
       currentVersionInfo = null;
@@ -757,10 +764,6 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
   if (versionSettingsBtn) {
     versionSettingsBtn.addEventListener('click', async (): Promise<void> => {
       if (selectedVersionId) {
-        
-        if (versionSelectPanel && !versionSelectPanel.classList.contains('hidden')) {
-          versionSelectPanel.classList.add('hidden');
-        }
         await showVersionSettingsPanel(selectedVersionId);
       } else {
         showToast('未选择版本', '请先选择一个版本', 'warning');
@@ -837,7 +840,11 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
   });
   
   initCustomSelect('version-startup-mode', () => {
+    const joinMode: boolean = getCustomSelectValue('version-startup-mode') === 'join';
     updateServerIpVisibility();
+    if (joinMode && versionServerIpContainer) {
+      versionServerIpContainer.scrollIntoView({ block: 'nearest' });
+    }
     saveCurrentVersionSettings();
   });
 
@@ -847,21 +854,12 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
     });
   }
 
-  const versionSelectBtn: HTMLElement | null = document.getElementById('version-select');
-  const versionPanel: HTMLElement | null = document.getElementById('version-select-panel');
-  if (versionSelectBtn && versionPanel) {
+  if (versionSelectBtn) {
     versionSelectBtn.addEventListener('click', () => {
-      
-      if (versionSettingsPanel && !versionSettingsPanel.classList.contains('hidden')) {
-        return;
-      }
-
-      if (versionPanel.classList.contains('hidden')) {
-        versionPanel.classList.remove('hidden');
-        renderVersionSelectList();
-      } else {
-        versionPanel.classList.add('hidden');
-      }
+      if (versionSettingsPanel && !versionSettingsPanel.classList.contains('hidden')) return;
+      const willOpen: boolean = !versionSelectPanel || versionSelectPanel.classList.contains('hidden');
+      setVersionListOpen(willOpen);
+      if (willOpen) void renderVersionSelectList();
     });
   }
 

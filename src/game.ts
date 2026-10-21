@@ -609,6 +609,20 @@ export const G1GC_ARGS: string[] = [
 ];
 
 
+// 1.20 起客户端移除了 --server / --port，改用 quickPlay。
+// 只能用 inheritsFrom / id 里的游戏版本判断：加载器 JSON 的 releaseTime 是安装时间，
+// 拿它判断会把今天装好的 1.12.2 Forge 也当成新版。快照名匹配不上时再退回 releaseTime。
+function supportsQuickPlay(vd: any): boolean {
+  const raw: string = String(vd?.inheritsFrom || vd?.id || '');
+  const match: RegExpMatchArray | null = raw.match(/^(\d+)\.(\d+)/);
+  if (match) {
+    return parseInt(match[1], 10) > 1 || parseInt(match[2], 10) >= 20;
+  }
+  const releaseTime: number = Date.parse(String(vd?.releaseTime || ''));
+  return !Number.isNaN(releaseTime) && releaseTime > Date.parse('2023-05-04T00:00:00Z');
+}
+
+
 export function buildLaunchArgs(vd: any, rootDir: string, gameDir: string, versionId: string, username: string, windowMode: string, memoryMB: number | null, serverIp: string | null, authInfo?: { uuid: string; accessToken: string; userType: string }, launchOptions?: { jvmArgsRaw?: string; gcPreset?: string; windowSize?: string; windowWidth?: number; windowHeight?: number }): any {
   const cp: string[] = [];
   
@@ -782,16 +796,23 @@ export function buildLaunchArgs(vd: any, rootDir: string, gameDir: string, versi
   }
 
   if (serverIp && serverIp.trim()) {
-    const ipParts: string[] = serverIp.trim().split(':');
-    const serverAddress: string = ipParts[0];
-    const serverPort: string = ipParts[1] || '25565';
-    
-    gameArgs.push('--server');
-    gameArgs.push(serverAddress);
-    gameArgs.push('--port');
-    gameArgs.push(serverPort);
-    
-    writeLog(`[启动] 已添加服务器连接参数: --server ${serverAddress} --port ${serverPort}`);
+    const address: string = serverIp.trim();
+
+    if (supportsQuickPlay(vd)) {
+      gameArgs.push('--quickPlayMultiplayer');
+      gameArgs.push(address);
+      writeLog(`[启动] 已添加快速进入服务器参数: --quickPlayMultiplayer ${address}`);
+    } else {
+      const ipParts: string[] = address.split(':');
+      const serverAddress: string = ipParts[0];
+      const serverPort: string = ipParts[1] || '25565';
+
+      gameArgs.push('--server');
+      gameArgs.push(serverAddress);
+      gameArgs.push('--port');
+      gameArgs.push(serverPort);
+      writeLog(`[启动] 已添加服务器连接参数: --server ${serverAddress} --port ${serverPort}`);
+    }
   }
 
   return { jvmArgs, gameArgs, mainClass: vd.mainClass };
@@ -885,8 +906,13 @@ ipcMain.handle('launch-minecraft', async (_, opt: any) => {
           writeLog(`[启动] 使用版本窗口模式: ${actualWindowMode}`);
         }
 
-        if (versionSettings.startupMode === 'join' && versionSettings.serverIp) {
-          serverIp = versionSettings.serverIp;
+        if (versionSettings.startupMode === 'join') {
+          const savedServer: string = String(versionSettings.serverIp || '').trim();
+          if (!savedServer) {
+            writeLog('[启动] 选择了加入服务器，但没有填写服务器地址');
+            return { success: false, error: '请先在版本设置里填写要加入的服务器地址' };
+          }
+          serverIp = savedServer;
           writeLog(`[启动] 使用版本启动模式: 加入服务器 ${serverIp}`);
         }
       }

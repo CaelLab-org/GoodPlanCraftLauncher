@@ -8,12 +8,14 @@
 
 
 // __IMPORTS_BEGIN__
-import { BrowserWindow, Menu, app, dialog, ipcMain, shell } from 'electron';
+import { BrowserWindow, Menu, app, dialog, ipcMain, nativeImage, shell } from 'electron';
+import crypto from 'crypto';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
+import { pathToFileURL } from 'url';
 
-import { APP_VERSION, BASE_DIR, getSystemMemoryInfo, writeLog } from './config';
+import { APP_VERSION, BASE_DIR, CONFIG_DIR, getSystemMemoryInfo, writeLog } from './config';
 import { isDeveloperMode, isDownloading, isJavaDownloading } from './state';
 // __IMPORTS_END__
 
@@ -166,6 +168,147 @@ ipcMain.handle('select-directory', async () => {
     return null;
   }
   return result.filePaths[0];
+});
+
+
+// ========== 自定义头像 ==========
+
+export const AVATAR_DIR_NAME: string = path.join('gpcl', 'users', 'avatar');
+
+function avatarConfigPath(): string {
+  return path.join(CONFIG_DIR, 'avatar.json');
+}
+
+function readAvatarConfig(): any {
+  try {
+    const file: string = avatarConfigPath();
+    if (!fs.existsSync(file)) return {};
+    return JSON.parse(fs.readFileSync(file, 'utf8')) || {};
+  } catch {
+    return {};
+  }
+}
+
+function resolveStoredAvatar(): string {
+  const stored: string = String(readAvatarConfig().path || '').trim();
+  if (!stored) return '';
+  const absolute: string = path.isAbsolute(stored) ? stored : path.join(BASE_DIR, stored);
+  return fs.existsSync(absolute) ? absolute : '';
+}
+
+function compressAvatar(source: Buffer): Buffer | null {
+  try {
+    const image = nativeImage.createFromBuffer(source);
+    if (image.isEmpty()) return null;
+    const size = image.getSize();
+    const longest: number = Math.max(size.width, size.height);
+    const scaled = longest > 1024
+      ? image.resize({
+        width: Math.round((size.width * 1024) / longest),
+        height: Math.round((size.height * 1024) / longest),
+        quality: 'best'
+      })
+      : image;
+
+    let quality: number = 88;
+    let output: Buffer = scaled.toJPEG(quality);
+    while (output.length > 1024 * 1024 && quality > 30) {
+      quality -= 8;
+      output = scaled.toJPEG(quality);
+    }
+    return output.length <= 4 * 1024 * 1024 ? output : null;
+  } catch (e: any) {
+    writeLog(`[头像] 压缩失败: ${e.message}`);
+    return null;
+  }
+}
+
+ipcMain.handle('get-avatar', () => {
+  const absolute: string = resolveStoredAvatar();
+  return { success: true, path: absolute, url: absolute ? pathToFileURL(absolute).href : '' };
+});
+
+ipcMain.handle('reset-avatar', () => {
+  try {
+    const file: string = avatarConfigPath();
+    if (fs.existsSync(file)) fs.unlinkSync(file);
+    writeLog('[头像] 已恢复默认头像');
+    return { success: true };
+  } catch (e: any) {
+    return { success: false, error: e.message };
+  }
+});
+
+ipcMain.handle('choose-avatar', async () => {
+  if (!mainWindow) return { success: false, error: '窗口未就绪' };
+
+  const picked = await dialog.showOpenDialog(mainWindow, {
+    title: '选择头像',
+    properties: ['openFile'],
+    filters: [{ name: '图片', extensions: ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp'] }]
+  });
+  if (picked.canceled || !picked.filePaths[0]) return { success: false, cancelled: true };
+
+  const source: string = picked.filePaths[0];
+  try {
+    const stat = fs.statSync(source);
+    const MB: number = 1024 * 1024;
+    if (stat.size > 32 * MB) {
+      return { success: false, error: '图片超过 32 MB，请先压缩后再选' };
+    }
+
+    let data: Buffer = fs.readFileSync(source);
+    let ext: string = (path.extname(source).slice(1) || 'png').toLowerCase();
+    let compressed: boolean = false;
+
+    if (data.length > MB) {
+      let shouldCompress: boolean = data.length > 4 * MB;
+      if (!shouldCompress) {
+        const answer = await dialog.showMessageBox(mainWindow, {
+          type: 'question',
+          title: '头像文件较大',
+          message: `所选图片有 ${(data.length / MB).toFixed(1)} MB，是否压缩后使用？`,
+          detail: '压缩后会保存为 JPEG，画质会略有下降；保持原图也可以，最大支持 4 MB。',
+          buttons: ['压缩后使用', '保持原图'],
+          defaultId: 0,
+          cancelId: 1,
+          noLink: true
+        });
+        shouldCompress = answer.response === 0;
+      }
+
+      if (shouldCompress) {
+        const small: Buffer | null = compressAvatar(data);
+        if (small) {
+          data = small;
+          ext = 'jpg';
+          compressed = true;
+        } else if (stat.size > 4 * MB) {
+          return { success: false, error: '图片超过 4 MB，且这个格式无法压缩，请换一张图片' };
+        }
+      }
+    }
+
+    if (data.length > 4 * MB) {
+      return { success: false, error: '头像最大支持 4 MB' };
+    }
+
+    const dir: string = path.join(BASE_DIR, AVATAR_DIR_NAME);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    const hash: string = crypto.createHash('sha1').update(data).digest('hex').slice(0, 8);
+    const fileName: string = `${Date.now()}-${hash}.${ext}`;
+    const dest: string = path.join(dir, fileName);
+    fs.writeFileSync(dest, data);
+
+    const relative: string = path.relative(BASE_DIR, dest).split(path.sep).join('/');
+    fs.writeFileSync(avatarConfigPath(), JSON.stringify({ path: relative, updatedAt: Date.now() }, null, 2), 'utf8');
+    writeLog(`[头像] 已保存 ${dest}${compressed ? '（已压缩）' : ''}`);
+
+    return { success: true, path: dest, url: pathToFileURL(dest).href, compressed, size: data.length };
+  } catch (e: any) {
+    writeLog(`[头像] 保存失败: ${e.message}`);
+    return { success: false, error: e.message };
+  }
 });
 
 

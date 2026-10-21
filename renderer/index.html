@@ -76,7 +76,7 @@
             </div>
             
             <div class="skin-container">
-              <div class="skin-wrapper">
+              <div class="skin-wrapper" id="skin-wrapper" role="button" tabindex="0" title="点击更换头像">
                 <img src="skin/Alex.png" alt="Skin" class="skin-image">
               </div>
               <div class="skin-reflection"></div>
@@ -225,10 +225,10 @@
                   
                   <div class="setting-item" id="version-server-ip-container">
                     <div class="setting-info">
-                      <div class="setting-label">服务器IP/域名</div>
-                      <div class="setting-desc">默认要加入的服务器地址</div>
+                      <div class="setting-label">服务器地址</div>
+                      <div class="setting-desc">填写要加入的服务器，例如 mc.caellab.com；必填</div>
                     </div>
-                    <input type="text" id="version-server-ip" class="setting-input" placeholder="caellab.com:25565">
+                    <input type="text" id="version-server-ip" class="setting-input" placeholder="mc.caellab.com" spellcheck="false">
                   </div>
                 </div>
               </div>
@@ -236,15 +236,24 @@
             
             <div id="version-select-panel" class="version-select-panel hidden">
               <div class="version-panel-header">
-                <h3 class="version-panel-title">版本选择</h3>
-                <div id="version-count" class="version-count">加载中...</div>
+                <div class="version-panel-heading">
+                  <h3 class="version-panel-title">版本列表</h3>
+                  <div id="version-count" class="version-count">加载中...</div>
+                </div>
+                <button id="local-install-btn" class="version-import-btn" type="button">
+                  <span class="icon icon-plus"></span>
+                  导入
+                </button>
               </div>
-              <button id="local-install-btn" class="version-import-btn" type="button">导入本地版本</button>
+              <div class="version-search-row">
+                <span class="icon icon-search"></span>
+                <input id="launch-version-search" class="version-search-input" type="text" placeholder="搜索已安装的版本" autocomplete="off" spellcheck="false">
+              </div>
               <div id="launch-version-list" class="version-list-container">
                 <div class="version-list-loading">正在扫描本地版本...</div>
               </div>
               <div id="selected-version-info" class="selected-version-info hidden">
-                <div class="selected-version-label">已选择:</div>
+                <div class="selected-version-label">已选择</div>
                 <div id="selected-version-name" class="selected-version-name">-</div>
               </div>
             </div>
@@ -567,7 +576,7 @@
                 <span class="sidebar-label">外观</span>
               </li>
               <li id="settings-tab-download" class="settings-sidebar-item" data-tab="download">
-                <span class="sidebar-icon">⬇</span>
+                <span class="sidebar-icon icon icon-download"></span>
                 <span class="sidebar-label">下载</span>
               </li>
               <li id="settings-tab-advanced" class="settings-sidebar-item" data-tab="advanced">
@@ -903,6 +912,38 @@
                             <div class="custom-select-option" data-value="180">180%</div>
                           </div>
                         </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="setting-card setting-card--group">
+                    <div class="setting-card-head">
+                      <span class="setting-card-icon"><span class="icon icon-user"></span></span>
+                      <div>
+                        <div class="setting-card-title">头像</div>
+                        <div class="setting-card-desc">启动页左侧显示的头像，也可以直接点击它更换</div>
+                      </div>
+                    </div>
+
+                    <div class="setting-row">
+                      <div class="setting-left">
+                        <div class="setting-label">头像大小</div>
+                        <div class="setting-desc">拖动调整，范围 32–160 像素</div>
+                      </div>
+                      <div class="setting-control setting-control-slider">
+                        <input type="range" id="settings-avatar-size" class="range-input" min="32" max="160" step="2" value="50">
+                        <span class="range-value" id="settings-avatar-size-value">50 px</span>
+                      </div>
+                    </div>
+
+                    <div class="setting-row">
+                      <div class="setting-left">
+                        <div class="setting-label">头像图片</div>
+                        <div class="setting-desc">支持 PNG / JPG / GIF / WebP；超过 1 MB 会询问是否压缩，最大 4 MB</div>
+                      </div>
+                      <div class="setting-control">
+                        <button id="settings-change-avatar" class="settings-action-btn" type="button">选择图片</button>
+                        <button id="settings-reset-avatar" class="settings-action-btn settings-action-btn-secondary" type="button">恢复默认</button>
                       </div>
                     </div>
                   </div>

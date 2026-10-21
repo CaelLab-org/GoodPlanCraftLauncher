@@ -58,6 +58,9 @@ export interface GPCLApi {
   getSettings(): Promise<AppSettings>;
   saveSettings(settings: AppSettings): Promise<void>;
   resetSettings(): Promise<void>;
+  getAvatar(): Promise<{ success: boolean; path: string; url: string }>;
+  chooseAvatar(): Promise<{ success: boolean; cancelled?: boolean; error?: string; url?: string; compressed?: boolean }>;
+  resetAvatar(): Promise<{ success: boolean; error?: string }>;
   playStartupAnimation(): Promise<void>;
   dismissStartupAnimation(): Promise<void>;
   setDeveloperMode(enabled: boolean): Promise<void>;
@@ -138,6 +141,7 @@ export interface AppearanceSettings {
   /** 启动小知识的出现频率：off / rare / half / always */
   tipFrequency: string;
   enableMore: boolean;
+  avatarSize: number;
 }
 
 export interface DownloadSettings {
