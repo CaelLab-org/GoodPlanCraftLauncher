@@ -1,0 +1,343 @@
+<!--
+ Copyright (c) 2026 Yunyun(云云) By 虚舟实验室(CaelLab) / CaelLabGameTS
+ Licensed under the CaelLab BY-SA Code License, Version 3
+ or any later version. https://www.caellab.com/license/cbs-v3.txt
+ Source: https://github.com/CaelLab-org/GoodPlanCraftLauncher
+ Project: https://gamets.caellab.com/gpcl/
+-->
+<!DOCTYPE html>
+<html lang="{{HTML_LANG}}" dir="{{HTML_DIR}}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{META_TITLE}}</title>
+    <meta name="description" content="{{META_DESC}}">
+    <meta name="keywords" content="{{META_KEYWORDS}}">
+    <meta name="author" content="CaelLabGameTS">
+    <meta name="theme-color" content="#f6fafd">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{OG_TITLE}}">
+    <meta property="og:description" content="{{OG_DESC}}">
+    <meta property="og:url" content="{{OG_URL}}">
+    <meta property="og:site_name" content="CaelLabGameTS">
+    {{HREFLANG}}
+    <link rel="icon" type="image/png" href="./icon.png">
+    <link rel="stylesheet" href="./style.css?v=n5q8v2k7">
+    <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="https://gamets.caellab.com" class="logo">
+                <img src="/logo.png" alt="GameTS">
+            </a>
+            <ul class="nav-links">
+                <li>
+                    <div class="dropdown" id="sourceDropdown">
+                        <button class="dropdown-toggle" onclick="toggleDropdown('sourceDropdown')">
+                            <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                            {{NAV_SOURCE}}
+                            <span class="arrow">&#9662;</span>
+                        </button>
+                        <div class="dropdown-menu">
+                            <div class="menu-label">GitHub</div>
+                            <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener">
+                                <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                                GoodPlanCraftLauncher
+                            </a>
+                        </div>
+                    </div>
+                </li>
+                <li class="lang-switch">{{LANG_SELECT}}</li>
+                <li><a href="{{HOME_ANCHOR}}download" class="nav-cta">&#9662; {{NAV_DOWNLOAD}}</a></li>
+            </ul>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="{{NAV_OPEN_MENU}}" aria-expanded="false">&#9776;</button>
+        </div>
+    </nav>
+    <div class="mobile-panel" id="mobilePanel">
+{{MOBILE_PANEL}}
+    </div>
+
+    <section class="hero">
+        <span class="float-pixel" style="top:18%;left:9%;"></span>
+        <span class="float-pixel" style="top:24%;right:11%;animation-delay:-3s;"></span>
+        <span class="float-pixel" style="bottom:30%;left:16%;animation-delay:-6s;width:8px;height:8px;"></span>
+        <span class="float-pixel" style="bottom:38%;right:18%;animation-delay:-1.5s;width:7px;height:7px;"></span>
+        <div class="hero-content">
+            <div class="hero-tags">
+{{HERO_TAGS}}
+            </div>
+            <div class="hero-icon">
+                <img src="./icon.png" alt="{{HERO_ICON_ALT}}">
+            </div>
+            <h1>GoodPlanCraftLauncher</h1>
+            <p class="hero-subtitle">{{HERO_SUBTITLE}}</p>
+            <p class="hero-desc">{{HERO_DESC}}</p>
+            <div class="hero-actions">
+                <a href="#download" class="hero-btn primary">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                    {{HERO_DOWNLOAD}}
+                </a>
+                <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener" class="hero-btn ghost">
+                    <svg width="17" height="17" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                    GitHub
+                </a>
+            </div>
+            <div class="hero-meta">
+{{HERO_META}}
+            </div>
+        </div>
+
+        <div class="window-stage" id="heroWindow">
+            <div class="window">
+                <iframe src="./demo/index.html?fit=1&v=q8m3x2vd&lang={{DEMO_LANG}}" title="{{HERO_IFRAME_TITLE}}" loading="eager"></iframe>
+            </div>
+        </div>
+        <p class="window-note">{{HERO_WINDOW_NOTE}}</p>
+    </section>
+
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">{{FEATURES_TAG}}</div>
+                <h2 class="section-title">{{FEATURES_TITLE}}</h2>
+                <p class="section-desc">{{FEATURES_DESC}}</p>
+            </div>
+            <div class="features-grid">
+{{FEATURES_GRID}}
+            </div>
+        </div>
+    </section>
+
+    <section id="screenshots">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">{{SHOTS_TAG}}</div>
+                <h2 class="section-title">{{SHOTS_TITLE}}</h2>
+                <p class="section-desc">{{SHOTS_DESC}}</p>
+            </div>
+            <div class="shot-gallery">
+{{SHOT_GALLERY}}
+            </div>
+        </div>
+    </section>
+
+    <section class="download" id="download">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">{{DOWNLOAD_TAG}}</div>
+                <h2 class="section-title">{{DOWNLOAD_TITLE}}</h2>
+                <p class="section-desc">{{DOWNLOAD_DESC}}</p>
+            </div>
+            <div class="download-card reveal">
+                <span class="dl-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
+                </span>
+                <div class="download-file">{{INSTALLER_FILE}}</div>
+                <a href="https://dl.caellab.com/file/games/gpcl/{{INSTALLER_FILE}}" class="download-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                    {{DOWNLOAD_BUTTON}}
+                </a>
+                <div class="update-info">
+{{DOWNLOAD_INFO}}
+                </div>
+                <div class="download-extra">
+                    <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener" class="hero-btn ghost">
+                        <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                        {{DOWNLOAD_GITHUB}}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="requirements" id="requirements">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">{{REQ_TAG}}</div>
+                <h2 class="section-title">{{REQ_TITLE}}</h2>
+                <p class="section-desc">{{REQ_DESC}}</p>
+            </div>
+            <div class="req-grid">
+{{REQ_GRID}}
+            </div>
+        </div>
+    </section>
+
+    <section class="opensource" id="opensource">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">{{OS_TAG}}</div>
+                <h2 class="section-title">{{OS_TITLE}}</h2>
+                <p class="section-desc">{{OS_DESC}}</p>
+            </div>
+            <div class="opensource-grid">
+{{OPENSOURCE_GRID}}
+            </div>
+            <details class="license-box reveal">
+                <summary><span class="dot"></span><span class="dot"></span><span class="dot"></span>&nbsp;{{LICENSE_SUMMARY}}</summary>
+                <pre>
+Copyright (c) 2026 Yunyun(云云) By 虚舟实验室(CaelLab) / CaelLabGameTS
+
+Licensed under the CaelLab BY-SA Code License, Version 3
+or any later version. https://www.caellab.com/license/cbs-v3.txt
+
+You are free to:
+  Share            — copy and redistribute the source code and the compiled
+                     output in any medium or format.
+  Adapt            — remix, transform, and build upon the work.
+  Use commercially — for personal, commercial, or non-commercial purposes.
+  Run it privately — including on your own servers, without publishing
+                     your changes.
+
+Under the following terms:
+  Attribution (BY) — keep the copyright notice, credit the author, link to
+                     this license, and state whether you made changes.
+  ShareAlike (SA)  — derivatives must be distributed under this license or a
+                     later version of it, with no additional restrictions.
+  Source code      — if you distribute the work in built form, the complete
+                     corresponding source must be made available.
+  No trademark     — you may not use the "CaelLab" name to endorse your
+                     version.
+
+THE WORK IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
+            </details>
+        </div>
+    </section>
+
+    <section class="history" id="history">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">{{HISTORY_TAG}}</div>
+                <h2 class="section-title">{{HISTORY_TITLE}}</h2>
+                <p class="section-desc">{{HISTORY_DESC}}</p>
+            </div>
+            <div class="timeline">
+{{HOME_TIMELINE}}
+            </div>
+        </div>
+    </section>
+
+    {{FOOTER}}
+
+    <script>
+        var navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', function() {
+            navbar.classList.toggle('scrolled', window.scrollY > 40);
+        }, { passive: true });
+
+        var mobileBtn = document.getElementById('mobileMenuBtn');
+        var mobilePanel = document.getElementById('mobilePanel');
+        mobileBtn.addEventListener('click', function() {
+            var open = mobilePanel.classList.toggle('open');
+            mobileBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+        mobilePanel.querySelectorAll('a').forEach(function(a) {
+            a.addEventListener('click', function() {
+                mobilePanel.classList.remove('open');
+                mobileBtn.setAttribute('aria-expanded', 'false');
+            });
+        });
+
+        var revealObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(function(el) {
+            revealObserver.observe(el);
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+            anchor.addEventListener('click', function(e) {
+                var target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        function toggleDropdown(id) {
+            var dropdown = document.getElementById(id);
+            var isActive = dropdown.classList.contains('active');
+            document.querySelectorAll('.dropdown').forEach(function(d) {
+                d.classList.remove('active');
+            });
+            if (!isActive) {
+                dropdown.classList.add('active');
+            }
+        }
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown').forEach(function(d) {
+                    d.classList.remove('active');
+                });
+            }
+        });
+
+        /* 页面顶上那个窗口就是体验区：进屏幕后自动播一遍启动流程 */
+        var heroFrame = document.querySelector('#heroWindow iframe');
+        var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        function tell(frame, message) {
+            if (!frame || !frame.contentWindow) return;
+            frame.contentWindow.postMessage(message, '*');
+        }
+
+        /* iframe 是异步加载的，等它报 ready 之后再发指令，否则消息会丢 */
+        var heroFrameReady = false;
+        var wantHeroAutoplay = false;
+        window.addEventListener('message', function(e) {
+            var data = e.data || {};
+            if (data.gpcl === 'ready') {
+                heroFrameReady = true;
+                if (wantHeroAutoplay) {
+                    wantHeroAutoplay = false;
+                    setTimeout(function() { tell(heroFrame, { gpcl: 'autoplay' }); }, 400);
+                }
+            }
+        });
+
+        if (heroFrame && !reduced) {
+            var heroSeen = false;
+            new IntersectionObserver(function(entries, obs) {
+                entries.forEach(function(entry) {
+                    if (!entry.isIntersecting || heroSeen) return;
+                    heroSeen = true;
+                    if (heroFrameReady) {
+                        setTimeout(function() { tell(heroFrame, { gpcl: 'autoplay' }); }, 600);
+                    } else {
+                        wantHeroAutoplay = true;
+                    }
+                    obs.disconnect();
+                });
+            }, { threshold: 0.35 }).observe(document.getElementById('heroWindow'));
+        }
+
+        /* 鼠标挪过窗口时给一点极轻的倾斜，键盘和触摸设备不动 */
+        if (window.matchMedia('(hover: hover) and (pointer: fine)').matches && !reduced) {
+            document.querySelectorAll('.window').forEach(function(win) {
+                var stage = win.closest('.window-stage');
+                stage.addEventListener('mousemove', function(e) {
+                    var r = stage.getBoundingClientRect();
+                    var x = (e.clientX - r.left) / r.width - 0.5;
+                    var y = (e.clientY - r.top) / r.height - 0.5;
+                    win.style.setProperty('--tilt-y', (x * 2.4).toFixed(2) + 'deg');
+                    win.style.setProperty('--tilt-x', (-y * 1.8).toFixed(2) + 'deg');
+                });
+                stage.addEventListener('mouseleave', function() {
+                    win.style.setProperty('--tilt-y', '0deg');
+                    win.style.setProperty('--tilt-x', '0deg');
+                });
+            });
+        }
+    </script>
+</body>
+</html>

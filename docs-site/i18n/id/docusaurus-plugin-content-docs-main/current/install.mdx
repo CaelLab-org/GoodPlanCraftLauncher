@@ -1,0 +1,73 @@
+---
+title: Pemasangan dan pembaruan
+description: Mengunduh, memasang, memperbarui, dan menghapus GPCL; game dan pengaturan disimpan di %APPDATA%\gpcl.
+---
+
+GPCL hanya mendukung **Windows 10 / 11 64-bit**. Paket instalasi tidak menyertakan Java; launcher memasangnya sendiri sesuai versi game.
+
+## Unduh
+
+Ambil paket instalasi dari [bagian unduhan situs resmi](https://gamets.caellab.com/gpcl/#download) atau [GitHub Releases](https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases); nama filenya `GPCL-<version>-Setup.exe`.
+
+Jangan mengambil paket instalasi dari penyimpanan cloud, file grup, atau situs unduhan pihak ketiga: file semacam itu bisa sudah diganti, dan launcher juga tidak bisa memverifikasi sumbernya.
+
+## Pasang
+
+1. Klik dua kali paket instalasi, lalu pilih folder pemasangan.
+2. Setelah selesai, jalankan GPCL dari desktop atau menu Start.
+3. Peluncuran pertama akan membuat konfigurasi, log, dan folder game bawaan.
+
+Tidak perlu menghapus versi lama sebelum memperbarui. Program pemasang mengambil alih pemasangan yang ada di tempatnya (termasuk paket NSIS lama), dan shortcut desktop serta data tetap dipertahankan.
+
+## Lokasi game dan pengaturan
+
+Semuanya di `%APPDATA%\gpcl`, bukan di folder pemasangan:
+
+| Path | Isi |
+| --- | --- |
+| `%APPDATA%\gpcl\.minecraft` | Versi game, library, aset, mod, dan save |
+| `%APPDATA%\gpcl\gpcl\config\setting.ini` | Pengaturan launcher |
+| `%APPDATA%\gpcl\gpcl\log` | Log launcher |
+| `%APPDATA%\gpcl\gpcl\updata` | Paket instalasi hasil unduhan pembaruan otomatis dan catatan progresnya |
+
+Kalau folder game diubah, versi dan aset pindah ke lokasi baru, tetapi konfigurasi dan log tetap di `%APPDATA%\gpcl`.
+
+### Mengatur bahasa game otomatis
+
+**Pengaturan → Game → Atur bahasa game otomatis** aktif secara bawaan, dan bahasa yang dipilih secara bawaan adalah Mandarin Sederhana. Sebelum setiap peluncuran, GPCL mengubah `lang:` di `options.txt` yang benar-benar dipakai versi saat ini menjadi nilai yang dipilih, dan baris lainnya dibiarkan apa adanya.
+
+Versi terisolasi menulisnya ke `versions/<version-name>/options.txt`, versi tidak terisolasi ke `options.txt` di akar folder game. Kalau tombol ini dimatikan, pengaturan di dalam game tidak disentuh sama sekali.
+
+## Pembaruan
+
+Dua hal aktif secara bawaan:
+
+- **Periksa pembaruan otomatis**: diperiksa saat mulai; kalau ada versi baru, muncul pemberitahuan di kanan atas.
+- **Pasang pembaruan otomatis**: diunduh diam-diam di latar belakang, tidak memakai halaman unduhan dan tidak mengubah bilah status. Setelah verifikasi lolos, pembaruan dipasang diam-diam saat Anda **keluar dari launcher**.
+
+Lencana bulat di kanan atas menampilkan progres unduhan; klik untuk melihat nomor versi dan isi pembaruan ini. Di sana juga ada "Unduh sekarang"; setelah terpasang, launcher akan terbuka kembali otomatis.
+
+Di **Pengaturan → Tentang**, pemeriksaan atau pemasangan otomatis bisa dimatikan, dan "Periksa pembaruan" juga bisa diklik manual.
+
+Paket pembaruan diverifikasi dengan SHA1 sebelum dipasang; kalau verifikasi gagal, tidak dipasang. Kalau pemasangan terputus di tengah, peluncuran berikutnya menampilkan "Pembaruan sebelumnya belum selesai" dengan opsi mencoba lagi; setelah tiga kali gagal berturut-turut, Anda diarahkan mengunduh ulang paket instalasi dari situs.
+
+:::warning Memperbarui dari 1.5.2 atau lebih lama
+Versi lama belum mengenal parameter pemasangan senyap, jadi pembaruan kali ini masih menampilkan wizard pemasangan lama satu kali. Mulai 1.6.0 semuanya senyap.
+:::
+
+Kalau launcher tidak terbuka setelah pembaruan, periksa dulu log terbaru di `%APPDATA%\gpcl\gpcl\log`, lalu kirim email dengan log tersebut.
+
+## Mengimpor versi lokal
+
+Di panel "Pilih versi" pada halaman peluncuran, klik "Impor versi lokal". Yang bisa diimpor:
+
+- satu folder versi (harus berisi `<version-name>.json`);
+- satu arsip zip atau jar — launcher akan mengekstraknya dan mencari folder yang berisi `<version-name>.json` secara rekursif;
+
+Modpack (yang punya bagian `minecraft` di `manifest.json`) belum bisa diimpor; launcher langsung menolaknya, tidak memasang setengah-setengah.
+
+## Hapus
+
+Hapus GPCL lewat "Aplikasi dan fitur" di Windows. Program penghapus **tidak** menghapus `%APPDATA%\gpcl`, jadi setelah dipasang ulang game dan pengaturan masih ada.
+
+Kalau sudah pasti tidak akan dipakai lagi, seluruh `%APPDATA%\gpcl` bisa dihapus manual. Cadangkan save terlebih dahulu.

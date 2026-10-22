@@ -1,0 +1,59 @@
+---
+title: Java und Arbeitsspeicher
+description: Welche Java-Version zu welcher Minecraft-Version passt, wie GPCL den Arbeitsspeicher automatisch zuweist und wie du ihn anpasst.
+---
+
+GPCL wählt Java passend zur Spielversion und weist den Arbeitsspeicher automatisch zu. In den meisten Fällen musst du nichts von Hand einstellen.
+
+## Java-Versionen
+
+| Minecraft-Version | Benötigtes Java |
+| --- | --- |
+| 1.16.5 und älter | Java 8 |
+| 1.17 – 1.20.4 | Java 17 |
+| 1.20.5 und neuer | Java 21 |
+
+Fehlt beim Start das passende Java, lädt und installiert GPCL es automatisch. Schlägt der Download fehl, wähle unter **Einstellungen → Downloads → Java-Download** einen anderen Mirror und versuche es erneut.
+
+Java liegt im eigenen Verzeichnis von GPCL, beeinflusst andere Java-Installationen des Systems nicht und ändert `JAVA_HOME` nicht.
+
+## Arbeitsspeicher: automatisch
+
+Standard ist „Automatisch“. Die Zuweisung läuft in zwei Schritten:
+
+1. Zuerst werden **30 %** des physischen Arbeitsspeichers geschätzt, auf ganze GB abgerundet und auf **2 – 8 GB** begrenzt;
+2. dann zählt der aktuell verfügbare Speicher: mindestens 1 GB bleibt für das System, gerechnet wird mit mindestens 2 GB, das Ergebnis wird auf 512 MB abgerundet; der kleinere der beiden Werte gilt.
+
+Einige reale Ergebnisse:
+
+| Physischer Speicher | Aktuell verfügbar | Automatische Zuweisung |
+| --- | --- | --- |
+| 16 GB | 8 GB | 4 GB |
+| 16 GB | 3,9 GB | 2,5 GB |
+| 8 GB | 4 GB | 2 GB |
+
+Die Einstellungsseite zeigt belegten und gesamten Systemspeicher sowie den aktuell verfügbaren Wert. Ist wenig verfügbar, senkt die automatische Zuweisung mit und weist darauf hin, zuerst andere Programme zu schließen.
+
+`-Xmx` ist eine Obergrenze, kein sofort belegter Speicher. Die Zuweisung nach dem aktuell verfügbaren Speicher ist daher stabiler als ein fester, sehr großer Wert.
+
+## Arbeitsspeicher: benutzerdefiniert
+
+Reicht der Speicher für ein Modpack oder eine große Modsammlung nicht, wechsle auf „Benutzerdefiniert“ und ziehe den Regler. Lass dem System und anderen Programmen Platz und gib nicht den gesamten physischen Speicher an das Spiel.
+
+Ein `OutOfMemoryError` bedeutet zu wenig Speicher:
+
+1. die Zuweisung eine Stufe erhöhen und erneut versuchen;
+2. reicht das nicht, weniger Mods verwenden;
+3. gleichzeitig speicherhungrige Programme wie den Browser schließen.
+
+## G1GC-Tuning
+
+Unter **Einstellungen → Erweitert → Speicherverwaltung** gibt es das G1GC-Tuning, standardmäßig aus. Sinnvoll ist es nur bei schwankenden FPS und deutlichen GC-Hängern; aktiviert werden gängige G1GC-Parameter ergänzt.
+
+Benutzerdefinierte JVM-Parameter stehen im selben Bereich. Falsche Parameter verhindern den Start des Spiels — ändere sie nur, wenn du sicher bist.
+
+## Arbeitsspeicher vor dem Start optimieren
+
+Ist die Option aktiv, gibt GPCL vor dem Spielstart einen Teil des eigenen Speichers frei. Das betrifft nur den Launcher-Prozess, nicht das laufende Minecraft, und der Anmeldestatus bleibt erhalten.
+
+Auf mechanischen Festplatten kann es dabei kurz hängen; das ist normal.

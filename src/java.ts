@@ -15,6 +15,7 @@ import path from 'path';
 
 import { CACHE_DIR, GAME_DIR, writeLog } from './config';
 import { fetchText } from './download';
+import { t } from './i18n';
 import { mainWindow } from './shell';
 import { completedDownloadFiles, isJavaDownloading, javaDownloadResolve, setCurrentDownloadPath, setCurrentDownloadType, setCurrentDownloadVersion, setIsJavaDownloading, setJavaDownloadReject, setJavaDownloadResolve, setShouldCancelDownload, shouldCancelDownload, totalDownloadFiles } from './state';
 // __IMPORTS_END__
@@ -123,7 +124,7 @@ ipcMain.handle('uninstall-java', async (_: any, javaVersion: string) => {
   try {
     const runtimeDir = getJavaRuntimeDir(javaVersion);
     writeLog(`[Java] 开始卸载 Java ${javaVersion}，目录: ${runtimeDir}`);
-    if (!fs.existsSync(runtimeDir)) return { success: false, error: `Java ${javaVersion} 未安装` };
+    if (!fs.existsSync(runtimeDir)) return { success: false, error: t('ui.java_version_is_not_installed', { version: javaVersion }) };
     fs.rmSync(runtimeDir, { recursive: true, force: true });
     writeLog(`[Java] Java ${javaVersion} 已卸载，目录已删除: ${runtimeDir}`);
     if (mainWindow) mainWindow.webContents.send('java-uninstalled', { javaVersion });
@@ -148,7 +149,7 @@ ipcMain.handle('get-java-download-url', async (_: any, javaVersion: string) => {
     if (fs.existsSync(settingsPath)) settings = JSON.parse(fs.readFileSync(settingsPath, 'utf8'));
     const url = await getJavaDownloadUrl(javaVersion, settings.mirror, settings.customUrl);
     writeLog(`[Java] 获取下载URL: Java ${javaVersion} - ${url}`);
-    if (!url) return { success: false, error: '没有可用的下载源' };
+    if (!url) return { success: false, error: 'No download source is available' };
     return { success: true, url };
   } catch (e: any) { writeLog(`[Java] 获取下载URL失败: ${e.message}`); return { success: false, error: e.message }; }
 });
@@ -291,7 +292,7 @@ setJavaDownloadReject(reject);
           availableVersions: sortedVersions
         });
       } else {
-        reject(new Error('窗口未初始化'));
+        reject(new Error('Window is not initialized'));
       }
     });
     
@@ -358,11 +359,11 @@ export async function downloadAndInstallJava(javaVersion: string): Promise<any> 
     }
 
     if (sources.length === 0) {
-      return { success: false, error: '没有可用的下载源' };
+      return { success: false, error: 'No download source is available' };
     }
     writeLog(`[Java] 候选下载源: ${sources.map(s => s.name).join(' → ')}`);
 
-    let result: any = { success: false, error: '没有可用的下载源' };
+    let result: any = { success: false, error: 'No download source is available' };
     for (let i = 0; i < sources.length; i++) {
       const src = sources[i];
       writeLog(`[Java] 尝试下载源 ${i + 1}/${sources.length}：${src.name} - ${src.url}`);
@@ -416,7 +417,7 @@ setIsJavaDownloading(false);
 setCurrentDownloadVersion(null);
 setCurrentDownloadType(null);
 setCurrentDownloadPath(null);
-      reject(new Error('没有可用的窗口'));
+      reject(new Error('No window is available'));
       return;
     }
 
@@ -457,7 +458,7 @@ setIsJavaDownloading(false);
 setCurrentDownloadVersion(null);
 setCurrentDownloadType(null);
 setCurrentDownloadPath(null);
-          reject(new Error('下载已取消'));
+          reject(new Error('Download cancelled'));
           return;
         }
 
@@ -466,7 +467,7 @@ setIsJavaDownloading(false);
 setCurrentDownloadVersion(null);
 setCurrentDownloadType(null);
 setCurrentDownloadPath(null);
-          reject(new Error('网络连接中断，请检查网络后重试'));
+          reject(new Error('The network connection dropped; check your connection and try again'));
           return;
         }
 
@@ -560,7 +561,7 @@ setCurrentDownloadPath(null);
 
           const javaPath: string | null = findJavaExecutable(runtimeDir);
           if (!javaPath) {
-            reject(new Error('Java运行时安装失败，未找到java.exe'));
+            reject(new Error('Java installation failed: java.exe was not found'));
             return;
           }
           
@@ -587,7 +588,7 @@ setIsJavaDownloading(false);
 setCurrentDownloadVersion(null);
 setCurrentDownloadType(null);
 setCurrentDownloadPath(null);
-        reject(new Error('下载超时'));
+        reject(new Error('Download timed out'));
       }
     }, 600000);
   }).catch((e: any) => {
@@ -693,7 +694,7 @@ ipcMain.handle('check-java', async (_, versionOrJavaVersion: string) => {
       const versionId: string = versionOrJavaVersion;
       const jsonPath: string = path.join(GAME_DIR, 'versions', versionId, versionId + '.json');
       if (!fs.existsSync(jsonPath)) {
-        return { success: false, error: '版本未下载' };
+        return { success: false, error: 'Version is not downloaded' };
       }
       
       const versionData: any = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));

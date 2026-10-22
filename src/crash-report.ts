@@ -14,6 +14,7 @@ import path from 'path';
 import { spawn } from 'child_process';
 
 import { GAME_DIR, LOG_FILE, loadSettings } from './config';
+import { t } from './i18n';
 import { describeVersion } from './mods';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const AdmZip = require('adm-zip');
@@ -456,7 +457,7 @@ export function analyzeCrash(record: CrashRecord): CrashAnalysis {
     if (rule.confidence !== 'high') continue;
     const evidence: string | null = rule.test(ctx);
     if (evidence === null) continue;
-    causes.push({ title: rule.title, detail: rule.detail, evidence: evidence || undefined, confidence: 'high' });
+    causes.push({ title: t(rule.title), detail: t(rule.detail), evidence: evidence || undefined, confidence: 'high' });
     if (causes.length >= 5) break;
   }
 
@@ -466,7 +467,7 @@ export function analyzeCrash(record: CrashRecord): CrashAnalysis {
       if (rule.confidence !== 'suspect') continue;
       const evidence: string | null = rule.test(ctx);
       if (evidence === null) continue;
-      causes.push({ title: rule.title, detail: rule.detail, evidence: evidence || undefined, confidence: 'suspect' });
+      causes.push({ title: t(rule.title), detail: t(rule.detail), evidence: evidence || undefined, confidence: 'suspect' });
       break;
     }
   }
@@ -475,8 +476,8 @@ export function analyzeCrash(record: CrashRecord): CrashAnalysis {
     const suspects: string[] = findSuspectMods(record.gameDir || GAME_DIR, [ctx.crash, ctx.latest, ctx.hs, ctx.output].filter(Boolean).join('\n'));
     if (suspects.length) {
       causes.push({
-        title: '可能是这些 Mod 导致的',
-        detail: '崩溃堆栈里出现了下面这些 Mod。可以从最后一个装上的开始，依次禁用它们试试。这只是线索，不能完全确定。',
+        title: t('ui.possibly_caused_by_these_mods'),
+        detail: t('ui.these_mods_appear_in_the_crash_stack_try_disabling_them_one_by_one_start_2981a7'),
         evidence: suspects.join('\n'),
         confidence: 'suspect'
       });
@@ -485,8 +486,8 @@ export function analyzeCrash(record: CrashRecord): CrashAnalysis {
 
   if (!causes.length && ctx.output.trim().length > 0 && ctx.output.trim().length < 300) {
     causes.push({
-      title: '游戏几乎没有输出就退出了',
-      detail: '这通常是 Java 参数、Java 版本或版本文件的问题。可以先把 JVM 参数恢复默认，再重新下载一次这个版本试试。',
+      title: t('ui.the_game_exited_with_almost_no_output'),
+      detail: t('ui.this_usually_points_to_jvm_arguments_the_java_version_or_version_files_r_551d14'),
       evidence: clip(ctx.output.trim(), 300),
       confidence: 'suspect'
     });
@@ -494,8 +495,8 @@ export function analyzeCrash(record: CrashRecord): CrashAnalysis {
 
   if (!causes.length && !hasAnyLog) {
     causes.push({
-      title: '没有找到可分析的日志',
-      detail: '这次退出没有留下游戏日志或崩溃报告。可以点「查看日志」看一眼，或重新启动一次再看看。',
+      title: t('ui.no_logs_to_analyze'),
+      detail: t('ui.this_exit_left_no_game_log_or_crash_report_open_the_log_or_launch_the_ga_429c46'),
       confidence: 'suspect'
     });
   }
@@ -566,7 +567,7 @@ function listEntries(dir: string, filter?: (name: string) => boolean): { name: s
 
 function parseXmx(args: string[]): string {
   const hit: string | undefined = args.find((arg: string) => /^-Xmx\d+[kKmMgG]?$/.test(arg));
-  return hit ? hit.replace('-Xmx', '') : '未指定';
+  return hit ? hit.replace('-Xmx', '') : t('ui.not_specified');
 }
 
 
@@ -587,10 +588,10 @@ function runCapture(file: string, args: string[], timeoutMs: number): Promise<st
       }, timeoutMs);
       child.stdout?.on('data', (d: any) => { output += d.toString(); });
       child.stderr?.on('data', (d: any) => { output += d.toString(); });
-      child.on('error', (e: any) => { clearTimeout(timer); finish(`${output}(无法执行: ${e.message})`); });
+      child.on('error', (e: any) => { clearTimeout(timer); finish(`${output}${t('ui.could_not_run_error', { error: e.message })}`); });
       child.on('close', () => { clearTimeout(timer); finish(output); });
     } catch (e: any) {
-      finish(`(无法执行: ${e.message})`);
+      finish(t('ui.could_not_run_error', { error: e.message }));
     }
   });
 }
@@ -598,7 +599,7 @@ function runCapture(file: string, args: string[], timeoutMs: number): Promise<st
 
 async function collectJavaInfo(javaPath: string | null): Promise<{ path: string; exists: boolean; size: string; mtime: string; version: string }> {
   if (!javaPath) {
-    return { path: '(未记录)', exists: false, size: '未知', mtime: '未知', version: '未知' };
+    return { path: t('ui.not_recorded'), exists: false, size: t('ui.unknown'), mtime: t('ui.unknown'), version: t('ui.unknown') };
   }
   let exists: boolean = false;
   let size: string = '未知';
@@ -617,8 +618,8 @@ async function collectJavaInfo(javaPath: string | null): Promise<{ path: string;
   }
   const version: string = exists
     ? (await runCapture(probePath, ['-version'], 4000)).replace(/^\uFEFF/, '').trim()
-    : '(文件不存在)';
-  return { path: javaPath, exists, size, mtime, version: version || '未知' };
+    : t('ui.file_does_not_exist');
+  return { path: javaPath, exists, size, mtime, version: version || t('ui.unknown') };
 }
 
 
@@ -645,12 +646,12 @@ async function collectGpuInfo(): Promise<string> {
 function describeDisplays(): string {
   try {
     const displays: any[] = screen.getAllDisplays();
-    if (!displays.length) return '未知';
+    if (!displays.length) return t('ui.unknown');
     return displays.map((display: any): string =>
-      `${display.size.width}×${display.size.height} @ ${display.scaleFactor}x${display.internal ? ' (内置)' : ''}`
+      `${display.size.width}×${display.size.height} @ ${display.scaleFactor}x${display.internal ? t('ui.built_in') : ''}`
     ).join('\n');
   } catch {
-    return '未知';
+    return t('ui.unknown');
   }
 }
 
@@ -670,83 +671,86 @@ async function buildReportText(record: CrashRecord, analysis: CrashAnalysis): Pr
   const shaderpacks: any[] = listEntries(path.join(gameDir, 'shaderpacks'));
   const loaders: string[] = versionInfo && Array.isArray(versionInfo.loaders) && versionInfo.loaders.length
     ? versionInfo.loaders.map((x: string) => x.charAt(0).toUpperCase() + x.slice(1))
-    : ['原版'];
+    : [t('ui.vanilla')];
   const sections: string[] = [];
 
-  sections.push('GoodPlanCraftLauncher 错误报告');
+  sections.push(t('ui.goodplancraftlauncher_error_report'));
   sections.push(''.padEnd(46, '='));
-  sections.push(`生成时间：${formatTime(Date.now())}`);
-  sections.push(`启动器版本：${app.getVersion()}`);
-  sections.push('报告内容：错误分析、运行环境、Java、启动参数、Mod 列表、游戏输出');
+  sections.push(t('ui.generated_time', { time: formatTime(Date.now()) }));
+  sections.push(t('ui.launcher_version_version', { version: app.getVersion() }));
+  sections.push(t('ui.contents_error_analysis_environment_java_launch_arguments_mod_list_game_output'));
   sections.push('');
 
-  sections.push('【一、可能的原因】');
+  sections.push(t('ui.1_possible_causes'));
   if (!analysis.causes.length) {
-    sections.push('没有从日志里找到明确的原因。可以查看下面的「错误摘要」和「游戏输出」，或把整份报告发给帮助你的人。');
+    sections.push(t('ui.no_clear_cause_was_found_in_the_logs_check_the_error_summary_and_game_ou_08b3e6'));
   } else {
-    sections.push('GPCL 根据日志和崩溃报告找到以下线索：');
+    sections.push(t('ui.gpcl_found_these_clues_in_the_log_and_crash_report'));
     sections.push('');
     analysis.causes.forEach((cause: CrashCause, index: number) => {
-      sections.push(`${index + 1}. ${cause.title}${cause.confidence === 'suspect' ? '（推测）' : ''}`);
+      sections.push(`${index + 1}. ${cause.title}${cause.confidence === 'suspect' ? t('（推测）') : ''}`);
       for (const line of cause.detail.split('\n')) sections.push(`   ${line}`);
       if (cause.evidence) {
         const evidenceLines: string[] = cause.evidence.split('\n');
         evidenceLines.forEach((line: string, lineIndex: number) => {
-          sections.push(`${lineIndex === 0 ? '   证据：' : '         '}${line}`);
+          sections.push(`${lineIndex === 0 ? '   ' + t('证据：') : '         '}${line}`);
         });
       }
       sections.push('');
     });
   }
 
-  sections.push('【二、错误摘要】');
-  sections.push(`退出码：${record.exitCode === null ? '未知' : record.exitCode}`);
+  sections.push(t('ui.2_error_summary'));
+  sections.push(t('ui.exit_code_code_2', { code: record.exitCode === null ? t('ui.unknown') : record.exitCode }));
   const reasonText: Record<string, string> = {
-    'exit-code': '异常退出',
-    'crash-report': '生成了崩溃报告',
-    'exit-code-and-crash-report': '异常退出并生成了崩溃报告'
+    'exit-code': t('ui.exited_unexpectedly'),
+    'crash-report': t('ui.a_crash_report_was_generated'),
+    'exit-code-and-crash-report': t('ui.exited_unexpectedly_and_generated_a_crash_report')
   };
-  sections.push(`判定：${reasonText[record.reason] || record.reason || '未知'}`);
-  sections.push(`版本 ID：${record.versionId}`);
-  if (record.versionName) sections.push(`版本名称：${record.versionName}`);
-  sections.push(`玩家名：${record.username || '未知'}`);
-  sections.push(`开始时间：${formatTime(record.startedAt)}`);
-  sections.push(`运行时长：${record.durationSec === null ? '未知' : `${record.durationSec} 秒`}`);
-  sections.push(`崩溃报告：${record.crashReport ? path.basename(record.crashReport) : '无'}`);
+  sections.push(t('ui.reason_reason', { reason: reasonText[record.reason] || record.reason || t('ui.unknown') }));
+  sections.push(t('ui.version_id_id', { id: record.versionId }));
+  if (record.versionName) sections.push(t('ui.version_name_name', { name: record.versionName }));
+  sections.push(t('ui.player_name_2', { name: record.username || t('ui.unknown') }));
+  sections.push(t('ui.started_time', { time: formatTime(record.startedAt) }));
+  sections.push(t('ui.duration_duration', { duration: record.durationSec === null ? t('ui.unknown') : t('ui.seconds_s', { seconds: record.durationSec }) }));
+  sections.push(t('ui.crash_report_file_2', { file: record.crashReport ? path.basename(record.crashReport) : t('ui.none') }));
   sections.push('');
 
-  sections.push('【三、运行环境】');
-  sections.push(`操作系统：${os.type()} ${os.release()} (${os.arch()})`);
-  sections.push(`CPU：${cpus[0]?.model || '未知'} × ${cpus.length}`);
-  sections.push(`内存：总计 ${gb(os.totalmem())} GB / 当前可用 ${gb(os.freemem())} GB`);
-  sections.push('显卡：');
+  sections.push(t('ui.3_environment'));
+  sections.push(t('ui.os_os', { os: `${os.type()} ${os.release()} (${os.arch()})` }));
+  sections.push(t('ui.cpu_model_count', { model: cpus[0]?.model || t('ui.unknown'), count: cpus.length }));
+  sections.push(t('ui.memory_total_gb_total_free_gb_available', { total: gb(os.totalmem()), free: gb(os.freemem()) }));
+  sections.push(t('ui.gpu'));
   sections.push(gpu.split('\n').map((line: string) => `  ${line}`).join('\n'));
-  sections.push('显示器：');
+  sections.push(t('ui.displays'));
   sections.push(describeDisplays().split('\n').map((line: string) => `  ${line}`).join('\n'));
   sections.push(`Electron ${process.versions.electron} / Chromium ${process.versions.chrome} / Node ${process.versions.node}`);
   sections.push('');
 
-  sections.push('【四、Java】');
-  sections.push(`路径：${javaInfo.path}`);
-  sections.push(`文件存在：${javaInfo.exists ? '是' : '否'}（${javaInfo.size}，修改时间 ${javaInfo.mtime}）`);
-  sections.push(`分配内存：${parseXmx(record.args)}`);
+  sections.push(t('ui.4_java'));
+  sections.push(t('ui.path_path', { path: javaInfo.path }));
+  sections.push(t('ui.exists_exists_size_modified_mtime', { exists: javaInfo.exists ? t('ui.yes') : t('ui.no'), size: javaInfo.size, mtime: javaInfo.mtime }));
+  sections.push(t('ui.allocated_memory_memory', { memory: parseXmx(record.args) }));
   sections.push('java -version：');
   sections.push(javaInfo.version.split('\n').map((line: string) => `  ${line}`).join('\n'));
   sections.push('');
 
-  sections.push('【五、游戏与版本】');
-  sections.push(`版本 ID：${record.versionId}`);
-  sections.push(`Minecraft：${versionInfo?.mcVersion || record.versionId}`);
-  sections.push(`Mod 加载器：${loaders.join(' / ')}`);
-  sections.push(`OptiFine：${versionInfo?.hasOptiFine ? '是' : '否'}`);
-  sections.push(`版本隔离：${versionInfo?.isolated ? '是' : '否'}`);
-  sections.push(`游戏目录：${gameDir}`);
-  sections.push(`Mod 数量：${mods.filter((mod: any) => !mod.name.endsWith('.disabled')).length}（已禁用 ${mods.filter((mod: any) => mod.name.endsWith('.disabled')).length}）`);
+  sections.push(t('ui.5_game_and_version'));
+  sections.push(t('ui.version_id_id', { id: record.versionId }));
+  sections.push(t('ui.minecraft_version', { version: versionInfo?.mcVersion || record.versionId }));
+  sections.push(t('ui.mod_loaders_loaders', { loaders: loaders.join(' / ') }));
+  sections.push(t('ui.optifine_value', { value: versionInfo?.hasOptiFine ? t('ui.yes') : t('ui.no') }));
+  sections.push(t('ui.version_isolation_value', { value: versionInfo?.isolated ? t('ui.yes') : t('ui.no') }));
+  sections.push(t('ui.game_directory_dir', { dir: gameDir }));
+  sections.push(t('ui.mods_enabled_disabled_disabled', {
+    enabled: mods.filter((mod: any) => !mod.name.endsWith('.disabled')).length,
+    disabled: mods.filter((mod: any) => mod.name.endsWith('.disabled')).length
+  }));
   sections.push('');
 
-  sections.push('【六、Mod 列表】');
+  sections.push(t('ui.6_mod_list'));
   if (!mods.length) {
-    sections.push('（没有检测到 Mod）');
+    sections.push(t('ui.no_mods_detected'));
   } else {
     for (const mod of mods) {
       sections.push(`- ${mod.name}  ${formatSize(mod.size)}  ${formatTime(mod.mtime)}`);
@@ -754,51 +758,51 @@ async function buildReportText(record: CrashRecord, analysis: CrashAnalysis): Pr
   }
   sections.push('');
 
-  sections.push('【七、资源包 / 光影】');
-  if (!resourcepacks.length) sections.push('资源包：无');
+  sections.push(t('ui.7_resource_packs_shaders'));
+  if (!resourcepacks.length) sections.push(t('ui.resource_packs_none'));
   else {
-    sections.push('资源包：');
-    for (const item of resourcepacks) sections.push(`- ${item.name}${item.dir ? ' (文件夹)' : `  ${formatSize(item.size)}`}`);
+    sections.push(t('ui.resource_packs_2'));
+    for (const item of resourcepacks) sections.push(`- ${item.name}${item.dir ? t('ui.folder') : `  ${formatSize(item.size)}`}`);
   }
-  if (!shaderpacks.length) sections.push('光影：无');
+  if (!shaderpacks.length) sections.push(t('ui.shaders_none'));
   else {
-    sections.push('光影：');
-    for (const item of shaderpacks) sections.push(`- ${item.name}${item.dir ? ' (文件夹)' : `  ${formatSize(item.size)}`}`);
+    sections.push(t('ui.shaders_2'));
+    for (const item of shaderpacks) sections.push(`- ${item.name}${item.dir ? t('ui.folder') : `  ${formatSize(item.size)}`}`);
   }
   sections.push('');
 
   const effectiveMemory: string = settings?.game?.memory === 'auto'
-    ? `自动（本次实际 ${parseXmx(record.args)}）`
-    : `${settings?.game?.memory || '未知'} GB`;
-  sections.push('【八、启动器设置（相关项）】');
-  sections.push(`内存分配：${effectiveMemory}`);
-  sections.push(`Java 路径设置：${settings?.game?.javaPath || '自动选择'}`);
-  sections.push(`JVM 参数：${settings?.game?.jvmArgs || '无'}`);
-  sections.push(`GC 预设：${settings?.game?.gcPreset || 'default'}`);
-  sections.push(`游戏目录设置：${settings?.download?.installDir || '默认'}`);
-  sections.push(`文件源：${settings?.download?.fileSource || 'auto'}`);
+    ? t('ui.automatic_memory_used_this_session', { memory: parseXmx(record.args) })
+    : `${settings?.game?.memory || t('ui.unknown')} GB`;
+  sections.push(t('ui.8_launcher_settings_relevant'));
+  sections.push(t('ui.memory_allocation_memory', { memory: effectiveMemory }));
+  sections.push(t('ui.java_path_path', { path: settings?.game?.javaPath || t('ui.automatic_3') }));
+  sections.push(t('ui.jvm_arguments_args', { args: settings?.game?.jvmArgs || t('ui.none') }));
+  sections.push(t('ui.gc_preset_preset', { preset: settings?.game?.gcPreset || 'default' }));
+  sections.push(t('ui.game_directory_setting_dir', { dir: settings?.download?.installDir || t('ui.default') }));
+  sections.push(t('ui.file_source_source', { source: settings?.download?.fileSource || 'auto' }));
   sections.push('');
 
-  sections.push('【九、启动参数（accessToken 已打码）】');
+  sections.push(t('ui.9_launch_arguments_accesstoken_redacted'));
   if (record.args.length) {
     record.args.forEach((arg: string) => sections.push(`  ${arg}`));
   } else {
-    sections.push('（没有记录到启动参数）');
+    sections.push(t('ui.no_launch_arguments_recorded'));
   }
   sections.push('');
 
-  sections.push('【十、游戏输出（最后 200 行）】');
+  sections.push(t('ui.10_game_output_last_200_lines'));
   const outputLines: string[] = (record.output || '').replace(/^\uFEFF/, '').split(/\r?\n/).filter((line: string) => line.length > 0);
   if (!outputLines.length) {
-    sections.push('（没有捕获到游戏输出）');
+    sections.push(t('ui.no_game_output_captured'));
   } else {
     for (const line of outputLines.slice(-200)) sections.push(line);
   }
   sections.push('');
 
-  sections.push('【十一、日志里的错误行（最后 20 条）】');
+  sections.push(t('ui.11_error_lines_in_the_log_last_20'));
   if (!analysis.errorLines.length) {
-    sections.push('（没有匹配到典型错误行）');
+    sections.push(t('ui.no_typical_error_lines_found'));
   } else {
     analysis.errorLines.forEach((line: string) => sections.push(`  ${line}`));
   }
@@ -813,7 +817,7 @@ function readLogForExport(file: string, maxBytes: number): string {
     const stat: fs.Stats = fs.statSync(file);
     if (!stat.isFile() || stat.size === 0) return '';
     if (stat.size <= maxBytes) return fs.readFileSync(file, 'utf8').replace(/^\uFEFF/, '');
-    return `（文件过大，以下为最后 ${formatSize(maxBytes)}）\n${readTail(file, maxBytes)}`;
+    return t('ui.file_too_large_showing_the_last_size', { size: formatSize(maxBytes) }) + `\n${readTail(file, maxBytes)}`;
   } catch {
     return '';
   }

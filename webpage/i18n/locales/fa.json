@@ -1,0 +1,206 @@
+{
+  "meta": {
+    "title": "GoodPlanCraftLauncher - یک لانچر سبک و کارآمد Minecraft - CaelLabGameTS",
+    "description": "GoodPlanCraftLauncher یک لانچر ساده و کارآمد Minecraft است با ورود Microsoft و آفلاین، مدیریت نسخه‌ها و نصب مودهای Forge/NeoForge/Fabric/OptiFine، تا با یک کلیک وارد دنیای مکعبی شوید. متن‌باز و رایگان.",
+    "keywords": "GoodPlanCraftLauncher,لانچر Minecraft,لانچر MC,Minecraft Java Edition,CaelLab,متن‌باز",
+    "ogTitle": "GoodPlanCraftLauncher - لانچر سبک و کارآمد Minecraft",
+    "ogDescription": "سبک · کارآمد · متن‌باز. ورود Microsoft و آفلاین، مدیریت نسخه‌ها و نصب یک‌کلیکی Forge/NeoForge/Fabric/OptiFine."
+  },
+  "historyMeta": {
+    "title": "تاریخچه تغییرات - GoodPlanCraftLauncher - CaelLabGameTS",
+    "description": "تاریخچه تغییرات و دانلود نصب‌کننده برای همه نسخه‌های GoodPlanCraftLauncher: از 1.0.0 تا آخرین نسخه، همه تغییرات در این صفحه است.",
+    "ogTitle": "تاریخچه تغییرات - GoodPlanCraftLauncher",
+    "ogDescription": "یادداشت‌های انتشار و دانلود نصب‌کننده برای هر نسخه."
+  },
+  "nav": {
+    "source": "منبع",
+    "language": "زبان",
+    "download": "دانلود v{version}",
+    "mobileGitHub": "منبع GitHub",
+    "openMenu": "باز کردن منو"
+  },
+  "hero": {
+    "tags": [
+      "متن‌باز",
+      "رایگان",
+      "لانچر Minecraft"
+    ],
+    "subtitle": "سبک · کارآمد · متن‌باز",
+    "desc": "لانچری برای Minecraft نوشته‌شده برای Windows: ورود Microsoft و آفلاین، مدیریت نسخه‌ها و نصب یک‌کلیکی Forge / Fabric / OptiFine. وقتی بازی کرش می‌کند، دلیلش را می‌گوید، نه فقط یک کادر خالی.",
+    "download": "همین حالا دانلود کنید",
+    "versionLabel": "نسخه",
+    "updatedLabel": "به‌روزرسانی",
+    "platformLabel": "پلتفرم",
+    "platform": "Windows 10+",
+    "iframeTitle": "رابط GoodPlanCraftLauncher",
+    "windowNote": "پنجره بالا <b>قابل کلیک</b> است — این خود رابط لانچر است که داخل صفحه وب اجرا می‌شود.",
+    "iconAlt": "آیکون GoodPlanCraftLauncher"
+  },
+  "features": {
+    "tag": "ویژگی‌ها",
+    "title": "ویژگی‌های اصلی",
+    "desc": "ابزارهای کاربردی برای بازیکنان، هر کدام برای اینکه سریع‌تر وارد بازی شوید",
+    "items": [
+      {
+        "title": "دو حالت ورود",
+        "desc": "ورود Microsoft و آفلاین، قابل تغییر در هر زمان؛ حالت آفلاین نیازی به تأیید آنلاین ندارد."
+      },
+      {
+        "title": "دانلود مود یکپارچه",
+        "desc": "در Modrinth وCurseForge جستجو کنید و مودها، شیدرها یا بسته‌های منابع را در پوشه‌ای که نسخه انتخاب‌شده واقعاً استفاده می‌کند نصب کنید."
+      },
+      {
+        "title": "چهار لودر مود",
+        "desc": "Forge، NeoForge، Fabric و OptiFine از منابع رسمی نصب می‌شوند و نسخه Java ابتدا بررسی می‌شود."
+      },
+      {
+        "title": "۲۵ زبان رابط",
+        "desc": "در اولین اجرا از زبان سیستم پیروی می‌کند و هر زمان از تنظیمات قابل تغییر است."
+      },
+      {
+        "title": "مدیریت خودکار نسخه‌ها",
+        "desc": "دانلود، نصب و تغییر نسخه‌های Minecraft با یک کلیک، با مدیریت خودکار کتابخانه‌ها و فایل‌های بازی."
+      },
+      {
+        "title": "شروع سریع",
+        "desc": "مسیر اجرای سبک و کش، تا کلیک کنید و بازی کنید، نه اینکه منتظر بمانید."
+      },
+      {
+        "title": "مدیریت محیط اجرای Java",
+        "desc": "محیط اجرای Java را خودکار تشخیص و نصب می‌کند؛ منبع دانلود را می‌توان روی Tsinghua، دانشگاه نانجینگ، Huawei Cloud یا منبع رسمی گذاشت و در صورت خطا به منبع بعدی می‌رود."
+      },
+      {
+        "title": "پشتیبانی از پوسته",
+        "desc": "پشتیبانی کامل از حالت روشن و تاریک، با مقیاس رابط قابل تنظیم برای ظاهری یکدست."
+      },
+      {
+        "title": "به‌روزرسانی و نگهداری خودکار",
+        "desc": "بررسی به‌روزرسانی داخلی و پاکسازی خودکار قابل تنظیم لاگ‌ها، تا لانچر در طول زمان سبک بماند."
+      },
+      {
+        "title": "اعلان کرش و گزارش خطا",
+        "desc": "وقتی بازی غیرعادی بسته می‌شود دلیل را توضیح می‌دهد و می‌تواند با یک کلیک گزارش خطا صادر کند (گزارش کرش + لاگ‌ها + اطلاعات سیستم)."
+      },
+      {
+        "title": "پنل اجرا",
+        "desc": "پس از اجرا، پنلی در سمت راست نسخه، PID، زمان اجرا و مصرف حافظه را نشان می‌دهد و می‌تواند بازی را در هر لحظه ببندد."
+      },
+      {
+        "title": "عنوان دلخواه پنجره",
+        "desc": "عنوان پنجره بازی را خودتان بنویسید، با واژه‌های جادویی مثل {mc_version} و {time}."
+      }
+    ]
+  },
+  "shots": {
+    "tag": "تصاویر",
+    "title": "تصاویر واقعی",
+    "desc": "پنجره بالای صفحه بازسازی وب رابط لانچر است و بدون نصب چیزی قابل کلیک است. چهار تصویر زیر لانچر در حال اجرا روی Windows است، بدون ویرایش.",
+    "items": [
+      {
+        "alt": "صفحه اجرای GoodPlanCraftLauncher",
+        "caption": "صفحه اجرا · نسخه را انتخاب کنید، نام بازیکن بگذارید، بازی را شروع کنید"
+      },
+      {
+        "alt": "صفحه دانلود GoodPlanCraftLauncher",
+        "caption": "صفحه دانلود · نسخه‌های بازی، مودها، شیدرها، بسته‌های منابع و مودپک‌ها"
+      },
+      {
+        "alt": "تنظیمات بازی GoodPlanCraftLauncher",
+        "caption": "تنظیمات · حافظه بازی، حالت پنجره، عنوان پنجره و واژه‌های جادویی"
+      },
+      {
+        "alt": "تنظیمات ظاهر GoodPlanCraftLauncher",
+        "caption": "تنظیمات · زبان، سبک رابط، پوسته و مقیاس"
+      }
+    ]
+  },
+  "download": {
+    "tag": "دانلود",
+    "title": "همین حالا دانلود کنید",
+    "desc": "پلتفرم خود را انتخاب کنید و ماجراجویی مکعبی را شروع کنید",
+    "button": "دنیای مکعبی را روشن کن!",
+    "updatedLabel": "به‌روزرسانی",
+    "platformLabel": "پلتفرم",
+    "licenseLabel": "مجوز",
+    "platform": "Windows 10 64-bit",
+    "license": "متن‌باز، رایگان",
+    "github": "مشاهده در GitHub"
+  },
+  "requirements": {
+    "tag": "سیستم",
+    "title": "پیش‌نیازهای سیستم",
+    "desc": "کم، اما دانستنش لازم است",
+    "items": [
+      {
+        "label": "سیستم‌عامل",
+        "text": "Windows 10 64-bit (1709+)؛ Windows 11 هم کار می‌کند"
+      },
+      {
+        "label": "محیط اجرای Java",
+        "text": "به‌صورت خودکار توسط لانچر نصب می‌شود؛ توصیه می‌شود نصب‌های اضافی یا متضاد Java روی سیستم پاک شوند"
+      },
+      {
+        "label": "فضای ذخیره‌سازی",
+        "text": "حداقل 90 MB فضای آزاد برای خود لانچر (بدون فایل‌های بازی)"
+      },
+      {
+        "label": "حافظه",
+        "text": "توصیه می‌شود 2 GB یا بیشتر حافظه آزاد باشد"
+      }
+    ]
+  },
+  "openSource": {
+    "tag": "متن‌باز",
+    "title": "متن‌باز و مشارکت",
+    "desc": "GPCL پروژه‌ای 100% متن‌باز است و منبعش روی GitHub میزبانی می‌شود. PRها و پیشنهادها در <a href=\"https://forum.xmuer.online/\" target=\"_blank\">انجمن</a> خوش‌آمدند، تا با هم لانچر بهتری برای Minecraft بسازیم.",
+    "items": [
+      {
+        "title": "مجوز",
+        "desc": "تحت CaelLab BY-SA Code License، نسخه 3 (یا هر نسخه بعدی) منتشر شده است. می‌توانید آزادانه استفاده، تغییر و بازتوزیع کنید؛ نسخه‌های تغییرداده باید همان مجوز متن‌باز را نگه دارند. صفحه پروژه: <a href=\"https://gamets.caellab.com/gpcl/\">gamets.caellab.com/gpcl</a>.",
+        "action": "متن کامل مجوز را بخوانید →"
+      },
+      {
+        "title": "مشارکت",
+        "desc": "مخزن اصلی روی GitHub است و issueها و PRها همان‌جا مدیریت می‌شوند. گزارش باگ، پیشنهاد ویژگی و مشارکت کد خوش‌آمد است.",
+        "action": "رفتن به GitHub →"
+      }
+    ],
+    "licenseSummary": "خلاصه مجوز — CaelLab BY-SA Code License v3"
+  },
+  "history": {
+    "tag": "تاریخچه",
+    "title": "تاریخچه نسخه‌ها",
+    "desc": "نسخه‌های قبلی و تغییراتشان",
+    "older": "نمایش {n} نسخه قدیمی‌تر",
+    "more": "مشاهده تاریخچه کامل تغییرات (همه {total} نسخه و نصب‌کننده‌ها) →",
+    "page": {
+      "back": "← بازگشت به خانه",
+      "tag": "تاریخچه تغییرات",
+      "heading": "تاریخچه تغییرات",
+      "intro": "از 1.0.0 تا آخرین انتشار، همه نسخه‌ها — چه چیزی تغییر کرده و آیا قابل دانلود است — در این صفحه است.",
+      "note": "برای 1.3.2 و پیش‌تر نصب‌کننده‌ای نگه داشته نشده؛ به‌روزرسان داخلی نسخه‌های قدیمی ممکن است دیگر کار نکند، بنابراین برای استفاده روزانه نصب آخرین نسخه توصیه می‌شود.",
+      "indexLabel": "فهرست نسخه‌ها",
+      "latest": "آخرین",
+      "download": "دانلود v{version}",
+      "unavailable": "برای این نسخه نصب‌کننده‌ای نگه داشته نشده",
+      "fileNote": "{file} · {size} · Windows 64-bit"
+    }
+  },
+  "footer": {
+    "brand": "تیمی مستقل برای توسعه بازی و ابزار در CaelLab. کاویدن مرزهای آینده، با نوآوری بی‌کران.",
+    "projects": "پروژه‌ها",
+    "community": "جامعه کاربران",
+    "openSource": "متن‌باز",
+    "help": "مرکز راهنما",
+    "changelog": "تاریخچه تغییرات",
+    "forum": "انجمن",
+    "license": "مجوز",
+    "copyright": "&copy; 2026 GameTS by <a href=\"https://www.caellab.com/\" target=\"_blank\" class=\"footer-inline-link\">CaelLab</a>. کلیه حقوق محفوظ است. صفحه پروژه: <a href=\"https://gamets.caellab.com/gpcl/\" class=\"footer-inline-link\">gamets.caellab.com/gpcl</a>",
+    "disclaimer": "GoodPlanCraftLauncher یک ابزار متن‌باز شخص ثالث است و هیچ وابستگی رسمی به <a href=\"https://www.minecraft.net/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Mojang Studios</a>، <a href=\"https://www.microsoft.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Microsoft</a>، <a href=\"https://www.xbox.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Xbox</a> ندارد. Minecraft علامت تجاری Mojang Studios است؛ استفاده از این لانچر به مجوز معتبر Minecraft نیاز دارد.",
+    "licenseLine": "مجوز متن‌باز: <a href=\"https://www.caellab.com/license/cbs-v3\" target=\"_blank\" class=\"footer-inline-link\">CaelLab BY-SA Code License v3</a> | متن‌باز در <a href=\"https://github.com/CaelLab-org/GoodPlanCraftLauncher\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">GitHub</a>"
+  },
+  "labels": {
+    "platform": "Windows 64-bit",
+    "github": "GitHub"
+  }
+}

@@ -1,0 +1,70 @@
+---
+title: Fallos del juego
+slug: /mc-game
+description: Exportar el informe de errores, leer los registros y diagnosticar fallos de Minecraft según el síntoma.
+---
+
+La ventana de fallo por sí sola normalmente no dice la causa. GPCL lee primero los registros y da pistas; después sigue este orden.
+
+:::tip Haz primero una cosa
+Pulsa «Exportar informe de errores» en la ventana de fallo y guarda el zip. El informe empieza con el análisis de GPCL y sigue con la lista de mods, Java, parámetros de inicio y todos los registros; el diagnóstico se apoya casi siempre en él.
+:::
+
+## 1. Mira primero el análisis de GPCL
+
+La ventana muestra 1–2 pistas encontradas en los registros, por ejemplo «Memoria insuficiente» o «No se superó la comprobación de dependencias o compatibilidad de mods». «Ver detalles» muestra todas las pistas, las líneas de registro correspondientes y la información del fallo.
+
+Estas conclusiones salen de coincidencias de palabras clave y solo indican una dirección. Cuando el registro da datos más concretos (qué dependencia falta, por ejemplo), aparecen en las pruebas.
+
+## 2. Exporta el informe de errores
+
+El botón está en la ventana de fallo. Elige una ubicación y GPCL empaqueta:
+
+- `error-report.txt`: análisis, resumen del error, sistema / tarjeta gráfica / Java, lista de mods, paquetes de recursos y shaders, parámetros de inicio, salida del juego y líneas de error de los registros;
+- `crash-reports/`: los informes de fallo generados por este fallo;
+- `logs/`: `latest.log` y `debug.log` (si son muy grandes, solo el final);
+- `jvm-crash/`: los `hs_err_pid*.log` que escribe la propia JVM (si hay un fallo de la JVM, por ejemplo por el controlador gráfico);
+- `launcher-log.txt`: registros del lanzador;
+- `game-output.txt`: salida estándar y de error del proceso del juego en esta ejecución.
+
+El `--accessToken` y el nombre de usuario del sistema ya están enmascarados en el informe, puedes enviarlo tal cual. No envíes solo una captura de la ventana de fallo.
+
+## 3. Mira tú mismo los registros
+
+«Ver registros» abre la salida del proceso del juego. Fíjate sobre todo en el final y busca estas palabras:
+
+| Palabra | Suele significar |
+| --- | --- |
+| `Exception`, `Caused by` | La excepción real suele estar detrás del primer `Caused by` |
+| `OutOfMemoryError` | La memoria asignada no basta |
+| `UnsupportedClassVersionError` | La versión de Java no coincide con la del juego |
+| `NoSuchMethodError`, `ClassNotFoundException` | El mod no coincide con la versión del juego o del cargador, o falta una dependencia |
+| `GLFW error` | Problema del controlador gráfico o del soporte de OpenGL |
+
+## 4. Causas habituales
+
+| Síntoma | Causa habitual | Qué hacer |
+| --- | --- | --- |
+| Sale al arrancar, `UnsupportedClassVersionError` en el registro | Versión de Java incorrecta | Deja que GPCL añada Java; o cambia el espejo en los ajustes y reinstala |
+| Se cuelga o se cierra al cargar, `OutOfMemoryError` | Falta memoria o hay demasiados mods | Ajustes → Juego → Asignación de memoria, subir; no pasar de la memoria física |
+| Fallo al cargar mods, aparece un nombre de mod en el registro | Versión del mod incorrecta, dependencia que falta o conflicto entre dos mods | Prueba primero solo con ese mod; comprueba la versión de MC y de cargador que admite |
+| Se cierra antes de aparecer la ventana, `GLFW error` | Controlador gráfico antiguo o falta de OpenGL | Actualiza el controlador; en portátiles comprueba que el juego usa la gráfica dedicada |
+| Te expulsan del servidor, `Invalid session` | Sesión premium caducada o cuenta sin licencia para esa versión | Vuelve a iniciar sesión premium; comprueba que la cuenta posee esa versión |
+| Fallo al entrar en un mundo o al cargar paquetes | Partida, paquete de recursos o de shaders dañado | Prueba con un mundo nuevo; haz copia de la partida antes de tocarla |
+| Fallo al arrancar con Fabric, falta `fabric-api` | No está instalado Fabric API | Marca «Instalar también Fabric API» al reinstalar Fabric, o instálalo a mano |
+
+## 5. Descarta primero estas tres cosas
+
+1. **Quita todos los mods, paquetes de recursos y shaders** y arranca una vez sin nada. Si entra, el problema está en los mods.
+2. **Arranca una versión vanilla**. Si entra, el problema es la versión actual o su combinación de mods.
+3. **Crea un mundo nuevo**. Si entra, la partida anterior está dañada.
+
+## 6. Si sigue sin funcionar
+
+Escribe a [gamets@caellab.com](mailto:gamets@caellab.com) con el informe de errores exportado y:
+
+- versión del lanzador, versión de Minecraft, versión del cargador;
+- qué mods están instalados (mejor con número de versión);
+- qué hiciste antes del fallo.
+
+Decir solo «se cierra al arrancar» no ayuda a localizarlo; los registros del informe son la clave.

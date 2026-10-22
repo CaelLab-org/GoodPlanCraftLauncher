@@ -1,0 +1,59 @@
+---
+title: Java dan memori
+description: Padanan versi Java, cara GPCL memperuntukkan memori secara automatik, dan cara melaraskan apabila memori tidak cukup.
+---
+
+GPCL memilih Java secara automatik mengikut versi permainan, dan juga memperuntukkan memori berdasarkan memori komputer. Dalam kebanyakan kes, pelarasan manual tidak diperlukan.
+
+## Padanan versi Java
+
+| Versi Minecraft | Java yang diperlukan |
+| --- | --- |
+| 1.16.5 dan lebih lama | Java 8 |
+| 1.17 – 1.20.4 | Java 17 |
+| 1.20.5 dan seterusnya | Java 21 |
+
+Jika Java yang sepadan tiada semasa pelancaran, GPCL akan memuat turun dan memasangnya secara automatik. Jika muat turun gagal, pergi ke **Tetapan → Muat turun → Muat turun Java** dan tukar sumber cermin, kemudian cuba lagi.
+
+Java dipasang dalam direktori GPCL sendiri; ia tidak akan menjejaskan Java lain dalam sistem dan tidak akan mengubah `JAVA_HOME` sistem.
+
+## Memori: automatik
+
+Lalai ialah "Automatik". Logik peruntukan terbahagi kepada dua langkah:
+
+1. Anggarkan **30%** memori fizikal dahulu, bundarkan ke bawah kepada GB, dan hadkan kepada **2 – 8 GB**;
+2. Kemudian lihat memori tersedia semasa: simpan sekurang-kurangnya 1 GB untuk sistem, kira minimum 2 GB, bundarkan hasilnya ke bawah kepada 512 MB, dan ambil nilai yang lebih kecil antara keduanya.
+
+Beberapa keputusan sebenar:
+
+| Memori fizikal | Tersedia semasa | Peruntukan automatik |
+| --- | --- | --- |
+| 16 GB | 8 GB | 4 GB |
+| 16 GB | 3.9 GB | 2.5 GB |
+| 8 GB | 4 GB | 2 GB |
+
+Halaman tetapan menunjukkan memori sistem yang digunakan / jumlah dan nilai tersedia semasa. Apabila memori tersedia terhad, peruntukan automatik akan turun dan mencadangkan anda menutup beberapa program dahulu.
+
+`-Xmx` ialah had atas, bukan diambil penuh sebaik sahaja dimulakan. Jadi memperuntukkan berdasarkan memori tersedia semasa adalah lebih stabil daripada memberi nilai yang sangat besar secara tetap.
+
+## Memori: tersuai
+
+Apabila pek mod atau pek mod besar tidak mencukupi, tukar ke "Tersuai" dan seret peluncur. Tinggalkan ruang untuk sistem dan program lain; jangan peruntukkan semua memori fizikal kepada permainan.
+
+`OutOfMemoryError` bermaksud memori tidak mencukupi:
+
+1. Naikkan peruntukan satu tahap dan cuba lagi;
+2. Jika masih tidak berjaya, kurangkan mod;
+3. Tutup program yang menggunakan banyak memori seperti pelayar pada masa yang sama.
+
+## Penalaan G1GC
+
+**Tetapan → Lanjutan → Pengurusan memori** mengandungi penalaan G1GC, dimatikan secara lalai. Hanya disyorkan untuk didayakan apabila terdapat turun naik FPS atau tersekat GC yang jelas; selepas didayakan, satu set parameter G1GC biasa akan ditambahkan.
+
+Parameter JVM tersuai juga berada dalam blok yang sama. Parameter yang salah akan menyebabkan permainan tidak dapat dimulakan terus; jangan ubah jika tidak pasti.
+
+## Optimumkan memori sebelum melancarkan
+
+Selepas didayakan, GPCL akan mengosongkan sebahagian memori yang digunakannya sebelum melancarkan permainan. Ia hanya membersihkan proses pelancar sendiri, tidak akan menyentuh Minecraft yang sedang berjalan, dan tidak akan menghapuskan status log masuk.
+
+Pada cakera keras mekanikal, langkah ini mungkin menyebabkan tersekat seketika; ini adalah normal.

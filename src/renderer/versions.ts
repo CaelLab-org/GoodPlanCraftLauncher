@@ -8,6 +8,7 @@
 
 
 // __IMPORTS_BEGIN__
+import { t } from '../i18n';
 import { detailBackBtn, detailDownloadBtn, escapeHtml, icon, setStatus, showToast, versionCountLabel, versionDetailPage, versionListContainer, versionListSection, versionSelect } from './dom';
 import { startDownload } from './launch';
 // __IMPORTS_END__
@@ -29,7 +30,7 @@ export async function loadVersions(silent: boolean = false): Promise<void> {
       
       updateLaunchButtonState(false);
     } else {
-      if (!silent) setStatus(`发现 ${versions.length} 个已安装版本`);
+      if (!silent) setStatus(t('ui.count_installed_versions_found', { count: versions.length }));
       
       updateLaunchButtonState(true);
     }
@@ -39,7 +40,7 @@ export async function loadVersions(silent: boolean = false): Promise<void> {
       return;
     }
 
-    versionSelect.innerHTML = '<option value="">请选择版本</option>';
+    versionSelect.innerHTML = `<option value="">${t('ui.select_a_version')}</option>`;
 
     if (!versions || versions.length === 0) {
       const opt: HTMLOptionElement = document.createElement('option');
@@ -68,7 +69,7 @@ export async function loadVersions(silent: boolean = false): Promise<void> {
   } catch (err: any) {
     if (!silent) {
       setStatus('扫描本地版本失败', 'error');
-      showToast('扫描失败', err.message || String(err), 'error');
+      showToast('ui.scan_failed', err.message || String(err), 'error');
     }
     
     updateLaunchButtonState(false);
@@ -82,12 +83,12 @@ export function updateLaunchButtonState(hasGame: boolean): void {
 
   if (launchBtnEl && launchText) {
     if (hasGame) {
-      launchText.innerHTML = icon('play') + ' 开始游戏';
+      launchText.innerHTML = icon('play') + t('ui.launch_game');
       launchBtnEl.dataset.mode = 'launch';
       
       launchBtnEl.classList.remove('no-game');
     } else {
-      launchText.innerHTML = icon('download') + ' 前往下载';
+      launchText.innerHTML = icon('download') + t('ui.go_to_download');
       launchBtnEl.dataset.mode = 'download';
       
       launchBtnEl.classList.add('no-game');
@@ -181,7 +182,7 @@ function versionSubTags(info: any, versionId: string): string {
     : loaders.includes('forge') ? 'Forge'
       : loaders.includes('fabric') ? 'Fabric'
         : loaders.includes('quilt') ? 'Quilt'
-          : info?.hasOptiFine ? 'OptiFine' : '原版';
+          : info?.hasOptiFine ? 'OptiFine' : t('ui.vanilla');
   tags.push(loaderName);
 
   return tags.map((tag: string) => `<span class="version-item-tag">${tag}</span>`).join('');
@@ -191,9 +192,9 @@ function formatRelativeTime(lastTime: number): string {
   if (!lastTime) return '';
   const date: Date = new Date(lastTime);
   const diff: number = Date.now() - date.getTime();
-  if (diff < 60000) return '刚刚';
-  if (diff < 3600000) return `${Math.floor(diff / 60000)} 分钟前`;
-  if (diff < 86400000) return `${Math.floor(diff / 3600000)} 小时前`;
+  if (diff < 60000) return t('ui.just_now');
+  if (diff < 3600000) return t('ui.minutes_min_ago', { minutes: Math.floor(diff / 60000) });
+  if (diff < 86400000) return t('ui.hours_h_ago', { hours: Math.floor(diff / 3600000) });
   return `${date.getMonth() + 1}/${date.getDate()}`;
 }
 
@@ -217,8 +218,8 @@ export async function renderVersionSelectList(): Promise<void> {
     const history = await getVersionHistory();
     
     if (!versions || versions.length === 0) {
-      container.innerHTML = '<div class="version-list-empty">暂无已安装的版本</div>';
-      if (countEl) countEl.textContent = '0 个版本';
+      container.innerHTML = `<div class="version-list-empty">${t('ui.no_installed_versions')}</div>`;
+      if (countEl) countEl.textContent = t('ui.0_versions');
       lastVersionListSignature = '';
       return;
     }
@@ -246,7 +247,7 @@ export async function renderVersionSelectList(): Promise<void> {
     container.innerHTML = '';
 
     if (visible.length === 0) {
-      container.innerHTML = `<div class="version-list-empty">没有匹配「${escapeHtml(versionSearchTerm.trim())}」的版本</div>`;
+      container.innerHTML = `<div class="version-list-empty">${t('ui.no_versions_match_query', { query: escapeHtml(versionSearchTerm.trim()) })}</div>`;
     }
 
     const infos: any[] = await Promise.all(visible.map((versionId: string) => getVersionInfoCached(versionId)));
@@ -282,8 +283,8 @@ export async function renderVersionSelectList(): Promise<void> {
     
     if (countEl) {
       countEl.textContent = query
-        ? `${visible.length} / ${versions.length} 个版本`
-        : `${versions.length} 个版本`;
+        ? t('ui.visible_total_versions', { visible: visible.length, total: versions.length })
+        : t('ui.count_versions', { count: versions.length });
     }
 
     if (!selectedVersionId && versions.length > 0) {
@@ -294,8 +295,8 @@ export async function renderVersionSelectList(): Promise<void> {
       });
     }
   } catch (err: any) {
-    container.innerHTML = '<div class="version-list-empty">加载版本列表失败</div>';
-    if (countEl) countEl.textContent = '加载失败';
+    container.innerHTML = `<div class="version-list-empty">${t('ui.could_not_load_the_version_list')}</div>`;
+    if (countEl) countEl.textContent = t('ui.load_failed');
   }
 }
 
@@ -640,7 +641,7 @@ export function resetModLoaderState(): void {
 
 
 export function getCategoryLabel(type: string): string {
-  const map: Record<string, string> = { release: '正式版', snapshot: '快照版', old_beta: '老版本 Beta', old_alpha: '老版本 Alpha' };
+  const map: Record<string, string> = { release: t('ui.release'), snapshot: t('ui.snapshot'), old_beta: t('ui.old_beta'), old_alpha: t('ui.old_alpha') };
   return map[type] || type;
 }
 
@@ -716,7 +717,7 @@ export function renderVersionList(versionMap: Record<string, any[]>): void {
   });
 
   if (versionCountLabel) {
-    versionCountLabel.textContent = `共 ${totalCount} 个版本`;
+    versionCountLabel.textContent = t('ui.count_versions_in_total', { count: totalCount });
   }
 }
 
@@ -812,7 +813,7 @@ export async function loadRemoteVersions(): Promise<void> {
     setStatus('远程版本列表已加载');
   } catch (err: any) {
     setStatus('无法获取远程版本列表，请检查网络', 'error');
-    showToast('版本列表加载失败', err.message || '请检查网络连接', 'error', 'remote-versions-error');
+    showToast('ui.could_not_load_versions', err.message || '请检查网络连接', 'error', 'remote-versions-error');
     if (versionListContainer) {
       versionListContainer.innerHTML = '<div class="version-list-error">加载失败，请检查网络连接<br><button class="refresh-btn" style="margin-top:12px;" onclick="loadRemoteVersions()">重试</button></div>';
     }

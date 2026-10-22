@@ -1,0 +1,72 @@
+---
+title: Downloaden en mirrors
+description: Bron voor bestanden, bron voor de versielijst, aantal threads, snelheidslimiet, Java-mirrors en een eigen bestandsmirror.
+---
+
+Traag downloaden ligt meestal niet aan de launcher. Wissel eerst van downloadbron en kijk daarna naar threads en snelheidslimiet.
+
+## Downloads komen in een wachtrij
+
+Na een klik op ‘Downloaden’ komt de taak in de wachtrij en blokkeert de interface niet: wachtende taken verwijder je met ×, een lopende taak kun je annuleren en daarna gaat de wachtrij verder.
+
+De downloadpagina toont de status van elke taak: wachtend, bezig, voltooid, mislukt.
+
+## Bron voor bestanden en bron voor de versielijst
+
+In **Instellingen → Downloaden → Downloadbron** staan twee onafhankelijke keuzelijsten:
+
+- **Bron voor bestanden**: client-jar, assets, libraries;
+- **Bron voor de versielijst**: versiemanifest, versie-JSON, asset-index.
+
+Beide hebben dezelfde vier opties:
+
+| Optie | Gedrag |
+| --- | --- |
+| Officieel eerst, bij traagheid naar mirror | Standaard. Probeert eerst officieel en schakelt na een paar seconden zonder antwoord over op BMCLAPI |
+| Mirrors waar mogelijk gebruiken | Gebruikt op Chinese netwerken direct de mirror |
+| Officiële bron eerst | Probeert officieel en valt bij een fout terug op de mirror |
+| Officiële bron waar mogelijk gebruiken | Alleen officieel; lukt de verbinding niet, dan mislukt de taak |
+
+## Eigen bestandsmirror
+
+In **Instellingen → Downloaden → Eigen bestandsmirror** vul je een basisadres van een mirror in (standaard BMCLAPI, bijvoorbeeld `https://bmclapi2.bangbang93.com`). Met een ingevuld adres gaan versiemanifest, client, libraries en assets eerst daar langs; komen ze niet binnen, dan gelden de normale bronnen in hun volgorde.
+
+Leeg laten betekent de standaard BMCLAPI.
+
+## Gamemap
+
+Met **Instellingen → Downloaden → Gamemap** zet je versies, libraries, assets en mods in een willekeurige map; leeg laten betekent terug naar `%APPDATA%\gpcl\.minecraft`.
+
+Van map wisselen **verplaatst bestaande bestanden niet**. Versies in de oude map gaan niet mee; kopieer ze zelf als je ze nodig hebt. Configuratie en logboeken blijven in `%APPDATA%\gpcl`.
+
+## Maximaal aantal threads
+
+Standaard 64, bereik 1–128. Bij veel kleine bestanden helpt meer parallelle uitvoering een beetje, maar te veel kan door netwerkapparatuur of de mirror worden afgeknepen. Bij een instabiel netwerk zet je het lager.
+
+## Snelheidslimiet
+
+0 betekent geen limiet; met een waarde **delen alle downloads deze totale bovengrens**, in MB/s, en die geldt vanaf de volgende download. Op een netwerk dat meerdere mensen delen zet je hem lager.
+
+De limiet geldt alleen voor het downloaden van gamebestanden. De Java-runtime komt via een aparte mirror en ondervindt hier geen hinder van.
+
+## Java-mirrors
+
+In **Instellingen → Downloaden → Java downloaden** kies je Tsinghua University, Nanjing University, Huawei Cloud of een eigen adres. Mislukt de gekozen bron, dan probeert GPCL automatisch de volgende, met de officiële Adoptium-server als laatste redmiddel.
+
+Een eigen adres ondersteunt twee variabelen:
+
+- `{v}`: hoofdversie van Java, bijvoorbeeld `8`, `17`, `21`;
+- `{version}`: volledige upstream-versie, bijvoorbeeld `17.0.20.1_1`, die met upstream-releases verandert.
+
+Voorbeeld:
+
+```text
+https://cdn.example.com/java/{v}/OpenJDK{v}U-jre_x64_windows_hotspot_{v}.zip
+```
+
+## Wat te doen als een download mislukt
+
+1. Wissel van downloadbron.
+2. Zet het aantal threads op 32 of 16 en probeer opnieuw.
+3. Controleer of de systeemtijd klopt — een grote afwijking laat de HTTPS-certificaatcontrole mislukken.
+4. Lukt het nog niet, mail dan met het nieuwste logboek uit `%APPDATA%\gpcl\gpcl\log`.

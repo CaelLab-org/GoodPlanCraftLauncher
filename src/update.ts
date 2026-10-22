@@ -17,6 +17,7 @@ import path from 'path';
 import { spawn } from 'child_process';
 
 import { UPDATA_DIR, loadSettings, writeLog } from './config';
+import { t } from './i18n';
 import { mainWindow } from './shell';
 // __IMPORTS_END__
 
@@ -178,14 +179,11 @@ export function initUpdateState(): void {
 }
 
 
-ipcMain.handle('check-for-updates', async () => {
-  return new Promise((resolve) => {
-    const url = 'https://gamets.caellab.com/gpcl/data.json';
-    writeLog('[更新] 开始检查更新...');
+function fetchJsonUrl(url: string): Promise<any> {
+  return new Promise((resolve, reject) => {
     const req = https.get(url, (res: any) => {
       if (res.statusCode !== 200) {
-        writeLog(`[更新] 检查更新返回 HTTP ${res.statusCode}`);
-        resolve({ success: false, error: `HTTP ${res.statusCode}` });
+        reject(new Error(`HTTP ${res.statusCode}`));
         return;
       }
       let data = '';
@@ -193,25 +191,45 @@ ipcMain.handle('check-for-updates', async () => {
       res.on('data', (chunk: string) => { data += chunk; });
       res.on('end', () => {
         try {
-          const json = JSON.parse(data);
-          writeLog('[更新] 检查更新完成');
-          resolve({ success: true, data: json });
+          resolve(JSON.parse(data));
         } catch (e: any) {
-          writeLog('[更新] JSON解析失败: ' + e.message);
-          resolve({ success: false, error: 'JSON解析失败: ' + e.message });
+          reject(new Error(t('ui.json_parsing_failed_message', { message: e.message })));
         }
       });
     });
-    req.on('error', (e: any) => {
-      writeLog('[更新] 请求失败: ' + e.message);
-      resolve({ success: false, error: e.message });
-    });
+    req.on('error', reject);
     req.setTimeout(15000, () => {
       req.destroy();
-      writeLog('[更新] 检查更新超时');
-      resolve({ success: false, error: '检查更新超时' });
+      reject(new Error('Update check timed out'));
     });
   });
+}
+
+
+ipcMain.handle('check-for-updates', async (_: any, locale: string = 'en-US') => {
+  const slug = String(locale || 'en-US').toLowerCase().replace('_', '-');
+  const localizedUrl = `https://gamets.caellab.com/gpcl/gpclversion/${slug}.json`;
+  const legacyUrl = 'https://gamets.caellab.com/gpcl/data.json';
+
+  writeLog(`[更新] 开始检查更新（${slug}）...`);
+  try {
+    const data = await fetchJsonUrl(localizedUrl);
+    if (data && Array.isArray(data.versions)) {
+      writeLog('[更新] 检查更新完成（按语言）');
+      return { success: true, data };
+    }
+  } catch (e: any) {
+    writeLog(`[更新] 按语言检查失败，回退 data.json: ${e.message}`);
+  }
+
+  try {
+    const data = await fetchJsonUrl(legacyUrl);
+    writeLog('[更新] 检查更新完成（data.json）');
+    return { success: true, data };
+  } catch (e: any) {
+    writeLog(`[更新] 请求失败: ${e.message}`);
+    return { success: false, error: e.message };
+  }
 });
 
 
@@ -238,7 +256,7 @@ function fetchExpectedSHA1(): Promise<string> {
       res.on('error', reject);
     });
     req.on('error', reject);
-    req.on('timeout', () => { req.destroy(); reject(new Error('超时')); });
+    req.on('timeout', () => { req.destroy(); reject(new Error('Timed out')); });
   });
 }
 
@@ -249,11 +267,11 @@ async function verifyInstaller(filePath: string): Promise<{ ok: boolean; error?:
     expectedSHA1 = await fetchExpectedSHA1();
   } catch (e: any) {
     writeLog(`[更新] 获取SHA1校验文件失败: ${e.message}`);
-    return { ok: false, error: '无法获取校验信息' };
+    return { ok: false, error: 'Could not get checksum information' };
   }
   if (!/^[0-9a-f]{40}$/.test(expectedSHA1)) {
     writeLog(`[更新] SHA1格式无效 (${expectedSHA1})`);
-    return { ok: false, error: '校验信息无效' };
+    return { ok: false, error: 'Invalid checksum information' };
   }
   const actualSHA1 = await computeFileSHA1(filePath);
   if (actualSHA1 === expectedSHA1) {
@@ -261,14 +279,14 @@ async function verifyInstaller(filePath: string): Promise<{ ok: boolean; error?:
     return { ok: true };
   }
   writeLog(`[更新] SHA1校验失败: 期望 ${expectedSHA1}, 实际 ${actualSHA1}`);
-  return { ok: false, error: '安装包校验失败' };
+  return { ok: false, error: 'Installer verification failed' };
 }
 
 
 ipcMain.handle('download-update', async (_: any, version: string, manual: boolean = false) => {
-  if (isUpdateDownloading) return { success: false, error: '已有更新下载进行中' };
+  if (isUpdateDownloading) return { success: false, error: 'An update download is already in progress' };
   if (typeof version !== 'string' || !/^\d+(\.\d+)*$/.test(version)) {
-    return { success: false, error: '版本号无效' };
+    return { success: false, error: 'Invalid version' };
   }
 
   const downloadUrl = `${UPDATE_BASE_URL}/GPCL-${version}-Setup.exe`;
@@ -364,7 +382,7 @@ ipcMain.handle('download-update', async (_: any, version: string, manual: boolea
   } catch (e: any) {
     removeFile(partPath);
     clearUpdateState();
-    return { success: false, error: `保存安装包失败: ${e.message}` };
+    return { success: false, error: t('ui.could_not_save_the_installer_message', { message: e.message }) };
   }
 
   const verified = await verifyInstaller(destPath);
@@ -401,13 +419,13 @@ function installerArgs(relaunch: boolean): string[] {
 function launchInstaller(installerPath: string, relaunch: boolean): { success: boolean; error?: string } {
   if (!fs.existsSync(installerPath)) {
     writeLog(`[更新] 安装程序不存在: ${installerPath}`);
-    return { success: false, error: '安装程序不存在' };
+    return { success: false, error: 'The installer does not exist' };
   }
 
   const previous = readUpdateState();
   const versionMatch = installerPath.match(/GPCL-(.+)-Setup\.exe$/);
   const targetVersion = previous?.targetVersion || (versionMatch ? versionMatch[1] : '');
-  if (!targetVersion) return { success: false, error: '无法确定更新版本' };
+  if (!targetVersion) return { success: false, error: 'Could not determine the update version' };
 
   const nextState: UpdateState = {
     targetVersion,
@@ -440,7 +458,7 @@ ipcMain.handle('install-update', (_: any, installerPath: string, relaunch: boole
 
 
 ipcMain.handle('set-update-shutdown-hook', (_: any, installerPath: string, relaunch: boolean = false) => {
-  if (!fs.existsSync(installerPath)) return { success: false, error: '安装程序不存在' };
+  if (!fs.existsSync(installerPath)) return { success: false, error: 'The installer does not exist' };
   quitInstaller = { installerPath, relaunch: !!relaunch };
   writeLog(`[更新] 已设置关闭钩子: ${installerPath} (重启=${relaunch})`);
   return { success: true };

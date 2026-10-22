@@ -1,0 +1,59 @@
+---
+title: Mod downloads
+description: Searching and installing Modrinth and CurseForge mods in GPCL, dependencies, and Chinese search.
+---
+
+The "Mods" section of the download page lets you search for mods, pick a file, and install it into a chosen version, without downloading from a website and dragging files into folders yourself.
+
+## Search
+
+There are two sources: **Modrinth** and **CurseForge**. Both are searched by default, and the source is marked in the result list.
+
+You can type Chinese in the search box first. When the query contains Chinese, GPCL searches MCMOD's public search results first, takes the English name out of the parentheses in the title (for example, the title "雾中人 (The Man From The Fog)" yields `The Man From The Fog`), and then searches Modrinth with that English name. If no English name is found, it searches with the original query.
+
+## Filters
+
+By default **no** version or loader filter is applied - like PCL, everything is searched first, so new mods are not hidden by filtering. Narrow it down manually when needed:
+
+- Minecraft version;
+- loader (Forge / Fabric / NeoForge / Quilt);
+- sort order.
+
+The file list puts files matching the current launch version's MC version first, reducing the chance of installing the wrong version.
+
+## Installing
+
+The target picker appears only after you click "Install" on a file row:
+
+- a list of installed mod versions - pick one and install directly;
+- "Select folder" - install into `mods` under any directory.
+
+Files land in the `mods` folder the target version actually uses: `versions/<version-name>/mods` for isolated versions, otherwise `mods` in the game root.
+
+Installing a mod into a non-isolated version enables version isolation the first time; the target dialog says so and no extra confirmation is shown.
+
+### Dependencies
+
+Modrinth file rows show "N dependencies". Installation recursively installs the dependencies required for download, and the success notice says how many were included.
+
+CurseForge link mode installs only the single selected file and **does not install dependencies automatically**; the interface says so as well.
+
+## CurseForge without an API key
+
+Normal CurseForge search needs an API key (**Settings → Downloads → CurseForge API key**, optional), or you wait for the public mirror to become available. With no key and the mirror unavailable, there is a fallback:
+
+Paste the project URL into the search box, or write `cf:<short-name>`:
+
+```text
+https://www.curseforge.com/minecraft/mc-mods/sodium
+cf:sodium
+```
+
+GPCL looks up the project and files through `api.cfwidget.com` and downloads from a direct ForgeCDN link. This path **installs only the selected single file and does not resolve dependencies**.
+
+## Installed but not working
+
+- Confirm the mod's supported MC version and loader match the current version;
+- Confirm it went into the right `mods` (after version isolation that is not the one in the root);
+- If dependencies are missing, install them first;
+- If it still fails, see the log order in [Game crashes](./mc-game.mdx).

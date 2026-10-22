@@ -1,0 +1,72 @@
+---
+title: Downloads und Mirrors
+description: Download-Quellen für Dateien und Versionslisten, Threads, Bandbreitenlimit, Java-Mirrors und benutzerdefinierter Datei-Mirror.
+---
+
+Langsame Downloads liegen meist nicht am Launcher. Wechsle zuerst die Download-Quelle und kümmere dich danach um Threads und Bandbreitenlimit.
+
+## Download-Aufgaben werden eingereiht
+
+Nach einem Klick auf „Download“ wandert die Aufgabe in eine Warteschlange, die Oberfläche bleibt bedienbar: Wartende Aufgaben lassen sich per × entfernen, laufende abbrechen; danach arbeitet die Warteschlange weiter.
+
+Die Download-Seite zeigt den Status jeder Aufgabe: wartend, läuft, abgeschlossen, fehlgeschlagen.
+
+## Datei-Quelle vs. Versionslisten-Quelle
+
+Unter **Einstellungen → Downloads → Download-Quelle** gibt es zwei unabhängige Dropdowns:
+
+- **Datei-Quelle**: Client-JARs, Assets, Bibliotheken;
+- **Versionslisten-Quelle**: Versionsmanifest, Versions-JSON, Asset-Index.
+
+Beide haben dieselben vier Optionen:
+
+| Option | Verhalten |
+| --- | --- |
+| Offiziell zuerst, bei Langsamkeit auf Mirror wechseln | Standard. Zuerst offiziell, ohne Antwort nach wenigen Sekunden BMCLAPI |
+| Mirror bevorzugen | In chinesischen Netzen direkt Mirror |
+| Offiziell bevorzugen | Zuerst offiziell, bei Fehlern zurück zum Mirror |
+| Nur offiziell | Ausschließlich offiziell, bei Verbindungsfehler Abbruch |
+
+## Benutzerdefinierter Datei-Mirror
+
+Unter **Einstellungen → Downloads → Benutzerdefinierter Datei-Mirror** lässt sich eine Mirror-Basisadresse eintragen (Standard BMCLAPI, z. B. `https://bmclapi2.bangbang93.com`). Danach laufen Versionsmanifest, Client, Bibliotheken und Assets zuerst darüber; ist etwas nicht erreichbar, greift wieder die ursprüngliche Quellenreihenfolge.
+
+Leer lassen bedeutet BMCLAPI als Standard.
+
+## Spielverzeichnis
+
+Mit **Einstellungen → Downloads → Spielverzeichnis** lassen sich Versionen, Bibliotheken, Assets und Mods in einen beliebigen Ordner legen; leer lassen führt zurück zu `%APPDATA%\gpcl\.minecraft`.
+
+Beim Wechsel werden vorhandene Dateien **nicht automatisch verschoben**. Versionen im alten Verzeichnis bleiben dort; kopiere sie bei Bedarf selbst. Konfiguration und Logs bleiben unter `%APPDATA%\gpcl`.
+
+## Maximale Threads
+
+Standard 64, Bereich 1–128. Bei vielen kleinen Dateien hilft mehr Parallelität, zu hohe Werte können aber von Netzwerkgeräten oder Mirrors gedrosselt werden. Bei instabiler Verbindung niedriger einstellen.
+
+## Bandbreitenlimit
+
+0 bedeutet unbegrenzt; ein eingetragener Wert ist **ein gemeinsames Limit für alle Download-Aufgaben** in MB/s und greift beim nächsten Download. In gemeinsam genutzten Netzen kann ein niedrigerer Wert sinnvoll sein.
+
+Das Limit gilt nur für Spieldownloads. Die Java-Laufzeit kommt über einen eigenen Mirror und ist davon nicht betroffen.
+
+## Java-Mirrors
+
+Unter **Einstellungen → Downloads → Java-Download** stehen Tsinghua-Universität, Nanjing-Universität, Huawei Cloud oder Benutzerdefiniert zur Wahl. Fällt die gewählte Quelle aus, wird automatisch die nächste versucht, zuletzt Adoptium als offizielle Absicherung.
+
+Benutzerdefinierte Adressen unterstützen zwei Variablen:
+
+- `{v}`: Java-Hauptversion, etwa `8`, `17`, `21`;
+- `{version}`: vollständige Upstream-Version, etwa `17.0.20.1_1`, ändert sich mit Upstream-Releases.
+
+Beispiel:
+
+```text
+https://cdn.example.com/java/{v}/OpenJDK{v}U-jre_x64_windows_hotspot_{v}.zip
+```
+
+## Was bei Download-Fehlern zuerst tun
+
+1. Andere Download-Quelle wählen.
+2. Threads auf 32 oder 16 senken und erneut versuchen.
+3. Systemzeit prüfen — eine zu große Abweichung lässt die HTTPS-Zertifikatsprüfung scheitern.
+4. Hilft das nicht, E-Mail mit dem neuesten Log aus `%APPDATA%\gpcl\gpcl\log` senden.

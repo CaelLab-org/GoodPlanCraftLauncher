@@ -1,6 +1,6 @@
 {
   "name": "gpcl",
-  "version": "1.7.2",
+  "version": "1.8.0",
   "description": "Minecraft 启动器",
   "main": "main.js",
   "scripts": {

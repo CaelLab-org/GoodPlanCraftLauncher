@@ -1,0 +1,355 @@
+{
+  "schema": 1,
+  "latest": "1.8.0",
+  "updated": "2026-10-22",
+  "versions": [
+    {
+      "version": "1.8.0",
+      "anchor": "v1-8-0",
+      "date": "2026-10-22",
+      "title": "25 种语言，从启动器到官网",
+      "log": [
+        "启动器现在支持 25 种语言：在设置 → 外观 → 界面语言里切换，列表可以直接搜索",
+        "首次启动跟随系统语言，欢迎引导里也能先选好再开始",
+        "新增首次使用的欢迎引导：语言、界面风格、简短介绍共 4 步，可以跳过",
+        "新增三种界面风格：Minecraft、高级（原来的样子）、简约",
+        "安装包也翻成了同样的 25 种语言，按系统语言自动选择",
+        "帮助中心支持 25 种语言，启动器里的帮助链接会打开与界面语言对应的页面",
+        "官网和官网里的交互演示也支持 25 种语言",
+        "阿拉伯语、波斯语、希伯来语会把整个界面切换成从右到左的排版",
+        "启动不再闪一下：启动页和主界面合成一个页面，窗口底色跟随主题；切换语言重载时也不会黑一下"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.8.0-Setup.exe",
+        "file": "GPCL-1.8.0-Setup.exe",
+        "size": "94 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.7.2",
+      "anchor": "v1-7-2",
+      "date": "2026-10-22",
+      "title": "头像能换了，版本列表也好找了",
+      "log": [
+        "启动页头像可以换了：点一下头像，或在设置 → 外观 → 头像里选图片，支持 PNG / JPG / GIF / WebP",
+        "图片超过 1 MB 会询问是否压缩，最大 4 MB；也能一键恢复默认头像",
+        "外观设置新增「头像大小」，32–160 像素拖动调整",
+        "版本列表新增搜索框，每个版本标出游戏版本和加载器，当前选中的会高亮",
+        "版本列表刷新时不再重建整个列表，滚动位置不会被顶回顶部；「导入本地版本」挪到列表右上角",
+        "1.20 及以后选择「加入服务器」能直接进服，没填地址时会提示，不再悄悄启动单人游戏",
+        "版本设置自动保存不再每次弹「保存成功」",
+        "安装包从约 103 MB 降到 93 MB：只保留中英语言包，其他语言回退英文",
+        "1.7.1 是未发布的内部测试版本，已作废；1.7.2 包含它的全部改动"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.7.2-Setup.exe",
+        "file": "GPCL-1.7.2-Setup.exe",
+        "size": "93 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.7.0",
+      "anchor": "v1-7-0",
+      "date": "2026-10-22",
+      "title": "光影、资源包、整合包，一键装好",
+      "log": [
+        "下载页新增「光影」「资源包」分类：Modrinth / CurseForge 搜索，选好目标版本后直接装进对应文件夹",
+        "新增「整合包」分类：支持 Modrinth（.mrpack）和 CurseForge 整合包，自动安装对应的游戏版本、加载器和全部模组",
+        "每个整合包会建成独立版本，模组、配置和存档都在自己的文件夹里，不同整合包不会互相串",
+        "本地整合包也能导入：在版本管理里选 zip / .mrpack，填个名字就开始装",
+        "整合包文件按清单校验大小与 SHA1，下了一半的 jar 会被重下，不会装出一个进不去的游戏",
+        "NeoForge 现在能像 Forge / Fabric 一样选版本安装（1.20.1 及以后）",
+        "「更多」菜单默认收起，需要时在设置 → 外观里打开；修了关掉后重启又冒出来的问题"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.7.0-Setup.exe",
+        "file": "GPCL-1.7.0-Setup.exe",
+        "size": "103 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.6.1",
+      "anchor": "v1-6-1",
+      "date": "2026-10-21",
+      "title": "崩溃原因，直接告诉你",
+      "log": [
+        "崩溃后自动分析原因：内存不足、Java 版本不对、缺前置、显卡驱动、OptiFine / Forge 不兼容等，弹窗直接给 1–2 条结论",
+        "点「查看详情」能看到全部线索和证据行；「查看日志」打开崩溃那个版本自己的游戏目录",
+        "错误报告导出一个完整的 zip：分析结果、错误摘要、系统与显卡、Java 版本、版本与加载器、Mod / 资源包 / 光影列表、启动参数、游戏输出与崩溃报告",
+        "报告里的 --accessToken 和系统用户名已打码，可以直接发给别人排查",
+        "同时开多个游戏时，每个会话单独保留输出，崩溃现场不会串到别的版本",
+        "模组详情页重做：中文名 + 英文名、下载量、分类标签、按 MC 版本分组的文件列表、前置资源卡片，可跳 Modrinth / CurseForge / MC 百科、一键复制名称",
+        "修复给 1.20.1 装前置却按 1.20 解析，导致 Fabric API / GeckoLib 版本重复、Fabric 报 Incompatible mods found 不启动",
+        "装完模组会清掉同一项目的旧 jar，不再出现多个版本并存"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.6.1-Setup.exe",
+        "file": "GPCL-1.6.1-Setup.exe",
+        "size": "103 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.6.0",
+      "anchor": "v1-6-0",
+      "date": "2026-10-20",
+      "title": "装 Mod，不用手动找文件了",
+      "log": [
+        "下载页新增「模组」分区：Modrinth / CurseForge 搜索，按当前游戏版本挑文件，安装时选择装到哪个版本",
+        "Modrinth 自动带必需前置；支持中文搜索（先查 MCMOD 转成英文名）",
+        "没有 CurseForge API Key 也能用：粘贴项目链接或 cf:短名，走镜像装单个文件",
+        "下载改成任务队列：连续点多个版本会排队，可以移除排队任务、取消当前任务后继续",
+        "自动更新改为静默安装：后台自动下载，退出启动器时装好；右上角圆形徽标显示进度",
+        "新增自动设置游戏语言（默认简体中文）、自定义游戏目录、自定义文件镜像",
+        "新增导入本地版本（版本文件夹或 zip / jar）",
+        "Fabric 真能装了，默认同时安装 Fabric API；版本隔离后 Mod / 存档跟着版本走",
+        "Forge 安装只跑 --installClient，会显示安装进度，Java 版本不够会直接说明",
+        "OptiFine 改为静默安装，不再弹图形安装器",
+        "修复下载 0 字节算成功、相对地址重定向、第二次下载没进度"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.6.0-Setup.exe",
+        "file": "GPCL-1.6.0-Setup.exe",
+        "size": "103 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.5.2",
+      "anchor": "v1-5-2",
+      "date": "2026-10-18",
+      "title": "设置，重做了一遍",
+      "log": [
+        "设置页重做：内存、窗口、启动行为、下载源、Java 参数重新分组，滑块、开关、分段按钮直接调",
+        "内存默认改为「自动」：按物理内存 30% 分配，至少 1 GB、最多 8 GB，并给系统留 2 GB；也可手动指定",
+        "内存管理真能回收了：只清理启动器自己的进程，不碰正在运行的游戏，可设启动前自动优化",
+        "下载源分四档（自动 / 镜像优先 / 官方优先 / 仅官方），文件和版本列表分开选；新增 0–20 MB/s 全局限速",
+        "新增 G1GC 调优、自定义 JVM 参数、进程优先级、窗口尺寸预设、启动器可见性",
+        "关于页补齐项目信息、运行环境与许可证全文；官网与帮助页一并重写",
+        "修复：线程数设置不生效、下载 404 页面被当成文件保存、下载失败残留半截文件"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.5.2-Setup.exe",
+        "file": "GPCL-1.5.2-Setup.exe",
+        "size": "103 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.5.1",
+      "anchor": "v1-5-1",
+      "date": "2026-10-16",
+      "title": "崩了？我看看",
+      "log": [
+        "新增崩溃提示：游戏异常退出时说明原因，可一键导出错误报告（崩溃报告 + 日志 + 系统信息，token 已打码）",
+        "新增运行中面板：游戏启动后右侧显示版本、PID、时长、内存，可随时结束游戏",
+        "用户名支持最近 5 个记录下拉，可逐条删除",
+        "游戏改为独立进程，关闭启动器不再连带结束游戏；关掉游戏窗口也能正确识别为退出",
+        "新增自定义游戏窗口标题与魔术字（{mc_version}、{time} 等）",
+        "启动小知识改为概率出现（可在设置里调整），并补充了大量条目",
+        "启动动画与页面切换更顺滑"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.5.1-Setup.exe",
+        "file": "GPCL-1.5.1-Setup.exe",
+        "size": "103 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.5.0",
+      "anchor": "v1-5-0",
+      "date": "2026-10-16",
+      "title": "修好了 Java，换上了新装",
+      "log": [
+        "修复 Java 运行时下载：镜像站文件名变了导致安装失败，现改为动态获取",
+        "安装包改用 Inno Setup，可直接从旧版就地升级",
+        "全局配色统一（天蓝为主、深蓝暗色），启动动画与官网一并换新",
+        "修复浅色模式下启动界面不跟随主题、若干按钮样式失效"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.5.0-Setup.exe",
+        "file": "GPCL-1.5.0-Setup.exe",
+        "size": "103 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.4.4",
+      "anchor": "v1-4-4",
+      "date": "2026-07-11",
+      "title": "光影支持！",
+      "log": [
+        "新增 OptiFine（光影）支持",
+        "一键安装，自动处理继承、库文件、tweakClass",
+        "支持 inheritsFrom 版本继承机制"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.4.4-Setup.exe",
+        "file": "GPCL-1.4.4-Setup.exe",
+        "size": "104 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.4.3",
+      "anchor": "v1-4-3",
+      "date": "2026-06-02",
+      "title": "修复了",
+      "log": [
+        "修复了双滚轮的问题",
+        "关于页扩展，新增了更多内容（包含百宝箱等）"
+      ],
+      "download": {
+        "url": "https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases/download/1.4.3/GPCL-1.4.3-Setup.exe",
+        "file": "GPCL-1.4.3-Setup.exe",
+        "size": "101 MB",
+        "github": true
+      }
+    },
+    {
+      "version": "1.4.2",
+      "anchor": "v1-4-2",
+      "date": "2026-06-02",
+      "title": "修复了？我看未必",
+      "log": [
+        "Splash 上个版本有点问题",
+        "将设置规范",
+        "取消启动可以真正杀死进程！"
+      ],
+      "download": {
+        "url": "https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases/download/1.4.2/GPCL-1.4.2-Setup.exe",
+        "file": "GPCL-1.4.2-Setup.exe",
+        "size": "101 MB",
+        "github": true
+      }
+    },
+    {
+      "version": "1.4.1",
+      "anchor": "v1-4-1",
+      "date": "2026-06-02",
+      "title": "欢迎！",
+      "log": [
+        "新增新人首次启动欢迎动画",
+        "取消过度反调试，且允许开发者模式"
+      ],
+      "download": {
+        "url": "https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases/download/1.4.1/GPCL-1.4.1-Setup.exe",
+        "file": "GPCL-1.4.1-Setup.exe",
+        "size": "101 MB",
+        "github": true
+      }
+    },
+    {
+      "version": "1.4.0",
+      "anchor": "v1-4-0",
+      "date": "2026-06-01",
+      "title": "芜湖起飞！",
+      "log": [
+        "试图真正支持 Forge",
+        "秒开！这是安装版，使用了机器码编译！",
+        "修复了 Bug，感谢论坛",
+        "大幅优化了流程，让更新详情可查看详细日志"
+      ],
+      "download": {
+        "url": "https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases/download/1.4.0/GPCL-1.4.0-Setup.exe",
+        "file": "GPCL-1.4.0-Setup.exe",
+        "size": "99 MB",
+        "github": true
+      }
+    },
+    {
+      "version": "1.3.3",
+      "anchor": "v1-3-3",
+      "date": "2026-05-28",
+      "title": "",
+      "log": [
+        "真正能用 Forge / Fabric / OptiFine 了！",
+        "这个版本是第一个开源的版本啦！"
+      ],
+      "download": {
+        "url": "https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases/download/1.3.3/GoodPlanCraftLauncher.1.3.3.exe",
+        "file": "GoodPlanCraftLauncher.1.3.3.exe",
+        "size": "90 MB",
+        "github": true
+      }
+    },
+    {
+      "version": "1.3.2",
+      "anchor": "v1-3-2",
+      "date": "2026-05-23",
+      "title": "",
+      "log": [
+        "新增版本设置详细项目，并默认托管；允许删除游戏版本",
+        "适配浅色模式更多；恢复默认设置移至新增的兼容性设置，更新 API",
+        "下拉框美化等多处细节"
+      ],
+      "download": null
+    },
+    {
+      "version": "1.3.0–1.3.1",
+      "anchor": "v1-3-1",
+      "date": "2026-05-22",
+      "title": "",
+      "log": [
+        "修复下载时无图表的问题（未在安装环境下调用）",
+        "将自动检查更新的设置移至「关于」",
+        "下载页包含完整的 Alpha、Beta、快照、正式版，修复正式版无法完整展示的问题",
+        "重构启动页，新增版本管理并按最后启动时间排序",
+        "启动时新增「你知道吗？」；新增自动清理日志（可在设置中更改时间）",
+        "外观中的缩放正式可用；1.3.1 修复了无法显示的问题"
+      ],
+      "download": null
+    },
+    {
+      "version": "1.2.1",
+      "anchor": "v1-2-1",
+      "date": "2026-05-22",
+      "title": "",
+      "log": [
+        "将动态库本地化",
+        "新增防止重复启动 / 运行",
+        "去除无用的设置项，下载页面的内容可以折叠啦"
+      ],
+      "download": null
+    },
+    {
+      "version": "1.2.0",
+      "anchor": "v1-2-0",
+      "date": "2026-05-21",
+      "title": "",
+      "log": [
+        "新增滚动条与浅色模式",
+        "新增启动器整体启动动画，降低启动白屏时间",
+        "左侧菜单栏移至顶端，放大 UI；优化下载页面观感，Java 运行时增入",
+        "新增大量设置，整理为游戏、下载、外观、高级、关于"
+      ],
+      "download": null
+    },
+    {
+      "version": "1.1.0",
+      "anchor": "v1-1-0",
+      "date": "2026-05-21",
+      "title": "",
+      "log": [
+        "新增 Java 自动补全，设置可配置下载源（谢谢清华！）",
+        "优化性能，新增启动动画，完善日志排错功能",
+        "修复下载列表大量 Bug（如无法取消、取消后有残留）"
+      ],
+      "download": null
+    },
+    {
+      "version": "1.0.0",
+      "anchor": "v1-0-0",
+      "date": "2026-05-20",
+      "title": "",
+      "log": [
+        "首个正式版本发布"
+      ],
+      "download": null
+    }
+  ]
+}

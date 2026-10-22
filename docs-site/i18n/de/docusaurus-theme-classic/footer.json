@@ -1,0 +1,54 @@
+{
+  "link.title.入口": {
+    "message": "Einstieg",
+    "description": "The title of the footer links column with title=入口 in the footer"
+  },
+  "link.title.帮助": {
+    "message": "Hilfe",
+    "description": "The title of the footer links column with title=帮助 in the footer"
+  },
+  "link.title.联系": {
+    "message": "Kontakt",
+    "description": "The title of the footer links column with title=联系 in the footer"
+  },
+  "link.item.label.GPCL 官网": {
+    "message": "GPCL-Website",
+    "description": "The label of footer link with label=GPCL 官网 linking to https://gamets.caellab.com/gpcl/"
+  },
+  "link.item.label.下载最新版": {
+    "message": "Neueste Version herunterladen",
+    "description": "The label of footer link with label=下载最新版 linking to https://gamets.caellab.com/gpcl/#download"
+  },
+  "link.item.label.GitHub 源码": {
+    "message": "GitHub-Quellcode",
+    "description": "The label of footer link with label=GitHub 源码 linking to https://github.com/CaelLab-org/GoodPlanCraftLauncher"
+  },
+  "link.item.label.安装与更新": {
+    "message": "Installation und Updates",
+    "description": "The label of footer link with label=安装与更新 linking to /install"
+  },
+  "link.item.label.Java 与内存": {
+    "message": "Java und Arbeitsspeicher",
+    "description": "The label of footer link with label=Java 与内存 linking to /java-memory"
+  },
+  "link.item.label.游戏崩溃": {
+    "message": "Spielabsturz",
+    "description": "The label of footer link with label=游戏崩溃 linking to /mc-game"
+  },
+  "link.item.label.gamets@caellab.com": {
+    "message": "gamets@caellab.com",
+    "description": "The label of footer link with label=gamets@caellab.com linking to mailto:gamets@caellab.com"
+  },
+  "link.item.label.官方论坛": {
+    "message": "Offizielles Forum",
+    "description": "The label of footer link with label=官方论坛 linking to https://forum.xmuer.online"
+  },
+  "link.item.label.虚舟实验室": {
+    "message": "CaelLab",
+    "description": "The label of footer link with label=虚舟实验室 linking to https://www.caellab.com/"
+  },
+  "copyright": {
+    "message": "Copyright © 2026 <a href=\"https://www.caellab.com/\" target=\"_blank\" rel=\"noopener\">CaelLab</a> · CaelLabGameTS · Projektseite <a href=\"https://gamets.caellab.com/gpcl/\" target=\"_blank\" rel=\"noopener\">gamets.caellab.com/gpcl</a> · <a href=\"https://www.caellab.com/license/cbs-v3\" target=\"_blank\" rel=\"noopener\">CaelLab BY-SA Code License v3</a>",
+    "description": "The footer copyright"
+  }
+}

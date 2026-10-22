@@ -1,0 +1,67 @@
+---
+title: Forge / Fabric / OptiFine
+description: Pasang pemuat mod dalam GPCL, pilih versi dan cari folder mod.
+---
+
+Apabila memilih versi di halaman muat turun, anda boleh memilih pemuat terus. GPCL akan memasang versi vanilla dahulu, kemudian memasang pemuat ke direktori versi berasingan, tanpa menimpa versi vanilla.
+
+## Cara memasang
+
+1. Buka halaman muat turun dan pilih versi Minecraft.
+2. Dalam pilihan pemuat, pilih Forge, Fabric atau OptiFine, kemudian pilih versi pemuat yang sepadan.
+3. Klik muat turun dan tunggu sehingga kedua-dua versi vanilla dan pemuat selesai dipasang.
+4. Kembali ke halaman pelancaran dan pilih versi dengan nama pemuat untuk dilancarkan.
+
+Tugas muat turun akan masuk ke baris gilir; anda boleh menekan beberapa versi berturut-turut untuk berbaris. Tugas yang sedang dimuat turun boleh dibatalkan, dan baris gilir akan diteruskan selepas pembatalan.
+
+## Cara memilih antara tiga pemuat
+
+| Pemuat | Sesuai untuk | Perhatian |
+| --- | --- | --- |
+| Forge | Pek mod besar, mod lama | Pelancaran lebih perlahan daripada Fabric, tetapi lebih banyak pilihan versi |
+| Fabric | Mod ringan, versi baharu | Perlu pilih Fabric Loader yang betul mengikut versi permainan |
+| OptiFine | Shader, pengoptimuman prestasi | Bercampur dengan pemuat lain mungkin memerlukan mod keserasian |
+
+### Forge
+
+Semasa pemasangan, GPCL hanya menjalankan `--installClient` dan tidak akan mencuba GUI atau parameter pelayan. Output pemasang akan ditukar kepada paparan kemajuan, contohnya "Memasang Forge: Downloading library…".
+
+Versi utama Java akan disemak sebelum pemasangan; jika lebih rendah daripada keperluan Forge, ralat akan dilaporkan terus, dan Java versi rendah tidak akan digunakan secara paksa. Keseluruhan proses menunggu paling lama 15 minit; membatalkan muat turun akan menamatkan proses pemasang.
+
+### Fabric
+
+GPCL mengambil profil versi dan fail pustaka Fabric secara terus, tanpa bergantung pada pemasang.
+
+"Pasang Fabric API sekali" ditanda secara lalai; selepas Fabric dipasang, Fabric API versi yang sepadan akan diletakkan dalam `mods` versi tersebut. Jika tanda dikeluarkan, ia tidak akan dipasang; kegagalan pemasangan Fabric API hanya akan dimaklumkan dan tidak menjejaskan Fabric sendiri.
+
+### OptiFine
+
+OptiFine menggunakan pemasangan senyap dan tidak akan memunculkan pemasang grafiknya sendiri. Hasil pemasangan akan diletakkan semula dalam direktori permainan semasa; direktori permainan tersuai juga dikendalikan dengan betul.
+
+## Di mana mod diletakkan
+
+Versi yang baru dimuat turun akan mendayakan **pengasingan versi** secara lalai: direktori permainan menunjuk ke `versions/<version-name>`, dan mod, simpanan serta tetapan permainan mengikut versi ini.
+
+| Keadaan versi | Direktori mod |
+| --- | --- |
+| Baru dimuat turun, telah diasingkan | `versions/<version-name>/mods` |
+| Sedia ada sebelum ini, dan tiada `mods` / `saves` dalam folder versi | `mods` dalam direktori akar permainan |
+
+Di halaman pelancaran, buka "Tetapan versi" bagi versi tersebut; pintu masuk folder dikira berdasarkan hasil pengasingan sebenar:
+
+- "Folder versi" sentiasa ada;
+- "Folder Mod" muncul apabila Forge / Fabric / NeoForge / Quilt dikesan;
+- "Folder shader" muncul apabila OptiFine dikesan.
+
+Jika anda ingin memasang mod terus ke mana-mana direktori, pilih "Pilih folder" dalam sasaran pemasangan muat turun mod; ia akan mencari `mods` dalam direktori tersebut.
+
+## Ranap selepas pemasangan
+
+1. Pindahkan semua mod keluar dari `mods` dahulu dan lancarkan sekali tanpa mod.
+2. Jika boleh masuk, letakkan semula separuh setiap kali untuk mencari mod bermasalah.
+3. Pastikan mod sepadan dengan versi Minecraft dan versi pemuat pada masa yang sama — mod Forge tidak boleh terus diletakkan dalam Fabric, dan sebaliknya juga begitu.
+4. Prasyarat yang hilang juga akan menyebabkan ranap semasa pelancaran; pergi ke [Muat turun mod](./mods.mdx) untuk melihat prasyarat yang disenaraikan.
+
+Menggabungkan OptiFine dengan Forge / Fabric biasanya memerlukan mod keserasian tambahan. Jangan paksa pasang jika tiada mod keserasian yang sepadan.
+
+Lagi banyak langkah penyelesaian masalah ada di [Permainan ranap](./mc-game.mdx).

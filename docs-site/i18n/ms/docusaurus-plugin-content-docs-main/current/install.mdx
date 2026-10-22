@@ -1,0 +1,73 @@
+---
+title: Pemasangan dan kemas kini
+description: Muat turun, pasang, tingkatkan dan nyahpasang GPCL; permainan dan tetapan disimpan di %APPDATA%\gpcl.
+---
+
+GPCL hanya menyokong **Windows 10 / 11 64-bit**. Pakej pemasang tidak menyertakan Java; pelancar akan memasangnya mengikut versi permainan.
+
+## Muat turun
+
+Dapatkan pakej pemasang daripada [bahagian muat turun laman web](https://gamets.caellab.com/gpcl/#download) atau [GitHub Releases](https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases). Nama fail ialah `GPCL-<version>-Setup.exe`.
+
+Jangan dapatkan pakej pemasang daripada cakera awan, fail kumpulan atau tapak muat turun pihak ketiga: fail sebegitu mungkin telah ditukar ganti, dan pelancar juga tidak dapat mengesahkan sumbernya.
+
+## Pemasangan
+
+1. Klik dua kali pakej pemasang dan pilih direktori pemasangan.
+2. Selepas selesai, lancarkan GPCL dari desktop atau menu Mula.
+3. Pelancaran pertama akan mencipta konfigurasi, log dan direktori permainan lalai.
+
+Menaik taraf daripada versi lama tidak memerlukan nyahpasang terlebih dahulu. Program pemasang akan mengambil alih pemasangan asal di tempat (termasuk pakej NSIS yang lebih lama); pintasan desktop dan data dikekalkan.
+
+## Permainan dan tetapan disimpan di mana
+
+Semuanya dalam `%APPDATA%\gpcl`, bukan dalam direktori pemasangan:
+
+| Laluan | Kandungan |
+| --- | --- |
+| `%APPDATA%\gpcl\.minecraft` | Versi permainan, pustaka, aset, mod dan simpanan |
+| `%APPDATA%\gpcl\gpcl\config\setting.ini` | Tetapan pelancar |
+| `%APPDATA%\gpcl\gpcl\log` | Log pelancar |
+| `%APPDATA%\gpcl\gpcl\updata` | Pakej pemasang yang dimuat turun untuk kemas kini automatik dan rekod kemajuan |
+
+Jika direktori permainan telah ditukar, versi dan aset akan diletakkan di lokasi baharu, tetapi konfigurasi dan log kekal dalam `%APPDATA%\gpcl`.
+
+### Tetapkan bahasa permainan secara automatik
+
+**Tetapan → Permainan → Tetapkan bahasa permainan secara automatik** didayakan secara lalai, dan bahasa yang dipilih secara lalai ialah Cina Ringkas. Sebelum setiap pelancaran, GPCL akan menukar `lang:` dalam `options.txt` yang benar-benar digunakan oleh versi semasa kepada nilai yang dipilih, sambil mengekalkan baris lain seperti asal.
+
+Versi terasing menulis ke `versions/<version-name>/options.txt`, versi tidak terasing menulis ke `options.txt` dalam direktori akar permainan. Matikan suis ini dan tetapan dalam permainan tidak akan disentuh sama sekali.
+
+## Kemas kini
+
+Dua pilihan didayakan secara lalai:
+
+- **Semak kemas kini secara automatik**: disemak semasa pelancaran; jika ada versi baharu, petunjuk akan dipaparkan di penjuru kanan atas.
+- **Pasang kemas kini secara automatik**: dimuat turun secara senyap di latar belakang, tidak menggunakan halaman muat turun dan tidak mengubah bar status. Selepas pengesahan lulus, kemas kini akan dipasang secara senyap apabila anda **keluar dari pelancar**.
+
+Lencana bulat di penjuru kanan atas menunjukkan kemajuan muat turun; klik untuk melihat nombor versi dan kandungan kemas kini versi ini. Anda juga boleh klik "Muat turun sekarang" di situ; selepas dipasang, pelancar akan dibuka semula secara automatik.
+
+Dalam **Tetapan → Perihal** anda boleh mematikan semakan automatik atau pemasangan automatik, dan juga menyemak kemas kini secara manual.
+
+Pakej kemas kini akan disahkan SHA1 sebelum dipasang; jika pengesahan gagal, ia tidak akan dipasang. Jika pemasangan terhenti di tengah jalan, pelancaran seterusnya akan memaklumkan "Kemas kini terakhir tidak selesai" dan anda boleh mencuba lagi; selepas tiga kegagalan berturut-turut, anda akan diarahkan memuat turun semula pakej pemasang dari laman web.
+
+:::warning Naik taraf daripada 1.5.2 atau lebih lama
+Versi lama belum mengenali parameter pemasangan senyap, jadi naik taraf kali ini masih akan memaparkan wizard pemasangan lama sekali. Hanya bermula dari 1.6.0 ke atas keseluruhan proses adalah senyap.
+:::
+
+Jika pelancar tidak dapat dibuka selepas kemas kini, lihat log terbaharu dalam `%APPDATA%\gpcl\gpcl\log` dahulu, kemudian hantar e-mel bersama log tersebut.
+
+## Import versi setempat
+
+Dalam panel "Pilih versi" di halaman pelancaran, klik "Import versi setempat" untuk mengimport:
+
+- folder versi (di dalamnya mesti ada `<version-name>.json`);
+- pakej zip atau jar; pelancar akan mengekstrak dan mencari secara rekursif direktori yang mengandungi `<version-name>.json`;
+
+Pek mod (jenis yang mempunyai bahagian `minecraft` dalam `manifest.json`) tidak boleh diimport buat masa ini; pelancar akan menolaknya terus dan tidak akan memasang sebahagian sahaja.
+
+## Nyahpasang
+
+Nyahpasang GPCL dalam "Apl dan ciri" Windows. Program nyahpasang **tidak** memadam `%APPDATA%\gpcl`; selepas pemasangan semula, permainan dan tetapan masih ada.
+
+Jika anda pasti tidak akan menggunakannya lagi, anda boleh memadam seluruh `%APPDATA%\gpcl` secara manual. Sandarkan simpanan anda terlebih dahulu sebelum memadam.

@@ -1,0 +1,52 @@
+---
+title: Magische woorden in de venstertitel
+slug: /magic-words
+description: De venstertitel van Minecraft aanpassen met plaatsaanduidingen zoals {mc_version} en {time}.
+---
+
+De venstertitel van het spel accepteert plaatsaanduidingen die GPCL bij het starten door echte waarden vervangt.
+
+De optie staat in **Instellingen → Spel → Venstertitel van het spel**. Een lege titel betekent dat de venstertitel niet wordt aangepast.
+
+## Een voorbeeld
+
+Met de titel:
+
+```text
+{time} · {mc_version} · {gpcl_version}
+```
+
+Kan het er na het starten zo uitzien:
+
+```text
+20:09:58 · Minecraft 1.21.3 · 1.6.0
+```
+
+## Beschikbare plaatsaanduidingen
+
+| Plaatsaanduiding | Wordt |
+| --- | --- |
+| `{mc_version}` | Weergavenaam van de versie, bijvoorbeeld Minecraft 1.21.3, of de naam met loader |
+| `{mc_id}` | Naam van de versiemap, bijvoorbeeld 1.21.3-Fabric |
+| `{username}` | Spelersnaam die voor deze start is gebruikt |
+| `{gpcl_version}` | Versienummer van GPCL, bijvoorbeeld 1.6.0 |
+| `{date}` | Startdatum, notatie 2026/10/20 |
+| `{time}` | Huidige tijd, notatie 20:09:58 |
+| `{datetime}` | Datum en tijd, gescheiden door een spatie |
+| `{java}` | Naam van de map van de gebruikte Java-runtime |
+| `{memory}` | Maximaal toegewezen geheugen voor deze sessie, bijvoorbeeld 4096MB |
+
+Hoofdletters en kleine letters moeten kloppen. Verkeerd geschreven plaatsaanduidingen worden letterlijk getoond, zodat je ziet welke je hebt verschreven.
+
+## Blijft de titel staan?
+
+Daaronder staat de optie ‘Deze titel zoveel mogelijk vasthouden’, standaard uit.
+
+- **Uit**: nadat het spelvenster verschijnt, corrigeert GPCL de titel 20 seconden lang. Daarna grijpt hij niet meer in als het spel of een mod de titel wijzigt. Titels met `{time}` blijven ook op dat tijdstip staan.
+- **Aan**: de ingestelde titel blijft het hele spel staan en wordt bij het betreden van een wereld niet vervangen door ‘ - Singleplayer’.
+
+Sommige modpacks of mods wijzigen de venstertitel ook; dat ze elkaar overschrijven is normaal.
+
+:::note
+Op dit moment werken magische woorden alleen in de venstertitel van het spel, niet in andere instellingen.
+:::

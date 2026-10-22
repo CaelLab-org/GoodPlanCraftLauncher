@@ -19,17 +19,21 @@ declare global {
 // 少一个模块，它那批界面交互就静默失效（编译和类型检查都不报错）。
 
 // __IMPORTS_BEGIN__
+import { applyI18n, docsUrl, observeI18n, setLocale, setSystemLocale, t } from '../i18n';
 import { cancelDownloadBtn, detailDownloadBtn, downloadPanel, getCustomSelectValue, initCustomSelect, launchBtn, menuLaunch, setCustomSelectValue, setStatus, showDialog, showToast, usernameHistoryBtn, usernameInput } from './dom';
 import { bindJavaInstallButtons, initJavaVersionStatus, saveJavaMirrorSettings, updateJavaInstallStatus } from './java-panel';
+import { initBootSplash } from './boot-splash';
 import { hasQueuedDownloads, hideLaunchAnimation, launchGame, launchTipFrequency, setLaunchTipFrequency } from './launch';
+import { initLanguagePicker } from './language';
 import { refreshGameMonitor } from './monitor';
 import { currentPage, showPage, switchSettingsTab } from './nav';
 import { closeUsernameHistory, playerHistory, setPlayerHistory } from './player';
 import { msAuthData, setMsAuthData } from './session';
-import { applyScale, initScale, initTheme, loadSettings, updateSettingsBadge } from './settings';
+import { applyScale, applyStyle, applyTheme, initScale, initTheme, loadSettings, updateSettingsBadge } from './settings';
 import { allNewerVersions, autoDownloadUpdate, checkForUpdates, installReadyUpdate, isUpdateDownloadActive, renderUpdateVersionCards, showUpdateStartupNotice, startUpdateDownload, updateAvailable } from './update';
 import { initUpdateBadge } from './update-badge';
 import { bindModLoaderEvents, loadRemoteVersions, loadVersions, renderVersionSelectList, selectedVersionId } from './versions';
+import { initWelcome } from './welcome';
 
 import './chart';
 import './dom';
@@ -49,10 +53,50 @@ import './avatar';
 if (launchBtn) launchBtn.addEventListener('click', launchGame);
 
 (async function init(): Promise<void> {
-  setStatus('正在加载...');
+  let firstRun: boolean = false;
+  const initial: any = (window.gpcl as any).initialI18n;
+  const reloading: boolean = document.documentElement.classList.contains('gpcl-reloading');
+  if (initial) {
+    setSystemLocale(initial.systemLocale);
+    setLocale(initial.locale);
+    applyTheme(initial.theme);
+    applyStyle(initial.style);
+    applyScale(initial.scale);
+    firstRun = Boolean(initial.firstRun);
+  }
+  applyI18n(document.body);
+  observeI18n();
+  initBootSplash(Boolean((initial && initial.skipSplash) || reloading));
+  const licensePlaceholder: HTMLElement | null = document.getElementById('license-text');
+  if (licensePlaceholder && licensePlaceholder.dataset.loaded !== '1') {
+    licensePlaceholder.textContent = t('ui.loading_license');
+  }
+  const aboutHelpLink: HTMLElement | null = document.getElementById('about-help-link');
+  if (aboutHelpLink) aboutHelpLink.setAttribute('href', docsUrl(''));
+  const crashHelpLink: HTMLElement | null = document.getElementById('crash-dialog-help-link');
+  if (crashHelpLink) {
+    crashHelpLink.setAttribute('href', docsUrl('mc-game/'));
+    crashHelpLink.textContent = docsUrl('mc-game/').replace(/^https:\/\//, '');
+  }
+  initLanguagePicker();
+
+  setStatus(t('ui.loading_2'));
   initTheme();
   initScale();
+  initWelcome(firstRun);
   if (menuLaunch) menuLaunch.classList.add('active');
+
+  try {
+    const restore: any = JSON.parse(sessionStorage.getItem('gpcl:restore') || 'null');
+    sessionStorage.removeItem('gpcl:restore');
+    if (restore && restore.page === 'settings') {
+      showPage('settings', false);
+      switchSettingsTab(restore.tab || 'game');
+    }
+  } catch (e) {}
+
+  // <head> 里那套首帧规则只负责绘制前的状态，接管后交给正常逻辑
+  document.documentElement.classList.remove('gpcl-boot-settings', 'gpcl-reloading', 'gpcl-skip-splash');
 
   if (usernameInput && window.gpcl && window.gpcl.getPlayerNames) {
     const names: any = await window.gpcl.getPlayerNames();
@@ -156,9 +200,9 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
         if (!hasQueuedDownloads()) {
           if (downloadPanel) downloadPanel.classList.add('hidden');
           if (detailDownloadBtn) detailDownloadBtn.disabled = false;
-          showToast('已取消', '下载已取消，文件已清理', 'info');
+          showToast('ui.cancelled', '下载已取消，文件已清理', 'info');
         } else {
-          showToast('已取消当前任务', '队列里的任务会继续下载', 'info');
+          showToast('ui.current_task_cancelled', '队列里的任务会继续下载', 'info');
         }
       }
     }
@@ -215,11 +259,11 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
       
       if (updateAvailable) {
         const newest = allNewerVersions[allNewerVersions.length - 1];
-        checkUpdateBtn.textContent = `发现 ${allNewerVersions.length} 个新版本`;
+        checkUpdateBtn.textContent = t('ui.count_new_version_s_available', { count: allNewerVersions.length });
         checkUpdateBtn.classList.add('new-version');
         
         if (updateStatus) {
-          updateStatus.innerHTML = `<div class="update-log-title">发现 ${allNewerVersions.length} 个新版本！</div>${renderUpdateVersionCards(allNewerVersions)}`;
+          updateStatus.innerHTML = `<div class="update-log-title">${t('ui.count_new_version_s_available_2', { count: allNewerVersions.length })}</div>${renderUpdateVersionCards(allNewerVersions)}`;
           updateStatus.classList.add('show', 'has-update');
         }
         
@@ -231,11 +275,11 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
           openWebsiteBtn.classList.remove('hidden');
         }
       } else {
-        checkUpdateBtn.textContent = '已是最新版本';
+        checkUpdateBtn.textContent = t('ui.up_to_date');
         checkUpdateBtn.classList.remove('new-version');
         
         if (updateStatus) {
-          updateStatus.innerHTML = '当前已是最新版本';
+          updateStatus.innerHTML = t('ui.you_re_on_the_latest_version');
           updateStatus.classList.add('show');
           updateStatus.classList.remove('has-update');
         }
@@ -293,9 +337,9 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
       windowTitleInput.value = nextTitle;
       await gpcl.saveSettings(settings);
       if (nextTitle) {
-        showToast('已保存', '新的窗口标题会在下次启动游戏时生效', 'success', 'window-title-saved');
+        showToast('ui.saved', '新的窗口标题会在下次启动游戏时生效', 'success', 'window-title-saved');
       } else {
-        showToast('已关闭自定义标题', '留空表示不修改游戏窗口标题', 'info', 'window-title-off');
+        showToast('ui.custom_title_disabled', '留空表示不修改游戏窗口标题', 'info', 'window-title-off');
       }
     });
   }
@@ -305,7 +349,7 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
     windowTitleHelp.addEventListener('click', (e: Event): void => {
       e.preventDefault();
       if (window.gpcl && window.gpcl.openExternal) {
-        window.gpcl.openExternal('https://gamets.caellab.com/gpcl/docs/magic-words/');
+        window.gpcl.openExternal(docsUrl('magic-words/'));
       }
     });
   }
@@ -464,7 +508,7 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
           if (window.gpcl && window.gpcl.restartApp) {
             await window.gpcl.restartApp();
           } else {
-            showToast('重启失败', '无法自动重启，请手动重启应用', 'error');
+            showToast('ui.restart_failed', '无法自动重启，请手动重启应用', 'error');
             developerMode.checked = false;
           }
         } else {
@@ -698,7 +742,7 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
     saveTimeout = setTimeout(async (): Promise<void> => {
       const success: boolean = await saveVersionSettings(currentVersionForSettings!, settings);
       if (!success) {
-        showToast('保存失败', '无法保存版本设置', 'error');
+        showToast('ui.save_failed', '无法保存版本设置', 'error');
       }
     }, 300);
   }
@@ -712,7 +756,7 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
     
     currentVersionForSettings = versionId;
     currentVersionInfo = null;
-    if (versionSettingsTitle) versionSettingsTitle.textContent = `版本设置 - ${versionId}`;
+    if (versionSettingsTitle) versionSettingsTitle.textContent = t('ui.version_settings_version', { version: versionId });
 
     try {
       const infoResult: any = await window.gpcl.getVersionInfo(versionId);
@@ -766,7 +810,7 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
       if (selectedVersionId) {
         await showVersionSettingsPanel(selectedVersionId);
       } else {
-        showToast('未选择版本', '请先选择一个版本', 'warning');
+        showToast('ui.no_version_selected', '请先选择一个版本', 'warning');
       }
     });
   }
@@ -783,7 +827,7 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
         const confirmed: boolean = await showDialog({
           type: 'confirm',
           title: '确认删除',
-          message: `确定要删除版本 "${currentVersionForSettings}" 吗？此操作不可恢复！`
+          message: t('ui.delete_version_name_this_cannot_be_undone', { name: currentVersionForSettings })
         });
         
         if (confirmed) {
@@ -791,17 +835,17 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
             try {
               const result = await window.gpcl.deleteVersion(currentVersionForSettings);
               if (result.success) {
-                showToast('删除成功', `版本 ${currentVersionForSettings} 已删除`, 'success');
+                showToast('ui.deleted', t('ui.version_name_deleted', { name: currentVersionForSettings }), 'success');
                 
                 await hideVersionSettingsPanel();
                 loadVersions(true);
                 renderVersionSelectList();
               } else {
-                showToast('删除失败', result.error || '无法删除版本', 'error');
+                showToast('ui.delete_failed', result.error || '无法删除版本', 'error');
                 this.checked = false;
               }
             } catch (e: any) {
-              showToast('删除失败', e.message, 'error');
+              showToast('ui.delete_failed', e.message, 'error');
               this.checked = false;
             }
           }
@@ -884,11 +928,11 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
         /* 正版登录时名字由账号决定，收起离线名字列表 */
         closeUsernameHistory();
         if (usernameHistoryBtn) usernameHistoryBtn.classList.add('hidden');
-        showToast('登录成功', `欢迎回来，${result.username}！`, 'success');
+        showToast('ui.signed_in', t('ui.welcome_back_name', { name: result.username }), 'success');
       } else if (result.status === 'timeout') {
-        showToast('登录超时', '登录超时，请重试', 'error');
+        showToast('ui.sign_in_timed_out', '登录超时，请重试', 'error');
       } else if (result.status === 'error') {
-        showToast('登录失败', result.message || '微软登录失败', 'error');
+        showToast('ui.sign_in_failed', result.message || '微软登录失败', 'error');
       }
     });
   }
@@ -910,11 +954,11 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
           usernameInput.disabled = false;
         }
         if (usernameHistoryBtn) usernameHistoryBtn.classList.remove('hidden');
-        showToast('已登出', '已切换到离线模式', 'info');
+        showToast('ui.signed_out', '已切换到离线模式', 'info');
         return;
       }
 
-      showToast('正版登录', '正在打开浏览器进行微软登录...', 'info');
+      showToast('ui.microsoft_sign_in', '正在打开浏览器进行微软登录...', 'info');
 
       // 启动认证
       if (window.gpcl && window.gpcl.startMicrosoftAuth) {
@@ -926,7 +970,7 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
   if (authOfflineBtn) {
     authOfflineBtn.addEventListener('click', () => {
       if (msAuthData) {
-        showToast('提示', '请先点击正版按钮登出', 'warning');
+        showToast('ui.notice', '请先点击正版按钮登出', 'warning');
         return;
       }
       authOfflineBtn.classList.add('auth-tab-active');

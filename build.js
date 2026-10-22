@@ -19,6 +19,7 @@ async function buildMain() {
   const mainEntries = fs.readdirSync(SRC)
     .filter(f => f.endsWith('.ts') && f !== 'types.ts')
     .map(f => `src/${f}`);
+  mainEntries.push('src/i18n/index.ts');
 
   await esbuild.build({
     entryPoints: mainEntries,
@@ -27,6 +28,7 @@ async function buildMain() {
     target: 'node18',
     format: 'cjs',
     outdir: 'dist',
+    outbase: 'src',
     sourcemap: false,
   });
   console.log(`✅ main process 编译完成 (${mainEntries.length} 个模块)`);
@@ -56,7 +58,7 @@ function copyStatic() {
   fs.mkdirSync(rendererDir, { recursive: true });
 
   // 复制 HTML 文件
-  for (const html of ['index.html', 'splash.html']) {
+  for (const html of ['index.html']) {
     const src = path.join('renderer', html);
     if (fs.existsSync(src)) {
       fs.copyFileSync(src, path.join(rendererDir, html));
@@ -121,6 +123,12 @@ function copyStatic() {
   // 关于页的许可证原文，随程序本地携带
   if (fs.existsSync('LICENSE')) {
     fs.copyFileSync('LICENSE', path.join(DIST, 'LICENSE.txt'));
+  }
+
+  // 主进程用 require 读语言包，renderer 由 esbuild 直接内联同一份 JSON
+  const localesSrc = path.join(SRC, 'i18n', 'locales');
+  if (fs.existsSync(localesSrc)) {
+    fs.cpSync(localesSrc, path.join(DIST, 'i18n', 'locales'), { recursive: true });
   }
 
   // 生成 dist/package.json

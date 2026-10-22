@@ -1,0 +1,70 @@
+---
+title: Gra się zawiesiła, co dalej
+slug: /mc-game
+description: Eksportowanie raportu błędu, czytanie logów i diagnozowanie awarii Minecrafta po objawach.
+---
+
+Z samego okna awarii zwykle nie wynika przyczyna. GPCL najpierw czyta logi i podaje wskazówki, a potem warto iść według kolejności poniżej.
+
+:::tip Zacznij od tego
+Kliknij „Eksportuj raport błędu” w oknie awarii i zapisz wygenerowany zip. Raport zaczyna się od analizy GPCL, a dalej zawiera listę modów, Javę, parametry uruchomienia i wszystkie logi — na nim opiera się prawie cała diagnoza.
+:::
+
+## 1. Najpierw analiza GPCL
+
+Okno pokazuje 1–2 wskazówki znalezione przez GPCL w logach, np. „za mało pamięci” albo „kontrola zależności lub zgodności modów nie przeszła”. Po kliknięciu „Pokaż szczegóły” widać wszystkie wskazówki, odpowiadające im wiersze logu i informacje o awarii.
+
+Te wnioski pochodzą z dopasowania słów kluczowych i służą tylko jako kierunek. Jeśli w logu jest coś bardziej konkretnego (np. której zależności brakuje), pojawia się to razem w dowodach.
+
+## 2. Eksport raportu błędu
+
+Przycisk jest w oknie awarii. Wybierz miejsce zapisu — GPCL przygotuje:
+
+- `error-report.txt`: wynik analizy, podsumowanie błędu, system / karta graficzna / Java, lista modów, paczki zasobów i shadery, parametry uruchomienia, wyjście gry i wiersze błędów z logów;
+- `crash-reports/`: raporty awarii wygenerowane w tym uruchomieniu;
+- `logs/`: `latest.log` i `debug.log` (przy bardzo dużych plikach tylko końcówka);
+- `jvm-crash/`: pliki `hs_err_pid*.log` zapisane przez samą JVM (gdy np. sterownik karty graficznej wywala JVM);
+- `launcher-log.txt`: log launcha;
+- `game-output.txt`: standardowe wyjście i wyjście błędów procesu gry z tego uruchomienia.
+
+`--accessToken` i nazwa użytkownika systemu w raporcie są już zamaskowane, więc można go wysłać bez zmian. Nie wysyłaj tylko zrzutu ekranu okna awarii.
+
+## 3. Zajrzyj do logów
+
+„Pokaż log” w oknie otwiera wyjście procesu gry. Patrz przede wszystkim na koniec i szukaj tych słów:
+
+| Słowo kluczowe | Zwykle oznacza |
+| --- | --- |
+| `Exception`, `Caused by` | Właściwy wyjątek jest zwykle po pierwszym `Caused by` |
+| `OutOfMemoryError` | Przydzielona pamięć jest za mała |
+| `UnsupportedClassVersionError` | Wersja Javy nie pasuje do wersji gry |
+| `NoSuchMethodError`, `ClassNotFoundException` | Mod nie pasuje do wersji gry lub loadera albo brakuje zależności |
+| `GLFW error` | Problem ze sterownikiem karty graficznej lub obsługą OpenGL |
+
+## 4. Najczęstsze przyczyny
+
+| Objaw | Częsta przyczyna | Co zrobić |
+| --- | --- | --- |
+| Zamyka się od razu przy starcie, w logu `UnsupportedClassVersionError` | Zła wersja Javy | Pozwól GPCL zainstalować Javę; albo zmień lustro w ustawieniach i zainstaluj ponownie |
+| Zawiesza się lub zamyka w połowie ładowania, z `OutOfMemoryError` | Za mało pamięci lub za dużo modów | Zwiększ w Ustawienia → Gra → Przydział pamięci; nie przekraczaj pamięci fizycznej |
+| Awaria przy ładowaniu modów, w logu nazwa moda | Zła wersja moda, brak zależności, konflikt dwóch modów | Sprawdź tylko z tym modem; potwierdź obsługiwane wersje MC i loadera |
+| Zamyka się, zanim pojawi się okno, z `GLFW error` | Przestarzały sterownik grafiki lub brak obsługi OpenGL | Zaktualizuj sterownik karty graficznej; na laptopie sprawdź, czy gra używa karty dedykowanej |
+| Wyrzucenie z serwera z `Invalid session` | Wygasłe logowanie lub konto bez uprawnień do tej wersji | Zaloguj się ponownie kontem oficjalnym; sprawdź, czy konto posiada tę wersję |
+| Awaria przy wejściu do świata lub ładowaniu paczek zasobów | Uszkodzony świat, paczka zasobów lub shader | Utwórz nowy świat do testu; przed ingerencją zrób kopię świata |
+| Awaria przy starcie z Fabric, komunikat o braku `fabric-api` | Brak Fabric API | Zainstaluj Fabric ponownie z zaznaczonym „Zainstaluj także Fabric API” albo doinstaluj ręcznie |
+
+## 5. Wyklucz najpierw trzy rzeczy
+
+1. **Wyłącz wszystkie mody, paczki zasobów i shadery** i uruchom raz bez nich. Jeśli gra wstanie, problem jest w modach.
+2. **Uruchom inną wersję vanilla**. Jeśli wstanie, problem jest w bieżącej wersji lub jej zestawie modów.
+3. **Utwórz nowy świat**. Jeśli wstanie, stary świat jest uszkodzony.
+
+## 6. Jeśli nadal nie działa
+
+Napisz na [gamets@caellab.com](mailto:gamets@caellab.com), dołącz wyeksportowany raport błędu i podaj:
+
+- wersję launcha, wersję Minecrafta, wersję loadera;
+- zainstalowane mody (najlepiej z numerami wersji);
+- co robiłeś przed awarią.
+
+Sam opis „wywala się od razu przy starcie” rzadko wystarcza do znalezienia przyczyny — kluczowe są logi w raporcie.

@@ -1,0 +1,72 @@
+---
+title: İndirme ve ayna sunucuları
+description: Dosya indirme kaynakları, sürüm listesi kaynakları, iş parçacığı sayısı, hız sınırı, Java aynaları ve özel dosya aynası.
+---
+
+Yavaş indirme genellikle başlatıcının sorunu değildir. Önce indirme kaynağını değiştirin, sonra iş parçacığı sayısı ve hız sınırını düşünün.
+
+## İndirme görevleri kuyruğa girer
+
+«İndir»e tıkladıktan sonra görev kuyruğa girer ve arayüzü kilitlemez: bekleyen görev × ile kaldırılabilir, indirilmekte olan iptal edilebilir; iptalden sonra kuyruk çalışmaya devam eder.
+
+İndirme sayfası her görevin durumunu listeler: bekliyor, indiriliyor, tamamlandı, başarısız.
+
+## Dosya kaynağı ve sürüm listesi kaynağı
+
+**Ayarlar → İndirme → İndirme kaynağı** bölümünde birbirinden bağımsız iki açılır liste vardır:
+
+- **Dosya indirme kaynağı**: istemci jar, varlık dosyaları, bağımlılık kütüphaneleri;
+- **Sürüm listesi kaynağı**: sürüm bildirimi, sürüm JSON'ları, varlık dizinleri.
+
+İkisinde de aynı dört seçenek bulunur:
+
+| Seçenek | Davranış |
+| --- | --- |
+| Önce resmî, yavaşsa aynaya geç | Varsayılan. Önce resmî sunucu; birkaç saniye yanıt gelmezse BMCLAPI |
+| Ayna kaynaklarını tercih et | Çin'deki ağlarda doğrudan ayna |
+| Önce resmî kaynağı kullan | Önce resmî; başarısız olursa aynaya döner |
+| Yalnızca resmî kaynağı kullan | Yalnızca resmî; bağlanamazsa başarısız olur |
+
+## Özel dosya aynası
+
+**Ayarlar → İndirme → Özel dosya aynası** bölümüne bir ayna kök adresi girilebilir (varsayılan BMCLAPI, örneğin `https://bmclapi2.bangbang93.com`). Girildiğinde sürüm bildirimi, istemci, kütüphaneler ve varlıklar önce buradan çekilir; olmazsa özgün kaynak sırasına göre yedek kaynaklar denenir.
+
+Boş bırakılırsa varsayılan BMCLAPI kullanılır.
+
+## Oyun klasörü
+
+**Ayarlar → İndirme → Oyun klasörü** ile sürümler, kütüphaneler, varlıklar ve modlar herhangi bir klasöre konabilir; boş bırakılırsa `%APPDATA%\gpcl\.minecraft` kullanılır.
+
+Klasör değiştirmek mevcut dosyaları **otomatik taşımaz**. Eski klasördeki sürümler taşınmaz; gerekiyorsa elle kopyalayın. Yapılandırma ve günlükler yine `%APPDATA%\gpcl` altında kalır.
+
+## En fazla iş parçacığı
+
+Varsayılan 64, aralık 1–128. Küçük dosya çoksa eşzamanlılığı artırmak biraz hızlandırır, ama çok yüksek değer ağ cihazı veya ayna tarafından sınırlanabilir. Ağ kararsızsa düşürün.
+
+## Hız sınırı
+
+0 sınırsız demektir; bir değer girildiğinde **tüm indirme görevleri bu toplam sınırı paylaşır**, birim MB/s ve bir sonraki indirme başlangıcında geçerli olur. Ağı paylaşıyorsanız düşürebilirsiniz.
+
+Bu sınır yalnızca oyun varlıklarının indirilmesi için geçerlidir. Java çalışma zamanı ayrı bir aynadan indirilir ve buradan etkilenmez.
+
+## Java ayna kaynakları
+
+**Ayarlar → İndirme → Java indirme** bölümünde Tsinghua, Nanjing Üniversitesi, Huawei Cloud veya özel kaynak seçilebilir. Seçili kaynak başarısız olursa otomatik olarak sonrakine geçilir, en sonda resmî Adoptium yedeği vardır.
+
+Özel adres iki değişkeni destekler:
+
+- `{v}`: Java ana sürümü, örneğin `8`, `17`, `21`;
+- `{version}`: üst kaynaktaki tam sürüm numarası, örneğin `17.0.20.1_1`; üst kaynak sürüm çıkardıkça değişir.
+
+Örnek:
+
+```text
+https://cdn.example.com/java/{v}/OpenJDK{v}U-jre_x64_windows_hotspot_{v}.zip
+```
+
+## İndirme başarısızsa ilk adımlar
+
+1. Başka bir indirme kaynağı seçin.
+2. İş parçacığı sayısını 32 veya 16'ya düşürüp yeniden deneyin.
+3. Sistem saatini doğrulayın — büyük sapma HTTPS sertifika doğrulamasını bozar.
+4. Hâlâ olmuyorsa e-posta gönderin ve `%APPDATA%\gpcl\gpcl\log` içindeki en yeni günlüğü ekleyin.

@@ -1,0 +1,839 @@
+<!--
+ Copyright (c) 2026 Yunyun(云云) By 虚舟实验室(CaelLab) / CaelLabGameTS
+ Licensed under the CaelLab BY-SA Code License, Version 3
+ or any later version. https://www.caellab.com/license/cbs-v3.txt
+ Source: https://github.com/CaelLab-org/GoodPlanCraftLauncher
+ Project: https://gamets.caellab.com/gpcl/
+-->
+<!DOCTYPE html>
+<html lang="el" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoodPlanCraftLauncher - Ελαφρύς, αποδοτικός εκκινητής Minecraft - CaelLabGameTS</title>
+    <meta name="description" content="Το GoodPlanCraftLauncher είναι ένας απλός, αποδοτικός εκκινητής Minecraft με σύνδεση Microsoft και offline, διαχείριση εκδόσεων και εγκατάσταση mods Forge/NeoForge/Fabric/OptiFine, ώστε να μπαίνεις στον κόσμο των κύβων με ένα κλικ. Ανοιχτού κώδικα και δωρεάν.">
+    <meta name="keywords" content="GoodPlanCraftLauncher,εκκινητής Minecraft,εκκινητής MC,Minecraft Java Edition,CaelLab,ανοιχτός κώδικας">
+    <meta name="author" content="CaelLabGameTS">
+    <meta name="theme-color" content="#f6fafd">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="GoodPlanCraftLauncher - Ελαφρύς, αποδοτικός εκκινητής Minecraft">
+    <meta property="og:description" content="Ελαφρύς · αποδοτικός · ανοιχτού κώδικα. Σύνδεση Microsoft και offline, διαχείριση εκδόσεων και εγκατάσταση Forge/NeoForge/Fabric/OptiFine με ένα κλικ.">
+    <meta property="og:url" content="https://gamets.caellab.com/gpcl/">
+    <meta property="og:site_name" content="CaelLabGameTS">
+        <link rel="alternate" hreflang="en-US" href="https://gamets.caellab.com/gpcl/index.en-us">
+    <link rel="alternate" hreflang="zh-CN" href="https://gamets.caellab.com/gpcl/index.zh-cn">
+    <link rel="alternate" hreflang="zh-TW" href="https://gamets.caellab.com/gpcl/index.zh-tw">
+    <link rel="alternate" hreflang="ar" href="https://gamets.caellab.com/gpcl/index.ar">
+    <link rel="alternate" hreflang="bn" href="https://gamets.caellab.com/gpcl/index.bn">
+    <link rel="alternate" hreflang="de" href="https://gamets.caellab.com/gpcl/index.de">
+    <link rel="alternate" hreflang="el" href="https://gamets.caellab.com/gpcl/index.el">
+    <link rel="alternate" hreflang="es" href="https://gamets.caellab.com/gpcl/index.es">
+    <link rel="alternate" hreflang="fa" href="https://gamets.caellab.com/gpcl/index.fa">
+    <link rel="alternate" hreflang="fr" href="https://gamets.caellab.com/gpcl/index.fr">
+    <link rel="alternate" hreflang="he" href="https://gamets.caellab.com/gpcl/index.he">
+    <link rel="alternate" hreflang="hi" href="https://gamets.caellab.com/gpcl/index.hi">
+    <link rel="alternate" hreflang="id" href="https://gamets.caellab.com/gpcl/index.id">
+    <link rel="alternate" hreflang="it" href="https://gamets.caellab.com/gpcl/index.it">
+    <link rel="alternate" hreflang="ja" href="https://gamets.caellab.com/gpcl/index.ja">
+    <link rel="alternate" hreflang="ko" href="https://gamets.caellab.com/gpcl/index.ko">
+    <link rel="alternate" hreflang="ms" href="https://gamets.caellab.com/gpcl/index.ms">
+    <link rel="alternate" hreflang="nl" href="https://gamets.caellab.com/gpcl/index.nl">
+    <link rel="alternate" hreflang="pl" href="https://gamets.caellab.com/gpcl/index.pl">
+    <link rel="alternate" hreflang="pt" href="https://gamets.caellab.com/gpcl/index.pt">
+    <link rel="alternate" hreflang="ru" href="https://gamets.caellab.com/gpcl/index.ru">
+    <link rel="alternate" hreflang="th" href="https://gamets.caellab.com/gpcl/index.th">
+    <link rel="alternate" hreflang="tr" href="https://gamets.caellab.com/gpcl/index.tr">
+    <link rel="alternate" hreflang="uk" href="https://gamets.caellab.com/gpcl/index.uk">
+    <link rel="alternate" hreflang="vi" href="https://gamets.caellab.com/gpcl/index.vi">
+    <link rel="alternate" hreflang="x-default" href="https://gamets.caellab.com/gpcl/index.en-us">
+    <link rel="icon" type="image/png" href="./icon.png">
+    <link rel="stylesheet" href="./style.css?v=n5q8v2k7">
+    <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="https://gamets.caellab.com" class="logo">
+                <img src="/logo.png" alt="GameTS">
+            </a>
+            <ul class="nav-links">
+                <li>
+                    <div class="dropdown" id="sourceDropdown">
+                        <button class="dropdown-toggle" onclick="toggleDropdown('sourceDropdown')">
+                            <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                            Πηγαίος κώδικας
+                            <span class="arrow">&#9662;</span>
+                        </button>
+                        <div class="dropdown-menu">
+                            <div class="menu-label">GitHub</div>
+                            <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener">
+                                <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                                GoodPlanCraftLauncher
+                            </a>
+                        </div>
+                    </div>
+                </li>
+                <li class="lang-switch"><select aria-label="Γλώσσα" onchange="if(this.value)location.href=this.value"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el" selected>Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select></li>
+                <li><a href="#download" class="nav-cta">&#9662; Λήψη v1.8.0</a></li>
+            </ul>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Άνοιγμα μενού" aria-expanded="false">&#9776;</button>
+        </div>
+    </nav>
+    <div class="mobile-panel" id="mobilePanel">
+        <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener">Πηγαίος κώδικας στο GitHub</a>
+        <select aria-label="Γλώσσα" onchange="if(this.value)location.href=this.value" style="width:100%;margin-top:8px;padding:10px;background:var(--surface);border:1px solid var(--line);border-radius:8px;color:var(--text-2);font:inherit;font-size:0.95rem;"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el" selected>Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select>
+    </div>
+
+    <section class="hero">
+        <span class="float-pixel" style="top:18%;left:9%;"></span>
+        <span class="float-pixel" style="top:24%;right:11%;animation-delay:-3s;"></span>
+        <span class="float-pixel" style="bottom:30%;left:16%;animation-delay:-6s;width:8px;height:8px;"></span>
+        <span class="float-pixel" style="bottom:38%;right:18%;animation-delay:-1.5s;width:7px;height:7px;"></span>
+        <div class="hero-content">
+            <div class="hero-tags">
+                <span class="hero-tag"><span class="dot"></span>Ανοιχτός κώδικας</span>
+                <span class="hero-tag"><span class="dot"></span>Δωρεάν</span>
+                <span class="hero-tag"><span class="dot"></span>Εκκινητής Minecraft</span>
+            </div>
+            <div class="hero-icon">
+                <img src="./icon.png" alt="Εικονίδιο GoodPlanCraftLauncher">
+            </div>
+            <h1>GoodPlanCraftLauncher</h1>
+            <p class="hero-subtitle">Ελαφρύς · Αποδοτικός · Ανοιχτού κώδικα</p>
+            <p class="hero-desc">Ένας εκκινητής Minecraft γραμμένος για Windows: σύνδεση Microsoft και offline, διαχείριση εκδόσεων και εγκατάσταση Forge / Fabric / OptiFine με ένα κλικ. Όταν το παιχνίδι καταρρέει, σου λέει γιατί αντί να δείχνει ένα κενό πλαίσιο.</p>
+            <div class="hero-actions">
+                <a href="#download" class="hero-btn primary">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                    Λήψη τώρα
+                </a>
+                <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener" class="hero-btn ghost">
+                    <svg width="17" height="17" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                    GitHub
+                </a>
+            </div>
+            <div class="hero-meta">
+                <span>Έκδοση <b>v1.8.0</b></span>
+                <span class="sep">/</span>
+                <span>Ενημερώθηκε <b>2026-10-22</b></span>
+                <span class="sep">/</span>
+                <span>Πλατφόρμα <b>Windows 10+</b></span>
+            </div>
+        </div>
+
+        <div class="window-stage" id="heroWindow">
+            <div class="window">
+                <iframe src="./demo/index.html?fit=1&v=q8m3x2vd&lang=el" title="Διεπαφή GoodPlanCraftLauncher" loading="eager"></iframe>
+            </div>
+        </div>
+        <p class="window-note">Το παράθυρο παραπάνω είναι <b>διαδραστικό</b> — είναι η ίδια η διεπαφή του εκκινητή, που τρέχει μέσα στην ιστοσελίδα.</p>
+    </section>
+
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">Χαρακτηριστικά</div>
+                <h2 class="section-title">Βασικά χαρακτηριστικά</h2>
+                <p class="section-desc">Πρακτικά εργαλεία για παίκτες, καθένα με στόχο να μπεις στο παιχνίδι πιο γρήγορα</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7.5" cy="15.5" r="4.5"/><path d="m10.8 12.2 8.7-8.7"/><path d="m16 5 3 3"/><path d="m19 8 2-2-3-3-2 2"/></svg>
+                    </span>
+                    <h3>Δύο τρόποι σύνδεσης</h3>
+                    <p>Σύνδεση Microsoft και offline, με εναλλαγή οποιαδήποτε στιγμή· η offline λειτουργία δεν απαιτεί διαδικτυακή επαλήθευση.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 13v8"/><path d="m8 17 4 4 4-4"/><path d="M20 16.7A5 5 0 0 0 18 7h-1.3A8 8 0 1 0 4 15.2"/></svg>
+                    </span>
+                    <h3>Λήψη mod ενσωματωμένη</h3>
+                    <p>Αναζητήστε στο Modrinth και το CurseForge και εγκαταστήστε mod, shaders ή resource packs στον φάκελο που χρησιμοποιεί πραγματικά η επιλεγμένη έκδοση.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 9 4.9-9 4.9-9-4.9Z"/><path d="m3 12 9 4.9 9-4.9"/><path d="m3 17 9 4.9 9-4.9"/></svg>
+                    </span>
+                    <h3>Τέσσερις φορτωτές mod</h3>
+                    <p>Forge, NeoForge, Fabric και OptiFine εγκαθίστανται από επίσημες πηγές, με έλεγχο της έκδοσης Java πρώτα.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 0 20a15.3 15.3 0 0 1 0-20Z"/></svg>
+                    </span>
+                    <h3>25 γλώσσες διεπαφής</h3>
+                    <p>Ακολουθεί τη γλώσσα του συστήματος στην πρώτη εκκίνηση· αλλάζει οποτεδήποτε από τις ρυθμίσεις.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+                    </span>
+                    <h3>Αυτόματη διαχείριση εκδόσεων</h3>
+                    <p>Κατέβασε, εγκατέστησε και άλλαξε εκδόσεις Minecraft με ένα κλικ, με βιβλιοθήκες και assets να χειρίζονται αυτόματα.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+                    </span>
+                    <h3>Γρήγορη εκκίνηση</h3>
+                    <p>Απλοποιημένη διαδρομή εκκίνησης και προσωρινή μνήμη, ώστε να πατάς και να παίζεις αντί να περιμένεις.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><path d="M6 2v2"/><path d="M10 2v2"/><path d="M14 2v2"/></svg>
+                    </span>
+                    <h3>Διαχείριση χρόνου εκτέλεσης Java</h3>
+                    <p>Εντοπίζει και εγκαθιστά αυτόματα χρόνο εκτέλεσης Java· η πηγή λήψης μπορεί να οριστεί σε Tsinghua, Nanjing University, Huawei Cloud ή την επίσημη πηγή, με εναλλαγή στην επόμενη σε περίπτωση αποτυχίας.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                    </span>
+                    <h3>Υποστήριξη θεμάτων</h3>
+                    <p>Πλήρης υποστήριξη φωτεινής και σκοτεινής λειτουργίας, με ρυθμιζόμενη κλιμάκωση διεπαφής για σταθερή εμφάνιση.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+                    </span>
+                    <h3>Αυτόματες ενημερώσεις και συντήρηση</h3>
+                    <p>Ενσωματωμένος έλεγχος ενημερώσεων και ρυθμιζόμενος αυτόματος καθαρισμός αρχείων καταγραφής κρατούν τον εκκινητή ελαφρύ με τον καιρό.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.29 3.86-8.47 14.14A2 2 0 0 0 3.53 21h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+                    </span>
+                    <h3>Ειδοποιήσεις κατάρρευσης και αναφορές σφαλμάτων</h3>
+                    <p>Όταν το παιχνίδι τερματίζεται μη φυσιολογικά, εξηγεί γιατί και μπορεί να εξάγει αναφορά σφάλματος με ένα κλικ (αναφορά κατάρρευσης + αρχεία καταγραφής + πληροφορίες συστήματος).</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    </span>
+                    <h3>Πίνακας εκτέλεσης</h3>
+                    <p>Μετά την εκκίνηση, ένας πίνακας στα δεξιά δείχνει έκδοση, PID, χρόνο λειτουργίας και χρήση μνήμης, και μπορεί να τερματίσει το παιχνίδι οποιαδήποτε στιγμή.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>
+                    </span>
+                    <h3>Προσαρμοσμένος τίτλος παραθύρου</h3>
+                    <p>Γράψε τον δικό σου τίτλο παραθύρου παιχνιδιού, με μαγικές λέξεις όπως {mc_version} και {time}.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="screenshots">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">Στιγμιότυπα</div>
+                <h2 class="section-title">Πραγματικά στιγμιότυπα</h2>
+                <p class="section-desc">Το παράθυρο στην κορυφή είναι αναδημιουργία της διεπαφής του εκκινητή για τον ιστό, διαδραστική χωρίς εγκατάσταση. Τα τέσσερα παρακάτω είναι ο εκκινητής σε πραγματική λειτουργία στα Windows, χωρίς επεξεργασία.</p>
+            </div>
+            <div class="shot-gallery">
+                <figure class="shot reveal">
+                    <img src="./screenshots/launch.png?v=q9v3m7k2" alt="Οθόνη εκκίνησης GoodPlanCraftLauncher" loading="lazy">
+                    <figcaption>Οθόνη εκκίνησης · διάλεξε έκδοση, βάλε όνομα παίκτη, ξεκίνα το παιχνίδι</figcaption>
+                </figure>
+                <figure class="shot reveal">
+                    <img src="./screenshots/download.png?v=q9v3m7k2" alt="Οθόνη λήψης GoodPlanCraftLauncher" loading="lazy">
+                    <figcaption>Οθόνη λήψης · εκδόσεις παιχνιδιού, mod, shaders, resource packs και modpacks</figcaption>
+                </figure>
+                <figure class="shot reveal">
+                    <img src="./screenshots/settings.png?v=q9v3m7k2" alt="Ρυθμίσεις παιχνιδιού GoodPlanCraftLauncher" loading="lazy">
+                    <figcaption>Ρυθμίσεις · μνήμη παιχνιδιού, λειτουργία παραθύρου, τίτλος παραθύρου και μαγικές λέξεις</figcaption>
+                </figure>
+                <figure class="shot reveal">
+                    <img src="./screenshots/appearance.png?v=q9v3m7k2" alt="Ρυθμίσεις εμφάνισης GoodPlanCraftLauncher" loading="lazy">
+                    <figcaption>Ρυθμίσεις · γλώσσα, στυλ διεπαφής, θέμα και κλίμακα</figcaption>
+                </figure>
+            </div>
+        </div>
+    </section>
+
+    <section class="download" id="download">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">Λήψη</div>
+                <h2 class="section-title">Λήψη τώρα</h2>
+                <p class="section-desc">Διάλεξε πλατφόρμα και ξεκίνα την περιπέτεια με κύβους</p>
+            </div>
+            <div class="download-card reveal">
+                <span class="dl-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
+                </span>
+                <div class="download-file">GPCL-1.8.0-Setup.exe</div>
+                <a href="https://dl.caellab.com/file/games/gpcl/GPCL-1.8.0-Setup.exe" class="download-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                    Ξεκίνα τον κόσμο των κύβων!
+                </a>
+                <div class="update-info">
+                    <span>Ενημερώθηκε <b>2026-10-22</b></span>
+                    <span>Πλατφόρμα <b>Windows 10 64-bit</b></span>
+                    <span>Άδεια <b>Ανοιχτός κώδικας, δωρεάν</b></span>
+                </div>
+                <div class="download-extra">
+                    <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener" class="hero-btn ghost">
+                        <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                        Δες στο GitHub
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="requirements" id="requirements">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">Σύστημα</div>
+                <h2 class="section-title">Απαιτήσεις συστήματος</h2>
+                <p class="section-desc">Μέτριες, αλλά καλό να τις ξέρεις</p>
+            </div>
+            <div class="req-grid">
+                <div class="req-card reveal">
+                    <div class="req-label">Λειτουργικό σύστημα</div>
+                    <p>Windows 10 64-bit (1709+); λειτουργεί και στα Windows 11</p>
+                </div>
+                <div class="req-card reveal">
+                    <div class="req-label">Χρόνος εκτέλεσης Java</div>
+                    <p>Εγκαθίσταται αυτόματα από τον εκκινητή· συνιστάται ο καθαρισμός περιττών ή συγκρουόμενων εγκαταστάσεων Java στο σύστημα</p>
+                </div>
+                <div class="req-card reveal">
+                    <div class="req-label">Αποθήκευση</div>
+                    <p>Τουλάχιστον 90 MB ελεύθερα για τον ίδιο τον εκκινητή (χωρίς τα αρχεία παιχνιδιού)</p>
+                </div>
+                <div class="req-card reveal">
+                    <div class="req-label">Μνήμη</div>
+                    <p>Συνιστάται 2 GB ή περισσότερη διαθέσιμη μνήμη</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="opensource" id="opensource">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">Ανοιχτός κώδικας</div>
+                <h2 class="section-title">Ανοιχτός κώδικας και συνεισφορές</h2>
+                <p class="section-desc">Το GPCL είναι έργο 100% ανοιχτού κώδικα, με τον κώδικα στο GitHub. Τα PR είναι ευπρόσδεκτα, όπως και οι προτάσεις στο <a href="https://forum.xmuer.online/" target="_blank">φόρουμ</a>, για να φτιάξουμε μαζί έναν καλύτερο εκκινητή Minecraft.</p>
+            </div>
+            <div class="opensource-grid">
+                <div class="opensource-card reveal">
+                    <span class="opensource-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="m10 13-2 2 2 2"/><path d="m14 13 2 2-2 2"/></svg>
+                    </span>
+                    <h3>Άδεια</h3>
+                    <p>Διανέμεται υπό την CaelLab BY-SA Code License, Έκδοση 3 (ή οποιαδήποτε μεταγενέστερη έκδοση). Μπορείς να τη χρησιμοποιήσεις, να την τροποποιήσεις και να την αναδιανείμεις ελεύθερα· οι τροποποιημένες εκδόσεις πρέπει να διατηρούν την ίδια άδεια ανοιχτού κώδικα. Αρχική σελίδα έργου: <a href="https://gamets.caellab.com/gpcl/">gamets.caellab.com/gpcl</a>.</p>
+                    <a href="https://www.caellab.com/license/cbs-v3" target="_blank">Διάβασε την πλήρη άδεια →</a>
+                </div>
+                <div class="opensource-card reveal">
+                    <span class="opensource-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3"/><path d="M12 19v3"/><path d="M4.9 4.9l2.1 2.1"/><path d="M17 17l2.1 2.1"/><path d="M2 12h3"/><path d="M19 12h3"/><path d="M4.9 19.1 7 17"/><path d="M17 7l2.1-2.1"/></svg>
+                    </span>
+                    <h3>Συνεισφορά</h3>
+                    <p>Ο κύριος αποθετήριος κώδικας βρίσκεται στο GitHub, όπου διαχειρίζονται issues και PR. Αναφορές σφαλμάτων, προτάσεις λειτουργιών και συνεισφορές κώδικα είναι ευπρόσδεκτες.</p>
+                    <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener">Επισκέψου το GitHub →</a>
+                </div>
+            </div>
+            <details class="license-box reveal">
+                <summary><span class="dot"></span><span class="dot"></span><span class="dot"></span>&nbsp;ΣΥΝΟΨΗ ΑΔΕΙΑΣ — CaelLab BY-SA Code License v3</summary>
+                <pre>
+Copyright (c) 2026 Yunyun(云云) By 虚舟实验室(CaelLab) / CaelLabGameTS
+
+Licensed under the CaelLab BY-SA Code License, Version 3
+or any later version. https://www.caellab.com/license/cbs-v3.txt
+
+You are free to:
+  Share            — copy and redistribute the source code and the compiled
+                     output in any medium or format.
+  Adapt            — remix, transform, and build upon the work.
+  Use commercially — for personal, commercial, or non-commercial purposes.
+  Run it privately — including on your own servers, without publishing
+                     your changes.
+
+Under the following terms:
+  Attribution (BY) — keep the copyright notice, credit the author, link to
+                     this license, and state whether you made changes.
+  ShareAlike (SA)  — derivatives must be distributed under this license or a
+                     later version of it, with no additional restrictions.
+  Source code      — if you distribute the work in built form, the complete
+                     corresponding source must be made available.
+  No trademark     — you may not use the "CaelLab" name to endorse your
+                     version.
+
+THE WORK IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
+            </details>
+        </div>
+    </section>
+
+    <section class="history" id="history">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">Ιστορικό</div>
+                <h2 class="section-title">Ιστορικό εκδόσεων</h2>
+                <p class="section-desc">Προηγούμενες εκδόσεις και τα αρχεία αλλαγών τους</p>
+            </div>
+            <div class="timeline">
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.8.0</span>
+                        <span class="version-title">25 γλώσσες, από τον launcher έως τον ιστότοπο</span>
+                        <span class="latest-chip">Τελευταία</span>
+                        <span class="version-date">2026-10-22</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Ο launcher υποστηρίζει πλέον 25 γλώσσες: επιλέξτε από Ρυθμίσεις → Εμφάνιση → Γλώσσα διεπαφής, με αναζήτηση στη λίστα</li>
+                        <li>Στην πρώτη εκκίνηση ακολουθεί τη γλώσσα του συστήματος· ο οδηγός καλωσορίσματος σας αφήνει να τη διαλέξετε πρώτα</li>
+                        <li>Νέος οδηγός καλωσορίσματος: γλώσσα, στυλ διεπαφής και μια σύντομη παρουσίαση σε 4 βήματα, με δυνατότητα παράλειψης</li>
+                        <li>Τρία στυλ διεπαφής: Minecraft, Προηγμένο (η γνωστή όψη) και Μινιμαλιστικό</li>
+                        <li>Το πρόγραμμα εγκατάστασης μεταφράστηκε στις ίδιες 25 γλώσσες και επιλέγει αυτόματα τη γλώσσα του συστήματος</li>
+                        <li>Το κέντρο βοήθειας είναι διαθέσιμο σε 25 γλώσσες και οι σύνδεσμοι βοήθειας ανοίγουν τη σελίδα της γλώσσας διεπαφής</li>
+                        <li>Ο ιστότοπος και η διαδραστική επίδειξη σε αυτόν είναι επίσης διαθέσιμα σε 25 γλώσσες</li>
+                        <li>Αραβικά, περσικά και εβραϊκά γυρίζουν όλη τη διεπαφή από δεξιά προς αριστερά</li>
+                        <li>Η εκκίνηση δεν τρεμοπαίζει πλέον: η οθόνη εκκίνησης και το κύριο παράθυρο είναι μία σελίδα και το φόντο του παραθύρου ακολουθεί το θέμα· η αλλαγή γλώσσας δεν αφήνει μαύρο καρέ</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.7.2</span>
+                        <span class="version-title">Προσαρμοσμένα avatars και λίστα εκδόσεων με αναζήτηση</span>
+                        <span class="version-date">2026-10-22</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Μπορείς πλέον να αλλάξεις το avatar της οθόνης εκκίνησης: κάνε κλικ πάνω του ή διάλεξε εικόνα από Ρυθμίσεις → Εμφάνιση → Avatar· υποστηρίζονται PNG / JPG / GIF / WebP</li>
+                        <li>Οι εικόνες άνω του 1 MB ρωτούν αν θέλεις συμπίεση· το όριο είναι 4 MB και το προεπιλεγμένο avatar επαναφέρεται με ένα κλικ</li>
+                        <li>Οι ρυθμίσεις εμφάνισης προσθέτουν ρυθμιστικό «Μέγεθος avatar», 32–160 pixel</li>
+                        <li>Η λίστα εκδόσεων αποκτά πεδίο αναζήτησης· κάθε έκδοση δείχνει την έκδοση παιχνιδιού και τον φορτωτή mods, και η επιλεγμένη επισημαίνεται</li>
+                        <li>Η ανανέωση της λίστας εκδόσεων δεν την ξαναχτίζει, οπότε η θέση κύλισης μένει σταθερή· η «Εισαγωγή τοπικής έκδοσης» μετακινήθηκε πάνω δεξιά της λίστας</li>
+                        <li>Στην 1.20 και μετά, η επιλογή «Σύνδεση σε διακομιστή» συνδέεται απευθείας· μια διεύθυνση που λείπει πλέον εμφανίζει μήνυμα αντί να ξεκινά σιωπηλά singleplayer</li>
+                        <li>Η αυτόματη αποθήκευση των ρυθμίσεων έκδοσης δεν εμφανίζει πλέον «Αποθηκεύτηκε» κάθε φορά</li>
+                        <li>Ο εγκαταστάτης μίκρυνε από περίπου 103 MB σε 93 MB: διατηρούνται μόνο τα γλωσσικά πακέτα κινεζικών και αγγλικών, με τις άλλες γλώσσες να πέφτουν στα αγγλικά</li>
+                        <li>Η 1.7.1 ήταν μη δημοσιευμένη εσωτερική δοκιμαστική έκδοση και αποσύρθηκε· η 1.7.2 περιλαμβάνει όλες τις αλλαγές της</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.7.0</span>
+                        <span class="version-title">Shaders, resource packs και modpacks, εγκατάσταση με ένα κλικ</span>
+                        <span class="version-date">2026-10-22</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Η σελίδα λήψης προσθέτει καρτέλες Shaders και Resource packs: αναζήτησε στο Modrinth / CurseForge και εγκατέστησε απευθείας στον αντίστοιχο φάκελο της επιλεγμένης έκδοσης</li>
+                        <li>Μια νέα καρτέλα Modpacks υποστηρίζει modpacks Modrinth (.mrpack) και CurseForge, εγκαθιστώντας αυτόματα τη σωστή έκδοση παιχνιδιού, τον φορτωτή mods και όλα τα mods</li>
+                        <li>Κάθε modpack γίνεται δική του έκδοση, με mods, configs και saves στον δικό του φάκελο, ώστε τα modpacks να μην ανακατεύονται μεταξύ τους</li>
+                        <li>Μπορείς να εισάγεις και τοπικά modpacks: διάλεξε zip / .mrpack στη διαχείριση εκδόσεων, δώσε όνομα και η εγκατάσταση ξεκινά</li>
+                        <li>Τα αρχεία modpack ελέγχονται βάσει του manifest για μέγεθος και SHA1, ώστε μισοκατεβασμένα jar να ξανακατεβαίνουν αντί να δίνουν παιχνίδι που δεν ξεκινά</li>
+                        <li>Το NeoForge μπορεί πλέον να εγκατασταθεί ανά έκδοση όπως το Forge / Fabric (1.20.1 και μετά)</li>
+                        <li>Το μενού «Περισσότερα» είναι συμπτυγμένο από προεπιλογή· ενεργοποίησέ το από Ρυθμίσεις → Εμφάνιση όταν χρειάζεται, και το σφάλμα όπου επανεμφανιζόταν μετά από επανεκκίνηση έχει διορθωθεί</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.6.1</span>
+                        <span class="version-title">Αιτίες κατάρρευσης, στα ίσια</span>
+                        <span class="version-date">2026-10-21</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Οι καταρρεύσεις διαγιγνώσκονται αυτόματα (έλλειψη μνήμης, λάθος έκδοση Java, λείπουσες εξαρτήσεις, οδηγοί GPU, ασυμβατότητα OptiFine / Forge και άλλα) και ο διάλογος δίνει 1–2 συμπεράσματα</li>
+                        <li>Το «Λεπτομέρειες» δείχνει κάθε ένδειξη και γραμμή τεκμηρίωσης· το «Προβολή αρχείων καταγραφής» ανοίγει τον φάκελο παιχνιδιού της έκδοσης που κατέρρευσε</li>
+                        <li>Οι αναφορές σφάλματος εξάγουν πλήρες zip: αποτελέσματα ανάλυσης, σύνοψη σφάλματος, σύστημα και GPU, έκδοση Java, έκδοση και φορτωτή mods, λίστες mods / resource packs / shaders, ορίσματα εκκίνησης, έξοδο παιχνιδιού και αναφορές κατάρρευσης</li>
+                        <li>Η αναφορά αποκρύπτει το --accessToken και το όνομα χρήστη του συστήματος, ώστε να μπορεί να σταλεί σε άλλους για διάγνωση</li>
+                        <li>Με πολλά παιχνίδια σε λειτουργία ταυτόχρονα, κάθε συνεδρία κρατά τη δική της έξοδο, ώστε το πλαίσιο κατάρρευσης να μην μπερδεύεται με άλλη έκδοση</li>
+                        <li>Η σελίδα λεπτομερειών mod ξαναχτίστηκε: κινεζικά και αγγλικά ονόματα, αριθμοί λήψεων, ετικέτες κατηγορίας, λίστες αρχείων ανά έκδοση MC, κάρτες εξαρτήσεων, σύνδεσμοι προς Modrinth / CurseForge / MCMod και αντιγραφή ονόματος με ένα κλικ</li>
+                        <li>Διορθώθηκε η επίλυση εξαρτήσεων για εγκατάσταση 1.20.1 ως 1.20, που διπλασίαζε εκδόσεις Fabric API / GeckoLib και έκανε το Fabric να αναφέρει Incompatible mods found και να αρνείται την εκκίνηση</li>
+                        <li>Η εγκατάσταση mod αφαιρεί παλιά jar του ίδιου έργου, ώστε να μη συσσωρεύονται πολλαπλές εκδόσεις</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.6.0</span>
+                        <span class="version-title">Εγκατάσταση mods χωρίς κυνήγι αρχείων</span>
+                        <span class="version-date">2026-10-20</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Η σελίδα λήψης προσθέτει καρτέλα Mods: αναζήτησε στο Modrinth / CurseForge, διάλεξε αρχεία για την τρέχουσα έκδοση παιχνιδιού και επίλεξε σε ποια έκδοση θα εγκατασταθούν</li>
+                        <li>Το Modrinth φέρνει αυτόματα τις απαιτούμενες εξαρτήσεις· υποστηρίζεται αναζήτηση στα κινεζικά (το ερώτημα περνά πρώτα από το MCMod για να βρεθεί το αγγλικό όνομα)</li>
+                        <li>Λειτουργεί και χωρίς κλειδί API του CurseForge: επικόλλησε σύνδεσμο έργου ή cf:slug και εγκατέστησε ένα αρχείο μέσω του mirror</li>
+                        <li>Οι λήψεις είναι πλέον ουρά εργασιών: κλικ σε πολλές εκδόσεις τις βάζει σε ουρά, οι εργασίες σε αναμονή αφαιρούνται και η ακύρωση της τρέχουσας αφήνει την ουρά να συνεχίσει</li>
+                        <li>Η αυτόματη ενημέρωση εγκαθίσταται πλέον σιωπηλά: κατεβάζει στο παρασκήνιο και εγκαθιστά όταν κλείσεις τον εκκινητή, με στρογγυλό σήμα πάνω δεξιά να δείχνει την πρόοδο</li>
+                        <li>Νέα: αυτόματη γλώσσα παιχνιδιού (προεπιλογή απλοποιημένα κινεζικά), προσαρμοσμένος φάκελος παιχνιδιού και προσαρμοσμένο mirror αρχείων</li>
+                        <li>Νέα: εισαγωγή τοπικής έκδοσης από φάκελο έκδοσης ή zip / jar</li>
+                        <li>Το Fabric εγκαθίσταται πλέον πραγματικά, με Fabric API από προεπιλογή· με απομόνωση έκδοσης, mods και saves ακολουθούν την έκδοση</li>
+                        <li>Η εγκατάσταση Forge τρέχει μόνο --installClient, δείχνει πρόοδο και λέει καθαρά όταν η έκδοση Java είναι πολύ παλιά</li>
+                        <li>Το OptiFine εγκαθίσταται σιωπηλά αντί να ανοίγει τον γραφικό εγκαταστάτη</li>
+                        <li>Διορθώθηκαν οι λήψεις μηδέν byte που μετρούσαν ως επιτυχία, οι ανακατευθύνσεις σχετικής διεύθυνσης και η δεύτερη λήψη που δεν έδειχνε πρόοδο</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.5.2</span>
+                        <span class="version-title">Ρυθμίσεις, ξαναχτισμένες</span>
+                        <span class="version-date">2026-10-18</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Η σελίδα ρυθμίσεων ξαναχτίστηκε: μνήμη, παράθυρο, συμπεριφορά εκκίνησης, πηγές λήψης και ορίσματα Java αναομαδοποιήθηκαν, ρυθμιζόμενα με ρυθμιστικά, διακόπτες και τμηματικά κουμπιά</li>
+                        <li>Η μνήμη έχει πλέον προεπιλογή «Αυτόματο»: 30% της φυσικής μνήμης, τουλάχιστον 1 GB και έως 8 GB, αφήνοντας 2 GB στο σύστημα· μπορεί να οριστεί και χειροκίνητα</li>
+                        <li>Η διαχείριση μνήμης απελευθερώνει πραγματικά πλέον: καθαρίζει μόνο τις διεργασίες του εκκινητή, ποτέ παιχνίδι σε λειτουργία, και μπορεί να βελτιστοποιεί αυτόματα πριν την εκκίνηση</li>
+                        <li>Οι πηγές λήψης έχουν τέσσερις λειτουργίες (αυτόματη / πρώτα mirror / πρώτα επίσημη / μόνο επίσημη), επιλεγόμενες ξεχωριστά για αρχεία και λίστες εκδόσεων· προστέθηκε καθολικό όριο ταχύτητας 0–20 MB/s</li>
+                        <li>Νέα: συντονισμός G1GC, προσαρμοσμένα ορίσματα JVM, προτεραιότητα διεργασίας, προεπιλογές μεγέθους παραθύρου και ορατότητα εκκινητή</li>
+                        <li>Η σελίδα Σχετικά καλύπτει πλέον πληροφορίες έργου, το περιβάλλον εκτέλεσης και την πλήρη άδεια· ξαναγράφτηκαν επίσης η ιστοσελίδα και οι σελίδες βοήθειας</li>
+                        <li>Διορθώθηκαν: η ρύθμιση αριθμού νημάτων που αγνοούνταν, σελίδες 404 που αποθηκεύονταν ως αρχεία και μερικά αρχεία που έμεναν μετά από αποτυχημένες λήψεις</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.5.1</span>
+                        <span class="version-title">Κατέρρευσε; Άσε με να δω</span>
+                        <span class="version-date">2026-10-16</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Νέα ειδοποίηση κατάρρευσης: όταν το παιχνίδι τερματίζεται μη φυσιολογικά εξηγεί γιατί, με αναφορές σφάλματος με ένα κλικ (αναφορά κατάρρευσης + αρχεία καταγραφής + πληροφορίες συστήματος, με διαγραμμένα tokens)</li>
+                        <li>Νέος πίνακας εκτέλεσης: μετά την εκκίνηση δείχνει έκδοση, PID, χρόνο λειτουργίας και μνήμη στα δεξιά, και μπορεί να τερματίσει το παιχνίδι οποιαδήποτε στιγμή</li>
+                        <li>Το πεδίο ονόματος χρήστη κρατά τα τελευταία 5 ονόματα σε αναπτυσσόμενο μενού, καθένα αφαιρούμενο</li>
+                        <li>Το παιχνίδι τρέχει πλέον σε δική του διεργασία, οπότε το κλείσιμο του εκκινητή δεν το τερματίζει· το κλείσιμο του παραθύρου παιχνιδιού αναγνωρίζεται επίσης ως έξοδος</li>
+                        <li>Νέοι προσαρμοσμένοι τίτλοι παραθύρου παιχνιδιού με μαγικές λέξεις ({mc_version}, {time} και άλλα)</li>
+                        <li>Οι συμβουλές εκκίνησης εμφανίζονται πλέον τυχαία (ρυθμιζόμενο στις ρυθμίσεις), με πολλές περισσότερες καταχωρήσεις</li>
+                        <li>Πιο ομαλά κινούμενα σχέδια εκκίνησης και μεταβάσεις σελίδων</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.5.0</span>
+                        <span class="version-title">Java διορθωμένη και νέα φρέσκια εμφάνιση</span>
+                        <span class="version-date">2026-10-16</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Διορθώθηκαν οι λήψεις χρόνου εκτέλεσης Java: ένα αλλαγμένο όνομα αρχείου στο mirror έσπαγε την εγκατάσταση, οπότε πλέον λαμβάνεται δυναμικά</li>
+                        <li>Ο εγκαταστάτης πέρασε στο Inno Setup και αναβαθμίζει επί τόπου από παλαιότερες εκδόσεις</li>
+                        <li>Ενοποιημένα καθολικά χρώματα (γαλάζιο του ουρανού ως κύριο, βαθύ μπλε για σκοτεινή λειτουργία), με νέο κινούμενο σχέδιο εκκίνησης και νέα ιστοσελίδα</li>
+                        <li>Διορθώθηκε η οθόνη εκκίνησης που αγνοούσε το φωτεινό θέμα και αρκετά στυλ κουμπιών που δεν εφαρμόζονταν</li>
+                    </ul>
+                </div>
+                <details class="older-versions">
+                    <summary>Εμφάνιση 12 παλαιότερων εκδόσεων</summary>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.4.4</span>
+                        <span class="version-title">Υποστήριξη shaders!</span>
+                        <span class="version-date">2026-07-11</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Προστέθηκε υποστήριξη OptiFine (shaders)</li>
+                        <li>Εγκατάσταση με ένα κλικ που χειρίζεται αυτόματα κληρονομικότητα, βιβλιοθήκες και tweakClass</li>
+                        <li>Υποστηρίζει τον μηχανισμό κληρονομικότητας εκδόσεων inheritsFrom</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.4.3</span>
+                        <span class="version-title">Διορθώθηκε</span>
+                        <span class="version-date">2026-06-02</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Διορθώθηκε το πρόβλημα διπλής μπάρας κύλισης</li>
+                        <li>Η σελίδα Σχετικά επεκτάθηκε με περισσότερο περιεχόμενο, συμπεριλαμβανομένης εργαλειοθήκης</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.4.2</span>
+                        <span class="version-title">Διορθώθηκε; Αμφιβάλλω</span>
+                        <span class="version-date">2026-06-02</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Η οθόνη εκκίνησης είχε κάποια προβλήματα στην προηγούμενη έκδοση</li>
+                        <li>Τακτοποιήθηκαν οι ρυθμίσεις</li>
+                        <li>Η ακύρωση εκκίνησης σκοτώνει πλέον πραγματικά τη διεργασία!</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.4.1</span>
+                        <span class="version-title">Καλώς ήρθες!</span>
+                        <span class="version-date">2026-06-02</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Προστέθηκε κινούμενο σχέδιο καλωσορίσματος στην πρώτη εκκίνηση</li>
+                        <li>Αφαιρέθηκε η υπερβολική προστασία κατά του debugging και επιτράπηκε η λειτουργία developer</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.4.0</span>
+                        <span class="version-title">Απογείωση!</span>
+                        <span class="version-date">2026-06-01</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Προσπάθεια πραγματικής υποστήριξης Forge</li>
+                        <li>Άμεση εκκίνηση! Αυτή είναι δομή εγκαταστάτη, μεταγλωττισμένη σε κώδικα μηχανής!</li>
+                        <li>Διορθώθηκαν σφάλματα, χάρη στο φόρουμ</li>
+                        <li>Μεγάλη απλοποίηση της ροής· οι λεπτομέρειες ενημέρωσης μπορούν πλέον να δείχνουν πλήρες αρχείο καταγραφής</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.3.3</span>
+                        <span class="version-date">2026-05-28</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Το Forge / Fabric / OptiFine λειτουργούν πλέον πραγματικά!</li>
+                        <li>Αυτή είναι η πρώτη έκδοση ανοιχτού κώδικα!</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.3.2</span>
+                        <span class="version-date">2026-05-23</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Προστέθηκαν λεπτομερείς ρυθμίσεις ανά έκδοση, διαχειριζόμενες από προεπιλογή· οι εκδόσεις παιχνιδιού μπορούν να διαγραφούν</li>
+                        <li>Περισσότερη υποστήριξη φωτεινής λειτουργίας· η «Επαναφορά προεπιλογών» μετακινήθηκε σε νέα ενότητα ρυθμίσεων συμβατότητας· ενημερώθηκε το API</li>
+                        <li>Βελτιώθηκαν τα αναπτυσσόμενα μενού και διάφορες άλλες λεπτομέρειες</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.3.0–1.3.1</span>
+                        <span class="version-date">2026-05-22</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Διορθώθηκε το γράφημα λήψης που έλειπε (δεν καλούνταν στην εγκατεστημένη δομή)</li>
+                        <li>Η ρύθμιση αυτόματου ελέγχου ενημερώσεων μετακινήθηκε στο Σχετικά</li>
+                        <li>Η σελίδα λήψης εμφανίζει πλέον πλήρως Alpha, Beta, snapshots και εκδόσεις, διορθώνοντας την ελλιπή εμφάνιση των εκδόσεων</li>
+                        <li>Ξαναχτίστηκε η οθόνη εκκίνησης, με διαχείριση εκδόσεων ταξινομημένη κατά χρόνο τελευταίας εκκίνησης</li>
+                        <li>Προστέθηκαν συμβουλές «Το ήξερες;» στην εκκίνηση και αυτόματος καθαρισμός αρχείων καταγραφής (το διάστημα αλλάζει στις ρυθμίσεις)</li>
+                        <li>Η κλιμάκωση διεπαφής στην Εμφάνιση λειτουργεί πλέον· η 1.3.1 διόρθωσε τη μη εμφάνισή της</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.2.1</span>
+                        <span class="version-date">2026-05-22</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Ενσωματώθηκαν οι δυναμικές βιβλιοθήκες τοπικά</li>
+                        <li>Προστέθηκε προστασία κατά διπλών εκκινήσεων / παρουσιών</li>
+                        <li>Αφαιρέθηκαν άχρηστες ρυθμίσεις και το περιεχόμενο της σελίδας λήψης μπορεί πλέον να συμπτυχθεί</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.2.0</span>
+                        <span class="version-date">2026-05-21</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Προστέθηκαν μπάρες κύλισης και φωτεινή λειτουργία</li>
+                        <li>Προστέθηκε πλήρες κινούμενο σχέδιο εκκίνησης του εκκινητή, μειώνοντας τη λευκή οθόνη κατά την εκκίνηση</li>
+                        <li>Η αριστερή πλαϊνή στήλη μετακινήθηκε στην κορυφή και η διεπαφή μεγεθύνθηκε· βελτιώθηκε η σελίδα λήψης και προστέθηκε ο χρόνος εκτέλεσης Java</li>
+                        <li>Προστέθηκε μεγάλο σύνολο ρυθμίσεων, οργανωμένων σε Παιχνίδι, Λήψη, Εμφάνιση, Για προχωρημένους και Σχετικά</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.1.0</span>
+                        <span class="version-date">2026-05-21</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Προστέθηκε αυτόματη ρύθμιση Java, με ρυθμιζόμενη πηγή λήψης (ευχαριστίες, Tsinghua!)</li>
+                        <li>Βελτιωμένη απόδοση, προστέθηκε κινούμενο σχέδιο εκκίνησης και βελτιώθηκε η αντιμετώπιση προβλημάτων βάσει αρχείων καταγραφής</li>
+                        <li>Διορθώθηκαν πολλά σφάλματα της λίστας λήψεων, όπως η αδυναμία ακύρωσης και τα υπολείμματα μετά την ακύρωση</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.0.0</span>
+                        <span class="version-date">2026-05-20</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Πρώτη σταθερή έκδοση</li>
+                    </ul>
+                </div>
+                </details>
+                <div class="history-more">
+                    <a href="./history/index.el">Δες το πλήρες αρχείο αλλαγών (και οι 20 εκδόσεις και οι εγκαταστάτες) →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <a href="https://gamets.caellab.com" class="logo">
+                    <img src="/logo.png" alt="GameTS">
+                </a>
+                <p>Μια ανεξάρτητη ομάδα ανάπτυξης παιχνιδιών και εργαλείων στη CaelLab. Εξερευνά την άκρη του μέλλοντος, φέρνοντας απεριόριστη ανανέωση.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Έργα</h4>
+                <ul>
+                    <li><a href="./index.el">GoodPlanCraftLauncher</a></li>
+                    <li><a href="/gpcl/docs/el/">Κέντρο βοήθειας</a></li>
+                    <li><a href="./history/index.el">Αρχείο αλλαγών</a></li>
+                    <li><a href="/areyouok/">Are You OK?</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Κοινότητα</h4>
+                <ul>
+                    <li><a href="https://forum.xmuer.online" target="_blank" rel="noopener">Φόρουμ</a></li>
+                    <li><a href="mailto:gamets@caellab.com">gamets@caellab.com</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Ανοιχτός κώδικας</h4>
+                <ul>
+                    <li><a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener">GitHub</a></li>
+                    <li><a href="https://www.caellab.com/license/cbs-v3" target="_blank">Άδεια</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 GameTS από <a href="https://www.caellab.com/" target="_blank" class="footer-inline-link">CaelLab</a>. Με την επιφύλαξη παντός δικαιώματος. Αρχική σελίδα έργου: <a href="https://gamets.caellab.com/gpcl/" class="footer-inline-link">gamets.caellab.com/gpcl</a></p>
+            <p>Το GoodPlanCraftLauncher είναι τρίτο εργαλείο ανοιχτού κώδικα και δεν έχει επίσημη σχέση με <a href="https://www.minecraft.net/" target="_blank" rel="noopener" class="footer-inline-link">Mojang Studios</a>, <a href="https://www.microsoft.com/" target="_blank" rel="noopener" class="footer-inline-link">Microsoft</a>, <a href="https://www.xbox.com/" target="_blank" rel="noopener" class="footer-inline-link">Xbox</a>. Το Minecraft είναι εμπορικό σήμα της Mojang Studios· η χρήση αυτού του εκκινητή απαιτεί έγκυρη άδεια Minecraft.</p>
+            <p>Άδεια ανοιχτού κώδικα: <a href="https://www.caellab.com/license/cbs-v3" target="_blank" class="footer-inline-link">CaelLab BY-SA Code License v3</a> | Ανοιχτός κώδικας στο <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener" class="footer-inline-link">GitHub</a></p>
+        </div>
+    </footer>
+
+    <script>
+        var navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', function() {
+            navbar.classList.toggle('scrolled', window.scrollY > 40);
+        }, { passive: true });
+
+        var mobileBtn = document.getElementById('mobileMenuBtn');
+        var mobilePanel = document.getElementById('mobilePanel');
+        mobileBtn.addEventListener('click', function() {
+            var open = mobilePanel.classList.toggle('open');
+            mobileBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+        mobilePanel.querySelectorAll('a').forEach(function(a) {
+            a.addEventListener('click', function() {
+                mobilePanel.classList.remove('open');
+                mobileBtn.setAttribute('aria-expanded', 'false');
+            });
+        });
+
+        var revealObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(function(el) {
+            revealObserver.observe(el);
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+            anchor.addEventListener('click', function(e) {
+                var target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        function toggleDropdown(id) {
+            var dropdown = document.getElementById(id);
+            var isActive = dropdown.classList.contains('active');
+            document.querySelectorAll('.dropdown').forEach(function(d) {
+                d.classList.remove('active');
+            });
+            if (!isActive) {
+                dropdown.classList.add('active');
+            }
+        }
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown').forEach(function(d) {
+                    d.classList.remove('active');
+                });
+            }
+        });
+
+        /* 页面顶上那个窗口就是体验区：进屏幕后自动播一遍启动流程 */
+        var heroFrame = document.querySelector('#heroWindow iframe');
+        var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        function tell(frame, message) {
+            if (!frame || !frame.contentWindow) return;
+            frame.contentWindow.postMessage(message, '*');
+        }
+
+        /* iframe 是异步加载的，等它报 ready 之后再发指令，否则消息会丢 */
+        var heroFrameReady = false;
+        var wantHeroAutoplay = false;
+        window.addEventListener('message', function(e) {
+            var data = e.data || {};
+            if (data.gpcl === 'ready') {
+                heroFrameReady = true;
+                if (wantHeroAutoplay) {
+                    wantHeroAutoplay = false;
+                    setTimeout(function() { tell(heroFrame, { gpcl: 'autoplay' }); }, 400);
+                }
+            }
+        });
+
+        if (heroFrame && !reduced) {
+            var heroSeen = false;
+            new IntersectionObserver(function(entries, obs) {
+                entries.forEach(function(entry) {
+                    if (!entry.isIntersecting || heroSeen) return;
+                    heroSeen = true;
+                    if (heroFrameReady) {
+                        setTimeout(function() { tell(heroFrame, { gpcl: 'autoplay' }); }, 600);
+                    } else {
+                        wantHeroAutoplay = true;
+                    }
+                    obs.disconnect();
+                });
+            }, { threshold: 0.35 }).observe(document.getElementById('heroWindow'));
+        }
+
+        /* 鼠标挪过窗口时给一点极轻的倾斜，键盘和触摸设备不动 */
+        if (window.matchMedia('(hover: hover) and (pointer: fine)').matches && !reduced) {
+            document.querySelectorAll('.window').forEach(function(win) {
+                var stage = win.closest('.window-stage');
+                stage.addEventListener('mousemove', function(e) {
+                    var r = stage.getBoundingClientRect();
+                    var x = (e.clientX - r.left) / r.width - 0.5;
+                    var y = (e.clientY - r.top) / r.height - 0.5;
+                    win.style.setProperty('--tilt-y', (x * 2.4).toFixed(2) + 'deg');
+                    win.style.setProperty('--tilt-x', (-y * 1.8).toFixed(2) + 'deg');
+                });
+                stage.addEventListener('mouseleave', function() {
+                    win.style.setProperty('--tilt-y', '0deg');
+                    win.style.setProperty('--tilt-x', '0deg');
+                });
+            });
+        }
+    </script>
+</body>
+</html>

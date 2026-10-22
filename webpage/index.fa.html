@@ -1,0 +1,839 @@
+<!--
+ Copyright (c) 2026 Yunyun(云云) By 虚舟实验室(CaelLab) / CaelLabGameTS
+ Licensed under the CaelLab BY-SA Code License, Version 3
+ or any later version. https://www.caellab.com/license/cbs-v3.txt
+ Source: https://github.com/CaelLab-org/GoodPlanCraftLauncher
+ Project: https://gamets.caellab.com/gpcl/
+-->
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoodPlanCraftLauncher - یک لانچر سبک و کارآمد Minecraft - CaelLabGameTS</title>
+    <meta name="description" content="GoodPlanCraftLauncher یک لانچر ساده و کارآمد Minecraft است با ورود Microsoft و آفلاین، مدیریت نسخه‌ها و نصب مودهای Forge/NeoForge/Fabric/OptiFine، تا با یک کلیک وارد دنیای مکعبی شوید. متن‌باز و رایگان.">
+    <meta name="keywords" content="GoodPlanCraftLauncher,لانچر Minecraft,لانچر MC,Minecraft Java Edition,CaelLab,متن‌باز">
+    <meta name="author" content="CaelLabGameTS">
+    <meta name="theme-color" content="#f6fafd">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="GoodPlanCraftLauncher - لانچر سبک و کارآمد Minecraft">
+    <meta property="og:description" content="سبک · کارآمد · متن‌باز. ورود Microsoft و آفلاین، مدیریت نسخه‌ها و نصب یک‌کلیکی Forge/NeoForge/Fabric/OptiFine.">
+    <meta property="og:url" content="https://gamets.caellab.com/gpcl/">
+    <meta property="og:site_name" content="CaelLabGameTS">
+        <link rel="alternate" hreflang="en-US" href="https://gamets.caellab.com/gpcl/index.en-us">
+    <link rel="alternate" hreflang="zh-CN" href="https://gamets.caellab.com/gpcl/index.zh-cn">
+    <link rel="alternate" hreflang="zh-TW" href="https://gamets.caellab.com/gpcl/index.zh-tw">
+    <link rel="alternate" hreflang="ar" href="https://gamets.caellab.com/gpcl/index.ar">
+    <link rel="alternate" hreflang="bn" href="https://gamets.caellab.com/gpcl/index.bn">
+    <link rel="alternate" hreflang="de" href="https://gamets.caellab.com/gpcl/index.de">
+    <link rel="alternate" hreflang="el" href="https://gamets.caellab.com/gpcl/index.el">
+    <link rel="alternate" hreflang="es" href="https://gamets.caellab.com/gpcl/index.es">
+    <link rel="alternate" hreflang="fa" href="https://gamets.caellab.com/gpcl/index.fa">
+    <link rel="alternate" hreflang="fr" href="https://gamets.caellab.com/gpcl/index.fr">
+    <link rel="alternate" hreflang="he" href="https://gamets.caellab.com/gpcl/index.he">
+    <link rel="alternate" hreflang="hi" href="https://gamets.caellab.com/gpcl/index.hi">
+    <link rel="alternate" hreflang="id" href="https://gamets.caellab.com/gpcl/index.id">
+    <link rel="alternate" hreflang="it" href="https://gamets.caellab.com/gpcl/index.it">
+    <link rel="alternate" hreflang="ja" href="https://gamets.caellab.com/gpcl/index.ja">
+    <link rel="alternate" hreflang="ko" href="https://gamets.caellab.com/gpcl/index.ko">
+    <link rel="alternate" hreflang="ms" href="https://gamets.caellab.com/gpcl/index.ms">
+    <link rel="alternate" hreflang="nl" href="https://gamets.caellab.com/gpcl/index.nl">
+    <link rel="alternate" hreflang="pl" href="https://gamets.caellab.com/gpcl/index.pl">
+    <link rel="alternate" hreflang="pt" href="https://gamets.caellab.com/gpcl/index.pt">
+    <link rel="alternate" hreflang="ru" href="https://gamets.caellab.com/gpcl/index.ru">
+    <link rel="alternate" hreflang="th" href="https://gamets.caellab.com/gpcl/index.th">
+    <link rel="alternate" hreflang="tr" href="https://gamets.caellab.com/gpcl/index.tr">
+    <link rel="alternate" hreflang="uk" href="https://gamets.caellab.com/gpcl/index.uk">
+    <link rel="alternate" hreflang="vi" href="https://gamets.caellab.com/gpcl/index.vi">
+    <link rel="alternate" hreflang="x-default" href="https://gamets.caellab.com/gpcl/index.en-us">
+    <link rel="icon" type="image/png" href="./icon.png">
+    <link rel="stylesheet" href="./style.css?v=n5q8v2k7">
+    <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="https://gamets.caellab.com" class="logo">
+                <img src="/logo.png" alt="GameTS">
+            </a>
+            <ul class="nav-links">
+                <li>
+                    <div class="dropdown" id="sourceDropdown">
+                        <button class="dropdown-toggle" onclick="toggleDropdown('sourceDropdown')">
+                            <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                            منبع
+                            <span class="arrow">&#9662;</span>
+                        </button>
+                        <div class="dropdown-menu">
+                            <div class="menu-label">GitHub</div>
+                            <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener">
+                                <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                                GoodPlanCraftLauncher
+                            </a>
+                        </div>
+                    </div>
+                </li>
+                <li class="lang-switch"><select aria-label="زبان" onchange="if(this.value)location.href=this.value"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa" selected>فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select></li>
+                <li><a href="#download" class="nav-cta">&#9662; دانلود v1.8.0</a></li>
+            </ul>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="باز کردن منو" aria-expanded="false">&#9776;</button>
+        </div>
+    </nav>
+    <div class="mobile-panel" id="mobilePanel">
+        <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener">منبع GitHub</a>
+        <select aria-label="زبان" onchange="if(this.value)location.href=this.value" style="width:100%;margin-top:8px;padding:10px;background:var(--surface);border:1px solid var(--line);border-radius:8px;color:var(--text-2);font:inherit;font-size:0.95rem;"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa" selected>فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select>
+    </div>
+
+    <section class="hero">
+        <span class="float-pixel" style="top:18%;left:9%;"></span>
+        <span class="float-pixel" style="top:24%;right:11%;animation-delay:-3s;"></span>
+        <span class="float-pixel" style="bottom:30%;left:16%;animation-delay:-6s;width:8px;height:8px;"></span>
+        <span class="float-pixel" style="bottom:38%;right:18%;animation-delay:-1.5s;width:7px;height:7px;"></span>
+        <div class="hero-content">
+            <div class="hero-tags">
+                <span class="hero-tag"><span class="dot"></span>متن‌باز</span>
+                <span class="hero-tag"><span class="dot"></span>رایگان</span>
+                <span class="hero-tag"><span class="dot"></span>لانچر Minecraft</span>
+            </div>
+            <div class="hero-icon">
+                <img src="./icon.png" alt="آیکون GoodPlanCraftLauncher">
+            </div>
+            <h1>GoodPlanCraftLauncher</h1>
+            <p class="hero-subtitle">سبک · کارآمد · متن‌باز</p>
+            <p class="hero-desc">لانچری برای Minecraft نوشته‌شده برای Windows: ورود Microsoft و آفلاین، مدیریت نسخه‌ها و نصب یک‌کلیکی Forge / Fabric / OptiFine. وقتی بازی کرش می‌کند، دلیلش را می‌گوید، نه فقط یک کادر خالی.</p>
+            <div class="hero-actions">
+                <a href="#download" class="hero-btn primary">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                    همین حالا دانلود کنید
+                </a>
+                <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener" class="hero-btn ghost">
+                    <svg width="17" height="17" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                    GitHub
+                </a>
+            </div>
+            <div class="hero-meta">
+                <span>نسخه <b>v1.8.0</b></span>
+                <span class="sep">/</span>
+                <span>به‌روزرسانی <b>2026-10-22</b></span>
+                <span class="sep">/</span>
+                <span>پلتفرم <b>Windows 10+</b></span>
+            </div>
+        </div>
+
+        <div class="window-stage" id="heroWindow">
+            <div class="window">
+                <iframe src="./demo/index.html?fit=1&v=q8m3x2vd&lang=fa" title="رابط GoodPlanCraftLauncher" loading="eager"></iframe>
+            </div>
+        </div>
+        <p class="window-note">پنجره بالا <b>قابل کلیک</b> است — این خود رابط لانچر است که داخل صفحه وب اجرا می‌شود.</p>
+    </section>
+
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">ویژگی‌ها</div>
+                <h2 class="section-title">ویژگی‌های اصلی</h2>
+                <p class="section-desc">ابزارهای کاربردی برای بازیکنان، هر کدام برای اینکه سریع‌تر وارد بازی شوید</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7.5" cy="15.5" r="4.5"/><path d="m10.8 12.2 8.7-8.7"/><path d="m16 5 3 3"/><path d="m19 8 2-2-3-3-2 2"/></svg>
+                    </span>
+                    <h3>دو حالت ورود</h3>
+                    <p>ورود Microsoft و آفلاین، قابل تغییر در هر زمان؛ حالت آفلاین نیازی به تأیید آنلاین ندارد.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 13v8"/><path d="m8 17 4 4 4-4"/><path d="M20 16.7A5 5 0 0 0 18 7h-1.3A8 8 0 1 0 4 15.2"/></svg>
+                    </span>
+                    <h3>دانلود مود یکپارچه</h3>
+                    <p>در Modrinth وCurseForge جستجو کنید و مودها، شیدرها یا بسته‌های منابع را در پوشه‌ای که نسخه انتخاب‌شده واقعاً استفاده می‌کند نصب کنید.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 9 4.9-9 4.9-9-4.9Z"/><path d="m3 12 9 4.9 9-4.9"/><path d="m3 17 9 4.9 9-4.9"/></svg>
+                    </span>
+                    <h3>چهار لودر مود</h3>
+                    <p>Forge، NeoForge، Fabric و OptiFine از منابع رسمی نصب می‌شوند و نسخه Java ابتدا بررسی می‌شود.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 0 20a15.3 15.3 0 0 1 0-20Z"/></svg>
+                    </span>
+                    <h3>۲۵ زبان رابط</h3>
+                    <p>در اولین اجرا از زبان سیستم پیروی می‌کند و هر زمان از تنظیمات قابل تغییر است.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+                    </span>
+                    <h3>مدیریت خودکار نسخه‌ها</h3>
+                    <p>دانلود، نصب و تغییر نسخه‌های Minecraft با یک کلیک، با مدیریت خودکار کتابخانه‌ها و فایل‌های بازی.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+                    </span>
+                    <h3>شروع سریع</h3>
+                    <p>مسیر اجرای سبک و کش، تا کلیک کنید و بازی کنید، نه اینکه منتظر بمانید.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><path d="M6 2v2"/><path d="M10 2v2"/><path d="M14 2v2"/></svg>
+                    </span>
+                    <h3>مدیریت محیط اجرای Java</h3>
+                    <p>محیط اجرای Java را خودکار تشخیص و نصب می‌کند؛ منبع دانلود را می‌توان روی Tsinghua، دانشگاه نانجینگ، Huawei Cloud یا منبع رسمی گذاشت و در صورت خطا به منبع بعدی می‌رود.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                    </span>
+                    <h3>پشتیبانی از پوسته</h3>
+                    <p>پشتیبانی کامل از حالت روشن و تاریک، با مقیاس رابط قابل تنظیم برای ظاهری یکدست.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+                    </span>
+                    <h3>به‌روزرسانی و نگهداری خودکار</h3>
+                    <p>بررسی به‌روزرسانی داخلی و پاکسازی خودکار قابل تنظیم لاگ‌ها، تا لانچر در طول زمان سبک بماند.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.29 3.86-8.47 14.14A2 2 0 0 0 3.53 21h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+                    </span>
+                    <h3>اعلان کرش و گزارش خطا</h3>
+                    <p>وقتی بازی غیرعادی بسته می‌شود دلیل را توضیح می‌دهد و می‌تواند با یک کلیک گزارش خطا صادر کند (گزارش کرش + لاگ‌ها + اطلاعات سیستم).</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    </span>
+                    <h3>پنل اجرا</h3>
+                    <p>پس از اجرا، پنلی در سمت راست نسخه، PID، زمان اجرا و مصرف حافظه را نشان می‌دهد و می‌تواند بازی را در هر لحظه ببندد.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>
+                    </span>
+                    <h3>عنوان دلخواه پنجره</h3>
+                    <p>عنوان پنجره بازی را خودتان بنویسید، با واژه‌های جادویی مثل {mc_version} و {time}.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="screenshots">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">تصاویر</div>
+                <h2 class="section-title">تصاویر واقعی</h2>
+                <p class="section-desc">پنجره بالای صفحه بازسازی وب رابط لانچر است و بدون نصب چیزی قابل کلیک است. چهار تصویر زیر لانچر در حال اجرا روی Windows است، بدون ویرایش.</p>
+            </div>
+            <div class="shot-gallery">
+                <figure class="shot reveal">
+                    <img src="./screenshots/launch.png?v=q9v3m7k2" alt="صفحه اجرای GoodPlanCraftLauncher" loading="lazy">
+                    <figcaption>صفحه اجرا · نسخه را انتخاب کنید، نام بازیکن بگذارید، بازی را شروع کنید</figcaption>
+                </figure>
+                <figure class="shot reveal">
+                    <img src="./screenshots/download.png?v=q9v3m7k2" alt="صفحه دانلود GoodPlanCraftLauncher" loading="lazy">
+                    <figcaption>صفحه دانلود · نسخه‌های بازی، مودها، شیدرها، بسته‌های منابع و مودپک‌ها</figcaption>
+                </figure>
+                <figure class="shot reveal">
+                    <img src="./screenshots/settings.png?v=q9v3m7k2" alt="تنظیمات بازی GoodPlanCraftLauncher" loading="lazy">
+                    <figcaption>تنظیمات · حافظه بازی، حالت پنجره، عنوان پنجره و واژه‌های جادویی</figcaption>
+                </figure>
+                <figure class="shot reveal">
+                    <img src="./screenshots/appearance.png?v=q9v3m7k2" alt="تنظیمات ظاهر GoodPlanCraftLauncher" loading="lazy">
+                    <figcaption>تنظیمات · زبان، سبک رابط، پوسته و مقیاس</figcaption>
+                </figure>
+            </div>
+        </div>
+    </section>
+
+    <section class="download" id="download">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">دانلود</div>
+                <h2 class="section-title">همین حالا دانلود کنید</h2>
+                <p class="section-desc">پلتفرم خود را انتخاب کنید و ماجراجویی مکعبی را شروع کنید</p>
+            </div>
+            <div class="download-card reveal">
+                <span class="dl-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
+                </span>
+                <div class="download-file">GPCL-1.8.0-Setup.exe</div>
+                <a href="https://dl.caellab.com/file/games/gpcl/GPCL-1.8.0-Setup.exe" class="download-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                    دنیای مکعبی را روشن کن!
+                </a>
+                <div class="update-info">
+                    <span>به‌روزرسانی <b>2026-10-22</b></span>
+                    <span>پلتفرم <b>Windows 10 64-bit</b></span>
+                    <span>مجوز <b>متن‌باز، رایگان</b></span>
+                </div>
+                <div class="download-extra">
+                    <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener" class="hero-btn ghost">
+                        <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                        مشاهده در GitHub
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="requirements" id="requirements">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">سیستم</div>
+                <h2 class="section-title">پیش‌نیازهای سیستم</h2>
+                <p class="section-desc">کم، اما دانستنش لازم است</p>
+            </div>
+            <div class="req-grid">
+                <div class="req-card reveal">
+                    <div class="req-label">سیستم‌عامل</div>
+                    <p>Windows 10 64-bit (1709+)؛ Windows 11 هم کار می‌کند</p>
+                </div>
+                <div class="req-card reveal">
+                    <div class="req-label">محیط اجرای Java</div>
+                    <p>به‌صورت خودکار توسط لانچر نصب می‌شود؛ توصیه می‌شود نصب‌های اضافی یا متضاد Java روی سیستم پاک شوند</p>
+                </div>
+                <div class="req-card reveal">
+                    <div class="req-label">فضای ذخیره‌سازی</div>
+                    <p>حداقل 90 MB فضای آزاد برای خود لانچر (بدون فایل‌های بازی)</p>
+                </div>
+                <div class="req-card reveal">
+                    <div class="req-label">حافظه</div>
+                    <p>توصیه می‌شود 2 GB یا بیشتر حافظه آزاد باشد</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="opensource" id="opensource">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">متن‌باز</div>
+                <h2 class="section-title">متن‌باز و مشارکت</h2>
+                <p class="section-desc">GPCL پروژه‌ای 100% متن‌باز است و منبعش روی GitHub میزبانی می‌شود. PRها و پیشنهادها در <a href="https://forum.xmuer.online/" target="_blank">انجمن</a> خوش‌آمدند، تا با هم لانچر بهتری برای Minecraft بسازیم.</p>
+            </div>
+            <div class="opensource-grid">
+                <div class="opensource-card reveal">
+                    <span class="opensource-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="m10 13-2 2 2 2"/><path d="m14 13 2 2-2 2"/></svg>
+                    </span>
+                    <h3>مجوز</h3>
+                    <p>تحت CaelLab BY-SA Code License، نسخه 3 (یا هر نسخه بعدی) منتشر شده است. می‌توانید آزادانه استفاده، تغییر و بازتوزیع کنید؛ نسخه‌های تغییرداده باید همان مجوز متن‌باز را نگه دارند. صفحه پروژه: <a href="https://gamets.caellab.com/gpcl/">gamets.caellab.com/gpcl</a>.</p>
+                    <a href="https://www.caellab.com/license/cbs-v3" target="_blank">متن کامل مجوز را بخوانید →</a>
+                </div>
+                <div class="opensource-card reveal">
+                    <span class="opensource-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3"/><path d="M12 19v3"/><path d="M4.9 4.9l2.1 2.1"/><path d="M17 17l2.1 2.1"/><path d="M2 12h3"/><path d="M19 12h3"/><path d="M4.9 19.1 7 17"/><path d="M17 7l2.1-2.1"/></svg>
+                    </span>
+                    <h3>مشارکت</h3>
+                    <p>مخزن اصلی روی GitHub است و issueها و PRها همان‌جا مدیریت می‌شوند. گزارش باگ، پیشنهاد ویژگی و مشارکت کد خوش‌آمد است.</p>
+                    <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener">رفتن به GitHub →</a>
+                </div>
+            </div>
+            <details class="license-box reveal">
+                <summary><span class="dot"></span><span class="dot"></span><span class="dot"></span>&nbsp;خلاصه مجوز — CaelLab BY-SA Code License v3</summary>
+                <pre>
+Copyright (c) 2026 Yunyun(云云) By 虚舟实验室(CaelLab) / CaelLabGameTS
+
+Licensed under the CaelLab BY-SA Code License, Version 3
+or any later version. https://www.caellab.com/license/cbs-v3.txt
+
+You are free to:
+  Share            — copy and redistribute the source code and the compiled
+                     output in any medium or format.
+  Adapt            — remix, transform, and build upon the work.
+  Use commercially — for personal, commercial, or non-commercial purposes.
+  Run it privately — including on your own servers, without publishing
+                     your changes.
+
+Under the following terms:
+  Attribution (BY) — keep the copyright notice, credit the author, link to
+                     this license, and state whether you made changes.
+  ShareAlike (SA)  — derivatives must be distributed under this license or a
+                     later version of it, with no additional restrictions.
+  Source code      — if you distribute the work in built form, the complete
+                     corresponding source must be made available.
+  No trademark     — you may not use the "CaelLab" name to endorse your
+                     version.
+
+THE WORK IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
+            </details>
+        </div>
+    </section>
+
+    <section class="history" id="history">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">تاریخچه</div>
+                <h2 class="section-title">تاریخچه نسخه‌ها</h2>
+                <p class="section-desc">نسخه‌های قبلی و تغییراتشان</p>
+            </div>
+            <div class="timeline">
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.8.0</span>
+                        <span class="version-title">۲۵ زبان، از لانچر تا وب‌سایت</span>
+                        <span class="latest-chip">آخرین</span>
+                        <span class="version-date">2026-10-22</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>لانچر اکنون از ۲۵ زبان پشتیبانی می‌کند: از تنظیمات ← ظاهر ← زبان رابط کاربری انتخاب کنید؛ فهرست هم قابل جست‌وجو است</li>
+                        <li>در اولین اجرا زبان سیستم را دنبال می‌کند و در راهنمای خوش‌آمدگویی هم می‌توانید از قبل انتخابش کنید</li>
+                        <li>راهنمای خوش‌آمدگویی تازه: زبان، سبک رابط و معرفی کوتاه در ۴ مرحله، با امکان رد کردن</li>
+                        <li>سه سبک رابط: Minecraft، پیشرفته (ظاهر همیشگی) و ساده</li>
+                        <li>نصب‌کننده هم به همان ۲۵ زبان ترجمه شده و زبان سیستم را خودکار انتخاب می‌کند</li>
+                        <li>مرکز راهنما به ۲۵ زبان در دسترس است و پیوندهای راهنما در لانچر صفحهٔ هم‌زبان با رابط را باز می‌کنند</li>
+                        <li>وب‌سایت و نمایش تعاملی داخل آن هم به ۲۵ زبان در دسترس‌اند</li>
+                        <li>عربی، فارسی و عبری کل رابط را راست‌به‌چپ می‌کنند</li>
+                        <li>اجرا دیگر پرش ندارد: صفحهٔ شروع و پنجرهٔ اصلی یک صفحه شده‌اند و رنگ پس‌زمینهٔ پنجره با تم هماهنگ است؛ تغییر زبان هم قاب سیاهی باقی نمی‌گذارد</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.7.2</span>
+                        <span class="version-title">آواتارهای دلخواه، و فهرست نسخه‌ای که می‌توانید جست‌وجو کنید</span>
+                        <span class="version-date">2026-10-22</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>حالا می‌توانید آواتار صفحه اجرا را عوض کنید: روی آن کلیک کنید، یا از تنظیمات → ظاهر → آواتار تصویری انتخاب کنید؛ PNG / JPG / GIF / WebP پشتیبانی می‌شوند</li>
+                        <li>تصاویر بیش از 1 MB می‌پرسند آیا فشرده شوند؛ محدودیت 4 MB است و آواتار پیش‌فرض با یک کلیک بازگردانده می‌شود</li>
+                        <li>تنظیمات ظاهر یک لغزنده «اندازه آواتار» اضافه می‌کند، 32–160 پیکسل</li>
+                        <li>فهرست نسخه‌ها کادر جست‌وجو می‌گیرد؛ هر نسخه نسخه بازی و لودر مود خود را نشان می‌دهد و نسخه انتخاب‌شده برجسته است</li>
+                        <li>بازخوانی فهرست نسخه‌ها دیگر آن را از نو نمی‌سازد، پس موقعیت اسکرول ثابت می‌ماند؛ «وارد کردن نسخه محلی» به گوشه بالا سمت راست فهرست منتقل شد</li>
+                        <li>در 1.20 و بالاتر، انتخاب «ورود به سرور» مستقیم وصل می‌شود؛ آدرس خالی حالا پیام نشان می‌دهد، نه اینکه بی‌صدا بازی تک‌نفره را شروع کند</li>
+                        <li>ذخیره خودکار تنظیمات نسخه دیگر هر بار «ذخیره شد» نشان نمی‌دهد</li>
+                        <li>نصب‌کننده از حدود 103 MB به 93 MB کاهش یافت: فقط بسته‌های زبان چینی و انگلیسی نگه داشته می‌شوند و زبان‌های دیگر به انگلیسی برمی‌گردند</li>
+                        <li>1.7.1 یک بیلد آزمایشی داخلی منتشرنشده بود و پس گرفته شد؛ 1.7.2 همه تغییراتش را دارد</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.7.0</span>
+                        <span class="version-title">شیدرها، پک‌های منابع و مودپک‌ها، با یک کلیک نصب می‌شوند</span>
+                        <span class="version-date">2026-10-22</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>صفحه دانلود تب‌های شیدرها و پک‌های منابع را اضافه می‌کند: Modrinth / CurseForge را جست‌وجو کنید و مستقیم در پوشه مربوط به نسخه انتخاب‌شده نصب کنید</li>
+                        <li>تب جدید مودپک از مودپک‌های Modrinth (.mrpack) و CurseForge پشتیبانی می‌کند و نسخه بازی، لودر مود و همه مودها را خودکار نصب می‌کند</li>
+                        <li>هر مودپک نسخه خودش می‌شود، با مودها، تنظیمات و ذخیره‌ها در پوشه خودش، تا مودپک‌ها با هم قاطی نشوند</li>
+                        <li>مودپک‌های محلی هم قابل وارد کردن‌اند: در مدیریت نسخه‌ها یک zip / .mrpack انتخاب کنید، نام بگذارید و نصب شروع می‌شود</li>
+                        <li>فایل‌های مودپک از نظر اندازه و SHA1 با مانیفست بررسی می‌شوند، تا jarهای نیمه‌کاره دوباره گرفته شوند، نه اینکه بازی‌ای بسازند که بالا نمی‌آید</li>
+                        <li>NeoForge حالا مثل Forge / Fabric بر اساس نسخه نصب می‌شود (1.20.1 و بالاتر)</li>
+                        <li>منوی «بیشتر» به‌طور پیش‌فرض جمع شده است؛ در صورت نیاز از تنظیمات → ظاهر فعالش کنید، و باگی که باعث می‌شد بعد از راه‌اندازی دوباره ظاهر شود رفع شد</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.6.1</span>
+                        <span class="version-title">دلایل کرش، رو راست گفته می‌شوند</span>
+                        <span class="version-date">2026-10-21</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>کرش‌ها خودکار تشخیص داده می‌شوند (کمبود حافظه، نسخه اشتباه Java، نبود پیش‌نیاز، درایور گرافیک، ناسازگاری OptiFine / Forge و بیشتر) و دیالوگ 1–2 نتیجه می‌دهد</li>
+                        <li>«مشاهده جزئیات» همه سرنخ‌ها و خطوط شواهد را نشان می‌دهد؛ «مشاهده لاگ‌ها» پوشه بازی همان نسخه‌ای را باز می‌کند که کرش کرد</li>
+                        <li>گزارش‌های خطا یک zip کامل صادر می‌کنند: نتایج تحلیل، خلاصه خطا، سیستم و GPU، نسخه Java، نسخه و لودر مود، فهرست مودها / پک‌های منابع / شیدرها، آرگومان‌های اجرا، خروجی بازی و گزارش‌های کرش</li>
+                        <li>گزارش، --accessToken و نام کاربری سیستم را پنهان می‌کند، تا بتوانید برای عیب‌یابی برای دیگران بفرستید</li>
+                        <li>با اجرای چند بازی همزمان، هر نشست خروجی خودش را نگه می‌دارد، تا زمینه کرش به نسخه دیگر سرریز نکند</li>
+                        <li>صفحه جزئیات مود از نو ساخته شد: نام چینی و انگلیسی، تعداد دانلود، برچسب‌های دسته، فهرست فایل‌های گروه‌بندی‌شده بر اساس نسخه MC، کارت‌های پیش‌نیاز، پیوند به Modrinth / CurseForge / MCMOD و کپی نام با یک کلیک</li>
+                        <li>رفع شد که پیش‌نیازهای نصب 1.20.1 به‌عنوان 1.20 حل می‌شدند و نسخه‌های Fabric API / GeckoLib تکراری می‌شدند و Fabric پیام Incompatible mods found می‌داد و از شروع خودداری می‌کرد</li>
+                        <li>نصب یک مود، jarهای قدیمی همان پروژه را پاک می‌کند، تا چند نسخه روی هم انبار نشوند</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.6.0</span>
+                        <span class="version-title">مود نصب کنید بدون گشتن دنبال فایل</span>
+                        <span class="version-date">2026-10-20</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>صفحه دانلود تب مودها را اضافه می‌کند: Modrinth / CurseForge را جست‌وجو کنید، فایل‌های نسخه فعلی بازی را انتخاب کنید و بگویید در کدام نسخه نصب شود</li>
+                        <li>Modrinth پیش‌نیازهای لازم را خودکار می‌آورد؛ جست‌وجوی چینی پشتیبانی می‌شود (ابتدا پرس‌وجو از MCMOD نام انگلیسی را می‌گیرد)</li>
+                        <li>بدون کلید API برای CurseForge هم کار می‌کند: پیوند پروژه یا cf:slug را بچسبانید و یک فایل را از طریق آینه نصب کنید</li>
+                        <li>دانلودها حالا یک صف کار هستند: کلیک روی چند نسخه آن‌ها را صف می‌کند، کارهای در صف قابل حذف‌اند و لغو کار جاری اجازه می‌دهد صف ادامه یابد</li>
+                        <li>به‌روزرسانی خودکار حالا بی‌صدا نصب می‌شود: در پس‌زمینه دانلود می‌کند و هنگام خروج شما از لانچر نصب می‌شود، با یک نشان گرد در گوشه بالا سمت راست که پیشرفت را نشان می‌دهد</li>
+                        <li>جدید: زبان خودکار بازی (پیش‌فرض چینی ساده‌شده)، پوشه بازی دلخواه و آینه فایل دلخواه</li>
+                        <li>جدید: وارد کردن نسخه محلی از یک پوشه نسخه یا zip / jar</li>
+                        <li>Fabric حالا واقعاً نصب می‌شود، به‌طور پیش‌فرض همراه Fabric API؛ با جداسازی نسخه‌ها، مودها و ذخیره‌ها همراه نسخه می‌مانند</li>
+                        <li>نصب Forge فقط --installClient را اجرا می‌کند، پیشرفت نشان می‌دهد و وقتی نسخه Java قدیمی است صریح می‌گوید</li>
+                        <li>OptiFine بی‌صدا نصب می‌شود، نه اینکه نصب‌کننده گرافیکی را باز کند</li>
+                        <li>رفع شد که دانلودهای صفر بایتی موفق شمرده می‌شدند، آدرس‌های ریدایرکت نسبی، و اینکه دانلود دوم پیشرفت نشان نمی‌داد</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.5.2</span>
+                        <span class="version-title">تنظیمات، از نو ساخته شد</span>
+                        <span class="version-date">2026-10-18</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>صفحه تنظیمات از نو ساخته شد: حافظه، پنجره، رفتار اجرا، منابع دانلود و آرگومان‌های Java دوباره گروه‌بندی شدند و با لغزنده، کلید و دکمه‌های قطعه‌ای تنظیم می‌شوند</li>
+                        <li>حافظه حالا پیش‌فرض «خودکار» است: 30% حافظه فیزیکی، حداقل 1 GB و حداکثر 8 GB، با گذاشتن 2 GB برای سیستم؛ به‌صورت دستی هم قابل تنظیم است</li>
+                        <li>مدیریت حافظه حالا واقعاً آزادسازی می‌کند: فقط فرایندهای خود لانچر را پاک می‌کند، هرگز بازی در حال اجرا را، و می‌تواند برای بهینه‌سازی خودکار قبل از اجرا تنظیم شود</li>
+                        <li>منابع دانلود چهار حالت دارند (خودکار / آینه اول / رسمی اول / فقط رسمی) که جداگانه برای فایل‌ها و فهرست نسخه‌ها انتخاب می‌شوند؛ محدودیت سرعت کلی 0–20 MB/s اضافه شد</li>
+                        <li>جدید: تنظیم G1GC، آرگومان‌های JVM سفارشی، اولویت فرایند، اندازه‌های آماده پنجره و قابل‌مشاهده بودن لانچر</li>
+                        <li>صفحه درباره حالا اطلاعات پروژه، محیط اجرا و مجوز کامل را پوشش می‌دهد؛ وب‌سایت و صفحه‌های راهنما هم بازنویسی شدند</li>
+                        <li>رفع شد: نادیده گرفته شدن تنظیم تعداد ریسه‌ها، ذخیره شدن صفحه‌های 404 به‌عنوان فایل، و ماندن فایل‌های ناقص پس از دانلود ناموفق</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.5.1</span>
+                        <span class="version-title">کرش کرد؟ بگذار ببینم</span>
+                        <span class="version-date">2026-10-16</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>اعلان کرش جدید: وقتی بازی غیرعادی بسته می‌شود دلیل را توضیح می‌دهد، با گزارش خطای یک‌کلیکی (گزارش کرش + لاگ‌ها + اطلاعات سیستم، توکن‌ها پنهان)</li>
+                        <li>پنل اجرای جدید: پس از اجرا نسخه، PID، زمان اجرا و حافظه را در سمت راست نشان می‌دهد و می‌تواند بازی را در هر لحظه ببندد</li>
+                        <li>کادر نام کاربری 5 نام آخر را در یک فهرست بازشو نگه می‌دارد، هر کدام قابل حذف</li>
+                        <li>بازی حالا در فرایند خودش اجرا می‌شود، پس بستن لانچر آن را تمام نمی‌کند؛ بستن پنجره بازی هم خروج شناخته می‌شود</li>
+                        <li>عنوان پنجره بازی دلخواه، با واژه‌های جادویی ({mc_version}، {time} و بیشتر)</li>
+                        <li>نکته‌های اجرا حالا تصادفی ظاهر می‌شوند (قابل تنظیم در تنظیمات)، با ورودی‌های بسیار بیشتر</li>
+                        <li>انیمیشن شروع و گذار صفحه‌ها روان‌تر</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.5.0</span>
+                        <span class="version-title">Java درست شد، و ظاهری تازه</span>
+                        <span class="version-date">2026-10-16</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>رفع دانلودهای محیط اجرای Java: تغییر نام فایل آینه نصب را خراب کرده بود، حالا به‌صورت پویا گرفته می‌شود</li>
+                        <li>نصب‌کننده به Inno Setup منتقل شد و از نسخه‌های قدیمی‌تر در جا ارتقا می‌دهد</li>
+                        <li>رنگ‌های جهانی یکدست شدند (آبی آسمانی رنگ اصلی، آبی تیره برای حالت تاریک)، با انیمیشن شروع و وب‌سایت جدید</li>
+                        <li>رفع شد که صفحه شروع پوسته روشن را نادیده می‌گرفت و چند سبک دکمه اعمال نمی‌شد</li>
+                    </ul>
+                </div>
+                <details class="older-versions">
+                    <summary>نمایش 12 نسخه قدیمی‌تر</summary>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.4.4</span>
+                        <span class="version-title">پشتیبانی از شیدر!</span>
+                        <span class="version-date">2026-07-11</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>پشتیبانی از OptiFine (شیدر) اضافه شد</li>
+                        <li>نصب یک‌کلیکی که ارث‌بری، کتابخانه‌ها و tweakClass را خودکار مدیریت می‌کند</li>
+                        <li>از سازوکار ارث‌بری نسخه inheritsFrom پشتیبانی می‌کند</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.4.3</span>
+                        <span class="version-title">رفع شد</span>
+                        <span class="version-date">2026-06-02</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>مشکل نوار اسکرول دوتایی رفع شد</li>
+                        <li>صفحه درباره با محتوای بیشتر گسترش یافت، از جمله یک جعبه‌ابزار</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.4.2</span>
+                        <span class="version-title">رفع شد؟ شک دارم</span>
+                        <span class="version-date">2026-06-02</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>صفحه شروع در نسخه قبل چند مشکل داشت</li>
+                        <li>تنظیمات را مرتب کردم</li>
+                        <li>لغو اجرا حالا واقعاً فرایند را می‌کشد!</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.4.1</span>
+                        <span class="version-title">خوش آمدید!</span>
+                        <span class="version-date">2026-06-02</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>انیمیشن خوش‌آمدگویی در اولین اجرا اضافه شد</li>
+                        <li>ضد دیباگ بیش از حد حذف شد و حالت توسعه‌دهنده اجازه داده شد</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.4.0</span>
+                        <span class="version-title">برخاستن!</span>
+                        <span class="version-date">2026-06-01</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>تلاش برای پشتیبانی واقعی از Forge</li>
+                        <li>شروع فوری! این یک بیلد نصب‌کننده است که به کد ماشین کامپایل شده!</li>
+                        <li>باگ‌ها رفع شدند، به لطف انجمن</li>
+                        <li>جریان کار بسیار ساده‌تر شد؛ جزئیات به‌روزرسانی حالا می‌تواند لاگ کامل نشان دهد</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.3.3</span>
+                        <span class="version-date">2026-05-28</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Forge / Fabric / OptiFine حالا واقعاً کار می‌کنند!</li>
+                        <li>این اولین انتشار متن‌باز است!</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.3.2</span>
+                        <span class="version-date">2026-05-23</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>تنظیمات تفصیلی برای هر نسخه اضافه شد که به‌طور پیش‌فرض مدیریت می‌شوند؛ نسخه‌های بازی قابل حذف‌اند</li>
+                        <li>پشتیبانی بیشتر از حالت روشن؛ «بازگردانی پیش‌فرض‌ها» به بخش جدید تنظیمات سازگاری منتقل شد؛ API به‌روز شد</li>
+                        <li>فهرست‌های بازشو و جزئیات دیگر صیقل خوردند</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.3.0–1.3.1</span>
+                        <span class="version-date">2026-05-22</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>نمودار دانلود گمشده رفع شد (در بیلد نصب‌شده فراخوانی نمی‌شد)</li>
+                        <li>تنظیم بررسی خودکار به‌روزرسانی به صفحه درباره منتقل شد</li>
+                        <li>صفحه دانلود حالا Alpha، Beta، اسنپ‌شات‌ها و انتشارها را کامل فهرست می‌کند و مشکل نمایش ناقص نسخه‌های انتشار رفع شد</li>
+                        <li>صفحه اجرا بازسازی شد و مدیریت نسخه بر اساس آخرین زمان اجرا مرتب شد</li>
+                        <li>نکته‌های «می‌دانستید؟» در شروع و پاکسازی خودکار لاگ اضافه شد (فاصله در تنظیمات قابل تغییر است)</li>
+                        <li>مقیاس رابط در ظاهر حالا واقعاً کار می‌کند؛ 1.3.1 مشکل نمایش نشدنش را رفع کرد</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.2.1</span>
+                        <span class="version-date">2026-05-22</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>کتابخانه‌های پویا به‌صورت محلی همراه شدند</li>
+                        <li>محافظت در برابر اجرای تکراری / نمونه‌های تکراری اضافه شد</li>
+                        <li>تنظیمات بی‌فایده حذف شد و محتوای صفحه دانلود حالا قابل جمع شدن است</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.2.0</span>
+                        <span class="version-date">2026-05-21</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>نوار اسکرول و حالت روشن اضافه شد</li>
+                        <li>انیمیشن کامل شروع لانچر اضافه شد و صفحه سفید هنگام اجرا کاهش یافت</li>
+                        <li>نوار کناری چپ به بالا منتقل و رابط بزرگ‌تر شد؛ صفحه دانلود صیقل خورد و محیط اجرای Java اضافه شد</li>
+                        <li>مجموعه بزرگی از تنظیمات اضافه شد، سازمان‌یافته در بازی، دانلود، ظاهر، پیشرفته و درباره</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.1.0</span>
+                        <span class="version-date">2026-05-21</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>راه‌اندازی خودکار Java اضافه شد، با منبع دانلود قابل تنظیم (تشکر از Tsinghua!)</li>
+                        <li>کارایی بهبود یافت، انیمیشن شروع اضافه شد و عیب‌یابی بر پایه لاگ بهتر شد</li>
+                        <li>بسیاری از باگ‌های فهرست دانلود رفع شد، مثل ناتوانی در لغو و باقی‌مانده‌ها بعد از لغو</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.0.0</span>
+                        <span class="version-date">2026-05-20</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>اولین انتشار پایدار</li>
+                    </ul>
+                </div>
+                </details>
+                <div class="history-more">
+                    <a href="./history/index.fa">مشاهده تاریخچه کامل تغییرات (همه 20 نسخه و نصب‌کننده‌ها) →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <a href="https://gamets.caellab.com" class="logo">
+                    <img src="/logo.png" alt="GameTS">
+                </a>
+                <p>تیمی مستقل برای توسعه بازی و ابزار در CaelLab. کاویدن مرزهای آینده، با نوآوری بی‌کران.</p>
+            </div>
+            <div class="footer-links">
+                <h4>پروژه‌ها</h4>
+                <ul>
+                    <li><a href="./index.fa">GoodPlanCraftLauncher</a></li>
+                    <li><a href="/gpcl/docs/fa/">مرکز راهنما</a></li>
+                    <li><a href="./history/index.fa">تاریخچه تغییرات</a></li>
+                    <li><a href="/areyouok/">Are You OK?</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>جامعه کاربران</h4>
+                <ul>
+                    <li><a href="https://forum.xmuer.online" target="_blank" rel="noopener">انجمن</a></li>
+                    <li><a href="mailto:gamets@caellab.com">gamets@caellab.com</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>متن‌باز</h4>
+                <ul>
+                    <li><a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener">GitHub</a></li>
+                    <li><a href="https://www.caellab.com/license/cbs-v3" target="_blank">مجوز</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 GameTS by <a href="https://www.caellab.com/" target="_blank" class="footer-inline-link">CaelLab</a>. کلیه حقوق محفوظ است. صفحه پروژه: <a href="https://gamets.caellab.com/gpcl/" class="footer-inline-link">gamets.caellab.com/gpcl</a></p>
+            <p>GoodPlanCraftLauncher یک ابزار متن‌باز شخص ثالث است و هیچ وابستگی رسمی به <a href="https://www.minecraft.net/" target="_blank" rel="noopener" class="footer-inline-link">Mojang Studios</a>، <a href="https://www.microsoft.com/" target="_blank" rel="noopener" class="footer-inline-link">Microsoft</a>، <a href="https://www.xbox.com/" target="_blank" rel="noopener" class="footer-inline-link">Xbox</a> ندارد. Minecraft علامت تجاری Mojang Studios است؛ استفاده از این لانچر به مجوز معتبر Minecraft نیاز دارد.</p>
+            <p>مجوز متن‌باز: <a href="https://www.caellab.com/license/cbs-v3" target="_blank" class="footer-inline-link">CaelLab BY-SA Code License v3</a> | متن‌باز در <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener" class="footer-inline-link">GitHub</a></p>
+        </div>
+    </footer>
+
+    <script>
+        var navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', function() {
+            navbar.classList.toggle('scrolled', window.scrollY > 40);
+        }, { passive: true });
+
+        var mobileBtn = document.getElementById('mobileMenuBtn');
+        var mobilePanel = document.getElementById('mobilePanel');
+        mobileBtn.addEventListener('click', function() {
+            var open = mobilePanel.classList.toggle('open');
+            mobileBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+        mobilePanel.querySelectorAll('a').forEach(function(a) {
+            a.addEventListener('click', function() {
+                mobilePanel.classList.remove('open');
+                mobileBtn.setAttribute('aria-expanded', 'false');
+            });
+        });
+
+        var revealObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(function(el) {
+            revealObserver.observe(el);
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+            anchor.addEventListener('click', function(e) {
+                var target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        function toggleDropdown(id) {
+            var dropdown = document.getElementById(id);
+            var isActive = dropdown.classList.contains('active');
+            document.querySelectorAll('.dropdown').forEach(function(d) {
+                d.classList.remove('active');
+            });
+            if (!isActive) {
+                dropdown.classList.add('active');
+            }
+        }
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown').forEach(function(d) {
+                    d.classList.remove('active');
+                });
+            }
+        });
+
+        /* 页面顶上那个窗口就是体验区：进屏幕后自动播一遍启动流程 */
+        var heroFrame = document.querySelector('#heroWindow iframe');
+        var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        function tell(frame, message) {
+            if (!frame || !frame.contentWindow) return;
+            frame.contentWindow.postMessage(message, '*');
+        }
+
+        /* iframe 是异步加载的，等它报 ready 之后再发指令，否则消息会丢 */
+        var heroFrameReady = false;
+        var wantHeroAutoplay = false;
+        window.addEventListener('message', function(e) {
+            var data = e.data || {};
+            if (data.gpcl === 'ready') {
+                heroFrameReady = true;
+                if (wantHeroAutoplay) {
+                    wantHeroAutoplay = false;
+                    setTimeout(function() { tell(heroFrame, { gpcl: 'autoplay' }); }, 400);
+                }
+            }
+        });
+
+        if (heroFrame && !reduced) {
+            var heroSeen = false;
+            new IntersectionObserver(function(entries, obs) {
+                entries.forEach(function(entry) {
+                    if (!entry.isIntersecting || heroSeen) return;
+                    heroSeen = true;
+                    if (heroFrameReady) {
+                        setTimeout(function() { tell(heroFrame, { gpcl: 'autoplay' }); }, 600);
+                    } else {
+                        wantHeroAutoplay = true;
+                    }
+                    obs.disconnect();
+                });
+            }, { threshold: 0.35 }).observe(document.getElementById('heroWindow'));
+        }
+
+        /* 鼠标挪过窗口时给一点极轻的倾斜，键盘和触摸设备不动 */
+        if (window.matchMedia('(hover: hover) and (pointer: fine)').matches && !reduced) {
+            document.querySelectorAll('.window').forEach(function(win) {
+                var stage = win.closest('.window-stage');
+                stage.addEventListener('mousemove', function(e) {
+                    var r = stage.getBoundingClientRect();
+                    var x = (e.clientX - r.left) / r.width - 0.5;
+                    var y = (e.clientY - r.top) / r.height - 0.5;
+                    win.style.setProperty('--tilt-y', (x * 2.4).toFixed(2) + 'deg');
+                    win.style.setProperty('--tilt-x', (-y * 1.8).toFixed(2) + 'deg');
+                });
+                stage.addEventListener('mouseleave', function() {
+                    win.style.setProperty('--tilt-y', '0deg');
+                    win.style.setProperty('--tilt-x', '0deg');
+                });
+            });
+        }
+    </script>
+</body>
+</html>

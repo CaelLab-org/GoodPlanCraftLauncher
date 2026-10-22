@@ -1,0 +1,70 @@
+---
+title: Oyun çöktüğünde ne yapmalı
+slug: /mc-game
+description: Hata raporu dışa aktarma, günlük okuma ve belirtilere göre Minecraft çökmesi inceleme.
+---
+
+Çökme penceresi genellikle nedeni göstermez. GPCL önce günlükleri okuyup ipucu verir; ardından aşağıdaki sırayla ilerleyin.
+
+:::tip Önce tek bir şey yapın
+Çökme penceresindeki «Hata raporunu dışa aktar»a tıklayın ve oluşan zip'i saklayın. Raporun başında GPCL'nin analiz sonucu, arkasında mod listesi, Java, başlatma parametreleri ve tüm günlükler bulunur; inceleme neredeyse tamamen buna dayanır.
+:::
+
+## 1. Önce GPCL'nin analizine bakın
+
+Pencere, GPCL'nin günlüklerde bulduğu 1–2 ipucunu gösterir, örneğin «Bellek yetersiz» veya «Mod bağımlılığı ya da uyumluluk denetimi geçmedi». «Ayrıntıları gör»e tıklayınca tüm ipuçları, ilgili günlük satırları ve çökme bilgileri görünür.
+
+Bu sonuçlar anahtar kelime eşleşmesine dayanır ve yalnızca bir yön gösterir. Günlükte daha somut bilgi varsa (örneğin eksik bağımlılık) kanıtlara eklenir.
+
+## 2. Hata raporunu dışa aktarın
+
+Düğme çökme penceresindedir. Bir konum seçin; GPCL şunları paketler:
+
+- `error-report.txt`: analiz sonucu, hata özeti, sistem / ekran kartı / Java, mod listesi, kaynak paketleri ve shader'lar, başlatma parametreleri, oyun çıktısı, günlükteki hata satırları;
+- `crash-reports/`: bu çökmede oluşan çökme raporları;
+- `logs/`: `latest.log` ve `debug.log` (çok büyükse yalnızca son kısmı);
+- `jvm-crash/`: JVM'nin kendi yazdığı `hs_err_pid*.log` dosyaları (ekran kartı sürücüsü gibi nedenlerle JVM çökerse);
+- `launcher-log.txt`: başlatıcı günlüğü;
+- `game-output.txt`: oyun sürecinin bu çalışmadaki standart ve hata çıktısı.
+
+Rapordaki `--accessToken` ve sistem kullanıcı adı maskelenmiştir, olduğu gibi gönderilebilir. Yalnızca çökme penceresinin ekran görüntüsünü göndermeyin.
+
+## 3. Günlüğe kendiniz bakın
+
+Penceredeki «Günlüğü gör» oyun sürecinin çıktısını açar. En alta ve şu kelimelere bakın:
+
+| Anahtar kelime | Genellikle anlamı |
+| --- | --- |
+| `Exception`, `Caused by` | Gerçek istisna genellikle ilk `Caused by` sonrasındadır |
+| `OutOfMemoryError` | Ayrılan bellek yetmiyor |
+| `UnsupportedClassVersionError` | Java sürümü oyun sürümüyle eşleşmiyor |
+| `NoSuchMethodError`, `ClassNotFoundException` | Mod oyun ya da yükleyici sürümüyle uyuşmuyor veya bağımlılık eksik |
+| `GLFW error` | Ekran kartı sürücüsü veya OpenGL desteğinde sorun var |
+
+## 4. Yaygın nedenler
+
+| Belirti | Yaygın neden | Ne yapmalı |
+| --- | --- | --- |
+| Başlatmadan hemen sonra kapanıyor, günlükte `UnsupportedClassVersionError` | Java sürümü yanlış | GPCL'nin Java'yı otomatik eklemesine izin verin; ya da ayarlardan ayna kaynağını değiştirip yeniden kurun |
+| Yükleme ortasında donuyor veya kapanıyor, günlükte `OutOfMemoryError` | Bellek yetmiyor ya da çok fazla mod var | Ayarlar → Oyun → Bellek ayırma bölümünde artırın; fiziksel belleği aşmayın |
+| Modlar yüklenirken çöküyor, günlükte mod adı var | Mod sürümü yanlış, bağımlılık eksik, iki mod çakışıyor | Önce yalnızca bu modu kurup deneyin; desteklenen MC ve yükleyici sürümünü doğrulayın |
+| Pencere açılmadan kapanıyor, `GLFW error` var | Ekran kartı sürücüsü eski veya OpenGL desteklenmiyor | Ekran kartı sürücüsünü güncelleyin; dizüstünde oyunun harici kartı kullandığını doğrulayın |
+| Sunucudan atılıyor, `Invalid session` yazıyor | Premium oturumun süresi dolmuş veya hesabın bu sürüm için lisansı yok | Yeniden premium oturum açın; hesabın bu sürüme sahip olduğunu doğrulayın |
+| Dünyaya girerken veya kaynak paketi yüklerken çöküyor | Kayıt, kaynak paketi veya shader paketi bozuk | Önce yeni bir dünya oluşturup deneyin; kayıtların yedeğini alıp sonra inceleyin |
+| Fabric ile açılışta çöküyor, `fabric-api` eksik diyor | Fabric API kurulu değil | Fabric'i «Fabric API'yi de kur» işaretliyken yeniden kurun veya elle kurun |
+
+## 5. Önce şu üçünü eleyin
+
+1. **Tüm modları, kaynak paketlerini ve shader'ları kapatın**, sade başlatın. Açılıyorsa sorun modlardadır.
+2. **Başka bir vanilya sürümle başlatın**. Açılıyorsa sorun geçerli sürümde veya mod birleşimindedir.
+3. **Yeni bir dünya oluşturun**. Açılıyorsa eski kayıt bozulmuştur.
+
+## 6. Hâlâ olmuyorsa
+
+[gamets@caellab.com](mailto:gamets@caellab.com) adresine dışa aktardığınız hata raporuyla birlikte yazın ve şunları belirtin:
+
+- başlatıcı sürümü, Minecraft sürümü, yükleyici sürümü;
+- kurulu modlar (sürüm numaralarıyla birlikte daha iyi);
+- çökmeden önce ne yaptığınız.
+
+Yalnızca «açılır açılmaz çöküyor» demek sorunu bulmayı zorlaştırır; kilit nokta rapordaki günlüklerdir.

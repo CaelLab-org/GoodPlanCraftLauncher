@@ -1,0 +1,70 @@
+---
+title: Crash del gioco, cosa fare
+slug: /mc-game
+description: Esportare il report di errore, leggere i log e diagnosticare i crash di Minecraft in base ai sintomi.
+---
+
+La finestra di crash da sola di solito non mostra la causa. GPCL legge prima i log e fornisce indizi, poi conviene seguire l'ordine qui sotto.
+
+:::tip Prima cosa
+Fai clic su «Esporta report di errore» nella finestra di crash e salva lo zip generato. Il report inizia con l'analisi di GPCL e contiene poi l'elenco delle mod, Java, i parametri di avvio e tutti i log: quasi tutta la diagnosi si basa su di esso.
+:::
+
+## 1. Guarda prima l'analisi di GPCL
+
+La finestra mostra 1–2 indizi trovati da GPCL nei log, per esempio «memoria insufficiente» o «controllo delle dipendenze o della compatibilità delle mod non superato». Con «Mostra dettagli» vedi tutti gli indizi, le righe originali del log e le informazioni sul crash.
+
+Queste conclusioni derivano da una corrispondenza di parole chiave e indicano solo una direzione. Quando il log contiene informazioni più precise (per esempio quale dipendenza manca), vengono elencate insieme nelle prove.
+
+## 2. Esportare il report di errore
+
+Il pulsante è nella finestra di crash. Scegli dove salvare: GPCL prepara:
+
+- `error-report.txt`: esito dell'analisi, riepilogo dell'errore, sistema / scheda video / Java, elenco delle mod, resource pack e shader, parametri di avvio, output del gioco e righe di errore dei log;
+- `crash-reports/`: i report di crash generati da questa esecuzione;
+- `logs/`: `latest.log` e `debug.log` (se troppo grandi, solo la parte finale);
+- `jvm-crash/`: i file `hs_err_pid*.log` scritti dalla JVM stessa (quando driver video o simili fanno crashare la JVM);
+- `launcher-log.txt`: log del launcher;
+- `game-output.txt`: stdout e stderr del processo di gioco in questa esecuzione.
+
+Il `--accessToken` e il nome utente di sistema nel report sono già oscurati, quindi si può inviare così com'è. Non inviare solo uno screenshot della finestra di crash.
+
+## 3. Dai un'occhiata ai log
+
+«Mostra log» nella finestra apre l'output del processo di gioco. Guarda soprattutto la parte finale e cerca queste parole:
+
+| Parola chiave | Di solito significa |
+| --- | --- |
+| `Exception`, `Caused by` | L'eccezione reale di solito è dopo il primo `Caused by` |
+| `OutOfMemoryError` | La memoria assegnata non basta |
+| `UnsupportedClassVersionError` | La versione di Java non corrisponde a quella del gioco |
+| `NoSuchMethodError`, `ClassNotFoundException` | Mod incompatibile con la versione del gioco o del loader, oppure dipendenza mancante |
+| `GLFW error` | Problema con il driver video o con il supporto OpenGL |
+
+## 4. Cause frequenti
+
+| Sintomo | Causa frequente | Cosa fare |
+| --- | --- | --- |
+| Si chiude subito all'avvio, con `UnsupportedClassVersionError` nel log | Versione di Java errata | Lascia che GPCL installi Java; oppure cambia mirror nelle impostazioni e reinstalla |
+| Si blocca o si chiude a metà caricamento, con `OutOfMemoryError` | Memoria insufficiente o troppe mod | Aumenta in Impostazioni → Gioco → Assegnazione della memoria; non superare la memoria fisica |
+| Crash durante il caricamento delle mod, con il nome di una mod nel log | Versione della mod errata, dipendenza mancante, conflitto tra due mod | Prova con quella sola mod; verifica le versioni di MC e del loader supportate |
+| Si chiude prima che compaia la finestra, con `GLFW error` | Driver video troppo vecchio o OpenGL non supportato | Aggiorna il driver video; sui portatili verifica che il gioco usi la GPU dedicata |
+| Espulso dal server con `Invalid session` | Accesso scaduto o account senza diritto a quella versione | Rifai l'accesso con account ufficiale; verifica che l'account possieda la versione |
+| Crash entrando in un mondo o caricando resource pack | Mondo, resource pack o shader danneggiato | Crea un mondo nuovo per provare; salva una copia del mondo prima di intervenire |
+| Crash all'avvio con Fabric, indica `fabric-api` mancante | Fabric API non installato | Reinstalla Fabric selezionando «Installa anche Fabric API», oppure installalo a mano |
+
+## 5. Escludi prima questi tre fattori
+
+1. **Disattiva tutte le mod, i resource pack e gli shader** e avvia una volta senza nulla. Se il gioco parte, il problema è nelle mod.
+2. **Avvia un'altra versione vanilla**. Se parte, il problema è la versione attuale o la sua combinazione di mod.
+3. **Crea un mondo nuovo**. Se parte, il mondo precedente è danneggiato.
+
+## 6. Se ancora non si risolve
+
+Scrivi a [gamets@caellab.com](mailto:gamets@caellab.com) allegando il report di errore esportato e indica:
+
+- versione del launcher, versione di Minecraft, versione del loader;
+- quali mod sono installate (meglio con numero di versione);
+- cosa hai fatto prima del crash.
+
+Descrivere solo «crasha appena avvio» raramente basta a individuare il problema: i log nel report sono la parte decisiva.

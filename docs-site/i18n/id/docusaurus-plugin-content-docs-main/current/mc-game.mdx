@@ -1,0 +1,70 @@
+---
+title: Apa yang dilakukan saat game crash
+slug: /mc-game
+description: Mengekspor laporan kesalahan, membaca log, dan menelusuri crash Minecraft sesuai gejalanya.
+---
+
+Dari jendela crash sendiri biasanya penyebabnya tidak terlihat. GPCL membaca log dulu dan memberi petunjuk, lalu periksa dengan urutan di bawah.
+
+:::tip Satu hal dulu
+Klik "Ekspor laporan kesalahan" di dialog crash dan simpan zip yang dihasilkan. Di awal laporan ada hasil analisis GPCL, lalu daftar Mod, Java, parameter peluncuran, dan semua log — sebagian besar pemeriksaan bergantung pada ini.
+:::
+
+## 1. Lihat analisis GPCL dulu
+
+Dialog menampilkan 1–2 petunjuk yang ditemukan GPCL dari log, misalnya "memori tidak cukup" atau "pemeriksaan dependensi atau kompatibilitas Mod tidak lolos". Klik "Lihat detail" untuk melihat semua petunjuk, baris log terkait, dan informasi crash.
+
+Kesimpulan ini berasal dari pencocokan kata kunci, jadi anggap hanya sebagai arah pemeriksaan. Kalau log punya informasi lebih spesifik (misalnya dependensi mana yang hilang), itu juga dicantumkan dalam bukti.
+
+## 2. Ekspor laporan kesalahan
+
+Tombolnya ada di dialog crash. Pilih lokasi penyimpanan, dan GPCL mengemas:
+
+- `error-report.txt`: hasil analisis, ringkasan error, sistem / GPU / Java, daftar Mod, resource pack dan shader, parameter peluncuran, output game, baris error di log;
+- `crash-reports/`: laporan crash yang dihasilkan dari crash ini;
+- `logs/`: `latest.log` dan `debug.log` (kalau terlalu besar hanya bagian akhirnya);
+- `jvm-crash/`: `hs_err_pid*.log` yang ditulis sendiri oleh JVM (jika masalah seperti driver GPU membuat JVM crash);
+- `launcher-log.txt`: log launcher;
+- `game-output.txt`: output standar dan output error proses game pada eksekusi ini.
+
+`--accessToken` dan nama pengguna sistem di laporan sudah disamarkan, jadi bisa langsung dikirim. Jangan hanya mengirim tangkapan layar jendela crash.
+
+## 3. Periksa log sendiri
+
+"Lihat log" di dialog membuka output proses game. Perhatikan bagian paling bawah, dan cari kata-kata ini:
+
+| Kata kunci | Biasanya berarti |
+| --- | --- |
+| `Exception`, `Caused by` | Exception sebenarnya biasanya ada setelah `Caused by` pertama |
+| `OutOfMemoryError` | Memori yang dialokasikan tidak cukup |
+| `UnsupportedClassVersionError` | Versi Java dan versi game tidak cocok |
+| `NoSuchMethodError`, `ClassNotFoundException` | Mod tidak cocok dengan versi game atau versi loader, atau dependensi hilang |
+| `GLFW error` | Ada masalah pada driver GPU atau dukungan OpenGL |
+
+## 4. Penyebab umum
+
+| Gejala | Penyebab umum | Yang dilakukan |
+| --- | --- | --- |
+| Langsung keluar saat dijalankan, di log ada `UnsupportedClassVersionError` | Versi Java salah | Biarkan GPCL memasang Java yang sesuai; atau ganti mirror di pengaturan lalu pasang ulang |
+| Tersendat atau tertutup di tengah pemuatan, di log ada `OutOfMemoryError` | Memori kurang, atau mod terlalu banyak | Pengaturan → Game → Alokasi memori: naikkan; jangan melebihi memori fisik |
+| Crash saat memuat mod, nama mod muncul di log | Versi mod salah, dependensi hilang, dua mod bentrok | Coba dulu hanya dengan mod ini; pastikan versi MC dan versi loader yang didukungnya |
+| Keluar sebelum jendela muncul, ada `GLFW error` | Driver GPU terlalu lama, atau OpenGL tidak didukung | Perbarui driver GPU; di laptop pastikan game memakai GPU diskrit |
+| Ditendang dari server, muncul `Invalid session` | Login premium kedaluwarsa, atau akun tidak punya lisensi versi ini | Login premium lagi; pastikan akun memang memiliki versi tersebut |
+| Crash saat masuk dunia atau memuat resource pack | Save, resource pack, atau shader pack rusak | Coba buat dunia baru dulu; cadangkan save lalu tangani |
+| Crash begitu dijalankan dengan Fabric, muncul pesan `fabric-api` hilang | Fabric API belum terpasang | Saat memasang Fabric lagi centang "Pasang Fabric API sekaligus", atau pasang manual |
+
+## 5. Singkirkan tiga hal ini dulu
+
+1. **Matikan semua mod, resource pack, dan shader**, lalu jalankan sekali tanpa apa pun. Kalau bisa masuk, masalahnya di mod.
+2. **Jalankan versi vanilla lain**. Kalau bisa masuk, masalahnya di versi saat ini atau kombinasi mod-nya.
+3. **Buat dunia baru**. Kalau bisa masuk, save lama yang rusak.
+
+## 6. Masih tidak bisa
+
+Kirim email ke [gamets@caellab.com](mailto:gamets@caellab.com) dengan laporan kesalahan hasil ekspor, dan tuliskan dengan jelas:
+
+- versi launcher, versi Minecraft, versi loader;
+- mod apa saja yang terpasang (lebih baik dengan nomor versi);
+- apa yang dilakukan sebelum crash.
+
+Hanya menulis "crash begitu dijalankan" sulit dilacak; log di laporan adalah kuncinya.

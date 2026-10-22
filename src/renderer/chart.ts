@@ -8,6 +8,7 @@
 
 
 // __IMPORTS_BEGIN__
+import { t } from '../i18n';
 // __IMPORTS_END__
 
 declare const Chart: any;
@@ -55,7 +56,7 @@ export function initChart(): void {
     data: {
       labels: Array(40).fill(''),
       datasets: [{
-        label: '下载速度',
+        label: t('ui.download_speed'),
         data: Array(40).fill(0),
         borderColor: '#4fc3f7',
         backgroundColor: gradient,
@@ -85,7 +86,7 @@ export function initChart(): void {
           padding: 10,
           callbacks: {
             label: function(context: any): string {
-              return `速度: ${context.parsed.y.toFixed(2)} Mbps`;
+              return t('ui.speed_speed_mbps', { speed: context.parsed.y.toFixed(2) });
             }
           }
         }

@@ -1,0 +1,206 @@
+{
+  "meta": {
+    "title": "GoodPlanCraftLauncher - একটি হালকা, দক্ষ Minecraft লঞ্চার - CaelLabGameTS",
+    "description": "GoodPlanCraftLauncher একটি সরল ও দক্ষ Minecraft লঞ্চার — Microsoft ও অফলাইন লগইন, ভার্সন ব্যবস্থাপনা এবং Forge/NeoForge/Fabric/OptiFine মড ইনস্টলেশন, যাতে এক ক্লিকে ব্লকজগতে ঢুকে পড়া যায়। ওপেন সোর্স ও বিনামূল্যে।",
+    "keywords": "GoodPlanCraftLauncher,Minecraft লঞ্চার,MC লঞ্চার,Minecraft Java Edition,CaelLab,ওপেন সোর্স",
+    "ogTitle": "GoodPlanCraftLauncher - হালকা, দক্ষ Minecraft লঞ্চার",
+    "ogDescription": "হালকা · দক্ষ · ওপেন সোর্স। Microsoft ও অফলাইন লগইন, ভার্সন ব্যবস্থাপনা এবং এক ক্লিকে Forge/NeoForge/Fabric/OptiFine ইনস্টলেশন।"
+  },
+  "historyMeta": {
+    "title": "চেঞ্জলগ - GoodPlanCraftLauncher - CaelLabGameTS",
+    "description": "GoodPlanCraftLauncher-এর প্রতিটি ভার্সনের চেঞ্জলগ ও ইনস্টলার ডাউনলোড: 1.0.0 থেকে সর্বশেষ পর্যন্ত, প্রতিটি পরিবর্তন এই পেজে আছে।",
+    "ogTitle": "চেঞ্জলগ - GoodPlanCraftLauncher",
+    "ogDescription": "প্রতিটি ভার্সনের রিলিজ নোট ও ইনস্টলার ডাউনলোড।"
+  },
+  "nav": {
+    "source": "সোর্স",
+    "language": "ভাষা",
+    "download": "v{version} ডাউনলোড",
+    "mobileGitHub": "GitHub সোর্স",
+    "openMenu": "মেনু খুলুন"
+  },
+  "hero": {
+    "tags": [
+      "ওপেন সোর্স",
+      "বিনামূল্যে",
+      "Minecraft লঞ্চার"
+    ],
+    "subtitle": "হালকা · দক্ষ · ওপেন সোর্স",
+    "desc": "Windows-এর জন্য লেখা Minecraft লঞ্চার: Microsoft ও অফলাইন লগইন, ভার্সন ব্যবস্থাপনা এবং এক ক্লিকে Forge / Fabric / OptiFine ইনস্টলেশন। গেম ক্র্যাশ করলে খালি বাক্স দেখানোর বদলে কারণটা বলে দেয়।",
+    "download": "এখনই ডাউনলোড করুন",
+    "versionLabel": "ভার্সন",
+    "updatedLabel": "আপডেট",
+    "platformLabel": "প্ল্যাটফর্ম",
+    "platform": "Windows 10+",
+    "iframeTitle": "GoodPlanCraftLauncher ইন্টারফেস",
+    "windowNote": "উপরের উইন্ডোটি <b>ক্লিকযোগ্য</b> — এটাই লঞ্চারের ইন্টারফেস, যা ওয়েব পেজের ভেতরে চলছে।",
+    "iconAlt": "GoodPlanCraftLauncher আইকন"
+  },
+  "features": {
+    "tag": "ফিচার",
+    "title": "মূল ফিচার",
+    "desc": "খেলোয়াড়দের কাজে লাগার সরঞ্জাম, প্রতিটির লক্ষ্য দ্রুত গেমে পৌঁছানো",
+    "items": [
+      {
+        "title": "দুটি লগইন পদ্ধতি",
+        "desc": "Microsoft ও অফলাইন লগইন, যেকোনো সময় বদলানো যায়; অফলাইন মোডে অনলাইন যাচাই লাগে না।"
+      },
+      {
+        "title": "মড ডাউনলোড অন্তর্ভুক্ত",
+        "desc": "Modrinth ও CurseForge-এ খুঁজুন এবং মড, শেডার বা রিসোর্স প্যাক নির্বাচিত সংস্করণ যে ফোল্ডার ব্যবহার করে সেখানে ইনস্টল করুন।"
+      },
+      {
+        "title": "চারটি মড লোডার",
+        "desc": "Forge, NeoForge, Fabric ও OptiFine অফিসিয়াল সোর্স থেকে ইনস্টল হয়, আগে Java সংস্করণ যাচাই করা হয়।"
+      },
+      {
+        "title": "২৫টি ইন্টারফেস ভাষা",
+        "desc": "প্রথম চালুতে সিস্টেম ভাষা অনুসরণ করে; সেটিংসে যেকোনো সময় বদলানো যায়।"
+      },
+      {
+        "title": "স্বয়ংক্রিয় ভার্সন ব্যবস্থাপনা",
+        "desc": "Minecraft ভার্সন এক ক্লিকে ডাউনলোড, ইনস্টল ও বদলান; লাইব্রেরি ও অ্যাসেট নিজে থেকেই সামলানো হয়।"
+      },
+      {
+        "title": "দ্রুত স্টার্টআপ",
+        "desc": "সংক্ষিপ্ত লঞ্চ পথ ও ক্যাশিং, তাই ক্লিক করেই খেলা, অপেক্ষা নয়।"
+      },
+      {
+        "title": "Java রানটাইম ব্যবস্থাপনা",
+        "desc": "Java রানটাইম নিজে থেকেই খুঁজে বের করে ইনস্টল করে; ডাউনলোড সোর্স Tsinghua, Nanjing University, Huawei Cloud বা অফিসিয়াল সোর্স দেওয়া যায়, ব্যর্থ হলে পরেরটিতে চলে যায়।"
+      },
+      {
+        "title": "থিম সাপোর্ট",
+        "desc": "হালকা ও গাঢ় মোডের পূর্ণ সমর্থন, ইন্টারফেস স্কেলিং সমন্বয়যোগ্য, দেখতে সবসময় একরকম।"
+      },
+      {
+        "title": "স্বয়ংক্রিয় আপডেট ও রক্ষণাবেক্ষণ",
+        "desc": "অন্তর্নির্মিত আপডেট চেক ও কনফিগারযোগ্য স্বয়ংক্রিয় লগ পরিষ্কার লঞ্চারকে সময়ের সঙ্গে হালকা রাখে।"
+      },
+      {
+        "title": "ক্র্যাশ নোটিশ ও এরর রিপোর্ট",
+        "desc": "গেম অস্বাভাবিকভাবে বন্ধ হলে কারণ ব্যাখ্যা করে, আর এক ক্লিকে এরর রিপোর্ট রপ্তানি করা যায় (ক্র্যাশ রিপোর্ট + লগ + সিস্টেম তথ্য)।"
+      },
+      {
+        "title": "রানিং প্যানেল",
+        "desc": "লঞ্চের পর ডানদিকে একটি প্যানেল ভার্সন, PID, চলার সময় ও মেমোরি ব্যবহার দেখায়, আর যেকোনো সময় গেম বন্ধ করা যায়।"
+      },
+      {
+        "title": "কাস্টম উইন্ডো টাইটেল",
+        "desc": "নিজের গেম উইন্ডো টাইটেল লেখা যায়, {mc_version} ও {time}-এর মতো ম্যাজিক শব্দসহ।"
+      }
+    ]
+  },
+  "shots": {
+    "tag": "স্ক্রিনশট",
+    "title": "আসল স্ক্রিনশট",
+    "desc": "উপরের উইন্ডোটি লঞ্চার ইন্টারফেসের ওয়েব অনুকরণ, কিছু ইনস্টল না করেই ক্লিক করা যায়। নিচের চারটি Windows-এ সত্যিই চলমান লঞ্চারের ছবি, এডিট ছাড়া।",
+    "items": [
+      {
+        "alt": "GoodPlanCraftLauncher লঞ্চ স্ক্রিন",
+        "caption": "লঞ্চ স্ক্রিন · ভার্সন বাছুন, প্লেয়ারের নাম লিখুন, গেম শুরু করুন"
+      },
+      {
+        "alt": "GoodPlanCraftLauncher ডাউনলোড স্ক্রিন",
+        "caption": "ডাউনলোড স্ক্রিন · গেম সংস্করণ, মড, শেডার, রিসোর্স প্যাক ও মডপ্যাক"
+      },
+      {
+        "alt": "GoodPlanCraftLauncher গেম সেটিংস",
+        "caption": "সেটিংস · গেম মেমোরি, উইন্ডো মোড, উইন্ডো টাইটেল ও ম্যাজিক শব্দ"
+      },
+      {
+        "alt": "GoodPlanCraftLauncher অ্যাপিয়ারেন্স সেটিংস",
+        "caption": "সেটিংস · ভাষা, ইন্টারফেস স্টাইল, থিম ও স্কেল"
+      }
+    ]
+  },
+  "download": {
+    "tag": "ডাউনলোড",
+    "title": "এখনই ডাউনলোড করুন",
+    "desc": "প্ল্যাটফর্ম বেছে নিন আর ব্লক অ্যাডভেঞ্চার শুরু করুন",
+    "button": "ব্লক জগতে ঝাঁপ দাও!",
+    "updatedLabel": "আপডেট",
+    "platformLabel": "প্ল্যাটফর্ম",
+    "licenseLabel": "লাইসেন্স",
+    "platform": "Windows 10 64-bit",
+    "license": "ওপেন সোর্স, বিনামূল্যে",
+    "github": "GitHub-এ দেখুন"
+  },
+  "requirements": {
+    "tag": "সিস্টেম",
+    "title": "সিস্টেম প্রয়োজনীয়তা",
+    "desc": "বেশি কিছু নয়, তবে জেনে রাখা ভালো",
+    "items": [
+      {
+        "label": "অপারেটিং সিস্টেম",
+        "text": "Windows 10 64-bit (1709+); Windows 11-ও চলে"
+      },
+      {
+        "label": "Java রানটাইম",
+        "text": "লঞ্চার নিজেই ইনস্টল করে; সিস্টেমে থাকা অতিরিক্ত বা সংঘর্ষকারী Java ইনস্টল পরিষ্কার করে নেওয়া ভালো"
+      },
+      {
+        "label": "স্টোরেজ",
+        "text": "লঞ্চারের জন্য অন্তত 90 MB খালি জায়গা (গেম ফাইল বাদে)"
+      },
+      {
+        "label": "মেমোরি",
+        "text": "2 GB বা তার বেশি খালি মেমোরি সুপারিশ করা হয়"
+      }
+    ]
+  },
+  "openSource": {
+    "tag": "ওপেন সোর্স",
+    "title": "ওপেন সোর্স ও অবদান",
+    "desc": "GPCL শতভাগ ওপেন সোর্স, সোর্স GitHub-এ। PR আর <a href=\"https://forum.xmuer.online/\" target=\"_blank\">ফোরামে</a> পরামর্শ দুটোই স্বাগত, যাতে একসঙ্গে আরও ভালো Minecraft লঞ্চার তৈরি হয়।",
+    "items": [
+      {
+        "title": "লাইসেন্স",
+        "desc": "CaelLab BY-SA Code License, Version 3 (বা তার পরবর্তী যেকোনো সংস্করণ) এর অধীনে প্রকাশিত। মুক্তভাবে ব্যবহার, পরিবর্তন ও পুনর্বিতরণ করা যায়; পরিবর্তিত সংস্করণেও একই ওপেন সোর্স লাইসেন্স রাখতে হবে। প্রজেক্ট হোম: <a href=\"https://gamets.caellab.com/gpcl/\">gamets.caellab.com/gpcl</a>।",
+        "action": "পূর্ণ লাইসেন্স পড়ুন →"
+      },
+      {
+        "title": "অবদান",
+        "desc": "মূল সোর্স রিপোজিটরি GitHub-এ, সেখানেই issue ও PR সামলানো হয়। বাগ রিপোর্ট, ফিচার প্রস্তাব ও কোড অবদান স্বাগত।",
+        "action": "GitHub-এ যান →"
+      }
+    ],
+    "licenseSummary": "লাইসেন্স সারসংক্ষেপ — CaelLab BY-SA Code License v3"
+  },
+  "history": {
+    "tag": "ইতিহাস",
+    "title": "ভার্সন ইতিহাস",
+    "desc": "আগের ভার্সন ও তাদের চেঞ্জলগ",
+    "older": "{n} টি পুরনো ভার্সন দেখান",
+    "more": "পূর্ণ চেঞ্জলগ দেখুন (সব {total} ভার্সন ও ইনস্টলার) →",
+    "page": {
+      "back": "← হোমে ফিরুন",
+      "tag": "চেঞ্জলগ",
+      "heading": "চেঞ্জলগ",
+      "intro": "1.0.0 থেকে সর্বশেষ রিলিজ পর্যন্ত প্রতিটি ভার্সন — কী বদলেছে, ডাউনলোড করা যায় কি না — এই পেজে আছে।",
+      "note": "1.3.2 ও তার আগের ভার্সনগুলোর ইনস্টলার রাখা হয়নি; পুরনো ভার্সনের অন্তর্নির্মিত আপডেটার আর কাজ না-ও করতে পারে, তাই প্রতিদিনের ব্যবহারে সর্বশেষ রিলিজ ইনস্টল করাই ভালো।",
+      "indexLabel": "ভার্সন তালিকা",
+      "latest": "সর্বশেষ",
+      "download": "v{version} ডাউনলোড",
+      "unavailable": "এই ভার্সনের ইনস্টলার রাখা হয়নি",
+      "fileNote": "{file} · {size} · Windows 64-bit"
+    }
+  },
+  "footer": {
+    "brand": "CaelLab-এর একটি স্বাধীন গেম ডেভেলপমেন্ট ও টুলস টিম। ভবিষ্যতের প্রান্ত অন্বেষণে, অসীম নবজন্ম বহন করে।",
+    "projects": "প্রজেক্ট",
+    "community": "কমিউনিটি",
+    "openSource": "ওপেন সোর্স",
+    "help": "সহায়তা কেন্দ্র",
+    "changelog": "চেঞ্জলগ",
+    "forum": "ফোরাম",
+    "license": "লাইসেন্স",
+    "copyright": "&copy; 2026 GameTS, <a href=\"https://www.caellab.com/\" target=\"_blank\" class=\"footer-inline-link\">CaelLab</a>। সর্বস্বত্ব সংরক্ষিত। প্রজেক্ট হোম: <a href=\"https://gamets.caellab.com/gpcl/\" class=\"footer-inline-link\">gamets.caellab.com/gpcl</a>",
+    "disclaimer": "GoodPlanCraftLauncher একটি তৃতীয় পক্ষের ওপেন সোর্স টুল, এর সঙ্গে <a href=\"https://www.minecraft.net/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Mojang Studios</a>, <a href=\"https://www.microsoft.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Microsoft</a>, <a href=\"https://www.xbox.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Xbox</a>-এর কোনো সরকারি সম্পর্ক নেই। Minecraft হলো Mojang Studios-এর ট্রেডমার্ক; এই লঞ্চার ব্যবহার করতে বৈধ Minecraft লাইসেন্স প্রয়োজন।",
+    "licenseLine": "ওপেন সোর্স লাইসেন্স: <a href=\"https://www.caellab.com/license/cbs-v3\" target=\"_blank\" class=\"footer-inline-link\">CaelLab BY-SA Code License v3</a> | <a href=\"https://github.com/CaelLab-org/GoodPlanCraftLauncher\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">GitHub</a>-এ ওপেন সোর্স"
+  },
+  "labels": {
+    "platform": "Windows 64-bit",
+    "github": "GitHub"
+  }
+}

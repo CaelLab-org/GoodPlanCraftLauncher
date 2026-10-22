@@ -77,13 +77,13 @@ async function pickAvatar(): Promise<void> {
     const result: any = await window.gpcl.chooseAvatar();
     if (result?.cancelled) return;
     if (!result?.success) {
-      showToast('更换头像失败', result?.error || '未知错误', 'error');
+      showToast('ui.could_not_change_avatar', result?.error || '未知错误', 'error');
       return;
     }
     await refreshAvatar();
-    showToast('头像已更新', result.compressed ? '图片较大，已压缩后保存' : '已保存到 users/avatar', 'success');
+    showToast('ui.avatar_updated', result.compressed ? '图片较大，已压缩后保存' : '已保存到 users/avatar', 'success');
   } catch (e: any) {
-    showToast('更换头像失败', e?.message || '未知错误', 'error');
+    showToast('ui.could_not_change_avatar', e?.message || '未知错误', 'error');
   }
 }
 
@@ -92,13 +92,13 @@ async function resetAvatar(): Promise<void> {
   try {
     const result: any = await window.gpcl.resetAvatar();
     if (!result?.success) {
-      showToast('恢复默认失败', result?.error || '未知错误', 'error');
+      showToast('ui.could_not_reset_avatar', result?.error || '未知错误', 'error');
       return;
     }
     await refreshAvatar();
-    showToast('已恢复默认头像', '', 'success');
+    showToast('ui.default_avatar_restored', '', 'success');
   } catch (e: any) {
-    showToast('恢复默认失败', e?.message || '未知错误', 'error');
+    showToast('ui.could_not_reset_avatar', e?.message || '未知错误', 'error');
   }
 }
 

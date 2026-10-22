@@ -1,0 +1,70 @@
+---
+title: O jogo travou, e agora
+slug: /mc-game
+description: Exportar o relatório de erro, ler os logs e diagnosticar travamentos do Minecraft pelo sintoma.
+---
+
+A janela de travamento, sozinha, normalmente não mostra a causa. O GPCL lê os logs primeiro, apresenta pistas e então vale seguir a ordem abaixo.
+
+:::tip Comece por aqui
+Clique em “Exportar relatório de erro” na janela de travamento e salve o zip gerado. O relatório começa com a análise do GPCL e traz depois a lista de mods, o Java, os argumentos de inicialização e todos os logs — quase todo diagnóstico depende dele.
+:::
+
+## 1. Veja primeiro a análise do GPCL
+
+A janela mostra 1–2 pistas encontradas pelo GPCL nos logs, como “memória insuficiente” ou “verificação de dependências ou compatibilidade de mods não passou”. Em “Ver detalhes” aparecem todas as pistas, as linhas originais do log e as informações do travamento.
+
+Essas conclusões vêm de correspondência de palavras-chave e servem apenas como direção. Quando o log tem informação mais específica (por exemplo, qual dependência está faltando), ela aparece junto nas evidências.
+
+## 2. Exportar o relatório de erro
+
+O botão está na própria janela de travamento. Escolha onde salvar; o GPCL gera:
+
+- `error-report.txt`: resultado da análise, resumo do erro, sistema / placa de vídeo / Java, lista de mods, resource packs e shaders, argumentos de inicialização, saída do jogo e linhas de erro dos logs;
+- `crash-reports/`: relatórios de travamento gerados nesta execução;
+- `logs/`: `latest.log` e `debug.log` (somente o final, quando muito grandes);
+- `jvm-crash/`: arquivos `hs_err_pid*.log` gravados pela própria JVM (quando driver de vídeo ou algo semelhante derruba a JVM);
+- `launcher-log.txt`: log do launcher;
+- `game-output.txt`: saída padrão e saída de erro do processo do jogo nesta execução.
+
+O `--accessToken` e o nome de usuário do sistema já vêm mascarados no relatório, então ele pode ser enviado como está. Não envie apenas uma captura da janela de travamento.
+
+## 3. Confira os logs você mesmo
+
+“Ver log” na janela abre a saída do processo do jogo. Olhe principalmente o final e procure estas palavras:
+
+| Palavra-chave | Normalmente significa |
+| --- | --- |
+| `Exception`, `Caused by` | A exceção real costuma vir depois do primeiro `Caused by` |
+| `OutOfMemoryError` | A memória alocada é insuficiente |
+| `UnsupportedClassVersionError` | A versão do Java não corresponde à do jogo |
+| `NoSuchMethodError`, `ClassNotFoundException` | Mod incompatível com a versão do jogo ou do loader, ou dependência faltando |
+| `GLFW error` | Problema no driver de vídeo ou no suporte a OpenGL |
+
+## 4. Causas comuns
+
+| Sintoma | Causa comum | O que fazer |
+| --- | --- | --- |
+| Fecha logo ao iniciar, com `UnsupportedClassVersionError` no log | Versão do Java errada | Deixe o GPCL instalar o Java; ou troque o espelho nas configurações e reinstale |
+| Trava ou fecha no meio do carregamento, com `OutOfMemoryError` | Memória insuficiente ou mods demais | Aumente em Configurações → Jogo → Alocação de memória; não ultrapasse a memória física |
+| Trava ao carregar mods, e o log cita um mod | Versão do mod errada, dependência faltando, conflito entre dois mods | Teste só com esse mod; confirme as versões de MC e de loader suportadas |
+| Fecha antes de a janela aparecer, com `GLFW error` | Driver de vídeo antigo ou OpenGL não suportado | Atualize o driver de vídeo; em notebook, confirme que o jogo usa a GPU dedicada |
+| Expulso do servidor com `Invalid session` | Login expirado ou conta sem direito a essa versão | Faça login novamente; confirme se a conta possui essa versão |
+| Trava ao entrar num mundo ou ao carregar resource packs | Mundo, resource pack ou shader corrompido | Crie um mundo novo para testar; faça backup do mundo antes de mexer |
+| Trava ao iniciar com Fabric, indicando falta de `fabric-api` | Fabric API não instalado | Reinstale o Fabric marcando “Instalar também o Fabric API”, ou instale manualmente |
+
+## 5. Elimine primeiro estes três fatores
+
+1. **Desative todos os mods, resource packs e shaders** e inicie uma vez sem nada. Se abrir, o problema está nos mods.
+2. **Inicie com outra versão vanilla**. Se abrir, o problema é a versão atual ou a combinação de mods dela.
+3. **Crie um mundo novo**. Se abrir, o mundo antigo está corrompido.
+
+## 6. Se ainda não resolver
+
+Envie um e-mail para [gamets@caellab.com](mailto:gamets@caellab.com) com o relatório de erro em anexo, informando também:
+
+- versão do launcher, versão do Minecraft e versão do loader;
+- quais mods estão instalados (com número de versão, se possível);
+- o que foi feito antes do travamento.
+
+Dizer apenas “trava assim que inicia” dificilmente permite localizar o problema; os logs do relatório são o que importa.

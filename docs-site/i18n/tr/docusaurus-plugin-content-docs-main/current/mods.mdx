@@ -1,0 +1,59 @@
+---
+title: Mod indirme
+description: GPCL'de Modrinth ve CurseForge modlarını arama, kurma, bağımlılıklar ve Çince arama.
+---
+
+İndirme sayfasındaki «Modlar» bölümünde mod arayabilir, dosya seçebilir ve doğrudan istediğiniz sürüme kurabilirsiniz; web sitesinden indirip klasöre sürüklemeniz gerekmez.
+
+## Arama
+
+İki kaynak vardır: **Modrinth** ve **CurseForge**. Varsayılan olarak ikisinde birlikte aranır ve sonuç listesinde kaynak belirtilir.
+
+Arama kutusuna Çince de yazabilirsiniz. Sorguda Çince karakter varsa GPCL önce MCMOD'un herkese açık arama sonuçlarına bakar, başlıktaki parantezden İngilizce adı çıkarır (örneğin «雾中人 (The Man From The Fog)» içinden `The Man From The Fog`) ve Modrinth'te bu adla arar. İngilizce ad bulunamazsa özgün sorguyla arar.
+
+## Filtreler
+
+Varsayılan olarak sürüm ve yükleyici filtresi **yoktur**; PCL'de olduğu gibi önce tüm sonuçlar aranır, böylece yeni modlar filtre koşulları yüzünden gizlenmez. Daraltmak istediğinizde elle seçin:
+
+- Minecraft sürümü;
+- yükleyici (Forge / Fabric / NeoForge / Quilt);
+- sıralama.
+
+Dosya listesinde geçerli başlatma sürümünün MC sürümüne ait dosyalar öne alınır; yanlış sürüm kurma olasılığı azalır.
+
+## Kurulum
+
+Hedef seçimi ancak dosya satırındaki «Kur»a tıklayınca açılır:
+
+- kurulu mod sürümlerinin listesi; birini seçip doğrudan kurun;
+- «Klasör seç»; herhangi bir klasörün `mods` dizinine kurun.
+
+Dosya, hedef sürümün gerçekte kullandığı `mods` dizinine gider: yalıtılmış sürümde `versions/<version-name>/mods`, değilse oyun kök klasöründeki `mods`.
+
+Yalıtılmamış bir sürüme ilk kez mod kurulurken sürüm yalıtımı açılır; hedef penceresinde bu yazılır, ayrıca onay istenmez.
+
+### Bağımlılıklar
+
+Modrinth dosya satırında «N bağımlılık» görünür. Kurulumda indirme için gerekli bağımlılıklar özyinelemeli olarak kurulur ve başarı bildirimi kaç bağımlılığın eklendiğini de söyler.
+
+CurseForge bağlantı modu yalnızca seçilen tek dosyayı kurar, **bağımlılıkları otomatik kurmaz**; arayüzde de bu yazılıdır.
+
+## CurseForge'ta API Key yoksa
+
+CurseForge'da normal arama için API Key gerekir (**Ayarlar → İndirme → CurseForge API Key**, isteğe bağlı) veya herkese açık aynanın çalışıyor olması gerekir. Anahtar yoksa ve ayna da kullanılamıyorsa bir yedek yol var:
+
+Arama kutusuna proje adresini yapıştırın ya da `cf:<short-name>` yazın:
+
+```text
+https://www.curseforge.com/minecraft/mc-mods/sodium
+cf:sodium
+```
+
+GPCL projeyi ve dosyaları `api.cfwidget.com` üzerinden sorgular, sonra ForgeCDN doğrudan bağlantısıyla indirir. Bu yol **yalnızca seçilen tek dosyayı kurar, bağımlılıkları çözmez**.
+
+## Kurdum ama çalışmıyor
+
+- modun desteklediği MC sürümü ve yükleyicinin geçerli sürümle aynı olduğunu doğrulayın;
+- doğru `mods` dizinine kurulduğunu doğrulayın (yalıtımdan sonra kök klasördeki değil);
+- bağımlılık eksikse önce onu kurun;
+- hâlâ olmuyorsa [Oyun çökmeleri](./mc-game.mdx) sayfasındaki günlük inceleme sırasına bakın.

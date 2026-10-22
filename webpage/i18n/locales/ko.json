@@ -1,0 +1,206 @@
+{
+  "meta": {
+    "title": "GoodPlanCraftLauncher - 가볍고 빠른 Minecraft 런처 - CaelLabGameTS",
+    "description": "GoodPlanCraftLauncher는 간결하고 빠른 Minecraft 런처입니다. Microsoft 로그인과 오프라인 로그인, 버전 관리, Forge / Fabric / OptiFine 모드 설치를 지원해 한 번의 클릭으로 블록 세계에 들어갈 수 있습니다. 오픈소스이며 무료입니다.",
+    "keywords": "GoodPlanCraftLauncher,Minecraft 런처,MC 런처,Minecraft Java Edition,CaelLab,오픈소스",
+    "ogTitle": "GoodPlanCraftLauncher - 가볍고 빠른 Minecraft 런처",
+    "ogDescription": "가볍게 · 빠르게 · 오픈소스. Microsoft 로그인과 오프라인 로그인, 버전 관리, Forge / Fabric / OptiFine 원클릭 설치."
+  },
+  "historyMeta": {
+    "title": "업데이트 내역 - GoodPlanCraftLauncher - CaelLabGameTS",
+    "description": "GoodPlanCraftLauncher 모든 버전의 업데이트 내역과 설치 파일 다운로드. 1.0.0부터 최신 버전까지 모든 변경 사항이 이 페이지에 있습니다.",
+    "ogTitle": "업데이트 내역 - GoodPlanCraftLauncher",
+    "ogDescription": "모든 버전의 릴리스 노트와 설치 파일 다운로드."
+  },
+  "nav": {
+    "source": "소스",
+    "language": "언어",
+    "download": "v{version} 다운로드",
+    "mobileGitHub": "GitHub 소스",
+    "openMenu": "메뉴 열기"
+  },
+  "hero": {
+    "tags": [
+      "오픈소스",
+      "무료",
+      "Minecraft 런처"
+    ],
+    "subtitle": "가볍게 · 빠르게 · 오픈소스",
+    "desc": "Windows용으로 만든 Minecraft 런처입니다. Microsoft 로그인과 오프라인 로그인, 버전 관리, Forge / Fabric / OptiFine 원클릭 설치를 지원합니다. 게임이 중단되면 빈 창만 띄우지 않고 이유를 알려 줍니다.",
+    "download": "지금 다운로드",
+    "versionLabel": "버전",
+    "updatedLabel": "업데이트",
+    "platformLabel": "플랫폼",
+    "platform": "Windows 10 이상",
+    "iframeTitle": "GoodPlanCraftLauncher 인터페이스",
+    "windowNote": "위 창은 <b>클릭할 수 있습니다</b> — 웹 페이지 안에서 실행되는 런처 인터페이스 자체입니다.",
+    "iconAlt": "GoodPlanCraftLauncher 아이콘"
+  },
+  "features": {
+    "tag": "기능",
+    "title": "핵심 기능",
+    "desc": "플레이어를 위한 실용적인 기능으로, 모두 게임에 더 빨리 들어가도록 설계했습니다",
+    "items": [
+      {
+        "title": "두 가지 로그인 방식",
+        "desc": "Microsoft 로그인과 오프라인 로그인을 언제든 전환할 수 있습니다. 오프라인 모드는 온라인 인증이 필요 없습니다."
+      },
+      {
+        "title": "모드 다운로드 내장",
+        "desc": "Modrinth와 CurseForge를 검색해 모드, 셰이더, 리소스 팩을 선택한 버전이 실제로 쓰는 폴더에 설치합니다."
+      },
+      {
+        "title": "네 가지 모드 로더",
+        "desc": "Forge, NeoForge, Fabric, OptiFine을 공식 소스에서 설치하며 Java 버전도 먼저 확인합니다."
+      },
+      {
+        "title": "25개 인터페이스 언어",
+        "desc": "첫 실행 시 시스템 언어를 따르고, 이후 설정에서 언제든 바꿀 수 있습니다."
+      },
+      {
+        "title": "자동 버전 관리",
+        "desc": "Minecraft 버전을 원클릭으로 다운로드, 설치, 전환하며 라이브러리와 에셋도 자동으로 처리합니다."
+      },
+      {
+        "title": "빠른 시작",
+        "desc": "시작 경로를 간소화하고 캐시를 활용해 기다리지 않고 클릭하면 바로 플레이할 수 있습니다."
+      },
+      {
+        "title": "Java 런타임 관리",
+        "desc": "Java 런타임을 자동으로 감지하고 설치합니다. 다운로드 소스는 칭화대, 난징대, Huawei Cloud, 공식 소스 중에서 선택할 수 있으며 실패하면 다음 소스로 넘어갑니다."
+      },
+      {
+        "title": "테마 지원",
+        "desc": "라이트 모드와 다크 모드를 완전히 지원하며 화면 배율도 조절할 수 있어 일관된 화면을 유지합니다."
+      },
+      {
+        "title": "자동 업데이트와 유지 관리",
+        "desc": "업데이트 확인을 내장하고 로그 자동 정리를 설정할 수 있어 오래 사용해도 가볍습니다."
+      },
+      {
+        "title": "중단 알림과 오류 보고서",
+        "desc": "게임이 비정상 종료되면 이유를 알려 주고 오류 보고서를 원클릭으로 내보낼 수 있습니다(중단 보고서 + 로그 + 시스템 정보)."
+      },
+      {
+        "title": "실행 중 패널",
+        "desc": "게임을 시작하면 오른쪽 패널에 버전, PID, 실행 시간, 메모리 사용량이 표시되고 언제든 게임을 종료할 수 있습니다."
+      },
+      {
+        "title": "창 제목 사용자 지정",
+        "desc": "게임 창 제목을 직접 작성할 수 있으며 {mc_version}, {time} 같은 매직 워드를 지원합니다."
+      }
+    ]
+  },
+  "shots": {
+    "tag": "스크린샷",
+    "title": "실제 화면",
+    "desc": "위쪽 창은 런처 인터페이스를 웹으로 재현한 것으로 설치 없이 조작할 수 있습니다. 아래 네 장은 Windows에서 실제로 실행한 런처 화면이며 보정하지 않았습니다.",
+    "items": [
+      {
+        "alt": "GoodPlanCraftLauncher 시작 화면",
+        "caption": "시작 화면 · 버전을 고르고 플레이어 이름을 입력해 게임 시작"
+      },
+      {
+        "alt": "GoodPlanCraftLauncher 다운로드 화면",
+        "caption": "다운로드 화면 · 게임 버전, 모드, 셰이더, 리소스 팩, 모드팩"
+      },
+      {
+        "alt": "GoodPlanCraftLauncher 게임 설정",
+        "caption": "설정 · 게임 메모리, 창 모드, 창 제목, 매직 워드"
+      },
+      {
+        "alt": "GoodPlanCraftLauncher 화면 설정",
+        "caption": "설정 · 언어, 인터페이스 스타일, 테마, 배율"
+      }
+    ]
+  },
+  "download": {
+    "tag": "다운로드",
+    "title": "지금 다운로드",
+    "desc": "플랫폼을 선택하고 블록 모험을 시작하세요",
+    "button": "블록 세계로 출발!",
+    "updatedLabel": "업데이트",
+    "platformLabel": "플랫폼",
+    "licenseLabel": "라이선스",
+    "platform": "Windows 10 64비트",
+    "license": "오픈소스, 무료",
+    "github": "GitHub에서 보기"
+  },
+  "requirements": {
+    "tag": "시스템",
+    "title": "시스템 요구 사항",
+    "desc": "높지 않지만 알아 두면 좋습니다",
+    "items": [
+      {
+        "label": "운영체제",
+        "text": "Windows 10 64비트(1709 이상), Windows 11도 지원합니다"
+      },
+      {
+        "label": "Java 런타임",
+        "text": "런처가 자동으로 설치합니다. 시스템에 중복되거나 충돌하는 Java가 있으면 정리를 권장합니다"
+      },
+      {
+        "label": "저장 공간",
+        "text": "런처 본체에 최소 90 MB의 여유 공간(게임 데이터 제외)"
+      },
+      {
+        "label": "메모리",
+        "text": "2 GB 이상의 사용 가능한 메모리를 권장합니다"
+      }
+    ]
+  },
+  "openSource": {
+    "tag": "오픈소스",
+    "title": "오픈소스와 기여",
+    "desc": "GPCL은 100% 오픈소스 프로젝트이며 소스는 GitHub에 공개되어 있습니다. PR과 <a href=\"https://forum.xmuer.online/\" target=\"_blank\">포럼</a>에서의 제안을 환영합니다. 함께 더 나은 Minecraft 런처를 만들어 갑시다.",
+    "items": [
+      {
+        "title": "라이선스",
+        "desc": "CaelLab BY-SA Code License Version 3(또는 이후 버전)로 배포됩니다. 자유롭게 사용, 수정, 재배포할 수 있으며 수정한 버전도 같은 오픈소스 라이선스를 유지해야 합니다. 프로젝트 홈: <a href=\"https://gamets.caellab.com/gpcl/\">gamets.caellab.com/gpcl</a>.",
+        "action": "라이선스 전문 보기 →"
+      },
+      {
+        "title": "기여하기",
+        "desc": "주요 소스 저장소는 GitHub에 있으며 이슈와 PR은 그곳에서 관리합니다. 버그 제보, 기능 제안, 코드 기여를 환영합니다.",
+        "action": "GitHub 방문 →"
+      }
+    ],
+    "licenseSummary": "라이선스 요약 — CaelLab BY-SA Code License v3"
+  },
+  "history": {
+    "tag": "기록",
+    "title": "버전 기록",
+    "desc": "이전 버전과 변경 사항",
+    "older": "이전 버전 {n}개 보기",
+    "more": "전체 업데이트 내역 보기(모든 {total}개 버전과 설치 파일) →",
+    "page": {
+      "back": "← 홈으로 돌아가기",
+      "tag": "업데이트 내역",
+      "heading": "업데이트 내역",
+      "intro": "1.0.0부터 최신 버전까지, 모든 버전에서 무엇이 바뀌었고 다운로드할 수 있는지 이 페이지에 정리했습니다.",
+      "note": "1.3.2 이전 버전의 설치 파일은 보관하지 않았습니다. 구버전의 내장 업데이터는 더 이상 작동하지 않을 수 있으므로 일상적으로 사용할 때는 최신 버전 설치를 권장합니다.",
+      "indexLabel": "버전 색인",
+      "latest": "최신",
+      "download": "v{version} 다운로드",
+      "unavailable": "이 버전의 설치 파일은 보관되지 않았습니다",
+      "fileNote": "{file} · {size} · Windows 64비트"
+    }
+  },
+  "footer": {
+    "brand": "CaelLab의 게임 개발 및 도구 팀. 미래의 끝을 탐색하고 무한한 새로움을 실어 나릅니다.",
+    "projects": "프로젝트",
+    "community": "커뮤니티",
+    "openSource": "오픈소스",
+    "help": "도움말 센터",
+    "changelog": "업데이트 내역",
+    "forum": "포럼",
+    "license": "라이선스",
+    "copyright": "&copy; 2026 GameTS by <a href=\"https://www.caellab.com/\" target=\"_blank\" class=\"footer-inline-link\">CaelLab</a>. All rights reserved. 프로젝트 홈: <a href=\"https://gamets.caellab.com/gpcl/\" class=\"footer-inline-link\">gamets.caellab.com/gpcl</a>",
+    "disclaimer": "GoodPlanCraftLauncher는 서드파티 오픈소스 도구이며 <a href=\"https://www.minecraft.net/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Mojang Studios</a>, <a href=\"https://www.microsoft.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Microsoft</a>, <a href=\"https://www.xbox.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Xbox</a>와 공식적인 제휴 관계가 없습니다. Minecraft는 Mojang Studios의 상표입니다. 이 런처를 사용하려면 정품 Minecraft 라이선스가 필요합니다.",
+    "licenseLine": "오픈소스 라이선스: <a href=\"https://www.caellab.com/license/cbs-v3\" target=\"_blank\" class=\"footer-inline-link\">CaelLab BY-SA Code License v3</a> | <a href=\"https://github.com/CaelLab-org/GoodPlanCraftLauncher\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">GitHub</a>에서 오픈소스로 공개"
+  },
+  "labels": {
+    "platform": "Windows 64비트",
+    "github": "GitHub"
+  }
+}

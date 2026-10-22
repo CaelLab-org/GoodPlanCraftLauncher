@@ -1,0 +1,59 @@
+---
+title: Tải xuống mod
+description: Tìm và cài mod Modrinth và CurseForge trong GPCL, phụ thuộc và tìm kiếm tiếng Trung.
+---
+
+Khu vực "Mod" ở trang tải xuống có thể tìm mod, chọn tệp, cài vào phiên bản chỉ định, không cần tự tải trên web rồi kéo vào thư mục.
+
+## Tìm kiếm
+
+Hai nguồn: **Modrinth** và **CurseForge**. Mặc định tìm cả hai cùng lúc, danh sách kết quả sẽ ghi rõ nguồn.
+
+Ô tìm kiếm có thể gõ tiếng Trung trước. Khi truy vấn chứa tiếng Trung, GPCL sẽ tra kết quả tìm kiếm công khai của MCMOD trước, lấy tên tiếng Anh trong ngoặc của tiêu đề (ví dụ "雾中人 (The Man From The Fog)" lấy ra `The Man From The Fog`), rồi dùng tên tiếng Anh tìm Modrinth. Không lấy được tên tiếng Anh thì tìm theo truy vấn gốc.
+
+## Bộ lọc
+
+Mặc định **không kèm** bộ lọc phiên bản và loader, giống PCL tìm tất cả trước, tránh mod mới bị ẩn vì điều kiện lọc. Khi cần thu hẹp thì chọn tay:
+
+- Phiên bản Minecraft;
+- Loader (Forge / Fabric / NeoForge / Quilt);
+- Cách sắp xếp.
+
+Danh sách tệp sẽ ưu tiên xếp phiên bản MC của phiên bản đang khởi chạy lên trước, giảm xác suất cài nhầm phiên bản.
+
+## Cài đặt
+
+Nhấn "Cài" trên dòng tệp mới hiện chọn đích:
+
+- Danh sách phiên bản Mod đã cài, chọn một để cài thẳng;
+- "Chọn thư mục", cài vào `mods` của thư mục bất kỳ.
+
+Tệp sẽ rơi vào `mods` mà phiên bản đích thực sự dùng: phiên bản cách ly là `versions/<version-name>/mods`, nếu không là `mods` ở thư mục gốc trò chơi.
+
+Phiên bản chưa cách ly lần đầu cài mod sẽ bật cách ly phiên bản, khung đích sẽ ghi rõ điều này, không bật thêm xác nhận.
+
+### Phụ thuộc
+
+Dòng tệp Modrinth hiển thị "N mục phụ thuộc". Khi cài sẽ cài đệ quy các phụ thuộc bắt buộc, thông báo thành công cũng ghi rõ kèm mấy mục phụ thuộc.
+
+Chế độ liên kết CurseForge chỉ cài một tệp được chọn, **không tự cài phụ thuộc**, giao diện cũng ghi rõ.
+
+## CurseForge không có API Key
+
+Tìm kiếm CurseForge bình thường cần API Key (**Cài đặt → Tải xuống → CurseForge API Key**, tùy chọn), hoặc đợi nguồn mirror công cộng khả dụng. Không có Key, mirror cũng không khả dụng thì vẫn có một đường dự phòng:
+
+Dán địa chỉ dự án vào ô tìm kiếm, hoặc viết `cf:<short-name>`:
+
+```text
+https://www.curseforge.com/minecraft/mc-mods/sodium
+cf:sodium
+```
+
+GPCL sẽ tra dự án và tệp qua `api.cfwidget.com`, rồi tải bằng liên kết trực tiếp ForgeCDN. Đường này **chỉ cài một tệp được chọn, không phân giải phụ thuộc**.
+
+## Cài xong không có tác dụng
+
+- Xác nhận phiên bản MC và loader mà mod hỗ trợ khớp với phiên bản hiện tại;
+- Xác nhận đã cài vào đúng `mods` (sau cách ly phiên bản không phải cái ở thư mục gốc);
+- Thiếu phụ thuộc thì bổ sung phụ thuộc trước;
+- Vẫn không được thì xem thứ tự kiểm tra nhật ký trong [Trò chơi bị crash](./mc-game.mdx).

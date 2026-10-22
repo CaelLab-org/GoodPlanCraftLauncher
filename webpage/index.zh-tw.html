@@ -1,0 +1,839 @@
+<!--
+ Copyright (c) 2026 Yunyun(云云) By 虚舟实验室(CaelLab) / CaelLabGameTS
+ Licensed under the CaelLab BY-SA Code License, Version 3
+ or any later version. https://www.caellab.com/license/cbs-v3.txt
+ Source: https://github.com/CaelLab-org/GoodPlanCraftLauncher
+ Project: https://gamets.caellab.com/gpcl/
+-->
+<!DOCTYPE html>
+<html lang="zh-TW" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoodPlanCraftLauncher - 輕量高效的 Minecraft 啟動器 - CaelLabGameTS</title>
+    <meta name="description" content="GoodPlanCraftLauncher 是一款簡潔高效的 Minecraft 啟動器，支援 Microsoft 正版與離線雙模式登入、版本管理、Forge/NeoForge/Fabric/OptiFine 模組安裝，讓你一鍵進入方塊世界。開源免費。">
+    <meta name="keywords" content="GoodPlanCraftLauncher,Minecraft啟動器,MC啟動器,麥塊啟動器,虛舟實驗室,開源">
+    <meta name="author" content="CaelLabGameTS">
+    <meta name="theme-color" content="#f6fafd">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="GoodPlanCraftLauncher - 輕量高效的 Minecraft 啟動器">
+    <meta property="og:description" content="輕量 · 高效 · 開源。支援 Microsoft 正版與離線雙模式登入、版本管理與 Forge/NeoForge/Fabric/OptiFine 一鍵安裝。">
+    <meta property="og:url" content="https://gamets.caellab.com/gpcl/">
+    <meta property="og:site_name" content="CaelLabGameTS">
+        <link rel="alternate" hreflang="en-US" href="https://gamets.caellab.com/gpcl/index.en-us">
+    <link rel="alternate" hreflang="zh-CN" href="https://gamets.caellab.com/gpcl/index.zh-cn">
+    <link rel="alternate" hreflang="zh-TW" href="https://gamets.caellab.com/gpcl/index.zh-tw">
+    <link rel="alternate" hreflang="ar" href="https://gamets.caellab.com/gpcl/index.ar">
+    <link rel="alternate" hreflang="bn" href="https://gamets.caellab.com/gpcl/index.bn">
+    <link rel="alternate" hreflang="de" href="https://gamets.caellab.com/gpcl/index.de">
+    <link rel="alternate" hreflang="el" href="https://gamets.caellab.com/gpcl/index.el">
+    <link rel="alternate" hreflang="es" href="https://gamets.caellab.com/gpcl/index.es">
+    <link rel="alternate" hreflang="fa" href="https://gamets.caellab.com/gpcl/index.fa">
+    <link rel="alternate" hreflang="fr" href="https://gamets.caellab.com/gpcl/index.fr">
+    <link rel="alternate" hreflang="he" href="https://gamets.caellab.com/gpcl/index.he">
+    <link rel="alternate" hreflang="hi" href="https://gamets.caellab.com/gpcl/index.hi">
+    <link rel="alternate" hreflang="id" href="https://gamets.caellab.com/gpcl/index.id">
+    <link rel="alternate" hreflang="it" href="https://gamets.caellab.com/gpcl/index.it">
+    <link rel="alternate" hreflang="ja" href="https://gamets.caellab.com/gpcl/index.ja">
+    <link rel="alternate" hreflang="ko" href="https://gamets.caellab.com/gpcl/index.ko">
+    <link rel="alternate" hreflang="ms" href="https://gamets.caellab.com/gpcl/index.ms">
+    <link rel="alternate" hreflang="nl" href="https://gamets.caellab.com/gpcl/index.nl">
+    <link rel="alternate" hreflang="pl" href="https://gamets.caellab.com/gpcl/index.pl">
+    <link rel="alternate" hreflang="pt" href="https://gamets.caellab.com/gpcl/index.pt">
+    <link rel="alternate" hreflang="ru" href="https://gamets.caellab.com/gpcl/index.ru">
+    <link rel="alternate" hreflang="th" href="https://gamets.caellab.com/gpcl/index.th">
+    <link rel="alternate" hreflang="tr" href="https://gamets.caellab.com/gpcl/index.tr">
+    <link rel="alternate" hreflang="uk" href="https://gamets.caellab.com/gpcl/index.uk">
+    <link rel="alternate" hreflang="vi" href="https://gamets.caellab.com/gpcl/index.vi">
+    <link rel="alternate" hreflang="x-default" href="https://gamets.caellab.com/gpcl/index.en-us">
+    <link rel="icon" type="image/png" href="./icon.png">
+    <link rel="stylesheet" href="./style.css?v=n5q8v2k7">
+    <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="https://gamets.caellab.com" class="logo">
+                <img src="/logo.png" alt="GameTS">
+            </a>
+            <ul class="nav-links">
+                <li>
+                    <div class="dropdown" id="sourceDropdown">
+                        <button class="dropdown-toggle" onclick="toggleDropdown('sourceDropdown')">
+                            <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                            原始碼
+                            <span class="arrow">&#9662;</span>
+                        </button>
+                        <div class="dropdown-menu">
+                            <div class="menu-label">GitHub</div>
+                            <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener">
+                                <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                                GoodPlanCraftLauncher
+                            </a>
+                        </div>
+                    </div>
+                </li>
+                <li class="lang-switch"><select aria-label="語言" onchange="if(this.value)location.href=this.value"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw" selected>繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select></li>
+                <li><a href="#download" class="nav-cta">&#9662; 下載 v1.8.0</a></li>
+            </ul>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="開啟選單" aria-expanded="false">&#9776;</button>
+        </div>
+    </nav>
+    <div class="mobile-panel" id="mobilePanel">
+        <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener">GitHub 原始碼</a>
+        <select aria-label="語言" onchange="if(this.value)location.href=this.value" style="width:100%;margin-top:8px;padding:10px;background:var(--surface);border:1px solid var(--line);border-radius:8px;color:var(--text-2);font:inherit;font-size:0.95rem;"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw" selected>繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select>
+    </div>
+
+    <section class="hero">
+        <span class="float-pixel" style="top:18%;left:9%;"></span>
+        <span class="float-pixel" style="top:24%;right:11%;animation-delay:-3s;"></span>
+        <span class="float-pixel" style="bottom:30%;left:16%;animation-delay:-6s;width:8px;height:8px;"></span>
+        <span class="float-pixel" style="bottom:38%;right:18%;animation-delay:-1.5s;width:7px;height:7px;"></span>
+        <div class="hero-content">
+            <div class="hero-tags">
+                <span class="hero-tag"><span class="dot"></span>開源</span>
+                <span class="hero-tag"><span class="dot"></span>免費</span>
+                <span class="hero-tag"><span class="dot"></span>Minecraft 啟動器</span>
+            </div>
+            <div class="hero-icon">
+                <img src="./icon.png" alt="GoodPlanCraftLauncher 圖示">
+            </div>
+            <h1>GoodPlanCraftLauncher</h1>
+            <p class="hero-subtitle">輕量 · 高效 · 開源</p>
+            <p class="hero-desc">一個為 Windows 寫的 Minecraft 啟動器：Microsoft 正版與離線雙模式登入、版本管理、Forge / Fabric / OptiFine 一鍵安裝，Java 環境自動補齊。崩潰時會告訴你原因，而不是只彈出一個空白視窗。</p>
+            <div class="hero-actions">
+                <a href="#download" class="hero-btn primary">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                    立即下載
+                </a>
+                <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener" class="hero-btn ghost">
+                    <svg width="17" height="17" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                    GitHub
+                </a>
+            </div>
+            <div class="hero-meta">
+                <span>版本 <b>v1.8.0</b></span>
+                <span class="sep">/</span>
+                <span>更新 <b>2026-10-22</b></span>
+                <span class="sep">/</span>
+                <span>平台 <b>Windows 10+</b></span>
+            </div>
+        </div>
+
+        <div class="window-stage" id="heroWindow">
+            <div class="window">
+                <iframe src="./demo/index.html?fit=1&v=q8m3x2vd&lang=zh-tw" title="GoodPlanCraftLauncher 介面" loading="eager"></iframe>
+            </div>
+        </div>
+        <p class="window-note">上面這個視窗是<b>可以點的</b>——它就是啟動器的介面，在網頁裡跑了一遍。</p>
+    </section>
+
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">Features</div>
+                <h2 class="section-title">核心功能</h2>
+                <p class="section-desc">為玩家打造的實用工具，每一項都為了「更快進入遊戲」而設計</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7.5" cy="15.5" r="4.5"/><path d="m10.8 12.2 8.7-8.7"/><path d="m16 5 3 3"/><path d="m19 8 2-2-3-3-2 2"/></svg>
+                    </span>
+                    <h3>雙模式登入</h3>
+                    <p>支援 Microsoft 正版登入與離線登入，隨時切換；離線模式不需要連網驗證。</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 13v8"/><path d="m8 17 4 4 4-4"/><path d="M20 16.7A5 5 0 0 0 18 7h-1.3A8 8 0 1 0 4 15.2"/></svg>
+                    </span>
+                    <h3>內建模組下載</h3>
+                    <p>在啟動器裡搜尋 Modrinth 和 CurseForge，模組、光影、資源包直接裝進所選版本實際使用的資料夾。</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 9 4.9-9 4.9-9-4.9Z"/><path d="m3 12 9 4.9 9-4.9"/><path d="m3 17 9 4.9 9-4.9"/></svg>
+                    </span>
+                    <h3>四種模組載入器</h3>
+                    <p>Forge、NeoForge、Fabric、OptiFine 都從官方來源安裝，安裝前先確認 Java 版本。</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 0 20a15.3 15.3 0 0 1 0-20Z"/></svg>
+                    </span>
+                    <h3>25 種介面語言</h3>
+                    <p>首次啟動跟隨系統語言，之後隨時可以在設定裡切換。</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+                    </span>
+                    <h3>版本自動管理</h3>
+                    <p>一鍵下載、安裝、切換 Minecraft 各版本，自動處理依賴函式庫與資源檔案。</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+                    </span>
+                    <h3>極速啟動</h3>
+                    <p>最佳化的啟動流程與快取機制，點擊即玩，告別漫長等待。</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><path d="M6 2v2"/><path d="M10 2v2"/><path d="M14 2v2"/></svg>
+                    </span>
+                    <h3>Java 執行環境管理</h3>
+                    <p>自動偵測並補齊 Java 執行環境，下載來源可在清華、南大、華為雲、官方之間切換，失敗自動換下一個。</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                    </span>
+                    <h3>視覺主題支援</h3>
+                    <p>完整支援淺色模式與深色模式，介面縮放可調，提供一致的視覺體驗。</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+                    </span>
+                    <h3>自動更新與維護</h3>
+                    <p>內建更新檢查機制，支援可設定的日誌自動清理策略，讓啟動器長期保持簡潔高效。</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.29 3.86-8.47 14.14A2 2 0 0 0 3.53 21h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+                    </span>
+                    <h3>崩潰提示與錯誤報告</h3>
+                    <p>遊戲異常結束時說明原因，可一鍵匯出錯誤報告（崩潰報告 + 日誌 + 系統資訊）。</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    </span>
+                    <h3>執行中面板</h3>
+                    <p>遊戲啟動後右側顯示版本、PID、執行時間、記憶體用量，隨時能結束遊戲。</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>
+                    </span>
+                    <h3>自訂視窗標題</h3>
+                    <p>遊戲視窗標題可以自己寫，支援 {mc_version}、{time} 等魔術字。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="screenshots">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">Screenshots</div>
+                <h2 class="section-title">實機截圖</h2>
+                <p class="section-desc">頁面上方的視窗是依啟動器介面在網頁裡複刻的，不用安裝就能點。下面這四張是啟動器在 Windows 上實際執行的樣子，沒有修圖。</p>
+            </div>
+            <div class="shot-gallery">
+                <figure class="shot reveal">
+                    <img src="./screenshots/launch.png?v=q9v3m7k2" alt="GoodPlanCraftLauncher 啟動頁" loading="lazy">
+                    <figcaption>啟動頁 · 選版本、填玩家名稱、開始遊戲</figcaption>
+                </figure>
+                <figure class="shot reveal">
+                    <img src="./screenshots/download.png?v=q9v3m7k2" alt="GoodPlanCraftLauncher 下載頁" loading="lazy">
+                    <figcaption>下載頁 · 遊戲版本、模組、光影、資源包與整合包</figcaption>
+                </figure>
+                <figure class="shot reveal">
+                    <img src="./screenshots/settings.png?v=q9v3m7k2" alt="GoodPlanCraftLauncher 遊戲設定" loading="lazy">
+                    <figcaption>設定 · 遊戲記憶體、視窗模式、視窗標題與魔術字</figcaption>
+                </figure>
+                <figure class="shot reveal">
+                    <img src="./screenshots/appearance.png?v=q9v3m7k2" alt="GoodPlanCraftLauncher 外觀設定" loading="lazy">
+                    <figcaption>設定 · 語言、介面風格、主題與縮放</figcaption>
+                </figure>
+            </div>
+        </div>
+    </section>
+
+    <section class="download" id="download">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">Download</div>
+                <h2 class="section-title">立即下載</h2>
+                <p class="section-desc">選擇你的平台，開始方塊冒險</p>
+            </div>
+            <div class="download-card reveal">
+                <span class="dl-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
+                </span>
+                <div class="download-file">GPCL-1.8.0-Setup.exe</div>
+                <a href="https://dl.caellab.com/file/games/gpcl/GPCL-1.8.0-Setup.exe" class="download-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                    啟動方塊世界！
+                </a>
+                <div class="update-info">
+                    <span>更新日期 <b>2026-10-22</b></span>
+                    <span>平台 <b>Windows 10 64 位元</b></span>
+                    <span>授權條款 <b>開源免費</b></span>
+                </div>
+                <div class="download-extra">
+                    <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener" class="hero-btn ghost">
+                        <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                        前往 GitHub 查看
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="requirements" id="requirements">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">System</div>
+                <h2 class="section-title">系統需求</h2>
+                <p class="section-desc">不高，但值得知道</p>
+            </div>
+            <div class="req-grid">
+                <div class="req-card reveal">
+                    <div class="req-label">作業系統</div>
+                    <p>Windows 10 64 位元（1709+），Windows 11 同樣相容</p>
+                </div>
+                <div class="req-card reveal">
+                    <div class="req-label">Java 環境</div>
+                    <p>由啟動器自動補齊；建議手動清理系統中多餘或衝突的 Java 安裝</p>
+                </div>
+                <div class="req-card reveal">
+                    <div class="req-label">儲存空間</div>
+                    <p>啟動器本體至少需要 90 MB 可用空間（不含遊戲本體）</p>
+                </div>
+                <div class="req-card reveal">
+                    <div class="req-label">記憶體</div>
+                    <p>建議 2 GB 以上可用記憶體</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="opensource" id="opensource">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">Open Source</div>
+                <h2 class="section-title">開源與貢獻</h2>
+                <p class="section-desc">GPCL 是 100% 開源專案，原始碼託管於 GitHub，歡迎提交 PR，或在<a href="https://forum.xmuer.online/" target="_blank">論壇</a>提出建議，一起打造更好的 Minecraft 啟動器。</p>
+            </div>
+            <div class="opensource-grid">
+                <div class="opensource-card reveal">
+                    <span class="opensource-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="m10 13-2 2 2 2"/><path d="m14 13 2 2-2 2"/></svg>
+                    </span>
+                    <h3>開源授權條款</h3>
+                    <p>採用 CaelLab BY-SA Code License, Version 3（或任何更新版本）授權。可自由使用、修改、散布，修改版必須維持相同開源授權。專案首頁：<a href="https://gamets.caellab.com/gpcl/">gamets.caellab.com/gpcl</a>。</p>
+                    <a href="https://www.caellab.com/license/cbs-v3" target="_blank">查看授權條款全文 →</a>
+                </div>
+                <div class="opensource-card reveal">
+                    <span class="opensource-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3"/><path d="M12 19v3"/><path d="M4.9 4.9l2.1 2.1"/><path d="M17 17l2.1 2.1"/><path d="M2 12h3"/><path d="M19 12h3"/><path d="M4.9 19.1 7 17"/><path d="M17 7l2.1-2.1"/></svg>
+                    </span>
+                    <h3>參與貢獻</h3>
+                    <p>主要原始碼倉庫託管於 GitHub，Issue、PR 都在此管理。歡迎提交 Bug 回報、功能建議或程式碼貢獻。</p>
+                    <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener">前往 GitHub →</a>
+                </div>
+            </div>
+            <details class="license-box reveal">
+                <summary><span class="dot"></span><span class="dot"></span><span class="dot"></span>&nbsp;LICENSE SUMMARY — CaelLab BY-SA Code License v3</summary>
+                <pre>
+Copyright (c) 2026 Yunyun(云云) By 虚舟实验室(CaelLab) / CaelLabGameTS
+
+Licensed under the CaelLab BY-SA Code License, Version 3
+or any later version. https://www.caellab.com/license/cbs-v3.txt
+
+You are free to:
+  Share            — copy and redistribute the source code and the compiled
+                     output in any medium or format.
+  Adapt            — remix, transform, and build upon the work.
+  Use commercially — for personal, commercial, or non-commercial purposes.
+  Run it privately — including on your own servers, without publishing
+                     your changes.
+
+Under the following terms:
+  Attribution (BY) — keep the copyright notice, credit the author, link to
+                     this license, and state whether you made changes.
+  ShareAlike (SA)  — derivatives must be distributed under this license or a
+                     later version of it, with no additional restrictions.
+  Source code      — if you distribute the work in built form, the complete
+                     corresponding source must be made available.
+  No trademark     — you may not use the "CaelLab" name to endorse your
+                     version.
+
+THE WORK IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
+            </details>
+        </div>
+    </section>
+
+    <section class="history" id="history">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">History</div>
+                <h2 class="section-title">歷史版本</h2>
+                <p class="section-desc">查看過往版本與更新紀錄</p>
+            </div>
+            <div class="timeline">
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.8.0</span>
+                        <span class="version-title">25 種語言，從啟動器到官網</span>
+                        <span class="latest-chip">最新</span>
+                        <span class="version-date">2026-10-22</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>啟動器現在支援 25 種語言：在設定 → 外觀 → 介面語言裡切換，清單可以直接搜尋</li>
+                        <li>首次啟動跟隨系統語言，歡迎引導裡也能先選好再開始</li>
+                        <li>新增首次使用的歡迎引導：語言、介面風格、簡短介紹共 4 步，可以跳過</li>
+                        <li>新增三種介面風格：Minecraft、進階（原本的樣子）、簡約</li>
+                        <li>安裝程式也翻成同樣的 25 種語言，依系統語言自動選擇</li>
+                        <li>說明中心支援 25 種語言，啟動器裡的說明連結會開啟與介面語言對應的頁面</li>
+                        <li>官網和官網裡的互動示範也支援 25 種語言</li>
+                        <li>阿拉伯語、波斯語、希伯來語會把整個介面切換成從右到左的排版</li>
+                        <li>啟動不再閃一下：啟動頁和主介面合成一個頁面，視窗底色跟隨主題；切換語言重新載入時也不會黑一下</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.7.2</span>
+                        <span class="version-title">自訂頭像，以及可以搜尋的版本列表</span>
+                        <span class="version-date">2026-10-22</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>現在可以更換啟動頁頭像：點擊頭像，或在「設定 → 外觀 → 頭像」選擇圖片；支援 PNG / JPG / GIF / WebP</li>
+                        <li>超過 1 MB 的圖片會詢問是否壓縮；上限為 4 MB，也能一鍵還原預設頭像</li>
+                        <li>外觀設定新增「頭像大小」滑桿，範圍 32–160 像素</li>
+                        <li>版本列表新增搜尋框；每個版本會顯示對應的遊戲版本與模組載入器，選取中的版本會醒目標示</li>
+                        <li>重新整理版本列表不再整個重建，捲動位置會保留；「匯入本機版本」移到列表右上角</li>
+                        <li>1.20 以上選擇「加入伺服器」會直接連線；沒填位址時會提示，而不是默默開單人遊戲</li>
+                        <li>版本設定自動儲存不再每次都彈出「已儲存」</li>
+                        <li>安裝包從約 103 MB 縮小到 93 MB：只保留中文與英文語言包，其他語言回退為英文</li>
+                        <li>1.7.1 是未發布的內部測試版，已撤下；1.7.2 已包含它的全部變更</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.7.0</span>
+                        <span class="version-title">光影、資源包與整合包，一鍵安裝</span>
+                        <span class="version-date">2026-10-22</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>下載頁新增「光影」與「資源包」分頁：可搜尋 Modrinth / CurseForge，並直接安裝到所選版本對應的資料夾</li>
+                        <li>新增「整合包」分頁，支援 Modrinth（.mrpack）與 CurseForge 整合包，會自動安裝對應的遊戲版本、模組載入器與所有模組</li>
+                        <li>每個整合包都是獨立版本，模組、設定與存檔都放在自己的資料夾，整合包之間不會互相混在一起</li>
+                        <li>也支援匯入本機整合包：在版本管理裡選擇 zip / .mrpack，輸入名稱後就開始安裝</li>
+                        <li>整合包檔案會依清單核對大小與 SHA1，下載不完整的 jar 會重新抓取，而不是裝出一個開不起來的遊戲</li>
+                        <li>NeoForge 現在也能像 Forge / Fabric 一樣依版本安裝（1.20.1 以上）</li>
+                        <li>「更多」選單預設收合；需要時在「設定 → 外觀」開啟，重新啟動後又冒出來的問題也已修正</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.6.1</span>
+                        <span class="version-title">崩潰原因，直接說清楚</span>
+                        <span class="version-date">2026-10-21</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>崩潰會自動診斷（記憶體不足、Java 版本錯誤、缺少前置、顯示卡驅動、OptiFine / Forge 不相容等），彈窗直接給出 1–2 條結論</li>
+                        <li>「查看詳情」可看到全部線索與證據行；「查看日誌」會開啟發生崩潰那個版本所屬的遊戲資料夾</li>
+                        <li>錯誤報告會匯出完整 zip：分析結果、錯誤摘要、系統與顯示卡、Java 版本、版本與模組載入器、模組 / 資源包 / 光影清單、啟動參數、遊戲輸出與崩潰報告</li>
+                        <li>報告會遮蔽 --accessToken 與系統使用者名稱，可以直接傳給別人協助排查</li>
+                        <li>同時開多個遊戲時，每個工作階段各自保留輸出，崩潰現場不會混到別的版本</li>
+                        <li>模組詳情頁重做：中英文名稱、下載量、分類標籤、依 MC 版本分組的檔案清單、前置卡片、前往 Modrinth / CurseForge / MCMOD 的連結，以及一鍵複製名稱</li>
+                        <li>修正在 1.20.1 安裝時把前置當成 1.20 解析，導致 Fabric API / GeckoLib 出現重複版本、Fabric 回報 Incompatible mods found 而拒絕啟動</li>
+                        <li>安裝模組時會清掉同專案的舊 jar，不會再堆積多個版本</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.6.0</span>
+                        <span class="version-title">裝模組不用自己找檔案</span>
+                        <span class="version-date">2026-10-20</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>下載頁新增「模組」分頁：搜尋 Modrinth / CurseForge，挑選符合目前遊戲版本的檔案，並選擇要裝進哪個版本</li>
+                        <li>Modrinth 會自動帶上必要前置；支援中文搜尋（查詢會先經由 MCMOD 取得英文名稱）</li>
+                        <li>沒有 CurseForge API Key 也能用：貼上專案連結或 cf:slug，即可透過鏡像安裝單一檔案</li>
+                        <li>下載改為任務佇列：連點多個版本會排隊，等待中的任務可以移除，取消目前任務後佇列會繼續</li>
+                        <li>自動更新改為靜默安裝：背景下載，離開啟動器時安裝，右上角圓形徽章會顯示進度</li>
+                        <li>新增：自動設定遊戲語言（預設簡體中文）、自訂遊戲資料夾與自訂檔案鏡像</li>
+                        <li>新增：從版本資料夾或 zip / jar 匯入本機版本</li>
+                        <li>Fabric 現在真的能安裝，預設一併安裝 Fabric API；開啟版本隔離後，模組與存檔會跟著版本走</li>
+                        <li>Forge 安裝只執行 --installClient，會顯示進度，Java 版本太舊時也會直接說明</li>
+                        <li>OptiFine 改為靜默安裝，不再彈出圖形化安裝程式</li>
+                        <li>修正 0 位元組下載被當成成功、相對位址轉址，以及第二次下載沒有進度的問題</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.5.2</span>
+                        <span class="version-title">設定頁重做</span>
+                        <span class="version-date">2026-10-18</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>設定頁重做：記憶體、視窗、啟動行為、下載來源與 Java 參數重新分組，可用滑桿、開關與分段按鈕調整</li>
+                        <li>記憶體預設改為「自動」：實體記憶體的 30%，最少 1 GB、最多 8 GB，並保留 2 GB 給系統；也可以手動設定</li>
+                        <li>記憶體管理現在真的會釋放：只清理啟動器自己的行程，絕不碰正在跑的遊戲，還能設定啟動前自動最佳化</li>
+                        <li>下載來源有四種模式（自動 / 鏡像優先 / 官方優先 / 僅官方），檔案與版本清單可分開設定；新增 0–20 MB/s 全域限速</li>
+                        <li>新增：G1GC 調校、自訂 JVM 參數、行程優先順序、視窗大小預設值與啟動器顯示模式</li>
+                        <li>關於頁現在包含專案資訊、執行環境與完整授權條款；官網與說明頁也一併重寫</li>
+                        <li>修正：執行緒數設定沒有生效、404 頁面被存成檔案，以及下載失敗後殘留部分檔案</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.5.1</span>
+                        <span class="version-title">崩了？我看看</span>
+                        <span class="version-date">2026-10-16</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>新增崩潰提示：遊戲異常結束時說明原因，可一鍵匯出錯誤報告（崩潰報告 + 日誌 + 系統資訊，權杖已遮蔽）</li>
+                        <li>新增執行中面板：啟動後右側顯示版本、PID、執行時間與記憶體用量，隨時能結束遊戲</li>
+                        <li>使用者名稱欄位會用下拉選單記住最近 5 個名稱，每個都能刪除</li>
+                        <li>遊戲改為獨立行程執行，關掉啟動器不會跟著結束；關閉遊戲視窗也會被視為結束</li>
+                        <li>新增自訂遊戲視窗標題，支援魔術字（{mc_version}、{time} 等）</li>
+                        <li>啟動小知識改為隨機出現（可在設定調整），條目也大幅增加</li>
+                        <li>啟動動畫與頁面切換更順暢</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.5.0</span>
+                        <span class="version-title">Java 修好了，順便換新裝</span>
+                        <span class="version-date">2026-10-16</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>修正 Java 執行環境下載：鏡像改了檔名導致安裝失敗，現在改為動態取得</li>
+                        <li>安裝程式改用 Inno Setup，可從舊版直接就地升級</li>
+                        <li>統一全域配色（主色天藍、深色模式深海藍），並換上新的啟動動畫與官網</li>
+                        <li>修正啟動畫面不跟隨淺色主題，以及部分按鈕樣式沒有生效</li>
+                    </ul>
+                </div>
+                <details class="older-versions">
+                    <summary>展開更早的 12 個版本</summary>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.4.4</span>
+                        <span class="version-title">光影支援！</span>
+                        <span class="version-date">2026-07-11</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>新增 OptiFine（光影）支援</li>
+                        <li>一鍵安裝，自動處理繼承、函式庫與 tweakClass</li>
+                        <li>支援 inheritsFrom 版本繼承機制</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.4.3</span>
+                        <span class="version-title">修復</span>
+                        <span class="version-date">2026-06-02</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>修正雙重捲軸的問題</li>
+                        <li>關於頁內容擴充，加入工具箱</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.4.2</span>
+                        <span class="version-title">修好了？我不信</span>
+                        <span class="version-date">2026-06-02</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>上個版本的啟動畫面有些問題</li>
+                        <li>把設定整理了一番</li>
+                        <li>取消啟動現在真的會結束行程了！</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.4.1</span>
+                        <span class="version-title">初次見面！</span>
+                        <span class="version-date">2026-06-02</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>首次啟動加入歡迎動畫</li>
+                        <li>移除過度的防除錯，開放開發者模式</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.4.0</span>
+                        <span class="version-title">起飛！</span>
+                        <span class="version-date">2026-06-01</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>嘗試真正支援 Forge</li>
+                        <li>立即啟動！這是安裝程式版本，已編譯為機器碼！</li>
+                        <li>修了一堆 bug，感謝論壇</li>
+                        <li>大幅精簡流程；更新詳情現在可以顯示完整日誌</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.3.3</span>
+                        <span class="version-date">2026-05-28</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Forge / Fabric / OptiFine 終於能用了！</li>
+                        <li>這是第一個開源版本！</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.3.2</span>
+                        <span class="version-date">2026-05-23</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>新增每個版本的詳細設定，預設啟用；遊戲版本可以刪除</li>
+                        <li>更多淺色模式支援；「還原預設值」移入新的相容性設定區；API 更新</li>
+                        <li>打磨下拉選單與各種細節</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.3.0–1.3.1</span>
+                        <span class="version-date">2026-05-22</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>修正下載曲線消失（安裝版裡沒有呼叫到）</li>
+                        <li>自動檢查更新的設定移到關於頁</li>
+                        <li>下載頁現在完整列出 Alpha、Beta、快照與正式版，修正正式版顯示不全的問題</li>
+                        <li>重做啟動頁，加入依最後啟動時間排序的版本管理</li>
+                        <li>啟動時新增「你知道嗎」小知識與日誌自動清理（間隔可在設定中調整）</li>
+                        <li>外觀裡的介面縮放現在真的有效；1.3.1 修正了縮放不顯示的問題</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.2.1</span>
+                        <span class="version-date">2026-05-22</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>把動態函式庫一併打包</li>
+                        <li>加入防止重複啟動 / 重複執行個體</li>
+                        <li>移除無用設定，下載頁內容現在可以收合</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.2.0</span>
+                        <span class="version-date">2026-05-21</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>加入捲軸與淺色模式</li>
+                        <li>加入完整的啟動器啟動動畫，減少啟動時的白畫面</li>
+                        <li>左側邊欄移到上方並放大介面；打磨下載頁並加入 Java 執行環境</li>
+                        <li>加入大量設定，分為遊戲、下載、外觀、進階與關於</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.1.0</span>
+                        <span class="version-date">2026-05-21</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>新增 Java 自動安裝，下載來源可設定（感謝清華！）</li>
+                        <li>效能改善，加入啟動動畫，並改善以日誌排查問題的體驗</li>
+                        <li>修正大量下載清單的 bug，例如無法取消、取消後仍殘留</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.0.0</span>
+                        <span class="version-date">2026-05-20</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>首個穩定版</li>
+                    </ul>
+                </div>
+                </details>
+                <div class="history-more">
+                    <a href="./history/index.zh-tw">查看完整更新紀錄（全部 20 個版本與安裝包） →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <a href="https://gamets.caellab.com" class="logo">
+                    <img src="/logo.png" alt="GameTS">
+                </a>
+                <p>虛舟實驗室旗下獨立遊戲開發與工具團隊。探未來之境，載無界新生。</p>
+            </div>
+            <div class="footer-links">
+                <h4>專案</h4>
+                <ul>
+                    <li><a href="./index.zh-tw">GoodPlanCraftLauncher</a></li>
+                    <li><a href="/gpcl/docs/zh-Hant/">說明中心</a></li>
+                    <li><a href="./history/index.zh-tw">更新紀錄</a></li>
+                    <li><a href="/areyouok/">Are You OK?</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>社群</h4>
+                <ul>
+                    <li><a href="https://forum.xmuer.online" target="_blank" rel="noopener">官方論壇</a></li>
+                    <li><a href="mailto:gamets@caellab.com">gamets@caellab.com</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>開源</h4>
+                <ul>
+                    <li><a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener">GitHub</a></li>
+                    <li><a href="https://www.caellab.com/license/cbs-v3" target="_blank">授權條款</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 GameTS by <a href="https://www.caellab.com/" target="_blank" class="footer-inline-link">CaelLab（虛舟實驗室）</a>. All rights reserved. 專案首頁：<a href="https://gamets.caellab.com/gpcl/" class="footer-inline-link">gamets.caellab.com/gpcl</a></p>
+            <p>GoodPlanCraftLauncher 為第三方開源工具，與 <a href="https://www.minecraft.net/" target="_blank" rel="noopener" class="footer-inline-link">Mojang Studios</a>、<a href="https://www.microsoft.com/" target="_blank" rel="noopener" class="footer-inline-link">Microsoft</a>、<a href="https://www.xbox.com/" target="_blank" rel="noopener" class="footer-inline-link">Xbox</a> 沒有任何官方關聯。Minecraft 為 Mojang Studios 註冊商標，使用本啟動器需持有有效的 Minecraft 正版授權。</p>
+            <p>開源授權條款：<a href="https://www.caellab.com/license/cbs-v3" target="_blank" class="footer-inline-link">CaelLab BY-SA Code License v3</a> | Open Source on <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener" class="footer-inline-link">GitHub</a></p>
+        </div>
+    </footer>
+
+    <script>
+        var navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', function() {
+            navbar.classList.toggle('scrolled', window.scrollY > 40);
+        }, { passive: true });
+
+        var mobileBtn = document.getElementById('mobileMenuBtn');
+        var mobilePanel = document.getElementById('mobilePanel');
+        mobileBtn.addEventListener('click', function() {
+            var open = mobilePanel.classList.toggle('open');
+            mobileBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+        mobilePanel.querySelectorAll('a').forEach(function(a) {
+            a.addEventListener('click', function() {
+                mobilePanel.classList.remove('open');
+                mobileBtn.setAttribute('aria-expanded', 'false');
+            });
+        });
+
+        var revealObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(function(el) {
+            revealObserver.observe(el);
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+            anchor.addEventListener('click', function(e) {
+                var target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        function toggleDropdown(id) {
+            var dropdown = document.getElementById(id);
+            var isActive = dropdown.classList.contains('active');
+            document.querySelectorAll('.dropdown').forEach(function(d) {
+                d.classList.remove('active');
+            });
+            if (!isActive) {
+                dropdown.classList.add('active');
+            }
+        }
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown').forEach(function(d) {
+                    d.classList.remove('active');
+                });
+            }
+        });
+
+        /* 页面顶上那个窗口就是体验区：进屏幕后自动播一遍启动流程 */
+        var heroFrame = document.querySelector('#heroWindow iframe');
+        var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        function tell(frame, message) {
+            if (!frame || !frame.contentWindow) return;
+            frame.contentWindow.postMessage(message, '*');
+        }
+
+        /* iframe 是异步加载的，等它报 ready 之后再发指令，否则消息会丢 */
+        var heroFrameReady = false;
+        var wantHeroAutoplay = false;
+        window.addEventListener('message', function(e) {
+            var data = e.data || {};
+            if (data.gpcl === 'ready') {
+                heroFrameReady = true;
+                if (wantHeroAutoplay) {
+                    wantHeroAutoplay = false;
+                    setTimeout(function() { tell(heroFrame, { gpcl: 'autoplay' }); }, 400);
+                }
+            }
+        });
+
+        if (heroFrame && !reduced) {
+            var heroSeen = false;
+            new IntersectionObserver(function(entries, obs) {
+                entries.forEach(function(entry) {
+                    if (!entry.isIntersecting || heroSeen) return;
+                    heroSeen = true;
+                    if (heroFrameReady) {
+                        setTimeout(function() { tell(heroFrame, { gpcl: 'autoplay' }); }, 600);
+                    } else {
+                        wantHeroAutoplay = true;
+                    }
+                    obs.disconnect();
+                });
+            }, { threshold: 0.35 }).observe(document.getElementById('heroWindow'));
+        }
+
+        /* 鼠标挪过窗口时给一点极轻的倾斜，键盘和触摸设备不动 */
+        if (window.matchMedia('(hover: hover) and (pointer: fine)').matches && !reduced) {
+            document.querySelectorAll('.window').forEach(function(win) {
+                var stage = win.closest('.window-stage');
+                stage.addEventListener('mousemove', function(e) {
+                    var r = stage.getBoundingClientRect();
+                    var x = (e.clientX - r.left) / r.width - 0.5;
+                    var y = (e.clientY - r.top) / r.height - 0.5;
+                    win.style.setProperty('--tilt-y', (x * 2.4).toFixed(2) + 'deg');
+                    win.style.setProperty('--tilt-x', (-y * 1.8).toFixed(2) + 'deg');
+                });
+                stage.addEventListener('mouseleave', function() {
+                    win.style.setProperty('--tilt-y', '0deg');
+                    win.style.setProperty('--tilt-x', '0deg');
+                });
+            });
+        }
+    </script>
+</body>
+</html>

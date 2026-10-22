@@ -1,0 +1,52 @@
+---
+title: Mots magiques du titre de fenêtre
+slug: /magic-words
+description: Personnaliser le titre de fenêtre de Minecraft avec des variables comme {mc_version} et {time}.
+---
+
+Le titre de la fenêtre du jeu peut contenir des variables, que GPCL remplace par les vraies valeurs au lancement.
+
+Le réglage se trouve dans **Paramètres → Jeu → Titre de la fenêtre du jeu**. Un titre vide signifie que le titre n'est pas modifié.
+
+## Un exemple
+
+Titre :
+
+```text
+{time} · {mc_version} · {gpcl_version}
+```
+
+Au lancement, l'affichage peut être :
+
+```text
+20:09:58 · Minecraft 1.21.3 · 1.6.0
+```
+
+## Variables disponibles
+
+| Variable | Devient |
+| --- | --- |
+| `{mc_version}` | Nom affiché de la version, par exemple Minecraft 1.21.3, ou un nom avec chargeur |
+| `{mc_id}` | Nom du dossier de version, par exemple 1.21.3-Fabric |
+| `{username}` | Pseudo utilisé pour ce lancement |
+| `{gpcl_version}` | Version de GPCL, par exemple 1.6.0 |
+| `{date}` | Date de lancement, format 2026/10/20 |
+| `{time}` | Heure actuelle, format 20:09:58 |
+| `{datetime}` | Date et heure, séparées par un espace |
+| `{java}` | Nom du dossier du runtime Java actuel |
+| `{memory}` | Mémoire maximale attribuée pour ce lancement, par exemple 4096MB |
+
+La casse compte. Une variable mal écrite reste affichée telle quelle, pour que vous voyiez laquelle corriger.
+
+## Le titre reste-t-il
+
+En dessous, l'option « Conserver ce nom si possible », désactivée par défaut.
+
+- **Désactivée** : après l'apparition de la fenêtre, GPCL corrige le titre pendant 20 secondes. Si le jeu ou un mod le change ensuite, plus rien n'est fait. Un titre contenant `{time}` reste figé à cet instant.
+- **Activée** : le titre défini est maintenu pendant toute la partie, même en entrant dans un monde, sans être écrasé par « - Singleplayer ».
+
+Certains modpacks ou mods changent aussi le titre ; que les deux se recouvrent est normal.
+
+:::note
+Les mots magiques ne fonctionnent que dans le titre de la fenêtre du jeu, pas dans les autres réglages.
+:::

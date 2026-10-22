@@ -1,0 +1,839 @@
+<!--
+ Copyright (c) 2026 Yunyun(云云) By 虚舟实验室(CaelLab) / CaelLabGameTS
+ Licensed under the CaelLab BY-SA Code License, Version 3
+ or any later version. https://www.caellab.com/license/cbs-v3.txt
+ Source: https://github.com/CaelLab-org/GoodPlanCraftLauncher
+ Project: https://gamets.caellab.com/gpcl/
+-->
+<!DOCTYPE html>
+<html lang="vi" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoodPlanCraftLauncher - Trình khởi chạy Minecraft nhẹ và nhanh - CaelLabGameTS</title>
+    <meta name="description" content="GoodPlanCraftLauncher là trình khởi chạy Minecraft đơn giản, hiệu quả với đăng nhập Microsoft và ngoại tuyến, quản lý phiên bản và cài đặt mod Forge/NeoForge/Fabric/OptiFine, giúp bạn vào thế giới khối vuông chỉ với một cú nhấp. Mã nguồn mở và miễn phí.">
+    <meta name="keywords" content="GoodPlanCraftLauncher,trình khởi chạy Minecraft,trình khởi chạy MC,Minecraft Java Edition,CaelLab,mã nguồn mở">
+    <meta name="author" content="CaelLabGameTS">
+    <meta name="theme-color" content="#f6fafd">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="GoodPlanCraftLauncher - Trình khởi chạy Minecraft nhẹ và nhanh">
+    <meta property="og:description" content="Nhẹ · nhanh · mã nguồn mở. Đăng nhập Microsoft và ngoại tuyến, quản lý phiên bản, cài Forge/NeoForge/Fabric/OptiFine chỉ một cú nhấp.">
+    <meta property="og:url" content="https://gamets.caellab.com/gpcl/">
+    <meta property="og:site_name" content="CaelLabGameTS">
+        <link rel="alternate" hreflang="en-US" href="https://gamets.caellab.com/gpcl/index.en-us">
+    <link rel="alternate" hreflang="zh-CN" href="https://gamets.caellab.com/gpcl/index.zh-cn">
+    <link rel="alternate" hreflang="zh-TW" href="https://gamets.caellab.com/gpcl/index.zh-tw">
+    <link rel="alternate" hreflang="ar" href="https://gamets.caellab.com/gpcl/index.ar">
+    <link rel="alternate" hreflang="bn" href="https://gamets.caellab.com/gpcl/index.bn">
+    <link rel="alternate" hreflang="de" href="https://gamets.caellab.com/gpcl/index.de">
+    <link rel="alternate" hreflang="el" href="https://gamets.caellab.com/gpcl/index.el">
+    <link rel="alternate" hreflang="es" href="https://gamets.caellab.com/gpcl/index.es">
+    <link rel="alternate" hreflang="fa" href="https://gamets.caellab.com/gpcl/index.fa">
+    <link rel="alternate" hreflang="fr" href="https://gamets.caellab.com/gpcl/index.fr">
+    <link rel="alternate" hreflang="he" href="https://gamets.caellab.com/gpcl/index.he">
+    <link rel="alternate" hreflang="hi" href="https://gamets.caellab.com/gpcl/index.hi">
+    <link rel="alternate" hreflang="id" href="https://gamets.caellab.com/gpcl/index.id">
+    <link rel="alternate" hreflang="it" href="https://gamets.caellab.com/gpcl/index.it">
+    <link rel="alternate" hreflang="ja" href="https://gamets.caellab.com/gpcl/index.ja">
+    <link rel="alternate" hreflang="ko" href="https://gamets.caellab.com/gpcl/index.ko">
+    <link rel="alternate" hreflang="ms" href="https://gamets.caellab.com/gpcl/index.ms">
+    <link rel="alternate" hreflang="nl" href="https://gamets.caellab.com/gpcl/index.nl">
+    <link rel="alternate" hreflang="pl" href="https://gamets.caellab.com/gpcl/index.pl">
+    <link rel="alternate" hreflang="pt" href="https://gamets.caellab.com/gpcl/index.pt">
+    <link rel="alternate" hreflang="ru" href="https://gamets.caellab.com/gpcl/index.ru">
+    <link rel="alternate" hreflang="th" href="https://gamets.caellab.com/gpcl/index.th">
+    <link rel="alternate" hreflang="tr" href="https://gamets.caellab.com/gpcl/index.tr">
+    <link rel="alternate" hreflang="uk" href="https://gamets.caellab.com/gpcl/index.uk">
+    <link rel="alternate" hreflang="vi" href="https://gamets.caellab.com/gpcl/index.vi">
+    <link rel="alternate" hreflang="x-default" href="https://gamets.caellab.com/gpcl/index.en-us">
+    <link rel="icon" type="image/png" href="./icon.png">
+    <link rel="stylesheet" href="./style.css?v=n5q8v2k7">
+    <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="https://gamets.caellab.com" class="logo">
+                <img src="/logo.png" alt="GameTS">
+            </a>
+            <ul class="nav-links">
+                <li>
+                    <div class="dropdown" id="sourceDropdown">
+                        <button class="dropdown-toggle" onclick="toggleDropdown('sourceDropdown')">
+                            <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                            Mã nguồn
+                            <span class="arrow">&#9662;</span>
+                        </button>
+                        <div class="dropdown-menu">
+                            <div class="menu-label">GitHub</div>
+                            <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener">
+                                <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                                GoodPlanCraftLauncher
+                            </a>
+                        </div>
+                    </div>
+                </li>
+                <li class="lang-switch"><select aria-label="Ngôn ngữ" onchange="if(this.value)location.href=this.value"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi" selected>Tiếng Việt</option></select></li>
+                <li><a href="#download" class="nav-cta">&#9662; Tải v1.8.0</a></li>
+            </ul>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Mở menu" aria-expanded="false">&#9776;</button>
+        </div>
+    </nav>
+    <div class="mobile-panel" id="mobilePanel">
+        <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener">Mã nguồn GitHub</a>
+        <select aria-label="Ngôn ngữ" onchange="if(this.value)location.href=this.value" style="width:100%;margin-top:8px;padding:10px;background:var(--surface);border:1px solid var(--line);border-radius:8px;color:var(--text-2);font:inherit;font-size:0.95rem;"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi" selected>Tiếng Việt</option></select>
+    </div>
+
+    <section class="hero">
+        <span class="float-pixel" style="top:18%;left:9%;"></span>
+        <span class="float-pixel" style="top:24%;right:11%;animation-delay:-3s;"></span>
+        <span class="float-pixel" style="bottom:30%;left:16%;animation-delay:-6s;width:8px;height:8px;"></span>
+        <span class="float-pixel" style="bottom:38%;right:18%;animation-delay:-1.5s;width:7px;height:7px;"></span>
+        <div class="hero-content">
+            <div class="hero-tags">
+                <span class="hero-tag"><span class="dot"></span>Mã nguồn mở</span>
+                <span class="hero-tag"><span class="dot"></span>Miễn phí</span>
+                <span class="hero-tag"><span class="dot"></span>Trình khởi chạy Minecraft</span>
+            </div>
+            <div class="hero-icon">
+                <img src="./icon.png" alt="Biểu tượng GoodPlanCraftLauncher">
+            </div>
+            <h1>GoodPlanCraftLauncher</h1>
+            <p class="hero-subtitle">Nhẹ · Nhanh · Mã nguồn mở</p>
+            <p class="hero-desc">Trình khởi chạy Minecraft dành cho Windows: đăng nhập Microsoft và ngoại tuyến, quản lý phiên bản, cài Forge / Fabric / OptiFine chỉ một cú nhấp. Khi game gặp sự cố, nó nói rõ nguyên nhân thay vì chỉ hiện một khung trống.</p>
+            <div class="hero-actions">
+                <a href="#download" class="hero-btn primary">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                    Tải ngay
+                </a>
+                <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener" class="hero-btn ghost">
+                    <svg width="17" height="17" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                    GitHub
+                </a>
+            </div>
+            <div class="hero-meta">
+                <span>Phiên bản <b>v1.8.0</b></span>
+                <span class="sep">/</span>
+                <span>Cập nhật <b>2026-10-22</b></span>
+                <span class="sep">/</span>
+                <span>Nền tảng <b>Windows 10+</b></span>
+            </div>
+        </div>
+
+        <div class="window-stage" id="heroWindow">
+            <div class="window">
+                <iframe src="./demo/index.html?fit=1&v=q8m3x2vd&lang=vi" title="Giao diện GoodPlanCraftLauncher" loading="eager"></iframe>
+            </div>
+        </div>
+        <p class="window-note">Cửa sổ phía trên <b>có thể bấm</b> — đó chính là giao diện trình khởi chạy, chạy ngay trong trang web.</p>
+    </section>
+
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">Tính năng</div>
+                <h2 class="section-title">Tính năng chính</h2>
+                <p class="section-desc">Công cụ thiết thực cho người chơi, mỗi thứ đều nhằm giúp bạn vào game nhanh hơn</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7.5" cy="15.5" r="4.5"/><path d="m10.8 12.2 8.7-8.7"/><path d="m16 5 3 3"/><path d="m19 8 2-2-3-3-2 2"/></svg>
+                    </span>
+                    <h3>Hai cách đăng nhập</h3>
+                    <p>Đăng nhập Microsoft và ngoại tuyến, chuyển đổi bất cứ lúc nào; chế độ ngoại tuyến không cần xác minh trực tuyến.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 13v8"/><path d="m8 17 4 4 4-4"/><path d="M20 16.7A5 5 0 0 0 18 7h-1.3A8 8 0 1 0 4 15.2"/></svg>
+                    </span>
+                    <h3>Tải mod tích hợp</h3>
+                    <p>Tìm trên Modrinth và CurseForge, rồi cài mod, shader hoặc gói tài nguyên vào thư mục mà phiên bản đã chọn thực sự dùng.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 9 4.9-9 4.9-9-4.9Z"/><path d="m3 12 9 4.9 9-4.9"/><path d="m3 17 9 4.9 9-4.9"/></svg>
+                    </span>
+                    <h3>Bốn trình tải mod</h3>
+                    <p>Forge, NeoForge, Fabric và OptiFine được cài từ nguồn chính thức, kiểm tra phiên bản Java trước.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 0 20a15.3 15.3 0 0 1 0-20Z"/></svg>
+                    </span>
+                    <h3>25 ngôn ngữ giao diện</h3>
+                    <p>Theo ngôn ngữ hệ thống lần đầu khởi chạy; đổi bất cứ lúc nào trong cài đặt.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+                    </span>
+                    <h3>Quản lý phiên bản tự động</h3>
+                    <p>Tải, cài và chuyển phiên bản Minecraft chỉ một cú nhấp, thư viện và tài nguyên được xử lý tự động.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+                    </span>
+                    <h3>Khởi động nhanh</h3>
+                    <p>Luồng khởi chạy tinh gọn cùng bộ nhớ đệm giúp bạn bấm là chơi, không phải chờ.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><path d="M6 2v2"/><path d="M10 2v2"/><path d="M14 2v2"/></svg>
+                    </span>
+                    <h3>Quản lý môi trường Java</h3>
+                    <p>Tự phát hiện và cài môi trường Java; nguồn tải có thể chọn Thanh Hoa, Đại học Nam Kinh, Huawei Cloud hoặc nguồn chính thức, lỗi thì chuyển sang nguồn kế tiếp.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                    </span>
+                    <h3>Hỗ trợ giao diện sáng tối</h3>
+                    <p>Hỗ trợ đầy đủ chế độ sáng và tối, có thể điều chỉnh tỉ lệ giao diện để hiển thị đồng nhất.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+                    </span>
+                    <h3>Tự động cập nhật và bảo trì</h3>
+                    <p>Kiểm tra cập nhật tích hợp và tự động dọn nhật ký có thể cấu hình giúp trình khởi chạy luôn gọn nhẹ theo thời gian.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.29 3.86-8.47 14.14A2 2 0 0 0 3.53 21h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+                    </span>
+                    <h3>Thông báo sự cố và báo cáo lỗi</h3>
+                    <p>Khi game thoát bất thường, nó giải thích nguyên nhân và có thể xuất báo cáo lỗi chỉ một cú nhấp (báo cáo sự cố + nhật ký + thông tin hệ thống).</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    </span>
+                    <h3>Bảng trạng thái khi chạy</h3>
+                    <p>Sau khi khởi chạy, bảng bên phải hiển thị phiên bản, PID, thời gian chạy và bộ nhớ, có thể kết thúc game bất cứ lúc nào.</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>
+                    </span>
+                    <h3>Tiêu đề cửa sổ tùy chỉnh</h3>
+                    <p>Tự viết tiêu đề cửa sổ game, hỗ trợ từ khóa như {mc_version} và {time}.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="screenshots">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">Ảnh chụp</div>
+                <h2 class="section-title">Ảnh chụp thực tế</h2>
+                <p class="section-desc">Cửa sổ phía trên là bản mô phỏng giao diện trình khởi chạy trên web, bấm được mà không cần cài gì. Bốn ảnh dưới là trình khởi chạy chạy thật trên Windows, không chỉnh sửa.</p>
+            </div>
+            <div class="shot-gallery">
+                <figure class="shot reveal">
+                    <img src="./screenshots/launch.png?v=q9v3m7k2" alt="Màn hình khởi chạy GoodPlanCraftLauncher" loading="lazy">
+                    <figcaption>Màn hình khởi chạy · chọn phiên bản, nhập tên người chơi, bắt đầu game</figcaption>
+                </figure>
+                <figure class="shot reveal">
+                    <img src="./screenshots/download.png?v=q9v3m7k2" alt="Màn hình tải xuống GoodPlanCraftLauncher" loading="lazy">
+                    <figcaption>Màn hình tải xuống · phiên bản game, mod, shader, gói tài nguyên và modpack</figcaption>
+                </figure>
+                <figure class="shot reveal">
+                    <img src="./screenshots/settings.png?v=q9v3m7k2" alt="Cài đặt game GoodPlanCraftLauncher" loading="lazy">
+                    <figcaption>Cài đặt · bộ nhớ game, chế độ cửa sổ, tiêu đề cửa sổ và từ khóa</figcaption>
+                </figure>
+                <figure class="shot reveal">
+                    <img src="./screenshots/appearance.png?v=q9v3m7k2" alt="Cài đặt giao diện GoodPlanCraftLauncher" loading="lazy">
+                    <figcaption>Cài đặt · ngôn ngữ, kiểu giao diện, chủ đề và tỉ lệ</figcaption>
+                </figure>
+            </div>
+        </div>
+    </section>
+
+    <section class="download" id="download">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">Tải xuống</div>
+                <h2 class="section-title">Tải ngay</h2>
+                <p class="section-desc">Chọn nền tảng của bạn và bắt đầu cuộc phiêu lưu khối vuông</p>
+            </div>
+            <div class="download-card reveal">
+                <span class="dl-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
+                </span>
+                <div class="download-file">GPCL-1.8.0-Setup.exe</div>
+                <a href="https://dl.caellab.com/file/games/gpcl/GPCL-1.8.0-Setup.exe" class="download-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                    Bước vào thế giới khối vuông!
+                </a>
+                <div class="update-info">
+                    <span>Cập nhật <b>2026-10-22</b></span>
+                    <span>Nền tảng <b>Windows 10 64-bit</b></span>
+                    <span>Giấy phép <b>Mã nguồn mở, miễn phí</b></span>
+                </div>
+                <div class="download-extra">
+                    <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener" class="hero-btn ghost">
+                        <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                        Xem trên GitHub
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="requirements" id="requirements">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">Hệ thống</div>
+                <h2 class="section-title">Yêu cầu hệ thống</h2>
+                <p class="section-desc">Khiêm tốn, nhưng nên biết</p>
+            </div>
+            <div class="req-grid">
+                <div class="req-card reveal">
+                    <div class="req-label">Hệ điều hành</div>
+                    <p>Windows 10 64-bit (1709 trở lên); Windows 11 cũng chạy được</p>
+                </div>
+                <div class="req-card reveal">
+                    <div class="req-label">Môi trường Java</div>
+                    <p>Trình khởi chạy tự cài; nên dọn các bản Java thừa hoặc xung đột trên hệ thống</p>
+                </div>
+                <div class="req-card reveal">
+                    <div class="req-label">Dung lượng</div>
+                    <p>Cần ít nhất 90 MB trống cho bản thân trình khởi chạy (không tính tệp game)</p>
+                </div>
+                <div class="req-card reveal">
+                    <div class="req-label">Bộ nhớ</div>
+                    <p>Khuyến nghị có từ 2 GB bộ nhớ trống trở lên</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="opensource" id="opensource">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">Mã nguồn mở</div>
+                <h2 class="section-title">Mã nguồn mở và đóng góp</h2>
+                <p class="section-desc">GPCL là dự án mã nguồn mở 100%, mã nguồn đặt trên GitHub. Hoan nghênh PR, và cả góp ý trên <a href="https://forum.xmuer.online/" target="_blank">diễn đàn</a>, để cùng xây một trình khởi chạy Minecraft tốt hơn.</p>
+            </div>
+            <div class="opensource-grid">
+                <div class="opensource-card reveal">
+                    <span class="opensource-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="m10 13-2 2 2 2"/><path d="m14 13 2 2-2 2"/></svg>
+                    </span>
+                    <h3>Giấy phép</h3>
+                    <p>Phát hành theo CaelLab BY-SA Code License, Phiên bản 3 (hoặc bất kỳ phiên bản mới hơn). Bạn có thể dùng, sửa và phân phối lại tự do; bản sửa đổi phải giữ cùng giấy phép mã nguồn mở. Trang dự án: <a href="https://gamets.caellab.com/gpcl/">gamets.caellab.com/gpcl</a>.</p>
+                    <a href="https://www.caellab.com/license/cbs-v3" target="_blank">Đọc toàn bộ giấy phép →</a>
+                </div>
+                <div class="opensource-card reveal">
+                    <span class="opensource-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3"/><path d="M12 19v3"/><path d="M4.9 4.9l2.1 2.1"/><path d="M17 17l2.1 2.1"/><path d="M2 12h3"/><path d="M19 12h3"/><path d="M4.9 19.1 7 17"/><path d="M17 7l2.1-2.1"/></svg>
+                    </span>
+                    <h3>Đóng góp</h3>
+                    <p>Kho mã nguồn chính nằm trên GitHub, nơi quản lý issue và PR. Hoan nghênh báo lỗi, đề xuất tính năng và đóng góp mã.</p>
+                    <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener">Ghé GitHub →</a>
+                </div>
+            </div>
+            <details class="license-box reveal">
+                <summary><span class="dot"></span><span class="dot"></span><span class="dot"></span>&nbsp;TÓM TẮT GIẤY PHÉP — CaelLab BY-SA Code License v3</summary>
+                <pre>
+Copyright (c) 2026 Yunyun(云云) By 虚舟实验室(CaelLab) / CaelLabGameTS
+
+Licensed under the CaelLab BY-SA Code License, Version 3
+or any later version. https://www.caellab.com/license/cbs-v3.txt
+
+You are free to:
+  Share            — copy and redistribute the source code and the compiled
+                     output in any medium or format.
+  Adapt            — remix, transform, and build upon the work.
+  Use commercially — for personal, commercial, or non-commercial purposes.
+  Run it privately — including on your own servers, without publishing
+                     your changes.
+
+Under the following terms:
+  Attribution (BY) — keep the copyright notice, credit the author, link to
+                     this license, and state whether you made changes.
+  ShareAlike (SA)  — derivatives must be distributed under this license or a
+                     later version of it, with no additional restrictions.
+  Source code      — if you distribute the work in built form, the complete
+                     corresponding source must be made available.
+  No trademark     — you may not use the "CaelLab" name to endorse your
+                     version.
+
+THE WORK IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
+            </details>
+        </div>
+    </section>
+
+    <section class="history" id="history">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">Lịch sử</div>
+                <h2 class="section-title">Lịch sử phiên bản</h2>
+                <p class="section-desc">Các phiên bản trước và lịch sử thay đổi của chúng</p>
+            </div>
+            <div class="timeline">
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.8.0</span>
+                        <span class="version-title">25 ngôn ngữ, từ trình khởi chạy đến trang web</span>
+                        <span class="latest-chip">Mới nhất</span>
+                        <span class="version-date">2026-10-22</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Trình khởi chạy nay hỗ trợ 25 ngôn ngữ: chọn trong Cài đặt → Giao diện → Ngôn ngữ giao diện, danh sách có thể tìm kiếm</li>
+                        <li>Lần đầu mở, nó theo ngôn ngữ hệ thống; trình hướng dẫn chào mừng cũng cho phép chọn trước</li>
+                        <li>Trình hướng dẫn chào mừng mới: ngôn ngữ, kiểu giao diện và giới thiệu ngắn trong 4 bước, có thể bỏ qua</li>
+                        <li>Ba kiểu giao diện: Minecraft, Nâng cao (diện mạo quen thuộc) và Tối giản</li>
+                        <li>Bộ cài cũng được dịch sang 25 ngôn ngữ đó và tự động chọn ngôn ngữ hệ thống</li>
+                        <li>Trung tâm trợ giúp có 25 ngôn ngữ, và liên kết trợ giúp trong trình khởi chạy mở trang theo ngôn ngữ giao diện</li>
+                        <li>Trang web và bản demo tương tác trên đó cũng có 25 ngôn ngữ</li>
+                        <li>Tiếng Ả Rập, Ba Tư và Do Thái chuyển toàn bộ giao diện sang viết từ phải sang trái</li>
+                        <li>Khởi động không còn nhấp nháy: màn hình khởi động và cửa sổ chính là một trang, nền cửa sổ theo chủ đề; đổi ngôn ngữ cũng không còn khung hình đen</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.7.2</span>
+                        <span class="version-title">Ảnh đại diện tùy chỉnh và danh sách phiên bản có thể tìm kiếm</span>
+                        <span class="version-date">2026-10-22</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Giờ có thể đổi ảnh đại diện ở màn hình khởi chạy: bấm vào ảnh, hoặc chọn ảnh trong Cài đặt → Giao diện → Ảnh đại diện; hỗ trợ PNG / JPG / GIF / WebP</li>
+                        <li>Ảnh lớn hơn 1 MB sẽ hỏi có nén không; giới hạn là 4 MB, có thể khôi phục ảnh mặc định chỉ một cú nhấp</li>
+                        <li>Cài đặt giao diện thêm thanh trượt 'Kích thước ảnh đại diện', 32–160 pixel</li>
+                        <li>Danh sách phiên bản có thêm ô tìm kiếm; mỗi phiên bản hiển thị phiên bản game và mod loader, bản đang chọn được làm nổi bật</li>
+                        <li>Làm mới danh sách phiên bản không còn dựng lại danh sách, nên vị trí cuộn được giữ nguyên; 'Nhập phiên bản cục bộ' chuyển lên góc trên bên phải danh sách</li>
+                        <li>Trên 1.20 trở lên, chọn 'Vào máy chủ' sẽ kết nối trực tiếp; thiếu địa chỉ giờ hiện lời nhắc thay vì lặng lẽ mở chế độ một người chơi</li>
+                        <li>Tự lưu trong cài đặt phiên bản không còn hiện 'Đã lưu' mỗi lần</li>
+                        <li>Bộ cài giảm từ khoảng 103 MB xuống 93 MB: chỉ giữ gói ngôn ngữ Trung và Anh, các ngôn ngữ khác dùng tiếng Anh</li>
+                        <li>1.7.1 là bản thử nội bộ chưa phát hành và đã bị thu hồi; 1.7.2 bao gồm mọi thay đổi của bản đó</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.7.0</span>
+                        <span class="version-title">Shader, gói tài nguyên và modpack, cài chỉ một cú nhấp</span>
+                        <span class="version-date">2026-10-22</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Trang tải xuống thêm tab Shader và Gói tài nguyên: tìm trên Modrinth / CurseForge và cài thẳng vào thư mục tương ứng của phiên bản đã chọn</li>
+                        <li>Tab Modpack mới hỗ trợ modpack Modrinth (.mrpack) và CurseForge, tự cài phiên bản game, mod loader và toàn bộ mod tương ứng</li>
+                        <li>Mỗi modpack trở thành một phiên bản riêng, mod, cấu hình và bản lưu nằm trong thư mục riêng, nên các modpack không lẫn vào nhau</li>
+                        <li>Cũng có thể nhập modpack cục bộ: chọn tệp zip / .mrpack trong quản lý phiên bản, nhập tên rồi bắt đầu cài</li>
+                        <li>Tệp modpack được đối chiếu kích thước và SHA1 với bản kê, nên jar tải dở sẽ được tải lại thay vì tạo ra game không khởi động được</li>
+                        <li>NeoForge giờ có thể cài theo phiên bản như Forge / Fabric (1.20.1 trở lên)</li>
+                        <li>Menu 'Thêm' mặc định thu gọn; bật trong Cài đặt → Giao diện khi cần, và lỗi nó hiện lại sau khi khởi động lại đã được sửa</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.6.1</span>
+                        <span class="version-title">Nguyên nhân sự cố, nói thẳng</span>
+                        <span class="version-date">2026-10-21</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Sự cố được chẩn đoán tự động (hết bộ nhớ, sai phiên bản Java, thiếu phụ thuộc, driver GPU, OptiFine / Forge không tương thích, v.v.), hộp thoại đưa ra 1–2 kết luận</li>
+                        <li>'Xem chi tiết' hiển thị mọi manh mối và dòng bằng chứng; 'Xem nhật ký' mở thư mục game của phiên bản đã gặp sự cố</li>
+                        <li>Báo cáo lỗi xuất tệp zip đầy đủ: kết quả phân tích, tóm tắt lỗi, hệ thống và GPU, phiên bản Java, phiên bản và mod loader, danh sách mod / gói tài nguyên / shader, tham số khởi chạy, đầu ra game và báo cáo sự cố</li>
+                        <li>Báo cáo che --accessToken và tên người dùng hệ thống, nên có thể gửi cho người khác để khắc phục sự cố</li>
+                        <li>Khi chạy nhiều game cùng lúc, mỗi phiên giữ đầu ra riêng, nên ngữ cảnh sự cố không lẫn sang phiên bản khác</li>
+                        <li>Trang chi tiết mod được làm lại: tên tiếng Trung và tiếng Anh, số lượt tải, thẻ phân loại, danh sách tệp theo phiên bản MC, thẻ phụ thuộc, liên kết tới Modrinth / CurseForge / MCMod và sao chép tên một cú nhấp</li>
+                        <li>Sửa lỗi phụ thuộc của bản cài 1.20.1 bị phân giải thành 1.20, khiến Fabric API / GeckoLib bị trùng phiên bản và Fabric báo Incompatible mods found rồi không khởi động</li>
+                        <li>Cài mod sẽ xóa các jar cũ của cùng dự án, nên không còn chồng nhiều phiên bản</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.6.0</span>
+                        <span class="version-title">Cài mod không cần lùng tệp</span>
+                        <span class="version-date">2026-10-20</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Trang tải xuống thêm tab Mod: tìm trên Modrinth / CurseForge, chọn tệp cho phiên bản game hiện tại và chọn cài vào phiên bản nào</li>
+                        <li>Modrinth tự kéo các phụ thuộc bắt buộc; hỗ trợ tìm kiếm tiếng Trung (truy vấn đi qua MCMod để lấy tên tiếng Anh trước)</li>
+                        <li>Vẫn dùng được khi không có API key CurseForge: dán liên kết dự án hoặc cf:slug và cài một tệp qua máy chủ gương</li>
+                        <li>Tải xuống giờ là hàng đợi tác vụ: bấm nhiều phiên bản sẽ xếp hàng, có thể xóa tác vụ đang chờ, hủy tác vụ hiện tại thì hàng đợi tiếp tục</li>
+                        <li>Tự động cập nhật giờ cài im lặng: tải ngầm và cài khi bạn thoát trình khởi chạy, huy hiệu tròn ở góc trên bên phải hiện tiến độ</li>
+                        <li>Mới: tự động đặt ngôn ngữ game (mặc định tiếng Trung giản thể), thư mục game tùy chỉnh và máy chủ gương tệp tùy chỉnh</li>
+                        <li>Mới: nhập phiên bản cục bộ từ thư mục phiên bản hoặc zip / jar</li>
+                        <li>Fabric giờ cài được thật, mặc định kèm Fabric API; với cách ly phiên bản, mod và bản lưu đi theo phiên bản</li>
+                        <li>Cài Forge chỉ chạy --installClient, hiện tiến độ và nói rõ khi phiên bản Java quá cũ</li>
+                        <li>OptiFine cài im lặng thay vì mở trình cài đồ họa</li>
+                        <li>Sửa lỗi tải 0 byte được tính là thành công, chuyển hướng địa chỉ tương đối và lần tải thứ hai không có tiến độ</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.5.2</span>
+                        <span class="version-title">Cài đặt, làm lại</span>
+                        <span class="version-date">2026-10-18</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Trang cài đặt được làm lại: bộ nhớ, cửa sổ, hành vi khởi chạy, nguồn tải và tham số Java được nhóm lại, điều chỉnh bằng thanh trượt, công tắc và nút phân đoạn</li>
+                        <li>Bộ nhớ mặc định là 'Tự động': 30% bộ nhớ vật lý, ít nhất 1 GB và tối đa 8 GB, để lại 2 GB cho hệ thống; cũng có thể đặt thủ công</li>
+                        <li>Quản lý bộ nhớ giờ thực sự thu hồi: chỉ dọn tiến trình của chính trình khởi chạy, không bao giờ đụng vào game đang chạy, và có thể đặt tối ưu tự động trước khi khởi chạy</li>
+                        <li>Nguồn tải có bốn chế độ (tự động / gương trước / chính thức trước / chỉ chính thức), chọn riêng cho tệp và danh sách phiên bản; thêm giới hạn tốc độ toàn cục 0–20 MB/s</li>
+                        <li>Mới: tinh chỉnh G1GC, tham số JVM tùy chỉnh, độ ưu tiên tiến trình, kích thước cửa sổ đặt trước và hiển thị trình khởi chạy</li>
+                        <li>Trang Giới thiệu giờ có thông tin dự án, môi trường chạy và toàn bộ giấy phép; trang web và trang trợ giúp cũng được viết lại</li>
+                        <li>Sửa: cài đặt số luồng bị bỏ qua, trang 404 bị lưu thành tệp và tệp dở còn lại sau khi tải thất bại</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.5.1</span>
+                        <span class="version-title">Nó sập à? Để tôi xem</span>
+                        <span class="version-date">2026-10-16</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Thông báo sự cố mới: khi game thoát bất thường, nó giải thích nguyên nhân, kèm báo cáo lỗi một cú nhấp (báo cáo sự cố + nhật ký + thông tin hệ thống, token đã che)</li>
+                        <li>Bảng trạng thái mới: sau khi khởi chạy, hiển thị phiên bản, PID, thời gian chạy và bộ nhớ ở bên phải, có thể kết thúc game bất cứ lúc nào</li>
+                        <li>Ô tên người dùng giữ 5 tên gần nhất trong danh sách thả xuống, mỗi tên có thể xóa</li>
+                        <li>Game giờ chạy trong tiến trình riêng, nên đóng trình khởi chạy không còn kết thúc game; đóng cửa sổ game cũng được nhận là thoát</li>
+                        <li>Tiêu đề cửa sổ game tùy chỉnh mới với từ khóa ({mc_version}, {time}, v.v.)</li>
+                        <li>Gợi ý khi khởi chạy giờ xuất hiện ngẫu nhiên (cấu hình được trong cài đặt), với nhiều mục hơn</li>
+                        <li>Hoạt ảnh khởi động và chuyển trang mượt hơn</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.5.0</span>
+                        <span class="version-title">Sửa Java và diện mạo mới</span>
+                        <span class="version-date">2026-10-16</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Sửa tải môi trường Java: tên tệp trên máy chủ gương thay đổi làm hỏng cài đặt, giờ được lấy động</li>
+                        <li>Bộ cài chuyển sang Inno Setup và nâng cấp tại chỗ từ bản cũ</li>
+                        <li>Màu sắc toàn cục thống nhất (xanh da trời là màu chính, xanh đậm cho chế độ tối), kèm hoạt ảnh khởi động và trang web mới</li>
+                        <li>Sửa màn hình khởi chạy không theo giao diện sáng và một số kiểu nút không áp dụng</li>
+                    </ul>
+                </div>
+                <details class="older-versions">
+                    <summary>Hiện 12 phiên bản cũ hơn</summary>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.4.4</span>
+                        <span class="version-title">Hỗ trợ shader!</span>
+                        <span class="version-date">2026-07-11</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Thêm hỗ trợ OptiFine (shader)</li>
+                        <li>Cài đặt một cú nhấp tự xử lý kế thừa, thư viện và tweakClass</li>
+                        <li>Hỗ trợ cơ chế kế thừa phiên bản inheritsFrom</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.4.3</span>
+                        <span class="version-title">Đã sửa</span>
+                        <span class="version-date">2026-06-02</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Sửa lỗi thanh cuộn đôi</li>
+                        <li>Mở rộng trang Giới thiệu với nhiều nội dung hơn, gồm một hộp công cụ</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.4.2</span>
+                        <span class="version-title">Đã sửa? Tôi nghi lắm</span>
+                        <span class="version-date">2026-06-02</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Màn hình chờ có vài vấn đề ở bản trước</li>
+                        <li>Sắp xếp lại phần cài đặt</li>
+                        <li>Hủy khởi chạy giờ thực sự kết thúc tiến trình!</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.4.1</span>
+                        <span class="version-title">Chào mừng!</span>
+                        <span class="version-date">2026-06-02</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Thêm hoạt ảnh chào mừng khi khởi chạy lần đầu</li>
+                        <li>Bỏ bớt chống gỡ lỗi quá mức và cho phép chế độ nhà phát triển</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.4.0</span>
+                        <span class="version-title">Cất cánh!</span>
+                        <span class="version-date">2026-06-01</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Cố gắng hỗ trợ Forge thực sự</li>
+                        <li>Khởi động tức thì! Đây là bản cài, biên dịch thành mã máy!</li>
+                        <li>Sửa lỗi, nhờ diễn đàn</li>
+                        <li>Tinh gọn luồng đáng kể; chi tiết cập nhật giờ có thể hiện toàn bộ nhật ký</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.3.3</span>
+                        <span class="version-date">2026-05-28</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Forge / Fabric / OptiFine giờ chạy được thật!</li>
+                        <li>Đây là bản phát hành mã nguồn mở đầu tiên!</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.3.2</span>
+                        <span class="version-date">2026-05-23</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Thêm cài đặt chi tiết cho từng phiên bản, mặc định được quản lý; có thể xóa phiên bản game</li>
+                        <li>Hỗ trợ giao diện sáng nhiều hơn; 'Khôi phục mặc định' chuyển vào mục cài đặt tương thích mới; cập nhật API</li>
+                        <li>Trau chuốt danh sách thả xuống và nhiều chi tiết khác</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.3.0–1.3.1</span>
+                        <span class="version-date">2026-05-22</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Sửa biểu đồ tải bị thiếu (không được gọi trong bản cài)</li>
+                        <li>Chuyển cài đặt kiểm tra cập nhật tự động sang Giới thiệu</li>
+                        <li>Trang tải xuống giờ liệt kê đầy đủ Alpha, Beta, snapshot và bản phát hành, sửa lỗi bản phát hành không hiện đủ</li>
+                        <li>Làm lại màn hình khởi chạy, thêm quản lý phiên bản sắp theo lần khởi chạy gần nhất</li>
+                        <li>Thêm gợi ý 'Bạn có biết?' khi khởi động và tự động dọn nhật ký (khoảng thời gian đổi được trong cài đặt)</li>
+                        <li>Tỉ lệ giao diện trong Giao diện giờ hoạt động thật; 1.3.1 sửa lỗi không hiển thị</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.2.1</span>
+                        <span class="version-date">2026-05-22</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Đóng gói thư viện động cục bộ</li>
+                        <li>Thêm bảo vệ chống khởi chạy / chạy trùng</li>
+                        <li>Bỏ cài đặt vô dụng, nội dung trang tải xuống giờ có thể thu gọn</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.2.0</span>
+                        <span class="version-date">2026-05-21</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Thêm thanh cuộn và giao diện sáng</li>
+                        <li>Thêm hoạt ảnh khởi động đầy đủ, giảm màn hình trắng khi khởi chạy</li>
+                        <li>Chuyển thanh bên trái lên trên và phóng to giao diện; trau chuốt trang tải xuống và thêm môi trường Java</li>
+                        <li>Thêm nhiều cài đặt, chia thành Game, Tải xuống, Giao diện, Nâng cao và Giới thiệu</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.1.0</span>
+                        <span class="version-date">2026-05-21</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Thêm thiết lập Java tự động, nguồn tải cấu hình được (cảm ơn Thanh Hoa!)</li>
+                        <li>Cải thiện hiệu năng, thêm hoạt ảnh khởi động và cải thiện khắc phục sự cố qua nhật ký</li>
+                        <li>Sửa nhiều lỗi danh sách tải, như không hủy được và còn tệp sau khi hủy</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.0.0</span>
+                        <span class="version-date">2026-05-20</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Bản phát hành ổn định đầu tiên</li>
+                    </ul>
+                </div>
+                </details>
+                <div class="history-more">
+                    <a href="./history/index.vi">Xem toàn bộ lịch sử thay đổi (cả 20 phiên bản và bộ cài) →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <a href="https://gamets.caellab.com" class="logo">
+                    <img src="/logo.png" alt="GameTS">
+                </a>
+                <p>Một nhóm phát triển game và công cụ độc lập tại CaelLab. Khám phá chân trời tương lai, mang theo sự tái sinh vô hạn.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Dự án</h4>
+                <ul>
+                    <li><a href="./index.vi">GoodPlanCraftLauncher</a></li>
+                    <li><a href="/gpcl/docs/vi/">Trung tâm trợ giúp</a></li>
+                    <li><a href="./history/index.vi">Lịch sử thay đổi</a></li>
+                    <li><a href="/areyouok/">Are You OK?</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Cộng đồng</h4>
+                <ul>
+                    <li><a href="https://forum.xmuer.online" target="_blank" rel="noopener">Diễn đàn</a></li>
+                    <li><a href="mailto:gamets@caellab.com">gamets@caellab.com</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Mã nguồn mở</h4>
+                <ul>
+                    <li><a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener">GitHub</a></li>
+                    <li><a href="https://www.caellab.com/license/cbs-v3" target="_blank">Giấy phép</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 GameTS bởi <a href="https://www.caellab.com/" target="_blank" class="footer-inline-link">CaelLab</a>. Bảo lưu mọi quyền. Trang dự án: <a href="https://gamets.caellab.com/gpcl/" class="footer-inline-link">gamets.caellab.com/gpcl</a></p>
+            <p>GoodPlanCraftLauncher là công cụ mã nguồn mở của bên thứ ba và không có liên kết chính thức với <a href="https://www.minecraft.net/" target="_blank" rel="noopener" class="footer-inline-link">Mojang Studios</a>, <a href="https://www.microsoft.com/" target="_blank" rel="noopener" class="footer-inline-link">Microsoft</a>, <a href="https://www.xbox.com/" target="_blank" rel="noopener" class="footer-inline-link">Xbox</a>. Minecraft là thương hiệu của Mojang Studios; dùng trình khởi chạy này cần giấy phép Minecraft hợp lệ.</p>
+            <p>Giấy phép mã nguồn mở: <a href="https://www.caellab.com/license/cbs-v3" target="_blank" class="footer-inline-link">CaelLab BY-SA Code License v3</a> | Mã nguồn mở trên <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener" class="footer-inline-link">GitHub</a></p>
+        </div>
+    </footer>
+
+    <script>
+        var navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', function() {
+            navbar.classList.toggle('scrolled', window.scrollY > 40);
+        }, { passive: true });
+
+        var mobileBtn = document.getElementById('mobileMenuBtn');
+        var mobilePanel = document.getElementById('mobilePanel');
+        mobileBtn.addEventListener('click', function() {
+            var open = mobilePanel.classList.toggle('open');
+            mobileBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+        mobilePanel.querySelectorAll('a').forEach(function(a) {
+            a.addEventListener('click', function() {
+                mobilePanel.classList.remove('open');
+                mobileBtn.setAttribute('aria-expanded', 'false');
+            });
+        });
+
+        var revealObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(function(el) {
+            revealObserver.observe(el);
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+            anchor.addEventListener('click', function(e) {
+                var target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        function toggleDropdown(id) {
+            var dropdown = document.getElementById(id);
+            var isActive = dropdown.classList.contains('active');
+            document.querySelectorAll('.dropdown').forEach(function(d) {
+                d.classList.remove('active');
+            });
+            if (!isActive) {
+                dropdown.classList.add('active');
+            }
+        }
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown').forEach(function(d) {
+                    d.classList.remove('active');
+                });
+            }
+        });
+
+        /* 页面顶上那个窗口就是体验区：进屏幕后自动播一遍启动流程 */
+        var heroFrame = document.querySelector('#heroWindow iframe');
+        var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        function tell(frame, message) {
+            if (!frame || !frame.contentWindow) return;
+            frame.contentWindow.postMessage(message, '*');
+        }
+
+        /* iframe 是异步加载的，等它报 ready 之后再发指令，否则消息会丢 */
+        var heroFrameReady = false;
+        var wantHeroAutoplay = false;
+        window.addEventListener('message', function(e) {
+            var data = e.data || {};
+            if (data.gpcl === 'ready') {
+                heroFrameReady = true;
+                if (wantHeroAutoplay) {
+                    wantHeroAutoplay = false;
+                    setTimeout(function() { tell(heroFrame, { gpcl: 'autoplay' }); }, 400);
+                }
+            }
+        });
+
+        if (heroFrame && !reduced) {
+            var heroSeen = false;
+            new IntersectionObserver(function(entries, obs) {
+                entries.forEach(function(entry) {
+                    if (!entry.isIntersecting || heroSeen) return;
+                    heroSeen = true;
+                    if (heroFrameReady) {
+                        setTimeout(function() { tell(heroFrame, { gpcl: 'autoplay' }); }, 600);
+                    } else {
+                        wantHeroAutoplay = true;
+                    }
+                    obs.disconnect();
+                });
+            }, { threshold: 0.35 }).observe(document.getElementById('heroWindow'));
+        }
+
+        /* 鼠标挪过窗口时给一点极轻的倾斜，键盘和触摸设备不动 */
+        if (window.matchMedia('(hover: hover) and (pointer: fine)').matches && !reduced) {
+            document.querySelectorAll('.window').forEach(function(win) {
+                var stage = win.closest('.window-stage');
+                stage.addEventListener('mousemove', function(e) {
+                    var r = stage.getBoundingClientRect();
+                    var x = (e.clientX - r.left) / r.width - 0.5;
+                    var y = (e.clientY - r.top) / r.height - 0.5;
+                    win.style.setProperty('--tilt-y', (x * 2.4).toFixed(2) + 'deg');
+                    win.style.setProperty('--tilt-x', (-y * 1.8).toFixed(2) + 'deg');
+                });
+                stage.addEventListener('mouseleave', function() {
+                    win.style.setProperty('--tilt-y', '0deg');
+                    win.style.setProperty('--tilt-x', '0deg');
+                });
+            });
+        }
+    </script>
+</body>
+</html>

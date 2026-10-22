@@ -11,7 +11,7 @@ import { app, ipcMain, shell } from 'electron';
 import fs from 'fs';
 import path from 'path';
 
-import { APP_VERSION, BASE_DIR, GAME_DIR, LOG_FILE, cleanupExpiredLogs, initGameDirFromSettings, initPaths, parseIni, setBaseDir, writeLog } from './config';
+import { APP_VERSION, BASE_DIR, GAME_DIR, LOG_FILE, cleanupExpiredLogs, initGameDirFromSettings, initLanguage, initPaths, parseIni, setBaseDir, writeLog } from './config';
 import { createGPCLShortcut, createWindow, mainWindow } from './shell';
 import { initUpdateState, installPendingUpdateOnRestart } from './update';
 import { isDeveloperMode, setIsDeveloperMode } from './state';
@@ -115,6 +115,7 @@ setBaseDir(app.getPath('userData'));
   }
 
   initPaths();
+  initLanguage();
   initGameDirFromSettings();
   initUpdateState();
   cleanupExpiredLogs();

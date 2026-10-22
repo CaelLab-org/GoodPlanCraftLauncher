@@ -6,6 +6,7 @@
 // ========== IPC 通道类型 ==========
 
 export interface GPCLApi {
+  initialI18n: { locale: string; dir: string; systemLocale: string; firstRun: boolean; theme: string; style: string; scale: string; skipSplash: boolean };
   getGameDir(): Promise<string>;
   scanVersions(gameDir: string, silent?: boolean): Promise<any>;
   launch(options: LaunchOptions): Promise<any>;
@@ -51,13 +52,16 @@ export interface GPCLApi {
   saveVersionSettings(versionId: string, settings: any): Promise<void>;
   selectDirectory(): Promise<string | null>;
   cancelLaunch(): Promise<void>;
-  checkForUpdates(): Promise<any>;
+  checkForUpdates(locale?: string): Promise<any>;
   getAppVersion(): Promise<string>;
   openExternal(url: string): Promise<void>;
   openFolder(folderPath: string): Promise<void>;
   getSettings(): Promise<AppSettings>;
   saveSettings(settings: AppSettings): Promise<void>;
   resetSettings(): Promise<void>;
+  setLanguage(code: string): Promise<{ success: boolean; locale: string }>;
+  getI18nInfo(): Promise<{ locale: string; systemLocale: string; firstRun: boolean }>;
+  completeWelcome(): Promise<{ success: boolean }>;
   getAvatar(): Promise<{ success: boolean; path: string; url: string }>;
   chooseAvatar(): Promise<{ success: boolean; cancelled?: boolean; error?: string; url?: string; compressed?: boolean }>;
   resetAvatar(): Promise<{ success: boolean; error?: string }>;
@@ -111,6 +115,12 @@ export interface GPCLApi {
 
 // ========== 设置类型 ==========
 
+export interface GeneralSettings {
+  /** 'auto' 跟随系统，其余为语言代码 */
+  language: string;
+  welcomeSeen?: boolean;
+}
+
 export interface GameSettings {
   memory: string;
   playerName: string;
@@ -135,6 +145,8 @@ export interface GameSettings {
 
 export interface AppearanceSettings {
   theme: string;
+  /** 界面风格：mc / advanced / minimal */
+  style: string;
   scale: string;
   playStartupAnimation: boolean;
   skipSplash: boolean;
@@ -170,6 +182,7 @@ export interface AdvancedSettings {
 }
 
 export interface AppSettings {
+  general: GeneralSettings;
   game: GameSettings;
   appearance: AppearanceSettings;
   download: DownloadSettings;

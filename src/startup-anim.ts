@@ -13,6 +13,7 @@ import fs from 'fs';
 import path from 'path';
 
 import { writeLog } from './config';
+import { t } from './i18n';
 // __IMPORTS_END__
 
 export let activeAnimWindow: any = null;
@@ -86,10 +87,10 @@ ipcMain.handle('play-startup-animation', async () => {
 '#flash{position:fixed;top:0;left:0;width:100%;height:100%;background:#fff;opacity:0;pointer-events:none;z-index:28}\n' +
 '</style></head><body>\n' +
 '<canvas id="c"></canvas>\n' +
-'<div class="scene" id="welcome"><div id="welcome-txt"><h1>Minecraft\u6B22\u8FCE\u4F60\uFF01</h1><p>By GPCL And AllMinecraftPlayer</p></div></div>\n' +
-'<div class="scene" id="logo-caellab"><div class="logo-row"><img src="caellab.png" alt="CaelLab"></div><div class="logo-text"><div class="logo-title">\u865A\u821F\u5B9E\u9A8C\u5BA4</div><a href="https://www.caellab.com" target="_blank" class="footer-link">caellab.com</a></div></div>\n' +
-'<div class="scene" id="logo-both"><div class="logo-row"><img class="caellab-img" src="caellab.png" alt="CaelLab"><img class="gamets-img" src="' + gametsFile + '" alt="GameTS"></div><div class="logo-text logo-text-bottom"><div class="copyright">Copyright \u00A9 2026 Yunyun(\u4E91\u4E91) By \u865A\u821F\u5B9E\u9A8C\u5BA4(CaelLab) / CaelLabGameTS</div><p class="license-text">Licensed under <a href="https://www.caellab.com/license/cbs-v3.txt" target="_blank" class="footer-link">CaelLab BY-SA Code License Version 3</a>. Open Source on <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" class="footer-link">GitHub</a>. \u9879\u76EE\u4E3B\u9875 <a href="https://gamets.caellab.com/gpcl/" target="_blank" class="footer-link">gamets.caellab.com/gpcl</a>.</p></div></div>\n' +
-'<div class="scene" id="logo-gpcl"><img src="GPCL.png" alt="GPCL"><div class="logo-text logo-text-bottom"><div class="disclaimer">GoodPlanCraftLauncher \u4E0E Mojang Studios \u53CA Microsoft\u3001Xbox \u65E0\u5B98\u65B9\u5173\u8054\u3002Minecraft \u4E3A Mojang Studios \u5546\u6807\u3002</div></div></div>\n' +
+'<div class="scene" id="welcome"><div id="welcome-txt"><h1>' + t('ui.welcome_to_minecraft') + '</h1><p>By GPCL And AllMinecraftPlayer</p></div></div>\n' +
+'<div class="scene" id="logo-caellab"><div class="logo-row"><img src="caellab.png" alt="CaelLab"></div><div class="logo-text"><div class="logo-title">' + t('ui.caellab') + '</div><a href="https://www.caellab.com" target="_blank" class="footer-link">caellab.com</a></div></div>\n' +
+'<div class="scene" id="logo-both"><div class="logo-row"><img class="caellab-img" src="caellab.png" alt="CaelLab"><img class="gamets-img" src="' + gametsFile + '" alt="GameTS"></div><div class="logo-text logo-text-bottom"><div class="copyright">' + t('ui.copyright_2026_yunyun_by_caellab_caellabgamets') + '</div><p class="license-text">Licensed under <a href="https://www.caellab.com/license/cbs-v3.txt" target="_blank" class="footer-link">CaelLab BY-SA Code License Version 3</a>. Open Source on <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" class="footer-link">GitHub</a>. ' + t('ui.project_home') + ' <a href="https://gamets.caellab.com/gpcl/" target="_blank" class="footer-link">gamets.caellab.com/gpcl</a>.</p></div></div>\n' +
+'<div class="scene" id="logo-gpcl"><img src="GPCL.png" alt="GPCL"><div class="logo-text logo-text-bottom"><div class="disclaimer">' + t('ui.goodplancraftlauncher_is_not_affiliated_with_mojang_studios_microsoft_or_c94ab4') + '</div></div></div>\n' +
 '<div id="sweep-line"><div class="band" id="sweep-band"></div></div>\n' +
 '<div id="flash"></div><div id="fade"></div>\n' +
 '<script>\n' +
@@ -243,7 +244,7 @@ ipcMain.handle('play-startup-animation', async () => {
   try { fs.writeFileSync(tempHtmlPath, htmlContent, 'utf8'); } catch (e: any) {
     writeLog('[启动动画] 写入临时文件失败: ' + e.message);
     cleanupAnimTempDir(tempAnimDir);
-    return { success: false, error: '写入临时文件失败', duration: 0 };
+    return { success: false, error: 'Could not write the temporary file', duration: 0 };
   }
 
   return new Promise<any>(function(resolve) {
@@ -321,7 +322,7 @@ ipcMain.handle('play-startup-animation', async () => {
       cleanupAnimTempDir(tempAnimDir);
       if (!resolved) {
         resolved = true;
-        resolve({ success: false, error: '动画窗口已关闭', duration: 0 });
+        resolve({ success: false, error: 'The animation window was closed', duration: 0 });
       }
     });
 
@@ -329,7 +330,7 @@ ipcMain.handle('play-startup-animation', async () => {
       if (!resolved) {
         resolved = true;
         writeLog('[启动动画] 动画加载超时');
-        resolve({ success: false, error: '动画加载超时', duration: 0 });
+        resolve({ success: false, error: 'The animation timed out while loading', duration: 0 });
         try { if (!animWindow.isDestroyed()) animWindow.close(); } catch (e: any) {}
       }
     }, 35000);

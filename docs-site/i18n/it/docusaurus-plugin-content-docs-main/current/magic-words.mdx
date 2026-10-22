@@ -1,0 +1,52 @@
+---
+title: Parole magiche nel titolo della finestra
+slug: /magic-words
+description: Personalizzare il titolo della finestra di Minecraft con segnaposto come {mc_version} e {time}.
+---
+
+Il titolo della finestra di gioco accetta segnaposto che GPCL sostituisce con valori reali all'avvio.
+
+L'opzione è in **Impostazioni → Gioco → Titolo della finestra di gioco**. Lasciare il titolo vuoto significa non modificare il titolo della finestra.
+
+## Esempio
+
+Con il titolo impostato così:
+
+```text
+{time} · {mc_version} · {gpcl_version}
+```
+
+All'avvio può apparire come:
+
+```text
+20:09:58 · Minecraft 1.21.3 · 1.6.0
+```
+
+## Segnaposto disponibili
+
+| Segnaposto | Diventa |
+| --- | --- |
+| `{mc_version}` | Nome visualizzato della versione, per esempio Minecraft 1.21.3, o il nome con il loader |
+| `{mc_id}` | Nome della cartella della versione, per esempio 1.21.3-Fabric |
+| `{username}` | Nome giocatore usato per questo avvio |
+| `{gpcl_version}` | Versione di GPCL, per esempio 1.6.0 |
+| `{date}` | Data di avvio, formato 2026/10/20 |
+| `{time}` | Ora corrente, formato 20:09:58 |
+| `{datetime}` | Data e ora separate da uno spazio |
+| `{java}` | Nome della cartella del runtime Java in uso |
+| `{memory}` | Memoria massima assegnata a questa esecuzione, per esempio 4096MB |
+
+Maiuscole e minuscole devono coincidere. I segnaposto sbagliati vengono mostrati così come sono, il che aiuta a capire quale hai scritto male.
+
+## Il titolo resta sempre lo stesso?
+
+Sotto c'è l'opzione «Mantieni questo titolo quando possibile», disattivata per impostazione predefinita.
+
+- **Disattivata**: dopo la comparsa della finestra di gioco, GPCL corregge il titolo per 20 secondi. Trascorso quel tempo, se il gioco o una mod cambia il titolo, non interviene più. Anche i titoli con `{time}` si fermano a quell'orario.
+- **Attivata**: il titolo impostato resta per tutta la sessione e, entrando in un mondo, non viene sostituito da « - Singleplayer».
+
+Alcuni modpack o mod cambiano a loro volta il titolo della finestra: che si sovrascrivano a vicenda è normale.
+
+:::note
+Per ora le parole magiche funzionano solo nel titolo della finestra di gioco, non nelle altre impostazioni.
+:::

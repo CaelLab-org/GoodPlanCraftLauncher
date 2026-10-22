@@ -6,12 +6,27 @@
  Project: https://gamets.caellab.com/gpcl/
 -->
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GoodPlanCraftLauncher</title>
-  <link rel="stylesheet" href="app.css?v=00g74i77">
+  <link rel="stylesheet" href="app.css?v=h3m9c4x2">
+  <script>
+    (function () {
+      var q = new URLSearchParams(location.search);
+      var raw = (q.get('lang') || 'en-us').toLowerCase();
+      var slug = raw.indexOf('zh') === 0
+        ? (/hant|tw|hk|mo/.test(raw) ? 'zh-tw' : 'zh-cn')
+        : raw.split('-')[0];
+      var known = { ar: 1, bn: 1, de: 1, el: 1, es: 1, fa: 1, fr: 1, he: 1, hi: 1, id: 1, it: 1, ja: 1, ko: 1, ms: 1, nl: 1, pl: 1, pt: 1, ru: 1, th: 1, tr: 1, uk: 1, vi: 1, 'zh-cn': 1, 'zh-tw': 1 };
+      if (!known[slug]) slug = 'en-us';
+      window.DEMO_SLUG = slug;
+      if (slug !== 'en-us') {
+        document.write('<script src="./locales/' + slug + '.js?v=f2k8m4v6"><\/script>');
+      }
+    })();
+  </script>
 </head>
 <body>
   <div class="stage" id="stage">
@@ -22,15 +37,15 @@
           <div class="titlebar-center">
             <nav class="menu-bar">
               <ul class="menu">
-                <li id="menu-launch" class="menu-item active"><span class="menu-icon icon icon-play"></span>启动</li>
-                <li id="menu-download" class="menu-item"><span class="menu-icon icon icon-download"></span>下载</li>
-                <li id="menu-settings" class="menu-item"><span class="menu-icon icon icon-gear"></span>设置</li>
+                <li id="menu-launch" class="menu-item active" data-i18n="Launch"><span class="menu-icon icon icon-play"></span>Launch</li>
+                <li id="menu-download" class="menu-item" data-i18n="Download"><span class="menu-icon icon icon-download"></span>Download</li>
+                <li id="menu-settings" class="menu-item" data-i18n="Settings"><span class="menu-icon icon icon-gear"></span>Settings</li>
               </ul>
             </nav>
           </div>
           <div class="window-controls">
-            <button class="min-btn" type="button" aria-label="最小化"><span class="icon icon-minimize"></span></button>
-            <button class="close-btn" type="button" aria-label="关闭"><span class="icon icon-close"></span></button>
+            <button class="min-btn" type="button" aria-label="Minimize" data-i18n-aria-label="Minimize"><span class="icon icon-minimize"></span></button>
+            <button class="close-btn" type="button" aria-label="Close" data-i18n-aria-label="Close"><span class="icon icon-close"></span></button>
           </div>
         </div>
 
@@ -42,16 +57,16 @@
                 <div class="launch-sidebar">
                   <div class="auth-tabs">
                     <button class="auth-tab auth-tab-disabled" type="button" disabled>
-                      <span class="auth-label"><span class="icon icon-diamond"></span> 正版</span>
+                      <span class="auth-label" data-i18n="Premium"><span class="icon icon-diamond"></span> Premium</span>
                     </button>
                     <button class="auth-tab auth-tab-active" type="button">
-                      <span class="auth-label"><span class="icon icon-user"></span> 离线</span>
+                      <span class="auth-label" data-i18n="Offline"><span class="icon icon-user"></span> Offline</span>
                     </button>
                   </div>
 
                   <div class="skin-container">
                     <div class="skin-wrapper">
-                      <img src="skin/Alex.png" alt="皮肤" class="skin-image">
+                      <img src="skin/Alex.png" alt="Skin" data-i18n-alt="Skin" class="skin-image">
                     </div>
                     <div class="skin-reflection"></div>
                   </div>
@@ -59,34 +74,34 @@
                   <div class="username-input-group">
                     <div class="username-field">
                       <input type="text" id="username" class="username-input" value="GPCL_Player" autocomplete="off" spellcheck="false">
-                      <button id="username-history-btn" class="username-history-btn" type="button" aria-label="最近使用的名字"><span class="icon icon-chevron"></span></button>
+                      <button id="username-history-btn" class="username-history-btn" type="button" aria-label="Recent names" data-i18n-aria-label="Recent names"><span class="icon icon-chevron"></span></button>
                       <div id="username-history" class="username-history hidden"></div>
                     </div>
                   </div>
 
                   <button id="launch-btn" class="launch-button">
-                    <span class="launch-text"><span class="icon icon-play"></span> 开始游戏</span>
+                    <span class="launch-text" data-i18n="Launch Game"><span class="icon icon-play"></span> Launch Game</span>
                   </button>
 
                   <div id="selected-version-display" class="selected-version-display hidden">
-                    <span>将启动:</span>
+                    <span data-i18n="Launching:">Launching:</span>
                     <span id="selected-version-text">-</span>
                   </div>
 
                   <div class="launch-footer">
-                    <button id="version-select-btn" class="footer-btn" type="button"><span>版本选择</span></button>
+                    <button id="version-select-btn" class="footer-btn" type="button"><span data-i18n="Select Version">Select Version</span></button>
                   </div>
                 </div>
 
                 <div class="launch-content">
                   <div id="version-select-panel" class="version-select-panel">
                     <div class="version-panel-header">
-                      <h3 class="version-panel-title">版本选择</h3>
-                      <div id="version-count" class="version-count">已安装 2 个</div>
+                      <h3 class="version-panel-title" data-i18n="Version Selection">Version Selection</h3>
+                      <div id="version-count" class="version-count" data-i18n="Installed versions">Installed versions</div>
                     </div>
                     <div id="launch-version-list" class="version-list-container"></div>
                     <div id="selected-version-info" class="selected-version-info">
-                      <span class="selected-version-label">已选择:</span>
+                      <span class="selected-version-label" data-i18n="Selected:">Selected:</span>
                       <span id="selected-version-name" class="selected-version-name">-</span>
                     </div>
                   </div>
@@ -95,64 +110,108 @@
                 <div id="game-monitor" class="game-monitor">
                   <div class="game-monitor-header">
                     <span id="game-monitor-dot" class="game-monitor-dot"></span>
-                    <span id="game-monitor-state" class="game-monitor-state">未运行</span>
+                    <span id="game-monitor-state" class="game-monitor-state" data-i18n="Not running">Not running</span>
                   </div>
                   <div class="game-monitor-body">
-                    <div class="game-monitor-row"><span class="game-monitor-label">版本</span><span id="mon-version" class="game-monitor-value">-</span></div>
+                    <div class="game-monitor-row"><span class="game-monitor-label" data-i18n="Version">Version</span><span id="mon-version" class="game-monitor-value">-</span></div>
                     <div class="game-monitor-row"><span class="game-monitor-label">PID</span><span id="mon-pid" class="game-monitor-value">-</span></div>
-                    <div class="game-monitor-row"><span class="game-monitor-label">时长</span><span id="mon-uptime" class="game-monitor-value">-</span></div>
-                    <div class="game-monitor-row"><span class="game-monitor-label">内存</span><span id="mon-memory" class="game-monitor-value">-</span></div>
+                    <div class="game-monitor-row"><span class="game-monitor-label" data-i18n="Uptime">Uptime</span><span id="mon-uptime" class="game-monitor-value">-</span></div>
+                    <div class="game-monitor-row"><span class="game-monitor-label" data-i18n="Memory">Memory</span><span id="mon-memory" class="game-monitor-value">-</span></div>
                   </div>
                   <div class="game-monitor-actions">
-                    <button id="mon-log-btn" class="game-monitor-btn" type="button">查看日志</button>
-                    <button id="mon-stop-btn" class="game-monitor-btn game-monitor-btn-danger" type="button">结束游戏</button>
+                    <button id="mon-log-btn" class="game-monitor-btn" type="button" data-i18n="View Log">View Log</button>
+                    <button id="mon-stop-btn" class="game-monitor-btn game-monitor-btn-danger" type="button" data-i18n="End Game">End Game</button>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div id="download-page" class="page hidden">
-              <div class="download-header"><h3>下载</h3></div>
+            <div id="download-page" class="page download-page hidden">
+              <div class="download-header">
+                <h3 data-i18n="Download">Download</h3>
+                <div class="download-header-actions">
+                  <button id="local-install-btn" class="local-install-btn" type="button" data-i18n="Local install">Local install</button>
+                </div>
+              </div>
+
+              <div class="download-tabs">
+                <button class="download-tab active" type="button" data-download-tab="versions" data-i18n="Game version">Game version</button>
+                <button class="download-tab" type="button" data-download-tab="mods" data-i18n="Mods">Mods</button>
+                <button class="download-tab" type="button" data-download-tab="shaders" data-i18n="Shaders">Shaders</button>
+                <button class="download-tab" type="button" data-download-tab="resourcepacks" data-i18n="Resource packs">Resource packs</button>
+                <button class="download-tab" type="button" data-download-tab="modpacks" data-i18n="Modpacks">Modpacks</button>
+              </div>
 
               <div id="download-panel" class="download-status-panel hidden">
                 <div class="download-stats">
                   <div class="chart-container"><canvas id="speedChart" width="640" height="300"></canvas></div>
                   <div class="progress-section">
                     <div class="speed-info">
-                      <div class="speed-item"><span class="speed-label">当前</span><span id="current-speed" class="speed-value">0.00 Mbps</span></div>
-                      <div class="speed-item"><span class="speed-label">峰值</span><span id="peak-speed" class="speed-value">0.00 Mbps</span></div>
+                      <div class="speed-item"><span class="speed-label" data-i18n="Current">Current</span><span id="current-speed" class="speed-value">0.00 Mbps</span></div>
+                      <div class="speed-item"><span class="speed-label" data-i18n="Peak">Peak</span><span id="peak-speed" class="speed-value">0.00 Mbps</span></div>
                     </div>
                     <div class="progress-bar-wrapper">
                       <div class="progress-bar-bg"><div id="progress-fill" class="progress-bar-fill"></div></div>
                       <div id="progress-text" class="progress-text">0%</div>
                     </div>
-                    <div id="download-filename" class="download-filename">文件名</div>
-                    <button id="cancel-download-btn" class="cancel-download-btn" type="button">取消下载</button>
+                    <div id="download-filename" class="download-filename" data-i18n="File name">File name</div>
+                    <button id="cancel-download-btn" class="cancel-download-btn" type="button" data-i18n="Cancel Download">Cancel Download</button>
                   </div>
+                </div>
+              </div>
+
+              <div id="download-task-list" class="download-task-list hidden"></div>
+
+              <div id="mod-download-section" class="mod-download-section hidden">
+                <div class="mod-search-row">
+                  <input id="mod-search-input" class="mod-search-input" type="text" data-i18n-placeholder="Search mods, or paste a CurseForge project link" placeholder="Search mods, or paste a CurseForge project link">
+                  <button id="mod-search-btn" class="mod-search-btn" type="button" data-i18n="Search">Search</button>
+                </div>
+                <div class="mod-filter-row">
+                  <select id="mod-game-version" class="mod-select"></select>
+                  <select id="mod-loader" class="mod-select">
+                    <option value="" data-i18n="All loaders">All loaders</option>
+                    <option value="fabric">Fabric</option>
+                    <option value="forge">Forge</option>
+                    <option value="neoforge">NeoForge</option>
+                    <option value="quilt">Quilt</option>
+                  </select>
+                  <select id="mod-source" class="mod-select">
+                    <option value="both" selected data-i18n="All sources">All sources</option>
+                    <option value="modrinth">Modrinth</option>
+                    <option value="curseforge">CurseForge</option>
+                  </select>
+                </div>
+                <div id="mod-status" class="status-message"></div>
+                <div id="mod-results" class="mod-results"></div>
+                <div id="mod-detail" class="mod-detail hidden">
+                  <button id="mod-detail-back" class="detail-back-btn" type="button"><span class="icon icon-arrow-left"></span><span data-i18n="Back to search results">Back to search results</span></button>
+                  <div id="mod-detail-head"></div>
+                  <div id="mod-detail-versions"></div>
                 </div>
               </div>
 
               <div id="version-list-section" class="version-list-section">
                 <div class="version-list-header">
-                  <h4 class="section-title">游戏版本</h4>
-                  <span id="version-count-label" class="version-count-label">共 6 个</span>
+                  <h4 class="section-title" data-i18n="Game Versions">Game Versions</h4>
+                  <span id="version-count-label" class="version-count-label" data-i18n="Total versions">Total versions</span>
                 </div>
                 <div id="version-list" class="version-list-container"></div>
               </div>
 
               <div id="version-detail-page" class="version-detail-page hidden">
-                <button id="detail-back-btn" class="detail-back-btn" type="button"><span class="icon icon-arrow-left"></span> 返回列表</button>
+                <button id="detail-back-btn" class="detail-back-btn" type="button" data-i18n="Back to List"><span class="icon icon-arrow-left"></span> Back to List</button>
                 <div class="detail-content">
                   <div class="detail-header">
                     <div class="detail-version-id" id="detail-version-id">-</div>
-                    <div class="detail-version-type" id="detail-version-type">正式版</div>
+                    <div class="detail-version-type" id="detail-version-type" data-i18n="Release">Release</div>
                   </div>
                   <div class="detail-info-grid">
-                    <div class="detail-info-item"><span class="detail-info-label">版本类型</span><span class="detail-info-value" id="detail-type-label">-</span></div>
-                    <div class="detail-info-item"><span class="detail-info-label">发布时间</span><span class="detail-info-value" id="detail-release-time">-</span></div>
+                    <div class="detail-info-item"><span class="detail-info-label" data-i18n="Version Type">Version Type</span><span class="detail-info-value" id="detail-type-label">-</span></div>
+                    <div class="detail-info-item"><span class="detail-info-label" data-i18n="Release Date">Release Date</span><span class="detail-info-value" id="detail-release-time">-</span></div>
                   </div>
                   <div class="detail-options" id="mod-loader-options"></div>
-                  <button id="detail-download-btn" class="detail-download-btn" type="button">下载</button>
+                  <button id="detail-download-btn" class="detail-download-btn" type="button" data-i18n="Download">Download</button>
                 </div>
               </div>
             </div>
@@ -161,41 +220,43 @@
               <div class="settings-page">
                 <div class="settings-sidebar">
                   <ul class="settings-sidebar-menu">
-                    <li class="settings-sidebar-item active" data-tab="game"><span class="icon icon-gamepad"></span><span>游戏</span></li>
-                    <li class="settings-sidebar-item" data-tab="appearance"><span class="icon icon-palette"></span><span>外观</span></li>
-                    <li class="settings-sidebar-item" data-tab="download"><span class="icon icon-download"></span><span>下载</span></li>
-                    <li class="settings-sidebar-item" data-tab="advanced"><span class="icon icon-sliders"></span><span>高级</span></li>
+                    <li class="settings-sidebar-item active" data-tab="game"><span class="icon icon-gamepad"></span><span data-i18n="Game">Game</span></li>
+                    <li class="settings-sidebar-item" data-tab="compatibility"><span class="icon icon-sliders"></span><span data-i18n="Compatibility">Compatibility</span></li>
+                    <li class="settings-sidebar-item" data-tab="appearance"><span class="icon icon-palette"></span><span data-i18n="Appearance">Appearance</span></li>
+                    <li class="settings-sidebar-item" data-tab="download"><span class="icon icon-download"></span><span data-i18n="Download">Download</span></li>
+                    <li class="settings-sidebar-item" data-tab="advanced"><span class="icon icon-sliders"></span><span data-i18n="Advanced">Advanced</span></li>
+                    <li class="settings-sidebar-item" data-tab="about"><span class="icon icon-info"></span><span data-i18n="About">About</span></li>
                   </ul>
                 </div>
                 <div class="settings-content">
                   <div class="settings-content-panel active" data-panel="game">
-                    <h2 class="settings-group-title">游戏设置</h2>
-                    <p class="settings-group-desc">内存、窗口和启动方式</p>
+                    <h2 class="settings-group-title" data-i18n="Game Settings">Game Settings</h2>
+                    <p class="settings-group-desc" data-i18n="Memory, window and launch options">Memory, window and launch options</p>
 
                     <div class="setting-card setting-card--group">
                       <div class="setting-card-head">
                         <span class="setting-card-icon"><span class="icon icon-thread"></span></span>
                         <div>
-                          <div class="setting-card-title">内存分配</div>
-                          <div class="setting-card-desc">自动模式会根据电脑内存给系统留出空间</div>
+                          <div class="setting-card-title" data-i18n="Memory Allocation">Memory Allocation</div>
+                          <div class="setting-card-desc" data-i18n="Auto mode leaves room for the system based on installed memory">Auto mode leaves room for the system based on installed memory</div>
                         </div>
                       </div>
                       <div class="setting-row">
                         <div class="setting-left">
-                          <div class="setting-label">分配方式</div>
-                          <div class="setting-desc">由 GPCL 自动控制，或手动指定上限</div>
+                          <div class="setting-label" data-i18n="Allocation Mode">Allocation Mode</div>
+                          <div class="setting-desc" data-i18n="Controlled automatically by GPCL, or set a limit manually">Controlled automatically by GPCL, or set a limit manually</div>
                         </div>
                         <div class="setting-control">
                           <div class="segmented" id="demo-memory-mode">
-                            <label><input type="radio" name="demo-memory-mode" value="auto" checked><span>自动</span></label>
-                            <label><input type="radio" name="demo-memory-mode" value="custom"><span>自定义</span></label>
+                            <label><input type="radio" name="demo-memory-mode" value="auto" checked><span data-i18n="Auto">Auto</span></label>
+                            <label><input type="radio" name="demo-memory-mode" value="custom"><span data-i18n="Custom">Custom</span></label>
                           </div>
                         </div>
                       </div>
                       <div class="setting-row hidden" id="demo-memory-custom-row">
                         <div class="setting-left">
-                          <div class="setting-label">自定义上限</div>
-                          <div class="setting-desc">拖动选择分配给游戏的最大内存</div>
+                          <div class="setting-label" data-i18n="Custom Limit">Custom Limit</div>
+                          <div class="setting-desc" data-i18n="Drag to choose the maximum memory for the game">Drag to choose the maximum memory for the game</div>
                         </div>
                         <div class="setting-control setting-control-slider">
                           <input type="range" id="demo-memory-slider" class="range-input" min="1" max="16" step="1" value="4" disabled>
@@ -203,9 +264,9 @@
                         </div>
                       </div>
                       <div class="memory-usage">
-                        <div class="memory-usage-head"><span>系统内存（已用 / 总计）</span><span>9.1 GB / 16.0 GB</span></div>
+                        <div class="memory-usage-head"><span data-i18n="System Memory (Used / Total)">System Memory (Used / Total)</span><span>9.1 GB / 16.0 GB</span></div>
                         <div class="memory-usage-track"><div class="memory-usage-used" style="width:57%"></div></div>
-                        <div class="memory-usage-foot"><span>当前可用 6.9 GB</span><span>GPCL 将分配 <b id="demo-memory-alloc">4.0 GB（自动）</b></span></div>
+                        <div class="memory-usage-foot"><span data-i18n="Available 6.9 GB">Available 6.9 GB</span><span data-i18n="GPCL will allocate">GPCL will allocate <b id="demo-memory-alloc" data-i18n="4.0 GB (Auto)">4.0 GB (Auto)</b></span></div>
                       </div>
                     </div>
 
@@ -213,30 +274,30 @@
                       <div class="setting-card-head">
                         <span class="setting-card-icon"><span class="icon icon-gamepad"></span></span>
                         <div>
-                          <div class="setting-card-title">显示</div>
-                          <div class="setting-card-desc">窗口模式和标题</div>
+                          <div class="setting-card-title" data-i18n="Display">Display</div>
+                          <div class="setting-card-desc" data-i18n="Window mode and title">Window mode and title</div>
                         </div>
                       </div>
                       <div class="setting-row">
                         <div class="setting-left">
-                          <div class="setting-label">窗口模式</div>
-                          <div class="setting-desc">设置游戏启动时的窗口模式</div>
+                          <div class="setting-label" data-i18n="Window Mode">Window Mode</div>
+                          <div class="setting-desc" data-i18n="Window mode used when the game starts">Window mode used when the game starts</div>
                         </div>
                         <div class="setting-control">
                           <div class="custom-select" data-select-id="window-mode">
-                            <div class="custom-select-trigger"><span class="custom-select-value">窗口</span><span class="custom-select-arrow icon icon-chevron"></span></div>
+                            <div class="custom-select-trigger"><span class="custom-select-value" data-i18n="Windowed">Windowed</span><span class="custom-select-arrow icon icon-chevron"></span></div>
                             <div class="custom-select-dropdown">
-                              <div class="custom-select-option" data-value="fullscreen">全屏</div>
-                              <div class="custom-select-option selected" data-value="windowed">窗口</div>
-                              <div class="custom-select-option" data-value="borderless">无边框窗口</div>
+                              <div class="custom-select-option" data-value="fullscreen" data-i18n="Fullscreen">Fullscreen</div>
+                              <div class="custom-select-option selected" data-value="windowed" data-i18n="Windowed">Windowed</div>
+                              <div class="custom-select-option" data-value="borderless" data-i18n="Borderless">Borderless</div>
                             </div>
                           </div>
                         </div>
                       </div>
                       <div class="setting-row">
                         <div class="setting-left">
-                          <div class="setting-label">游戏窗口标题</div>
-                          <div class="setting-desc">支持 {mc_version}、{time} 等魔术字</div>
+                          <div class="setting-label" data-i18n="Game Window Title">Game Window Title</div>
+                          <div class="setting-desc" data-i18n="Supports magic words like {mc_version} and {time}">Supports magic words like {mc_version} and {time}</div>
                         </div>
                         <div class="setting-control">
                           <input type="text" id="window-title" class="setting-input" value="Minecraft {mc_version} (GPCL)" spellcheck="false">
@@ -244,8 +305,8 @@
                       </div>
                       <div class="setting-row">
                         <div class="setting-left">
-                          <div class="setting-label">尽量保持该名称</div>
-                          <div class="setting-desc">关闭时只在窗口出现后校正 20 秒</div>
+                          <div class="setting-label" data-i18n="Keep This Title">Keep This Title</div>
+                          <div class="setting-desc" data-i18n="When off, only correct it for 20 seconds after the window appears">When off, only correct it for 20 seconds after the window appears</div>
                         </div>
                         <div class="setting-control">
                           <label class="switch"><input type="checkbox"><span class="slider"></span></label>
@@ -257,76 +318,137 @@
                       <div class="setting-card-head">
                         <span class="setting-card-icon"><span class="icon icon-sliders"></span></span>
                         <div>
-                          <div class="setting-card-title">启动行为</div>
-                          <div class="setting-card-desc">游戏进程和启动器窗口</div>
+                          <div class="setting-card-title" data-i18n="Launch Behavior">Launch Behavior</div>
+                          <div class="setting-card-desc" data-i18n="Game process and launcher window">Game process and launcher window</div>
                         </div>
                       </div>
                       <div class="setting-row">
                         <div class="setting-left">
-                          <div class="setting-label">进程优先级</div>
-                          <div class="setting-desc">让游戏更积极地抢 CPU</div>
+                          <div class="setting-label" data-i18n="Process Priority">Process Priority</div>
+                          <div class="setting-desc" data-i18n="Let the game compete for CPU more aggressively">Let the game compete for CPU more aggressively</div>
                         </div>
                         <div class="setting-control">
                           <div class="custom-select" data-select-id="priority">
-                            <div class="custom-select-trigger"><span class="custom-select-value">中（默认）</span><span class="custom-select-arrow icon icon-chevron"></span></div>
+                            <div class="custom-select-trigger"><span class="custom-select-value" data-i18n="Normal (default)">Normal (default)</span><span class="custom-select-arrow icon icon-chevron"></span></div>
                             <div class="custom-select-dropdown">
-                              <div class="custom-select-option" data-value="low">低</div>
-                              <div class="custom-select-option selected" data-value="normal">中（默认）</div>
-                              <div class="custom-select-option" data-value="high">高</div>
+                              <div class="custom-select-option" data-value="low" data-i18n="Low">Low</div>
+                              <div class="custom-select-option selected" data-value="normal" data-i18n="Normal (default)">Normal (default)</div>
+                              <div class="custom-select-option" data-value="high" data-i18n="High">High</div>
                             </div>
                           </div>
                         </div>
                       </div>
                       <div class="setting-row">
                         <div class="setting-left">
-                          <div class="setting-label">启动器可见性</div>
-                          <div class="setting-desc">游戏启动后怎么处理启动器窗口</div>
+                          <div class="setting-label" data-i18n="Launcher Visibility">Launcher Visibility</div>
+                          <div class="setting-desc" data-i18n="What happens to the launcher window after the game starts">What happens to the launcher window after the game starts</div>
                         </div>
                         <div class="setting-control">
                           <div class="segmented">
-                            <label><input type="radio" name="demo-visibility" value="keep" checked><span>保持不变</span></label>
-                            <label><input type="radio" name="demo-visibility" value="minimize"><span>最小化</span></label>
+                            <label><input type="radio" name="demo-visibility" value="keep" checked><span data-i18n="Keep">Keep</span></label>
+                            <label><input type="radio" name="demo-visibility" value="minimize"><span data-i18n="Minimize">Minimize</span></label>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
 
+                  <div class="settings-content-panel" data-panel="compatibility">
+                    <h2 class="settings-group-title" data-i18n="Compatibility">Compatibility</h2>
+                    <p class="settings-group-desc" data-i18n="Fix launcher compatibility issues">Fix launcher compatibility issues</p>
+
+                    <div class="setting-card setting-card--group">
+                      <div class="setting-row">
+                        <div class="setting-left">
+                          <div class="setting-label" data-i18n="Reset all settings">Reset all settings</div>
+                          <div class="setting-desc" data-i18n="Restore every setting to its default value and restart the launcher">Restore every setting to its default value and restart the launcher</div>
+                        </div>
+                        <div class="setting-control">
+                          <label class="switch"><input type="checkbox" id="demo-reset-settings"><span class="slider"></span></label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                   <div class="settings-content-panel" data-panel="appearance">
-                    <h2 class="settings-group-title">外观设置</h2>
-                    <p class="settings-group-desc">主题、缩放和启动时的显示</p>
+                    <h2 class="settings-group-title" data-i18n="Appearance Settings">Appearance Settings</h2>
+                    <p class="settings-group-desc" data-i18n="Language, theme, scale and startup display">Language, theme, scale and startup display</p>
+
+                    <div class="setting-card setting-card--group">
+                      <div class="setting-card-head">
+                        <span class="setting-card-icon"><span class="icon icon-globe"></span></span>
+                        <div>
+                          <div class="setting-card-title" data-i18n="Language">Language</div>
+                          <div class="setting-card-desc" data-i18n="Language used by the launcher interface">Language used by the launcher interface</div>
+                        </div>
+                      </div>
+                      <div class="setting-row">
+                        <div class="setting-left">
+                          <div class="setting-label" data-i18n="Interface language">Interface language</div>
+                          <div class="setting-desc" data-i18n="Follows your system on first launch; you can change it anytime">Follows your system on first launch; you can change it anytime</div>
+                        </div>
+                        <div class="setting-control">
+                          <div class="custom-select language-select" data-select-id="language">
+                            <div class="custom-select-trigger">
+                              <span class="custom-select-value" id="demo-language-value">English</span>
+                              <span class="custom-select-arrow icon icon-chevron"></span>
+                            </div>
+                            <div class="custom-select-dropdown language-dropdown">
+                              <div class="language-search">
+                                <span class="icon icon-search"></span>
+                                <input type="text" id="demo-language-search" data-i18n-placeholder="Search languages" placeholder="Search languages" autocomplete="off">
+                              </div>
+                              <div class="language-options" id="demo-language-options"></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
 
                     <div class="setting-card setting-card--group">
                       <div class="setting-card-head">
                         <span class="setting-card-icon"><span class="icon icon-palette"></span></span>
                         <div>
-                          <div class="setting-card-title">外观</div>
-                          <div class="setting-card-desc">启动器本身的显示方式</div>
+                          <div class="setting-card-title" data-i18n="Appearance">Appearance</div>
+                          <div class="setting-card-desc" data-i18n="How the launcher itself looks">How the launcher itself looks</div>
                         </div>
                       </div>
                       <div class="setting-row">
                         <div class="setting-left">
-                          <div class="setting-label">主题模式</div>
-                          <div class="setting-desc">选择启动器主题</div>
+                          <div class="setting-label" data-i18n="Theme Mode">Theme Mode</div>
+                          <div class="setting-desc" data-i18n="Choose the launcher theme">Choose the launcher theme</div>
                         </div>
                         <div class="setting-control">
                           <div class="segmented" id="demo-theme">
-                            <label><input type="radio" name="demo-theme" value="dark"><span>深色</span></label>
-                            <label><input type="radio" name="demo-theme" value="light" checked><span>浅色</span></label>
+                            <label><input type="radio" name="demo-theme" value="dark"><span data-i18n="Dark">Dark</span></label>
+                            <label><input type="radio" name="demo-theme" value="light" checked><span data-i18n="Light">Light</span></label>
                           </div>
                         </div>
                       </div>
                       <div class="setting-row">
                         <div class="setting-left">
-                          <div class="setting-label">界面缩放</div>
-                          <div class="setting-desc">调整界面元素大小</div>
+                          <div class="setting-label" data-i18n="Interface style">Interface style</div>
+                          <div class="setting-desc" data-i18n="Choose the overall look of the launcher">Choose the overall look of the launcher</div>
+                        </div>
+                        <div class="setting-control">
+                          <div class="segmented" id="demo-style">
+                            <label><input type="radio" name="demo-style" value="mc"><span data-i18n="Minecraft">Minecraft</span></label>
+                            <label><input type="radio" name="demo-style" value="advanced" checked><span data-i18n="Advanced">Advanced</span></label>
+                            <label><input type="radio" name="demo-style" value="minimal"><span data-i18n="Minimal">Minimal</span></label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="setting-row">
+                        <div class="setting-left">
+                          <div class="setting-label" data-i18n="Interface Scale">Interface Scale</div>
+                          <div class="setting-desc" data-i18n="Adjust the size of interface elements">Adjust the size of interface elements</div>
                         </div>
                         <div class="setting-control">
                           <div class="custom-select" data-select-id="scale">
-                            <div class="custom-select-trigger"><span class="custom-select-value">100% (默认)</span><span class="custom-select-arrow icon icon-chevron"></span></div>
+                            <div class="custom-select-trigger"><span class="custom-select-value" data-i18n="100% (Default)">100% (Default)</span><span class="custom-select-arrow icon icon-chevron"></span></div>
                             <div class="custom-select-dropdown">
                               <div class="custom-select-option" data-value="85">85%</div>
-                              <div class="custom-select-option selected" data-value="100">100% (默认)</div>
+                              <div class="custom-select-option selected" data-value="100" data-i18n="100% (Default)">100% (Default)</div>
                               <div class="custom-select-option" data-value="110">110%</div>
                               <div class="custom-select-option" data-value="125">125%</div>
                             </div>
@@ -337,31 +459,68 @@
 
                     <div class="setting-card setting-card--group">
                       <div class="setting-card-head">
-                        <span class="setting-card-icon"><span class="icon icon-play"></span></span>
+                        <span class="setting-card-icon"><span class="icon icon-user"></span></span>
                         <div>
-                          <div class="setting-card-title">启动显示</div>
-                          <div class="setting-card-desc">进入游戏前的动画和提示</div>
+                          <div class="setting-card-title" data-i18n="Avatar">Avatar</div>
+                          <div class="setting-card-desc" data-i18n="Avatar shown on the launch page; click it to change">Avatar shown on the launch page; click it to change</div>
                         </div>
                       </div>
                       <div class="setting-row">
                         <div class="setting-left">
-                          <div class="setting-label">播放启动动画</div>
-                          <div class="setting-desc">启动游戏时显示方块与镐子动画</div>
+                          <div class="setting-label" data-i18n="Avatar size">Avatar size</div>
+                          <div class="setting-desc" data-i18n="Drag to adjust, 32–160 px">Drag to adjust, 32–160 px</div>
+                        </div>
+                        <div class="setting-control setting-control-slider">
+                          <input type="range" id="demo-avatar-size" class="range-input" min="32" max="160" step="2" value="50">
+                          <span class="range-value" id="demo-avatar-size-value">50 px</span>
+                        </div>
+                      </div>
+                      <div class="setting-row">
+                        <div class="setting-left">
+                          <div class="setting-label" data-i18n="Avatar image">Avatar image</div>
+                          <div class="setting-desc" data-i18n="PNG / JPG / GIF / WebP; files over 1 MB can be compressed, up to 4 MB">PNG / JPG / GIF / WebP; files over 1 MB can be compressed, up to 4 MB</div>
+                        </div>
+                        <div class="setting-control">
+                          <button class="settings-action-btn" type="button" data-i18n="Choose image">Choose image</button>
+                          <button class="settings-action-btn settings-action-btn-secondary" type="button" data-i18n="Reset">Reset</button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="setting-card setting-card--group">
+                      <div class="setting-card-head">
+                        <span class="setting-card-icon"><span class="icon icon-play"></span></span>
+                        <div>
+                          <div class="setting-card-title" data-i18n="Launch Display">Launch Display</div>
+                          <div class="setting-card-desc" data-i18n="Animation and tips before the game starts">Animation and tips before the game starts</div>
+                        </div>
+                      </div>
+                      <div class="setting-row">
+                        <div class="setting-left">
+                          <div class="setting-label" data-i18n="Play Launch Animation">Play Launch Animation</div>
+                          <div class="setting-desc" data-i18n="Show the block and pickaxe animation when launching">Show the block and pickaxe animation when launching</div>
                         </div>
                         <div class="setting-control"><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
                       </div>
                       <div class="setting-row">
                         <div class="setting-left">
-                          <div class="setting-label">启动小知识</div>
-                          <div class="setting-desc">启动游戏时显示一条 Minecraft 小知识</div>
+                          <div class="setting-label" data-i18n="Skip splash screen">Skip splash screen</div>
+                          <div class="setting-desc" data-i18n="Go straight to the main window without the splash screen; may show a white screen for longer">Go straight to the main window without the splash screen; may show a white screen for longer</div>
+                        </div>
+                        <div class="setting-control"><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
+                      </div>
+                      <div class="setting-row">
+                        <div class="setting-left">
+                          <div class="setting-label" data-i18n="Launch Tips">Launch Tips</div>
+                          <div class="setting-desc" data-i18n="Show one Minecraft tip when launching">Show one Minecraft tip when launching</div>
                         </div>
                         <div class="setting-control">
                           <div class="custom-select" data-select-id="tip">
-                            <div class="custom-select-trigger"><span class="custom-select-value">偶尔（1/3）</span><span class="custom-select-arrow icon icon-chevron"></span></div>
+                            <div class="custom-select-trigger"><span class="custom-select-value" data-i18n="Sometimes (1/3)">Sometimes (1/3)</span><span class="custom-select-arrow icon icon-chevron"></span></div>
                             <div class="custom-select-dropdown">
-                              <div class="custom-select-option" data-value="off">从不显示</div>
-                              <div class="custom-select-option selected" data-value="rare">偶尔（1/3）</div>
-                              <div class="custom-select-option" data-value="always">每次显示</div>
+                              <div class="custom-select-option" data-value="off" data-i18n="Never">Never</div>
+                              <div class="custom-select-option selected" data-value="rare" data-i18n="Sometimes (1/3)">Sometimes (1/3)</div>
+                              <div class="custom-select-option" data-value="always" data-i18n="Always">Always</div>
                             </div>
                           </div>
                         </div>
@@ -370,49 +529,99 @@
                   </div>
 
                   <div class="settings-content-panel" data-panel="download">
-                    <h2 class="settings-group-title">下载设置</h2>
-                    <p class="settings-group-desc">下载源、并发和速度</p>
+                    <h2 class="settings-group-title" data-i18n="Download Settings">Download Settings</h2>
+                    <p class="settings-group-desc" data-i18n="Download sources, concurrency and speed">Download sources, concurrency and speed</p>
 
                     <div class="setting-card setting-card--group">
                       <div class="setting-card-head">
                         <span class="setting-card-icon"><span class="icon icon-download"></span></span>
                         <div>
-                          <div class="setting-card-title">下载源</div>
-                          <div class="setting-card-desc">官方源和 BMCLAPI 镜像的优先顺序</div>
+                          <div class="setting-card-title" data-i18n="Download Source">Download Source</div>
+                          <div class="setting-card-desc" data-i18n="Priority of official sources and the BMCLAPI mirror">Priority of official sources and the BMCLAPI mirror</div>
                         </div>
                       </div>
                       <div class="setting-row">
                         <div class="setting-left">
-                          <div class="setting-label">文件下载源</div>
-                          <div class="setting-desc">客户端、资源文件和依赖库</div>
+                          <div class="setting-label" data-i18n="File Download Source">File Download Source</div>
+                          <div class="setting-desc" data-i18n="Client, assets and libraries">Client, assets and libraries</div>
                         </div>
                         <div class="setting-control">
                           <div class="custom-select" data-select-id="file-source">
-                            <div class="custom-select-trigger"><span class="custom-select-value">优先官方，缓慢时换镜像</span><span class="custom-select-arrow icon icon-chevron"></span></div>
+                            <div class="custom-select-trigger"><span class="custom-select-value" data-i18n="Official first, switch mirrors if slow">Official first, switch mirrors if slow</span><span class="custom-select-arrow icon icon-chevron"></span></div>
                             <div class="custom-select-dropdown">
-                              <div class="custom-select-option selected" data-value="auto">优先官方，缓慢时换镜像</div>
-                              <div class="custom-select-option" data-value="mirror-first">尽量使用镜像源</div>
-                              <div class="custom-select-option" data-value="official-first">优先使用官方源</div>
-                              <div class="custom-select-option" data-value="official-only">尽量使用官方源</div>
+                              <div class="custom-select-option selected" data-value="auto" data-i18n="Official first, switch mirrors if slow">Official first, switch mirrors if slow</div>
+                              <div class="custom-select-option" data-value="mirror-first" data-i18n="Prefer mirrors">Prefer mirrors</div>
+                              <div class="custom-select-option" data-value="official-first" data-i18n="Prefer official sources">Prefer official sources</div>
+                              <div class="custom-select-option" data-value="official-only" data-i18n="Official sources only">Official sources only</div>
                             </div>
                           </div>
                         </div>
                       </div>
                       <div class="setting-row">
                         <div class="setting-left">
-                          <div class="setting-label">版本列表源</div>
-                          <div class="setting-desc">版本清单、版本 JSON 和资源索引</div>
+                          <div class="setting-label" data-i18n="Version List Source">Version List Source</div>
+                          <div class="setting-desc" data-i18n="Version manifest, version JSON and asset index">Version manifest, version JSON and asset index</div>
                         </div>
                         <div class="setting-control">
                           <div class="custom-select" data-select-id="version-source">
-                            <div class="custom-select-trigger"><span class="custom-select-value">优先官方，缓慢时换镜像</span><span class="custom-select-arrow icon icon-chevron"></span></div>
+                            <div class="custom-select-trigger"><span class="custom-select-value" data-i18n="Official first, switch mirrors if slow">Official first, switch mirrors if slow</span><span class="custom-select-arrow icon icon-chevron"></span></div>
                             <div class="custom-select-dropdown">
-                              <div class="custom-select-option selected" data-value="auto">优先官方，缓慢时换镜像</div>
-                              <div class="custom-select-option" data-value="mirror-first">尽量使用镜像源</div>
-                              <div class="custom-select-option" data-value="official-first">优先使用官方源</div>
-                              <div class="custom-select-option" data-value="official-only">尽量使用官方源</div>
+                              <div class="custom-select-option selected" data-value="auto" data-i18n="Official first, switch mirrors if slow">Official first, switch mirrors if slow</div>
+                              <div class="custom-select-option" data-value="mirror-first" data-i18n="Prefer mirrors">Prefer mirrors</div>
+                              <div class="custom-select-option" data-value="official-first" data-i18n="Prefer official sources">Prefer official sources</div>
+                              <div class="custom-select-option" data-value="official-only" data-i18n="Official sources only">Official sources only</div>
                             </div>
                           </div>
+                        </div>
+                      </div>
+                      <div class="setting-row">
+                        <div class="setting-left">
+                          <div class="setting-label" data-i18n="Custom file mirror">Custom file mirror</div>
+                          <div class="setting-desc" data-i18n="Mirror root URL (e.g. https://bmclapi2.bangbang93.com); leave empty for BMCLAPI">Mirror root URL (e.g. https://bmclapi2.bangbang93.com); leave empty for BMCLAPI</div>
+                        </div>
+                        <div class="setting-control setting-control-column">
+                          <input type="text" class="setting-input" placeholder="https://bmclapi2.bangbang93.com">
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="setting-card setting-card--group">
+                      <div class="setting-card-head">
+                        <span class="setting-card-icon"><span class="icon icon-save"></span></span>
+                        <div>
+                          <div class="setting-card-title" data-i18n="Game directory">Game directory</div>
+                          <div class="setting-card-desc" data-i18n="Versions, libraries, assets and mods go here; existing files are not moved when you switch">Versions, libraries, assets and mods go here; existing files are not moved when you switch</div>
+                        </div>
+                      </div>
+                      <div class="setting-row">
+                        <div class="setting-left">
+                          <div class="setting-label" data-i18n="Install location">Install location</div>
+                          <div class="setting-desc install-dir-path">C:\Users\Yunyun\AppData\Roaming\gpcl\.minecraft</div>
+                        </div>
+                        <div class="setting-control setting-control-column">
+                          <div class="install-dir-actions">
+                            <button class="settings-action-btn" type="button" data-i18n="Change folder">Change folder</button>
+                            <button class="settings-action-btn settings-action-btn-secondary" type="button" data-i18n="Reset">Reset</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="setting-card setting-card--group">
+                      <div class="setting-card-head">
+                        <span class="setting-card-icon"><span class="icon icon-box"></span></span>
+                        <div>
+                          <div class="setting-card-title" data-i18n="Mod source">Mod source</div>
+                          <div class="setting-card-desc" data-i18n="The official CurseForge API needs an API key; the public mirror is used when it is not configured">The official CurseForge API needs an API key; the public mirror is used when it is not configured</div>
+                        </div>
+                      </div>
+                      <div class="setting-row">
+                        <div class="setting-left">
+                          <div class="setting-label">CurseForge API Key</div>
+                          <div class="setting-desc" data-i18n="Optional. Without a key, only the public mirror is used; CurseForge search may be unavailable while it is down">Optional. Without a key, only the public mirror is used; CurseForge search may be unavailable while it is down</div>
+                        </div>
+                        <div class="setting-control setting-control-column">
+                          <input type="text" class="setting-input" data-i18n-placeholder="Leave empty to use Modrinth and the mirror only" placeholder="Leave empty to use Modrinth and the mirror only">
                         </div>
                       </div>
                     </div>
@@ -421,14 +630,14 @@
                       <div class="setting-card-head">
                         <span class="setting-card-icon"><span class="icon icon-thread"></span></span>
                         <div>
-                          <div class="setting-card-title">速度</div>
-                          <div class="setting-card-desc">并发连接数和总下载速度上限</div>
+                          <div class="setting-card-title" data-i18n="Speed">Speed</div>
+                          <div class="setting-card-desc" data-i18n="Concurrent connections and overall download speed limit">Concurrent connections and overall download speed limit</div>
                         </div>
                       </div>
                       <div class="setting-row">
                         <div class="setting-left">
-                          <div class="setting-label">最大线程数</div>
-                          <div class="setting-desc">小文件较多时提高并发能加快下载</div>
+                          <div class="setting-label" data-i18n="Max Threads">Max Threads</div>
+                          <div class="setting-desc" data-i18n="More concurrency helps when there are many small files">More concurrency helps when there are many small files</div>
                         </div>
                         <div class="setting-control setting-control-slider">
                           <input type="range" id="demo-threads" class="range-input" min="1" max="128" step="1" value="64">
@@ -437,26 +646,26 @@
                       </div>
                       <div class="setting-row">
                         <div class="setting-left">
-                          <div class="setting-label">速度限制</div>
-                          <div class="setting-desc">所有下载任务共享这个上限，0 表示不限速</div>
+                          <div class="setting-label" data-i18n="Speed Limit">Speed Limit</div>
+                          <div class="setting-desc" data-i18n="Shared by all downloads; 0 means unlimited">Shared by all downloads; 0 means unlimited</div>
                         </div>
                         <div class="setting-control setting-control-slider">
                           <input type="range" id="demo-speed" class="range-input" min="0" max="20" step="1" value="0">
-                          <span class="range-value" id="demo-speed-value">不限速</span>
+                          <span class="range-value" id="demo-speed-value" data-i18n="Unlimited">Unlimited</span>
                         </div>
                       </div>
                       <div class="setting-row">
                         <div class="setting-left">
-                          <div class="setting-label">Java 镜像源</div>
-                          <div class="setting-desc">Java 运行时单独使用这个镜像</div>
+                          <div class="setting-label" data-i18n="Java Mirror">Java Mirror</div>
+                          <div class="setting-desc" data-i18n="Used only for the Java runtime">Used only for the Java runtime</div>
                         </div>
                         <div class="setting-control">
                           <div class="custom-select" data-select-id="java-mirror">
-                            <div class="custom-select-trigger"><span class="custom-select-value">清华大学镜像（推荐）</span><span class="custom-select-arrow icon icon-chevron"></span></div>
+                            <div class="custom-select-trigger"><span class="custom-select-value" data-i18n="Tsinghua Mirror (recommended)">Tsinghua Mirror (recommended)</span><span class="custom-select-arrow icon icon-chevron"></span></div>
                             <div class="custom-select-dropdown">
-                              <div class="custom-select-option selected" data-value="tsinghua">清华大学镜像（推荐）</div>
-                              <div class="custom-select-option" data-value="nju">南京大学镜像</div>
-                              <div class="custom-select-option" data-value="huawei">华为云镜像</div>
+                              <div class="custom-select-option selected" data-value="tsinghua" data-i18n="Tsinghua Mirror (recommended)">Tsinghua Mirror (recommended)</div>
+                              <div class="custom-select-option" data-value="nju" data-i18n="Nanjing University Mirror">Nanjing University Mirror</div>
+                              <div class="custom-select-option" data-value="huawei" data-i18n="Huawei Cloud Mirror">Huawei Cloud Mirror</div>
                             </div>
                           </div>
                         </div>
@@ -465,30 +674,55 @@
                   </div>
 
                   <div class="settings-content-panel" data-panel="advanced">
-                    <h2 class="settings-group-title">高级设置</h2>
-                    <p class="settings-group-desc">启动行为、日志和 Java 参数</p>
+                    <h2 class="settings-group-title" data-i18n="Advanced Settings">Advanced Settings</h2>
+                    <p class="settings-group-desc" data-i18n="Launch behavior, logs and Java arguments">Launch behavior, logs and Java arguments</p>
 
                     <div class="setting-card setting-card--group">
                       <div class="setting-card-head">
                         <span class="setting-card-icon"><span class="icon icon-gear"></span></span>
                         <div>
-                          <div class="setting-card-title">启动与日志</div>
-                          <div class="setting-card-desc">启动器自身的行为</div>
+                          <div class="setting-card-title" data-i18n="Launch and Logs">Launch and Logs</div>
+                          <div class="setting-card-desc" data-i18n="Launcher's own behavior">Launcher's own behavior</div>
                         </div>
                       </div>
                       <div class="setting-row">
                         <div class="setting-left">
-                          <div class="setting-label">防止多次启动</div>
-                          <div class="setting-desc">开启后将阻止启动器重复运行</div>
+                          <div class="setting-label" data-i18n="Single Instance">Single Instance</div>
+                          <div class="setting-desc" data-i18n="Prevents the launcher from running more than once">Prevents the launcher from running more than once</div>
                         </div>
                         <div class="setting-control"><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
                       </div>
                       <div class="setting-row">
                         <div class="setting-left">
-                          <div class="setting-label">自动清除日志</div>
-                          <div class="setting-desc">启动时自动清理过期的日志文件</div>
+                          <div class="setting-label" data-i18n="Developer options">Developer options</div>
+                          <div class="setting-desc" data-i18n="Allow DevTools, the context menu and page reloads">Allow DevTools, the context menu and page reloads</div>
+                        </div>
+                        <div class="setting-control"><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
+                      </div>
+                      <div class="setting-row">
+                        <div class="setting-left">
+                          <div class="setting-label" data-i18n="Auto-clear Logs">Auto-clear Logs</div>
+                          <div class="setting-desc" data-i18n="Delete expired log files at startup">Delete expired log files at startup</div>
                         </div>
                         <div class="setting-control"><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+                      </div>
+                      <div class="setting-row setting-row-indent">
+                        <div class="setting-left">
+                          <div class="setting-label" data-i18n="Keep logs for">Keep logs for</div>
+                          <div class="setting-desc" data-i18n="How long log files are kept">How long log files are kept</div>
+                        </div>
+                        <div class="setting-control">
+                          <input type="number" class="num-display" value="7" min="1">
+                          <div class="custom-select small" data-select-id="log-unit">
+                            <div class="custom-select-trigger"><span class="custom-select-value" data-i18n="days">days</span><span class="custom-select-arrow icon icon-chevron"></span></div>
+                            <div class="custom-select-dropdown">
+                              <div class="custom-select-option" data-value="hour" data-i18n="hours">hours</div>
+                              <div class="custom-select-option selected" data-value="day" data-i18n="days">days</div>
+                              <div class="custom-select-option" data-value="month" data-i18n="months">months</div>
+                              <div class="custom-select-option" data-value="year" data-i18n="years">years</div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
@@ -496,14 +730,14 @@
                       <div class="setting-card-head">
                         <span class="setting-card-icon"><span class="icon icon-bolt"></span></span>
                         <div>
-                          <div class="setting-card-title">Java 高级</div>
-                          <div class="setting-card-desc">不懂就不要改，错误参数会让游戏起不来</div>
+                          <div class="setting-card-title" data-i18n="Java Advanced">Java Advanced</div>
+                          <div class="setting-card-desc" data-i18n="Leave it alone unless you understand it — bad arguments can stop the game from starting">Leave it alone unless you understand it — bad arguments can stop the game from starting</div>
                         </div>
                       </div>
                       <div class="setting-row setting-row-stack">
                         <div class="setting-left">
-                          <div class="setting-label">自定义 JVM 参数</div>
-                          <div class="setting-desc">空格分隔，支持引号；留空使用默认参数</div>
+                          <div class="setting-label" data-i18n="Custom JVM Arguments">Custom JVM Arguments</div>
+                          <div class="setting-desc" data-i18n="Space-separated, quotes supported; leave empty for defaults">Space-separated, quotes supported; leave empty for defaults</div>
                         </div>
                         <div class="setting-control-column">
                           <textarea class="setting-input setting-textarea" rows="3" placeholder="-XX:+UseG1GC" spellcheck="false"></textarea>
@@ -511,18 +745,100 @@
                       </div>
                       <div class="setting-row">
                         <div class="setting-left">
-                          <div class="setting-label">内存管理</div>
-                          <div class="setting-desc">G1GC 调优会追加一组常用的垃圾回收参数</div>
+                          <div class="setting-label" data-i18n="Memory Management">Memory Management</div>
+                          <div class="setting-desc" data-i18n="G1GC tuning adds a set of common garbage collector arguments">G1GC tuning adds a set of common garbage collector arguments</div>
                         </div>
                         <div class="setting-control">
                           <div class="custom-select" data-select-id="gc">
-                            <div class="custom-select-trigger"><span class="custom-select-value">默认</span><span class="custom-select-arrow icon icon-chevron"></span></div>
+                            <div class="custom-select-trigger"><span class="custom-select-value" data-i18n="Default">Default</span><span class="custom-select-arrow icon icon-chevron"></span></div>
                             <div class="custom-select-dropdown">
-                              <div class="custom-select-option selected" data-value="default">默认</div>
-                              <div class="custom-select-option" data-value="g1gc">G1GC 调优</div>
+                              <div class="custom-select-option selected" data-value="default" data-i18n="Default">Default</div>
+                              <div class="custom-select-option" data-value="g1gc" data-i18n="G1GC Tuning">G1GC Tuning</div>
                             </div>
                           </div>
                         </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="settings-content-panel" data-panel="about">
+                    <h2 class="settings-group-title" data-i18n="About">About</h2>
+                    <p class="settings-group-desc" data-i18n="Project information, links and license">Project information, links and license</p>
+
+                    <div class="setting-card about-card">
+                      <div class="about-header">
+                        <img src="../icon.png" alt="Icon" data-i18n-alt="Icon" class="about-icon">
+                        <div class="about-info">
+                          <div class="about-title">GoodPlanCraftLauncher</div>
+                          <div class="about-version"><span data-i18n="Version:">Version:</span> 1.7.2</div>
+                          <div class="about-byline">CaelLab</div>
+                        </div>
+                      </div>
+                      <button id="about-check-update" class="check-update-btn" type="button" data-i18n="Check for updates">Check for updates</button>
+                      <div class="auto-update-setting">
+                        <div class="setting-row">
+                          <div class="setting-left">
+                            <div class="setting-label" data-i18n="Check for updates automatically">Check for updates automatically</div>
+                            <div class="setting-desc" data-i18n="Check for a new version at startup">Check for a new version at startup</div>
+                          </div>
+                          <div class="setting-control"><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+                        </div>
+                        <div class="setting-row setting-row-indent">
+                          <div class="setting-left">
+                            <div class="setting-label" data-i18n="Install updates automatically">Install updates automatically</div>
+                            <div class="setting-desc" data-i18n="Download new versions in the background and install them when the launcher exits">Download new versions in the background and install them when the launcher exits</div>
+                          </div>
+                          <div class="setting-control"><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="setting-card about-section">
+                      <h3 class="about-section-title" data-i18n="Links">Links</h3>
+                      <div class="about-links">
+                        <a class="about-link" href="https://gamets.caellab.com/gpcl/" target="_blank" rel="noopener">
+                          <span class="icon icon-globe"></span>
+                          <span><b data-i18n="Website">Website</b><small>gamets.caellab.com/gpcl</small></span>
+                        </a>
+                        <a class="about-link" href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener">
+                          <span class="icon icon-github"></span>
+                          <span><b data-i18n="GitHub repository">GitHub repository</b><small>CaelLab-org/GoodPlanCraftLauncher</small></span>
+                        </a>
+                        <a class="about-link" href="mailto:gamets@caellab.com">
+                          <span class="icon icon-mail"></span>
+                          <span><b data-i18n="Email">Email</b><small>gamets@caellab.com</small></span>
+                        </a>
+                        <a class="about-link" href="https://gamets.caellab.com/gpcl/docs/" target="_blank" rel="noopener">
+                          <span class="icon icon-book"></span>
+                          <span><b data-i18n="Help">Help</b><small data-i18n="Installation, sign-in, Java and mods">Installation, sign-in, Java and mods</small></span>
+                        </a>
+                      </div>
+                    </div>
+
+                    <div class="setting-card about-section">
+                      <h3 class="about-section-title" data-i18n="Developer">Developer</h3>
+                      <div class="about-developer">
+                        <span class="developer-avatar">Y</span>
+                        <div class="developer-info">
+                          <div class="developer-name">Yunyun</div>
+                          <div class="developer-role" data-i18n="Developer of GoodPlanCraftLauncher">Developer of GoodPlanCraftLauncher</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="setting-card about-section">
+                      <h3 class="about-section-title" data-i18n="License">License</h3>
+                      <p class="about-text" data-i18n="CaelLab BY-SA Code License, Version 3 (or any later version).">CaelLab BY-SA Code License, Version 3 (or any later version).</p>
+                    </div>
+
+                    <div class="setting-card about-section">
+                      <h3 class="about-section-title" data-i18n="Runtime">Runtime</h3>
+                      <div class="runtime-grid">
+                        <div class="runtime-item"><span data-i18n="Launcher">Launcher</span><b>1.7.2</b></div>
+                        <div class="runtime-item"><span>Electron</span><b>38.2.2</b></div>
+                        <div class="runtime-item"><span>Chromium</span><b>140.0.7339.133</b></div>
+                        <div class="runtime-item"><span>Node</span><b>22.19.0</b></div>
+                        <div class="runtime-item runtime-item-wide"><span data-i18n="System">System</span><b>Windows 11 (10.0.26100)</b></div>
                       </div>
                     </div>
                   </div>
@@ -532,6 +848,24 @@
 
           </div>
         </main>
+      </div>
+
+      <div id="mod-target-overlay" class="dialog-overlay hidden">
+        <div class="dialog-box mod-target-dialog">
+          <div class="dialog-header">
+            <span class="icon icon-download"></span>
+            <h3 class="dialog-title" data-i18n="Install to which version">Install to which version</h3>
+          </div>
+          <div class="dialog-body">
+            <div id="mod-target-list" class="mod-target-list"></div>
+            <p class="mod-target-hint" data-i18n="Files go into the mods folder this version actually uses.">Files go into the mods folder this version actually uses.</p>
+          </div>
+          <div class="dialog-footer">
+            <button class="dialog-btn" id="mod-target-cancel" type="button" data-i18n="Cancel">Cancel</button>
+            <button class="dialog-btn" id="mod-target-choose" type="button" data-i18n="Choose folder">Choose folder</button>
+            <button class="dialog-btn dialog-btn-primary" id="mod-target-install" type="button" data-i18n="Install">Install</button>
+          </div>
+        </div>
       </div>
 
       <div class="toast-container" id="toast-container"></div>
@@ -576,13 +910,13 @@
             </div>
           </div>
           <div class="launch-status">
-            <div id="launch-status-text" class="status-text">正在启动游戏...</div>
+            <div id="launch-status-text" class="status-text" data-i18n="Starting the game...">Starting the game...</div>
             <div class="progress-bar-container"><div id="launch-progress-fill" class="progress-bar-fill"></div></div>
             <div id="launch-version-info" class="launch-version-info"></div>
           </div>
-          <button id="launch-cancel-btn" class="launch-cancel-btn" type="button">取消启动</button>
+          <button id="launch-cancel-btn" class="launch-cancel-btn" type="button" data-i18n="Cancel Launch">Cancel Launch</button>
           <div id="launch-tip-card" class="launch-tip-card hidden">
-            <div class="launch-tip-header"><span class="launch-tip-icon icon icon-bulb"></span><span class="launch-tip-label">你知道吗？</span></div>
+            <div class="launch-tip-header"><span class="launch-tip-icon icon icon-bulb"></span><span class="launch-tip-label" data-i18n="Did you know?">Did you know?</span></div>
             <div id="launch-tip-text" class="launch-tip-text"></div>
           </div>
         </div>
@@ -590,14 +924,15 @@
 
       <div id="log-overlay" class="dialog-overlay hidden">
         <div class="dialog-box">
-          <div class="dialog-header"><span class="icon icon-file"></span><h3 class="dialog-title">游戏日志</h3></div>
+          <div class="dialog-header"><span class="icon icon-file"></span><h3 class="dialog-title" data-i18n="Game Log">Game Log</h3></div>
           <div class="dialog-body"><div class="log-view" id="log-view"></div></div>
-          <div class="dialog-footer"><button class="dialog-btn dialog-btn-primary" id="log-close" type="button">关闭</button></div>
+          <div class="dialog-footer"><button class="dialog-btn dialog-btn-primary" id="log-close" type="button" data-i18n="Close">Close</button></div>
         </div>
       </div>
     </div>
   </div>
-  <script src="versions.js?v=00g74i77"></script>
-  <script src="app.js?v=00g74i77"></script>
+  <script src="versions.js?v=y7p3q9d5"></script>
+  <script src="i18n.js?v=t4r9k3m8"></script>
+  <script src="app.js?v=z6w2n8p4"></script>
 </body>
 </html>

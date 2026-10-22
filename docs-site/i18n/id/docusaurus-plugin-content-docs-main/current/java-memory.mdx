@@ -1,0 +1,59 @@
+---
+title: Java dan memori
+description: Versi Java mana untuk versi game mana, bagaimana GPCL membagi memori, dan apa yang dilakukan kalau memori kurang.
+---
+
+GPCL memilih Java sesuai versi game dan membagi memori sesuai memori komputer. Umumnya tidak perlu diubah manual.
+
+## Kesesuaian versi Java
+
+| Versi Minecraft | Java yang dibutuhkan |
+| --- | --- |
+| 1.16.5 dan lebih lama | Java 8 |
+| 1.17 – 1.20.4 | Java 17 |
+| 1.20.5 dan setelahnya | Java 21 |
+
+Kalau saat peluncuran Java yang sesuai tidak ada, GPCL mengunduh dan memasangnya otomatis. Kalau unduhannya gagal, buka **Pengaturan → Unduhan → Unduhan Java**, ganti mirror, lalu coba lagi.
+
+Java terpasang di folder milik GPCL sendiri, tidak memengaruhi Java lain di sistem dan tidak mengubah `JAVA_HOME`.
+
+## Memori: otomatis
+
+Bawaannya "Otomatis". Logikanya dua langkah:
+
+1. Perkirakan **30%** dari memori fisik, bulatkan ke bawah ke GB, dan batasi di **2 – 8 GB**;
+2. Lalu lihat memori tersedia saat itu: sisakan minimal 1 GB untuk sistem, hitung minimal 2 GB, bulatkan hasilnya ke bawah ke 512 MB, dan ambil yang lebih kecil dari keduanya.
+
+Beberapa hasil nyata:
+
+| Memori fisik | Tersedia saat ini | Alokasi otomatis |
+| --- | --- | --- |
+| 16 GB | 8 GB | 4 GB |
+| 16 GB | 3.9 GB | 2.5 GB |
+| 8 GB | 4 GB | 2 GB |
+
+Halaman pengaturan menampilkan memori sistem terpakai / total dan nilai tersedia saat ini. Saat memori tersedia menipis, alokasi otomatis ikut turun dan muncul saran untuk menutup beberapa program.
+
+`-Xmx` adalah batas atas, bukan langsung memenuhi memori saat dijalankan. Karena itu mengalokasikan sesuai memori tersedia saat itu lebih stabil daripada memberi nilai yang sangat besar.
+
+## Memori: kustom
+
+Kalau modpack atau kumpulan mod besar tidak cukup, pindah ke "Kustom" dan geser slider. Sisakan ruang untuk sistem dan program lain, jangan berikan seluruh memori fisik ke game.
+
+`OutOfMemoryError` berarti memori tidak cukup:
+
+1. Naikkan alokasi satu tingkat lalu coba lagi;
+2. Kalau masih tidak cukup, kurangi mod;
+3. Tutup juga program yang banyak memakai memori, seperti browser.
+
+## Penyetelan G1GC
+
+Di **Pengaturan → Lanjutan → Manajemen memori** ada penyetelan G1GC, bawaannya mati. Sebaiknya dinyalakan hanya kalau FPS naik-turun dan GC terasa tersendat; kalau dinyalakan, sekumpulan parameter G1GC yang umum ditambahkan.
+
+Parameter JVM kustom juga ada di bagian yang sama. Parameter yang salah membuat game langsung tidak mau jalan; kalau tidak yakin, jangan diubah.
+
+## Optimalkan memori sebelum peluncuran
+
+Kalau aktif, GPCL melepaskan sebagian memori yang dipakai prosesnya sendiri sebelum menjalankan game. Ini hanya membersihkan proses launcher, tidak menyentuh Minecraft yang sedang berjalan dan tidak menghapus status login.
+
+Di hard disk (HDD) langkah ini bisa terasa tersendat sebentar; itu normal.

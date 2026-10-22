@@ -1,0 +1,67 @@
+---
+title: Forge / Fabric / OptiFine
+description: Modloaders in GPCL installeren, versies kiezen en de mods-map vinden.
+---
+
+Op de downloadpagina kies je de loader samen met de versie. GPCL installeert eerst de vanilla-versie en daarna de loader in een aparte versiemap, zonder de vanilla-versie te overschrijven.
+
+## Zo installeer je
+
+1. Open de downloadpagina en kies een Minecraft-versie.
+2. Kies bij de loaderopties Forge, Fabric of OptiFine en daarna de bijbehorende loaderversie.
+3. Klik op downloaden en wacht tot vanilla en loader beide geïnstalleerd zijn.
+4. Ga terug naar de startpagina en start de versie met de loadernaam erin.
+
+Downloads komen in een wachtrij, dus je kunt meerdere versies achter elkaar in de rij zetten; een lopende download kun je annuleren en daarna gaat de wachtrij verder.
+
+## Welke loader kiezen
+
+| Loader | Geschikt voor | Let op |
+| --- | --- | --- |
+| Forge | Grote modpacks, oudere mods | Start langzamer dan Fabric, maar heeft meer versies |
+| Fabric | Lichte mods, nieuwe versies | Kies de juiste Fabric Loader bij de gameversie |
+| OptiFine | Shaders, prestatieverbetering | Samen met andere loaders zijn soms compatibiliteitsmods nodig |
+
+### Forge
+
+Bij de installatie voert GPCL alleen `--installClient` uit en probeert het geen GUI- of serverparameters. De uitvoer van het installatieprogramma wordt omgezet in voortgang, bijvoorbeeld ‘Forge installeren: Downloading library…’.
+
+Vooraf wordt de hoofdversie van Java gecontroleerd; is die lager dan Forge vereist, dan meldt GPCL meteen een fout en probeert het niet met een oude Java. Het hele proces wacht maximaal 15 minuten; annuleren beëindigt het proces van het installatieprogramma.
+
+### Fabric
+
+GPCL haalt het versieprofiel en de libraries van Fabric rechtstreeks op, zonder het installatieprogramma.
+
+‘Fabric API ook installeren’ staat standaard aangevinkt: na Fabric zet GPCL de passende Fabric API-versie in de `mods`-map van die versie. Vink je het uit, dan wordt er niets geïnstalleerd; mislukt Fabric API, dan verschijnt alleen een melding en Fabric zelf blijft werken.
+
+### OptiFine
+
+OptiFine wordt stil geïnstalleerd, zonder het eigen grafische installatieprogramma te openen. Het resultaat komt in de huidige gamemap terecht, en ook aangepaste gamemappen worden correct afgehandeld.
+
+## Waar de mods staan
+
+Door de launcher gedownloade versies gebruiken standaard **versie-isolatie**: de gamemap wijst naar `versions/<version-name>`, en mods, werelden en spelinstellingen horen bij die versie.
+
+| Situatie van de versie | Mods-map |
+| --- | --- |
+| Zojuist gedownload, geïsoleerd | `versions/<version-name>/mods` |
+| Al aanwezig, zonder `mods` / `saves` in de versiemap | `mods` in de hoofdmap van het spel |
+
+Open op de startpagina ‘Versie-instellingen’; de mappenknoppen worden berekend op basis van de werkelijke isolatie:
+
+- ‘Versiemap’ is er altijd;
+- ‘Mods-map’ verschijnt bij gedetecteerde Forge / Fabric / NeoForge / Quilt;
+- ‘Shadermap’ verschijnt bij gedetecteerd OptiFine.
+
+Wil je mods direct in een willekeurige map installeren, kies dan ‘Map kiezen’ als installatiedoel bij het downloaden van mods; GPCL gebruikt de submap `mods` van die map.
+
+## Gecrasht na installatie
+
+1. Haal alle mods uit de `mods`-map en start één keer zonder mods.
+2. Start het spel wel, zet dan telkens de helft terug tot je de probleemmod vindt.
+3. Controleer of de mod zowel bij de Minecraft-versie als bij de loaderversie past — Forge-mods werken niet op Fabric en andersom.
+4. Een ontbrekende afhankelijkheid laat het spel ook crashen bij het starten; kijk naar de vereisten die in [Mods downloaden](./mods.mdx) staan.
+
+OptiFine samen met Forge / Fabric vereist meestal extra compatibiliteitsmods. Bestaan die niet voor jouw combinatie, forceer het dan niet.
+
+Meer stappen staan in [Spelcrashes](./mc-game.mdx).

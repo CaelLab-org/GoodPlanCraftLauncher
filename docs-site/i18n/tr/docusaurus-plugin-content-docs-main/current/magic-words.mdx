@@ -1,0 +1,52 @@
+---
+title: Pencere başlığı sihirli kelimeleri
+slug: /magic-words
+description: Minecraft oyun penceresi başlığını {mc_version}, {time} gibi yer tutucularla özelleştirin.
+---
+
+Oyun penceresi başlığına yer tutucular yazabilirsiniz; başlatmada GPCL bunları gerçek değerlerle değiştirir.
+
+Ayarlar **Ayarlar → Oyun → Oyun penceresi başlığı** bölümündedir. Başlığı boş bırakmak, oyun penceresi başlığının değiştirilmemesi anlamına gelir.
+
+## Örnek
+
+Başlık şöyle yazıldığında:
+
+```text
+{time} · {mc_version} · {gpcl_version}
+```
+
+Başlatmadan sonra şöyle görünebilir:
+
+```text
+20:09:58 · Minecraft 1.21.3 · 1.6.0
+```
+
+## Kullanılabilir yer tutucular
+
+| Yer tutucu | Dönüşeceği değer |
+| --- | --- |
+| `{mc_version}` | Sürüm görünen adı, örneğin Minecraft 1.21.3 veya yükleyici adıyla birlikte |
+| `{mc_id}` | Sürüm klasörü adı, örneğin 1.21.3-Fabric |
+| `{username}` | Bu başlatmada kullanılan oyuncu adı |
+| `{gpcl_version}` | GPCL sürüm numarası, örneğin 1.6.0 |
+| `{date}` | Başlatma tarihi, biçim 2026/10/20 |
+| `{time}` | Geçerli saat, biçim 20:09:58 |
+| `{datetime}` | Tarih ve saat, aralarında boşluk |
+| `{java}` | Geçerli Java çalışma zamanı klasörünün adı |
+| `{memory}` | Bu başlatmada ayrılan en yüksek bellek, örneğin 4096MB |
+
+Büyük/küçük harf eşleşmelidir. Yanlış yazılan yer tutucu olduğu gibi görünür; böylece hangisinin hatalı olduğunu görürsünüz.
+
+## Başlık sürekli korunur mu
+
+Altında «Adı korumaya çalış» anahtarı vardır, varsayılan olarak kapalıdır.
+
+- **Kapalı**: oyun penceresi göründükten sonra GPCL başlığı 20 saniye boyunca düzeltir. Sonrasında oyun veya bir mod başlığı değiştirirse artık müdahale etmez. `{time}` içeren başlık da o andaki değerde kalır.
+- **Açık**: başlık oyun boyunca korunur, dünyaya girerken « - Singleplayer» ile üzerine yazılmaz.
+
+Bazı mod paketleri veya modlar da pencere başlığını değiştirir; karşılıklı yazmanın olması normaldir.
+
+:::note
+Şu an sihirli kelimeler yalnızca oyun penceresi başlığında desteklenir, diğer ayarlarda geçerli değildir.
+:::

@@ -1,0 +1,206 @@
+{
+  "meta": {
+    "title": "GoodPlanCraftLauncher - Un lanceur Minecraft léger et efficace - CaelLabGameTS",
+    "description": "GoodPlanCraftLauncher est un lanceur Minecraft simple et efficace avec connexion Microsoft et hors ligne, gestion des versions et installation de mods Forge/NeoForge/Fabric/OptiFine, pour rejoindre le monde cubique en un clic. Open source et gratuit.",
+    "keywords": "GoodPlanCraftLauncher,lanceur Minecraft,lanceur MC,Minecraft Java Edition,CaelLab,open source",
+    "ogTitle": "GoodPlanCraftLauncher - Lanceur Minecraft léger et efficace",
+    "ogDescription": "Léger · efficace · open source. Connexion Microsoft et hors ligne, gestion des versions et installation Forge/NeoForge/Fabric/OptiFine en un clic."
+  },
+  "historyMeta": {
+    "title": "Journal des modifications - GoodPlanCraftLauncher - CaelLabGameTS",
+    "description": "Journaux des modifications et téléchargements de l'installeur pour chaque version de GoodPlanCraftLauncher : de la 1.0.0 à la dernière, chaque changement figure sur cette page.",
+    "ogTitle": "Journal des modifications - GoodPlanCraftLauncher",
+    "ogDescription": "Notes de version et téléchargements de l'installeur pour chaque version."
+  },
+  "nav": {
+    "source": "Code source",
+    "language": "Langue",
+    "download": "Télécharger v{version}",
+    "mobileGitHub": "Code source GitHub",
+    "openMenu": "Ouvrir le menu"
+  },
+  "hero": {
+    "tags": [
+      "Open source",
+      "Gratuit",
+      "Lanceur Minecraft"
+    ],
+    "subtitle": "Léger · Efficace · Open source",
+    "desc": "Un lanceur Minecraft conçu pour Windows : connexion Microsoft et hors ligne, gestion des versions et installation de Forge / Fabric / OptiFine en un clic. Quand le jeu plante, il vous explique pourquoi au lieu d'afficher une fenêtre vide.",
+    "download": "Télécharger",
+    "versionLabel": "Version",
+    "updatedLabel": "Mis à jour",
+    "platformLabel": "Plateforme",
+    "platform": "Windows 10+",
+    "iframeTitle": "Interface de GoodPlanCraftLauncher",
+    "windowNote": "La fenêtre ci-dessus est <b>cliquable</b> — c'est l'interface du lanceur elle-même, exécutée dans la page web.",
+    "iconAlt": "Icône de GoodPlanCraftLauncher"
+  },
+  "features": {
+    "tag": "Fonctionnalités",
+    "title": "Fonctionnalités principales",
+    "desc": "Des outils pratiques pour les joueurs, chacun pensé pour vous faire entrer en jeu plus vite",
+    "items": [
+      {
+        "title": "Deux modes de connexion",
+        "desc": "Connexion Microsoft et hors ligne, changeable à tout moment ; le mode hors ligne ne nécessite aucune vérification en ligne."
+      },
+      {
+        "title": "Téléchargement de mods intégré",
+        "desc": "Recherchez sur Modrinth et CurseForge, puis installez mods, shaders ou resource packs dans le dossier réellement utilisé par la version choisie."
+      },
+      {
+        "title": "Quatre chargeurs de mods",
+        "desc": "Forge, NeoForge, Fabric et OptiFine s'installent depuis les sources officielles, avec vérification de la version de Java."
+      },
+      {
+        "title": "25 langues d'interface",
+        "desc": "Suit la langue du système au premier lancement ; modifiable à tout moment dans les paramètres."
+      },
+      {
+        "title": "Gestion automatique des versions",
+        "desc": "Téléchargez, installez et changez de version Minecraft en un clic, bibliothèques et ressources gérées automatiquement."
+      },
+      {
+        "title": "Démarrage rapide",
+        "desc": "Un parcours de lancement épuré et de la mise en cache : vous cliquez et vous jouez, sans attendre."
+      },
+      {
+        "title": "Gestion du runtime Java",
+        "desc": "Détecte et installe automatiquement un runtime Java ; la source de téléchargement peut être Tsinghua, l'université de Nankin, Huawei Cloud ou la source officielle, avec bascule vers la suivante en cas d'échec."
+      },
+      {
+        "title": "Prise en charge des thèmes",
+        "desc": "Prise en charge complète des modes clair et sombre, avec une mise à l'échelle de l'interface réglable pour un rendu cohérent."
+      },
+      {
+        "title": "Mises à jour et maintenance automatiques",
+        "desc": "Vérification des mises à jour intégrée et nettoyage automatique des journaux configurable, pour garder le lanceur léger au fil du temps."
+      },
+      {
+        "title": "Avis de plantage et rapports d'erreur",
+        "desc": "Quand le jeu se ferme anormalement, il en explique la raison et peut exporter un rapport d'erreur en un clic (rapport de plantage + journaux + infos système)."
+      },
+      {
+        "title": "Panneau d'exécution",
+        "desc": "Après le lancement, un panneau à droite affiche la version, le PID, la durée et l'utilisation mémoire, et permet de fermer le jeu à tout moment."
+      },
+      {
+        "title": "Titre de fenêtre personnalisé",
+        "desc": "Rédigez votre propre titre de fenêtre de jeu, avec des mots magiques comme {mc_version} et {time}."
+      }
+    ]
+  },
+  "shots": {
+    "tag": "Captures d'écran",
+    "title": "Captures réelles",
+    "desc": "La fenêtre en haut est une reproduction web de l'interface du lanceur, cliquable sans rien installer. Les quatre ci-dessous montrent le lanceur réellement en cours d'exécution sous Windows, sans retouche.",
+    "items": [
+      {
+        "alt": "Écran de lancement de GoodPlanCraftLauncher",
+        "caption": "Écran de lancement · choisissez une version, saisissez un nom de joueur, lancez le jeu"
+      },
+      {
+        "alt": "Écran de téléchargement de GoodPlanCraftLauncher",
+        "caption": "Écran de téléchargement · versions du jeu, mods, shaders, resource packs et modpacks"
+      },
+      {
+        "alt": "Paramètres de jeu de GoodPlanCraftLauncher",
+        "caption": "Paramètres · mémoire du jeu, mode fenêtre, titre de fenêtre et mots magiques"
+      },
+      {
+        "alt": "Paramètres d'apparence de GoodPlanCraftLauncher",
+        "caption": "Paramètres · langue, style d'interface, thème et échelle"
+      }
+    ]
+  },
+  "download": {
+    "tag": "Téléchargement",
+    "title": "Télécharger",
+    "desc": "Choisissez votre plateforme et commencez l'aventure cubique",
+    "button": "Lancer le monde cubique !",
+    "updatedLabel": "Mis à jour",
+    "platformLabel": "Plateforme",
+    "licenseLabel": "Licence",
+    "platform": "Windows 10 64 bits",
+    "license": "Open source, gratuit",
+    "github": "Voir sur GitHub"
+  },
+  "requirements": {
+    "tag": "Système",
+    "title": "Configuration requise",
+    "desc": "Modeste, mais bon à savoir",
+    "items": [
+      {
+        "label": "Système d'exploitation",
+        "text": "Windows 10 64 bits (1709+) ; Windows 11 fonctionne aussi"
+      },
+      {
+        "label": "Runtime Java",
+        "text": "Installé automatiquement par le lanceur ; il est recommandé de nettoyer les installations Java redondantes ou conflictuelles du système"
+      },
+      {
+        "label": "Stockage",
+        "text": "Au moins 90 Mo d'espace libre pour le lanceur lui-même (fichiers de jeu non compris)"
+      },
+      {
+        "label": "Mémoire",
+        "text": "2 Go de mémoire disponible ou plus recommandés"
+      }
+    ]
+  },
+  "openSource": {
+    "tag": "Open source",
+    "title": "Open source et contributions",
+    "desc": "GPCL est un projet 100 % open source, dont le code est hébergé sur GitHub. Les PR sont bienvenues, tout comme les suggestions sur le <a href=\"https://forum.xmuer.online/\" target=\"_blank\">forum</a>, pour construire ensemble un meilleur lanceur Minecraft.",
+    "items": [
+      {
+        "title": "Licence",
+        "desc": "Publié sous la CaelLab BY-SA Code License, version 3 (ou toute version ultérieure). Vous pouvez l'utiliser, le modifier et le redistribuer librement ; les versions modifiées doivent conserver la même licence open source. Site du projet : <a href=\"https://gamets.caellab.com/gpcl/\">gamets.caellab.com/gpcl</a>.",
+        "action": "Lire la licence complète →"
+      },
+      {
+        "title": "Contribuer",
+        "desc": "Le dépôt principal du code est sur GitHub, où les issues et les PR sont gérées. Les rapports de bugs, les suggestions de fonctionnalités et les contributions de code sont les bienvenus.",
+        "action": "Aller sur GitHub →"
+      }
+    ],
+    "licenseSummary": "RÉSUMÉ DE LA LICENCE — CaelLab BY-SA Code License v3"
+  },
+  "history": {
+    "tag": "Historique",
+    "title": "Historique des versions",
+    "desc": "Versions passées et leurs journaux de modifications",
+    "older": "Afficher {n} versions plus anciennes",
+    "more": "Voir le journal complet (les {total} versions et leurs installeurs) →",
+    "page": {
+      "back": "← Retour à l'accueil",
+      "tag": "Journal des modifications",
+      "heading": "Journal des modifications",
+      "intro": "De la 1.0.0 à la dernière version, chaque version — ce qui a changé et si elle peut être téléchargée — figure sur cette page.",
+      "note": "Les installeurs n'ont pas été conservés pour la 1.3.2 et les versions antérieures ; le programme de mise à jour intégré des anciennes versions peut ne plus fonctionner, il est donc recommandé d'installer la dernière version pour un usage quotidien.",
+      "indexLabel": "Index des versions",
+      "latest": "Dernière",
+      "download": "Télécharger v{version}",
+      "unavailable": "Aucun installeur conservé pour cette version",
+      "fileNote": "{file} · {size} · Windows 64 bits"
+    }
+  },
+  "footer": {
+    "brand": "Une équipe indépendante de développement de jeux et d'outils au sein de CaelLab. Explorer les confins du futur, porter un renouveau sans limites.",
+    "projects": "Projets",
+    "community": "Communauté",
+    "openSource": "Open source",
+    "help": "Centre d'aide",
+    "changelog": "Journal des modifications",
+    "forum": "Forum",
+    "license": "Licence",
+    "copyright": "&copy; 2026 GameTS by <a href=\"https://www.caellab.com/\" target=\"_blank\" class=\"footer-inline-link\">CaelLab</a>. Tous droits réservés. Site du projet : <a href=\"https://gamets.caellab.com/gpcl/\" class=\"footer-inline-link\">gamets.caellab.com/gpcl</a>",
+    "disclaimer": "GoodPlanCraftLauncher est un outil open source tiers et n'a aucune affiliation officielle avec <a href=\"https://www.minecraft.net/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Mojang Studios</a>, <a href=\"https://www.microsoft.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Microsoft</a>, <a href=\"https://www.xbox.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Xbox</a>. Minecraft est une marque de Mojang Studios ; l'utilisation de ce lanceur nécessite une licence Minecraft valide.",
+    "licenseLine": "Licence open source : <a href=\"https://www.caellab.com/license/cbs-v3\" target=\"_blank\" class=\"footer-inline-link\">CaelLab BY-SA Code License v3</a> | Open source sur <a href=\"https://github.com/CaelLab-org/GoodPlanCraftLauncher\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">GitHub</a>"
+  },
+  "labels": {
+    "platform": "Windows 64 bits",
+    "github": "GitHub"
+  }
+}

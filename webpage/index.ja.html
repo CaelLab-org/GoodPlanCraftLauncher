@@ -1,0 +1,839 @@
+<!--
+ Copyright (c) 2026 Yunyun(云云) By 虚舟实验室(CaelLab) / CaelLabGameTS
+ Licensed under the CaelLab BY-SA Code License, Version 3
+ or any later version. https://www.caellab.com/license/cbs-v3.txt
+ Source: https://github.com/CaelLab-org/GoodPlanCraftLauncher
+ Project: https://gamets.caellab.com/gpcl/
+-->
+<!DOCTYPE html>
+<html lang="ja" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoodPlanCraftLauncher - 軽量で高効率な Minecraft ランチャー - CaelLabGameTS</title>
+    <meta name="description" content="GoodPlanCraftLauncher はシンプルで高効率な Minecraft ランチャーです。Microsoft ログインとオフラインログイン、バージョン管理、Forge / Fabric / OptiFine の導入に対応し、ワンクリックでブロックの世界へ。オープンソースで無料です。">
+    <meta name="keywords" content="GoodPlanCraftLauncher,Minecraft ランチャー,MC ランチャー,Minecraft Java Edition,CaelLab,オープンソース">
+    <meta name="author" content="CaelLabGameTS">
+    <meta name="theme-color" content="#f6fafd">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="GoodPlanCraftLauncher - 軽量で高効率な Minecraft ランチャー">
+    <meta property="og:description" content="軽量 · 高効率 · オープンソース。Microsoft ログインとオフラインログイン、バージョン管理、Forge / Fabric / OptiFine のワンクリック導入。">
+    <meta property="og:url" content="https://gamets.caellab.com/gpcl/">
+    <meta property="og:site_name" content="CaelLabGameTS">
+        <link rel="alternate" hreflang="en-US" href="https://gamets.caellab.com/gpcl/index.en-us">
+    <link rel="alternate" hreflang="zh-CN" href="https://gamets.caellab.com/gpcl/index.zh-cn">
+    <link rel="alternate" hreflang="zh-TW" href="https://gamets.caellab.com/gpcl/index.zh-tw">
+    <link rel="alternate" hreflang="ar" href="https://gamets.caellab.com/gpcl/index.ar">
+    <link rel="alternate" hreflang="bn" href="https://gamets.caellab.com/gpcl/index.bn">
+    <link rel="alternate" hreflang="de" href="https://gamets.caellab.com/gpcl/index.de">
+    <link rel="alternate" hreflang="el" href="https://gamets.caellab.com/gpcl/index.el">
+    <link rel="alternate" hreflang="es" href="https://gamets.caellab.com/gpcl/index.es">
+    <link rel="alternate" hreflang="fa" href="https://gamets.caellab.com/gpcl/index.fa">
+    <link rel="alternate" hreflang="fr" href="https://gamets.caellab.com/gpcl/index.fr">
+    <link rel="alternate" hreflang="he" href="https://gamets.caellab.com/gpcl/index.he">
+    <link rel="alternate" hreflang="hi" href="https://gamets.caellab.com/gpcl/index.hi">
+    <link rel="alternate" hreflang="id" href="https://gamets.caellab.com/gpcl/index.id">
+    <link rel="alternate" hreflang="it" href="https://gamets.caellab.com/gpcl/index.it">
+    <link rel="alternate" hreflang="ja" href="https://gamets.caellab.com/gpcl/index.ja">
+    <link rel="alternate" hreflang="ko" href="https://gamets.caellab.com/gpcl/index.ko">
+    <link rel="alternate" hreflang="ms" href="https://gamets.caellab.com/gpcl/index.ms">
+    <link rel="alternate" hreflang="nl" href="https://gamets.caellab.com/gpcl/index.nl">
+    <link rel="alternate" hreflang="pl" href="https://gamets.caellab.com/gpcl/index.pl">
+    <link rel="alternate" hreflang="pt" href="https://gamets.caellab.com/gpcl/index.pt">
+    <link rel="alternate" hreflang="ru" href="https://gamets.caellab.com/gpcl/index.ru">
+    <link rel="alternate" hreflang="th" href="https://gamets.caellab.com/gpcl/index.th">
+    <link rel="alternate" hreflang="tr" href="https://gamets.caellab.com/gpcl/index.tr">
+    <link rel="alternate" hreflang="uk" href="https://gamets.caellab.com/gpcl/index.uk">
+    <link rel="alternate" hreflang="vi" href="https://gamets.caellab.com/gpcl/index.vi">
+    <link rel="alternate" hreflang="x-default" href="https://gamets.caellab.com/gpcl/index.en-us">
+    <link rel="icon" type="image/png" href="./icon.png">
+    <link rel="stylesheet" href="./style.css?v=n5q8v2k7">
+    <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="https://gamets.caellab.com" class="logo">
+                <img src="/logo.png" alt="GameTS">
+            </a>
+            <ul class="nav-links">
+                <li>
+                    <div class="dropdown" id="sourceDropdown">
+                        <button class="dropdown-toggle" onclick="toggleDropdown('sourceDropdown')">
+                            <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                            ソース
+                            <span class="arrow">&#9662;</span>
+                        </button>
+                        <div class="dropdown-menu">
+                            <div class="menu-label">GitHub</div>
+                            <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener">
+                                <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                                GoodPlanCraftLauncher
+                            </a>
+                        </div>
+                    </div>
+                </li>
+                <li class="lang-switch"><select aria-label="言語" onchange="if(this.value)location.href=this.value"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja" selected>日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select></li>
+                <li><a href="#download" class="nav-cta">&#9662; v1.8.0 をダウンロード</a></li>
+            </ul>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="メニューを開く" aria-expanded="false">&#9776;</button>
+        </div>
+    </nav>
+    <div class="mobile-panel" id="mobilePanel">
+        <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener">GitHub ソース</a>
+        <select aria-label="言語" onchange="if(this.value)location.href=this.value" style="width:100%;margin-top:8px;padding:10px;background:var(--surface);border:1px solid var(--line);border-radius:8px;color:var(--text-2);font:inherit;font-size:0.95rem;"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja" selected>日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select>
+    </div>
+
+    <section class="hero">
+        <span class="float-pixel" style="top:18%;left:9%;"></span>
+        <span class="float-pixel" style="top:24%;right:11%;animation-delay:-3s;"></span>
+        <span class="float-pixel" style="bottom:30%;left:16%;animation-delay:-6s;width:8px;height:8px;"></span>
+        <span class="float-pixel" style="bottom:38%;right:18%;animation-delay:-1.5s;width:7px;height:7px;"></span>
+        <div class="hero-content">
+            <div class="hero-tags">
+                <span class="hero-tag"><span class="dot"></span>オープンソース</span>
+                <span class="hero-tag"><span class="dot"></span>無料</span>
+                <span class="hero-tag"><span class="dot"></span>Minecraft ランチャー</span>
+            </div>
+            <div class="hero-icon">
+                <img src="./icon.png" alt="GoodPlanCraftLauncher のアイコン">
+            </div>
+            <h1>GoodPlanCraftLauncher</h1>
+            <p class="hero-subtitle">軽量 · 高効率 · オープンソース</p>
+            <p class="hero-desc">Windows 向けに作られた Minecraft ランチャーです。Microsoft ログインとオフラインログイン、バージョン管理、Forge / Fabric / OptiFine のワンクリック導入に対応。ゲームがクラッシュしたときも、空のダイアログではなく原因を表示します。</p>
+            <div class="hero-actions">
+                <a href="#download" class="hero-btn primary">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                    今すぐダウンロード
+                </a>
+                <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener" class="hero-btn ghost">
+                    <svg width="17" height="17" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                    GitHub
+                </a>
+            </div>
+            <div class="hero-meta">
+                <span>バージョン <b>v1.8.0</b></span>
+                <span class="sep">/</span>
+                <span>更新日 <b>2026-10-22</b></span>
+                <span class="sep">/</span>
+                <span>対応環境 <b>Windows 10 以降</b></span>
+            </div>
+        </div>
+
+        <div class="window-stage" id="heroWindow">
+            <div class="window">
+                <iframe src="./demo/index.html?fit=1&v=q8m3x2vd&lang=ja" title="GoodPlanCraftLauncher の画面" loading="eager"></iframe>
+            </div>
+        </div>
+        <p class="window-note">上のウィンドウは<b>クリックできます</b> — ページの中で動いているランチャーの画面そのものです。</p>
+    </section>
+
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">機能</div>
+                <h2 class="section-title">主な機能</h2>
+                <p class="section-desc">プレイヤー向けの実用的な機能を、どれもゲームを早く始められるように設計しています</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7.5" cy="15.5" r="4.5"/><path d="m10.8 12.2 8.7-8.7"/><path d="m16 5 3 3"/><path d="m19 8 2-2-3-3-2 2"/></svg>
+                    </span>
+                    <h3>2 種類のログイン</h3>
+                    <p>Microsoft ログインとオフラインログインをいつでも切り替えられます。オフラインモードはオンライン認証が不要です。</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 13v8"/><path d="m8 17 4 4 4-4"/><path d="M20 16.7A5 5 0 0 0 18 7h-1.3A8 8 0 1 0 4 15.2"/></svg>
+                    </span>
+                    <h3>MOD のダウンロードを内蔵</h3>
+                    <p>Modrinth と CurseForge を検索し、MOD・シェーダー・リソースパックを選択中のバージョンが実際に使うフォルダーへインストールします。</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 9 4.9-9 4.9-9-4.9Z"/><path d="m3 12 9 4.9 9-4.9"/><path d="m3 17 9 4.9 9-4.9"/></svg>
+                    </span>
+                    <h3>4 つの MOD ローダー</h3>
+                    <p>Forge、NeoForge、Fabric、OptiFine を公式ソースからインストールし、Java のバージョンも事前に確認します。</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 0 20a15.3 15.3 0 0 1 0-20Z"/></svg>
+                    </span>
+                    <h3>25 言語のインターフェース</h3>
+                    <p>初回起動時はシステム言語に従い、その後は設定でいつでも切り替えられます。</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+                    </span>
+                    <h3>バージョンの自動管理</h3>
+                    <p>Minecraft の各バージョンをワンクリックでダウンロード・インストール・切り替え。ライブラリとアセットも自動で処理します。</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+                    </span>
+                    <h3>高速な起動</h3>
+                    <p>起動経路を簡素化し、キャッシュを活用。待たされず、クリックすればすぐ遊べます。</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><path d="M6 2v2"/><path d="M10 2v2"/><path d="M14 2v2"/></svg>
+                    </span>
+                    <h3>Java ランタイムの管理</h3>
+                    <p>Java ランタイムを自動で検出・導入します。ダウンロード元は清華大学、南京大学、Huawei Cloud、公式から選べ、失敗すると次のソースに切り替わります。</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                    </span>
+                    <h3>テーマ対応</h3>
+                    <p>ライトモードとダークモードに完全対応。画面スケーリングも調整でき、見た目が崩れません。</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+                    </span>
+                    <h3>自動更新とメンテナンス</h3>
+                    <p>更新チェックを内蔵し、ログの自動削除も設定可能。長く使っても軽いままです。</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.29 3.86-8.47 14.14A2 2 0 0 0 3.53 21h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+                    </span>
+                    <h3>クラッシュ通知とエラーレポート</h3>
+                    <p>ゲームが異常終了すると原因を説明し、エラーレポートをワンクリックで出力できます（クラッシュレポート + ログ + システム情報）。</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    </span>
+                    <h3>実行中パネル</h3>
+                    <p>起動後、右側のパネルにバージョン、PID、稼働時間、メモリ使用量を表示し、いつでもゲームを終了できます。</p>
+                </div>
+                <div class="feature-card reveal">
+                    <span class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>
+                    </span>
+                    <h3>ウィンドウタイトルのカスタム</h3>
+                    <p>ゲームウィンドウのタイトルを自由に設定できます。{mc_version} や {time} などのマジックワードに対応。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="screenshots">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">スクリーンショット</div>
+                <h2 class="section-title">実際の画面</h2>
+                <p class="section-desc">上のウィンドウはランチャー画面を Web で再現したもので、インストール不要で操作できます。下の 4 枚は Windows 上で実際に動かしたランチャーの画面で、無加工です。</p>
+            </div>
+            <div class="shot-gallery">
+                <figure class="shot reveal">
+                    <img src="./screenshots/launch.png?v=q9v3m7k2" alt="GoodPlanCraftLauncher の起動画面" loading="lazy">
+                    <figcaption>起動画面 · バージョンを選び、プレイヤー名を入力して開始</figcaption>
+                </figure>
+                <figure class="shot reveal">
+                    <img src="./screenshots/download.png?v=q9v3m7k2" alt="GoodPlanCraftLauncher のダウンロード画面" loading="lazy">
+                    <figcaption>ダウンロード画面 · ゲームバージョン、MOD、シェーダー、リソースパック、MOD パック</figcaption>
+                </figure>
+                <figure class="shot reveal">
+                    <img src="./screenshots/settings.png?v=q9v3m7k2" alt="GoodPlanCraftLauncher のゲーム設定" loading="lazy">
+                    <figcaption>設定 · ゲーム用メモリ、ウィンドウモード、ウィンドウタイトル、マジックワード</figcaption>
+                </figure>
+                <figure class="shot reveal">
+                    <img src="./screenshots/appearance.png?v=q9v3m7k2" alt="GoodPlanCraftLauncher の外観設定" loading="lazy">
+                    <figcaption>設定 · 言語、インターフェーススタイル、テーマ、拡大率</figcaption>
+                </figure>
+            </div>
+        </div>
+    </section>
+
+    <section class="download" id="download">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">ダウンロード</div>
+                <h2 class="section-title">今すぐダウンロード</h2>
+                <p class="section-desc">環境を選んで、ブロックの冒険を始めましょう</p>
+            </div>
+            <div class="download-card reveal">
+                <span class="dl-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
+                </span>
+                <div class="download-file">GPCL-1.8.0-Setup.exe</div>
+                <a href="https://dl.caellab.com/file/games/gpcl/GPCL-1.8.0-Setup.exe" class="download-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                    ブロックの世界へ！
+                </a>
+                <div class="update-info">
+                    <span>更新日 <b>2026-10-22</b></span>
+                    <span>対応環境 <b>Windows 10 64 ビット</b></span>
+                    <span>ライセンス <b>オープンソース・無料</b></span>
+                </div>
+                <div class="download-extra">
+                    <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener" class="hero-btn ghost">
+                        <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                        GitHub で見る
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="requirements" id="requirements">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">動作環境</div>
+                <h2 class="section-title">システム要件</h2>
+                <p class="section-desc">高くはありませんが、確認しておくと安心です</p>
+            </div>
+            <div class="req-grid">
+                <div class="req-card reveal">
+                    <div class="req-label">オペレーティングシステム</div>
+                    <p>Windows 10 64 ビット（1709 以降）。Windows 11 でも動作します</p>
+                </div>
+                <div class="req-card reveal">
+                    <div class="req-label">Java ランタイム</div>
+                    <p>ランチャーが自動で導入します。システム上に重複した Java や競合する Java がある場合は整理をおすすめします</p>
+                </div>
+                <div class="req-card reveal">
+                    <div class="req-label">ストレージ</div>
+                    <p>ランチャー本体に 90 MB 以上の空き容量（ゲームデータは含みません）</p>
+                </div>
+                <div class="req-card reveal">
+                    <div class="req-label">メモリ</div>
+                    <p>2 GB 以上の空きメモリを推奨</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="opensource" id="opensource">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">オープンソース</div>
+                <h2 class="section-title">オープンソースとコントリビュート</h2>
+                <p class="section-desc">GPCL は 100% オープンソースのプロジェクトで、ソースは GitHub で公開しています。PR も、<a href="https://forum.xmuer.online/" target="_blank">フォーラム</a>での提案も歓迎します。一緒に、より良い Minecraft ランチャーを作りましょう。</p>
+            </div>
+            <div class="opensource-grid">
+                <div class="opensource-card reveal">
+                    <span class="opensource-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="m10 13-2 2 2 2"/><path d="m14 13 2 2-2 2"/></svg>
+                    </span>
+                    <h3>ライセンス</h3>
+                    <p>CaelLab BY-SA Code License Version 3（またはそれ以降のバージョン）で公開しています。自由に使用・改変・再配布できますが、改変版も同じオープンソースライセンスを維持する必要があります。プロジェクトページ: <a href="https://gamets.caellab.com/gpcl/">gamets.caellab.com/gpcl</a>。</p>
+                    <a href="https://www.caellab.com/license/cbs-v3" target="_blank">ライセンス全文を読む →</a>
+                </div>
+                <div class="opensource-card reveal">
+                    <span class="opensource-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3"/><path d="M12 19v3"/><path d="M4.9 4.9l2.1 2.1"/><path d="M17 17l2.1 2.1"/><path d="M2 12h3"/><path d="M19 12h3"/><path d="M4.9 19.1 7 17"/><path d="M17 7l2.1-2.1"/></svg>
+                    </span>
+                    <h3>コントリビュート</h3>
+                    <p>メインのソースリポジトリは GitHub にあり、Issue と PR はそこで管理しています。バグ報告、機能提案、コードの貢献を歓迎します。</p>
+                    <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener">GitHub を見る →</a>
+                </div>
+            </div>
+            <details class="license-box reveal">
+                <summary><span class="dot"></span><span class="dot"></span><span class="dot"></span>&nbsp;ライセンス概要 — CaelLab BY-SA Code License v3</summary>
+                <pre>
+Copyright (c) 2026 Yunyun(云云) By 虚舟实验室(CaelLab) / CaelLabGameTS
+
+Licensed under the CaelLab BY-SA Code License, Version 3
+or any later version. https://www.caellab.com/license/cbs-v3.txt
+
+You are free to:
+  Share            — copy and redistribute the source code and the compiled
+                     output in any medium or format.
+  Adapt            — remix, transform, and build upon the work.
+  Use commercially — for personal, commercial, or non-commercial purposes.
+  Run it privately — including on your own servers, without publishing
+                     your changes.
+
+Under the following terms:
+  Attribution (BY) — keep the copyright notice, credit the author, link to
+                     this license, and state whether you made changes.
+  ShareAlike (SA)  — derivatives must be distributed under this license or a
+                     later version of it, with no additional restrictions.
+  Source code      — if you distribute the work in built form, the complete
+                     corresponding source must be made available.
+  No trademark     — you may not use the "CaelLab" name to endorse your
+                     version.
+
+THE WORK IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
+            </details>
+        </div>
+    </section>
+
+    <section class="history" id="history">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">履歴</div>
+                <h2 class="section-title">バージョン履歴</h2>
+                <p class="section-desc">過去のバージョンと変更内容</p>
+            </div>
+            <div class="timeline">
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.8.0</span>
+                        <span class="version-title">起動ツールから公式サイトまで、25 言語に</span>
+                        <span class="latest-chip">最新</span>
+                        <span class="version-date">2026-10-22</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>起動ツールが 25 言語に対応しました。設定 → 外観 → 表示言語から切り替えられ、一覧は検索できます</li>
+                        <li>初回起動時はシステムの言語に合わせ、ウェルカムガイドで先に選ぶこともできます</li>
+                        <li>初回向けのウェルカムガイドを追加しました。言語・画面スタイル・簡単な紹介の 4 ステップで、スキップもできます</li>
+                        <li>画面スタイルが 3 種類になりました：Minecraft、アドバンス（従来の見た目）、ミニマル</li>
+                        <li>インストーラーも同じ 25 言語に翻訳され、システム言語を自動で選びます</li>
+                        <li>ヘルプセンターが 25 言語に対応し、起動ツール内のヘルプは表示言語に合ったページを開きます</li>
+                        <li>公式サイトと、その中の操作デモも 25 言語に対応しました</li>
+                        <li>アラビア語・ペルシア語・ヘブライ語では、画面全体が右から左のレイアウトになります</li>
+                        <li>起動時のちらつきを解消しました。スプラッシュ画面とメイン画面を 1 ページにまとめ、ウィンドウの背景色もテーマに合わせます。言語の切り替え時も一瞬暗くなりません</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.7.2</span>
+                        <span class="version-title">カスタムアバターと、検索できるバージョン一覧</span>
+                        <span class="version-date">2026-10-22</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>起動画面のアバターを変更できるようになりました。アバターをクリックするか、設定 → 外観 → アバターで画像を選択します。PNG / JPG / GIF / WebP に対応</li>
+                        <li>1 MB を超える画像は圧縮するか確認します。上限は 4 MB で、既定のアバターにワンクリックで戻せます</li>
+                        <li>外観設定に「アバターサイズ」スライダー（32〜160 ピクセル）を追加</li>
+                        <li>バージョン一覧に検索ボックスを追加。各バージョンにゲームバージョンと MOD ローダーを表示し、選択中のものを強調表示します</li>
+                        <li>バージョン一覧の更新でリストを作り直さなくなったため、スクロール位置が保たれます。「ローカルバージョンをインポート」は一覧の右上に移動しました</li>
+                        <li>1.20 以降では「サーバーに参加」を選ぶと直接接続します。アドレスが未入力のときは、黙ってシングルプレイを始めずにメッセージを表示します</li>
+                        <li>バージョン設定の自動保存で、毎回「保存しました」が表示されなくなりました</li>
+                        <li>インストーラーが約 103 MB から 93 MB に縮小。中国語と英語の言語パックのみを同梱し、他の言語は英語で表示します</li>
+                        <li>1.7.1 は未公開の社内テスト版だったため取り下げました。1.7.2 にその変更をすべて含みます</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.7.0</span>
+                        <span class="version-title">シェーダー、リソースパック、MOD パックをワンクリックで導入</span>
+                        <span class="version-date">2026-10-22</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>ダウンロードページに「シェーダー」「リソースパック」タブを追加。Modrinth / CurseForge で検索し、選択したバージョンの対応フォルダーへ直接インストールできます</li>
+                        <li>新しい「MOD パック」タブは Modrinth（.mrpack）と CurseForge の MOD パックに対応し、対応するゲームバージョン、MOD ローダー、すべての MOD を自動で導入します</li>
+                        <li>MOD パックはそれぞれ独立したバージョンになり、MOD・設定・セーブデータが専用フォルダーに入るため、MOD パック同士が混ざりません</li>
+                        <li>ローカルの MOD パックもインポートできます。バージョン管理で zip / .mrpack を選び、名前を入力すると導入が始まります</li>
+                        <li>MOD パックのファイルはマニフェストとサイズ・SHA1 を照合するため、途中までしか落ちていない jar は取り直され、起動しないゲームにはなりません</li>
+                        <li>NeoForge を Forge / Fabric と同じようにバージョン指定で導入できるようになりました（1.20.1 以降）</li>
+                        <li>「その他」メニューは既定で折りたたまれます。必要なときは設定 → 外観で有効化でき、再起動後に復活してしまう不具合も修正しました</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.6.1</span>
+                        <span class="version-title">クラッシュの原因を、はっきりと</span>
+                        <span class="version-date">2026-10-21</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>クラッシュを自動診断します（メモリ不足、Java のバージョン違い、前提 MOD の不足、GPU ドライバー、OptiFine / Forge の非互換など）。ダイアログには結論を 1〜2 件表示します</li>
+                        <li>「詳細を表示」で手がかりと根拠の行をすべて確認できます。「ログを表示」はクラッシュしたバージョンのゲームディレクトリを開きます</li>
+                        <li>エラーレポートは完全な zip として出力します: 診断結果、エラー概要、システムと GPU、Java バージョン、バージョンと MOD ローダー、MOD / リソースパック / シェーダーの一覧、起動引数、ゲーム出力、クラッシュレポート</li>
+                        <li>レポートでは --accessToken とシステムのユーザー名を伏せ字にするため、そのまま他の人に送って調査を頼めます</li>
+                        <li>複数のゲームを同時に起動していても、各セッションが自分の出力を保持するため、クラッシュの情報が別のバージョンに混ざりません</li>
+                        <li>MOD 詳細ページを作り直しました: 中国語・英語名、ダウンロード数、カテゴリタグ、MC バージョン別のファイル一覧、前提 MOD カード、Modrinth / CurseForge / MCMod へのリンク、名前のワンクリックコピー</li>
+                        <li>1.20.1 向けの前提 MOD が 1.20 として解決され、Fabric API / GeckoLib のバージョンが重複して Fabric が Incompatible mods found を出し起動しない不具合を修正</li>
+                        <li>MOD を導入すると同じプロジェクトの古い jar を削除するため、複数バージョンが溜まらなくなりました</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.6.0</span>
+                        <span class="version-title">ファイルを探し回らずに MOD を導入</span>
+                        <span class="version-date">2026-10-20</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>ダウンロードページに「MOD」タブを追加。Modrinth / CurseForge で検索し、現在のゲームバージョン向けのファイルを選んで、導入先のバージョンを指定できます</li>
+                        <li>Modrinth は必須の前提 MOD を自動で導入します。中国語検索にも対応（クエリを MCMod 経由で英語名に変換してから検索）</li>
+                        <li>CurseForge の API キーがなくても使えます。プロジェクトのリンクか cf:slug を貼れば、ミラー経由で単一ファイルを導入できます</li>
+                        <li>ダウンロードがタスクキューになりました。複数バージョンをクリックすると順番に並び、待機中のタスクは削除でき、実行中のものをキャンセルすればキューは続行します</li>
+                        <li>自動更新がサイレントインストールになりました。バックグラウンドでダウンロードし、ランチャー終了時に導入します。右上の丸いバッジに進捗を表示します</li>
+                        <li>新機能: ゲーム言語の自動設定（既定は簡体字中国語）、ゲームディレクトリのカスタマイズ、ファイルミラーのカスタマイズ</li>
+                        <li>新機能: バージョンフォルダーや zip / jar からのローカルバージョン導入</li>
+                        <li>Fabric が実際に導入できるようになり、既定で Fabric API も入ります。バージョン分離を有効にすると MOD とセーブデータがバージョンに追従します</li>
+                        <li>Forge の導入は --installClient のみを実行し、進捗を表示します。Java バージョンが古い場合ははっきり伝えます</li>
+                        <li>OptiFine はグラフィカルなインストーラーを開かず、サイレントに導入します</li>
+                        <li>0 バイトのダウンロードを成功とみなす問題、相対アドレスのリダイレクト、2 回目のダウンロードで進捗が出ない問題を修正</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.5.2</span>
+                        <span class="version-title">設定を作り直しました</span>
+                        <span class="version-date">2026-10-18</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>設定ページを作り直し、メモリ、ウィンドウ、起動時の動作、ダウンロード元、Java 引数を再整理。スライダー、スイッチ、セグメントボタンで調整できます</li>
+                        <li>メモリの既定値が「自動」になりました。物理メモリの 30%、最低 1 GB、最大 8 GB で、システム用に 2 GB を残します。手動設定も可能</li>
+                        <li>メモリ管理が実際に解放するようになりました。ランチャー自身のプロセスだけを対象とし、実行中のゲームには触れません。起動前の自動最適化も設定できます</li>
+                        <li>ダウンロード元は 4 つのモード（自動 / ミラー優先 / 公式優先 / 公式のみ）があり、ファイルとバージョン一覧で別々に選べます。0〜20 MB/s の全体速度制限も追加</li>
+                        <li>新機能: G1GC のチューニング、JVM 引数のカスタマイズ、プロセスの優先度、ウィンドウサイズのプリセット、ランチャーの表示状態</li>
+                        <li>「このアプリについて」ページはプロジェクト情報、実行環境、ライセンス全文を扱うようになり、Web サイトとヘルプページも書き直しました</li>
+                        <li>修正: スレッド数の設定が無視される問題、404 ページがファイルとして保存される問題、ダウンロード失敗後に中途半端なファイルが残る問題</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.5.1</span>
+                        <span class="version-title">クラッシュした？見てみよう</span>
+                        <span class="version-date">2026-10-16</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>クラッシュ通知を追加: ゲームが異常終了すると原因を説明し、ワンクリックでエラーレポート（クラッシュレポート + ログ + システム情報、トークンは伏せ字）を出力できます</li>
+                        <li>実行中パネルを追加: 起動後に右側へバージョン、PID、稼働時間、メモリを表示し、いつでもゲームを終了できます</li>
+                        <li>ユーザー名欄は直近 5 件の名前をドロップダウンに保持し、それぞれ削除できます</li>
+                        <li>ゲームが独立したプロセスで動くようになり、ランチャーを閉じても終了しなくなりました。ゲームウィンドウを閉じた場合も終了として扱います</li>
+                        <li>マジックワード（{mc_version}、{time} など）を使ったゲームウィンドウタイトルのカスタマイズを追加</li>
+                        <li>起動時の豆知識がランダムに表示されるようになり（設定で変更可能）、項目も大幅に増やしました</li>
+                        <li>起動アニメーションとページ切り替えが滑らかになりました</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.5.0</span>
+                        <span class="version-title">Java を修正、そして新しい見た目</span>
+                        <span class="version-date">2026-10-16</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Java ランタイムのダウンロードを修正: ミラーのファイル名変更で導入が失敗していたため、動的に取得するようにしました</li>
+                        <li>インストーラーを Inno Setup に移行し、旧バージョンから上書きアップグレードできるようになりました</li>
+                        <li>全体の配色を統一（メインはスカイブルー、ダークモードはディープブルー）。新しい起動アニメーションと Web サイトも用意しました</li>
+                        <li>起動画面がライトテーマを無視する問題と、いくつかのボタンのスタイルが適用されない問題を修正</li>
+                    </ul>
+                </div>
+                <details class="older-versions">
+                    <summary>旧バージョン 12 件を表示</summary>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.4.4</span>
+                        <span class="version-title">シェーダー対応！</span>
+                        <span class="version-date">2026-07-11</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>OptiFine（シェーダー）対応を追加</li>
+                        <li>継承、ライブラリ、tweakClass を自動で処理するワンクリック導入</li>
+                        <li>inheritsFrom によるバージョン継承の仕組みに対応</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.4.3</span>
+                        <span class="version-title">修正</span>
+                        <span class="version-date">2026-06-02</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>二重スクロールバーの問題を修正</li>
+                        <li>「このアプリについて」ページを拡充し、ツールボックスなどを追加</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.4.2</span>
+                        <span class="version-title">直った？たぶんね</span>
+                        <span class="version-date">2026-06-02</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>前のバージョンではスプラッシュ画面にいくつか問題がありました</li>
+                        <li>設定を整理しました</li>
+                        <li>起動をキャンセルすると、本当にプロセスが終了するようになりました！</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.4.1</span>
+                        <span class="version-title">ようこそ！</span>
+                        <span class="version-date">2026-06-02</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>初回起動時にウェルカムアニメーションを追加</li>
+                        <li>過剰なデバッグ防止を削除し、開発者モードを許可</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.4.0</span>
+                        <span class="version-title">離陸！</span>
+                        <span class="version-date">2026-06-01</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Forge を本格的にサポートしてみました</li>
+                        <li>即起動！これはインストーラービルドで、マシンコードにコンパイルされています！</li>
+                        <li>フォーラムのおかげで不具合を修正</li>
+                        <li>流れを大幅に簡素化。更新の詳細で完全なログを表示できるようになりました</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.3.3</span>
+                        <span class="version-date">2026-05-28</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Forge / Fabric / OptiFine が本当に動くようになりました！</li>
+                        <li>最初のオープンソースリリースです！</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.3.2</span>
+                        <span class="version-date">2026-05-23</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>バージョンごとの詳細設定を追加し、既定で管理されるように。ゲームバージョンの削除も可能</li>
+                        <li>ライトモード対応を拡充。「既定値に戻す」は新しい互換性設定セクションへ移動。API を更新</li>
+                        <li>ドロップダウンやその他の細部を調整</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.3.0–1.3.1</span>
+                        <span class="version-date">2026-05-22</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>ダウンロードグラフが表示されない問題を修正（インストール版で呼ばれていませんでした）</li>
+                        <li>自動更新チェックの設定を「このアプリについて」へ移動</li>
+                        <li>ダウンロードページで Alpha、Beta、スナップショット、リリースをすべて表示し、リリース版が一部しか出ない問題を修正</li>
+                        <li>起動画面を作り直し、最終起動時間順のバージョン管理を追加</li>
+                        <li>起動時の「知ってた？」豆知識とログの自動削除を追加（間隔は設定で変更可能）</li>
+                        <li>外観の画面スケーリングが実際に効くようになりました。1.3.1 で表示されない問題も修正</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.2.1</span>
+                        <span class="version-date">2026-05-22</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>動的ライブラリをローカルに同梱</li>
+                        <li>二重起動 / 複数インスタンスの防止を追加</li>
+                        <li>不要な設定を削除し、ダウンロードページの内容を折りたためるように</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.2.0</span>
+                        <span class="version-date">2026-05-21</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>スクロールバーとライトモードを追加</li>
+                        <li>ランチャーの起動アニメーションを追加し、起動時の白画面を軽減</li>
+                        <li>左サイドバーを上部へ移動して UI を拡大。ダウンロードページを整え、Java ランタイムを追加</li>
+                        <li>多数の設定を追加し、ゲーム、ダウンロード、外観、詳細、このアプリについて に分類</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.1.0</span>
+                        <span class="version-date">2026-05-21</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Java の自動セットアップを追加。ダウンロード元を設定可能（清華大学、ありがとう！）</li>
+                        <li>パフォーマンスを改善し、起動アニメーションを追加。ログによるトラブルシューティングも改善</li>
+                        <li>ダウンロード一覧の多くの不具合（キャンセルできない、キャンセル後に残るなど）を修正</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.0.0</span>
+                        <span class="version-date">2026-05-20</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>最初の安定版</li>
+                    </ul>
+                </div>
+                </details>
+                <div class="history-more">
+                    <a href="./history/index.ja">完全な更新履歴を見る（全 20 バージョンとインストーラー）→</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <a href="https://gamets.caellab.com" class="logo">
+                    <img src="/logo.png" alt="GameTS">
+                </a>
+                <p>CaelLab のゲーム開発・ツールチーム。未来の果てを探り、限りない新生を運ぶ。</p>
+            </div>
+            <div class="footer-links">
+                <h4>プロジェクト</h4>
+                <ul>
+                    <li><a href="./index.ja">GoodPlanCraftLauncher</a></li>
+                    <li><a href="/gpcl/docs/ja/">ヘルプセンター</a></li>
+                    <li><a href="./history/index.ja">更新履歴</a></li>
+                    <li><a href="/areyouok/">Are You OK?</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>コミュニティ</h4>
+                <ul>
+                    <li><a href="https://forum.xmuer.online" target="_blank" rel="noopener">フォーラム</a></li>
+                    <li><a href="mailto:gamets@caellab.com">gamets@caellab.com</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>オープンソース</h4>
+                <ul>
+                    <li><a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener">GitHub</a></li>
+                    <li><a href="https://www.caellab.com/license/cbs-v3" target="_blank">ライセンス</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 GameTS by <a href="https://www.caellab.com/" target="_blank" class="footer-inline-link">CaelLab</a>. All rights reserved. プロジェクトページ: <a href="https://gamets.caellab.com/gpcl/" class="footer-inline-link">gamets.caellab.com/gpcl</a></p>
+            <p>GoodPlanCraftLauncher はサードパーティのオープンソースツールであり、<a href="https://www.minecraft.net/" target="_blank" rel="noopener" class="footer-inline-link">Mojang Studios</a>、<a href="https://www.microsoft.com/" target="_blank" rel="noopener" class="footer-inline-link">Microsoft</a>、<a href="https://www.xbox.com/" target="_blank" rel="noopener" class="footer-inline-link">Xbox</a> とは公式な関係はありません。Minecraft は Mojang Studios の商標です。本ランチャーの利用には正規の Minecraft ライセンスが必要です。</p>
+            <p>オープンソースライセンス: <a href="https://www.caellab.com/license/cbs-v3" target="_blank" class="footer-inline-link">CaelLab BY-SA Code License v3</a> | <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener" class="footer-inline-link">GitHub</a> でオープンソース公開中</p>
+        </div>
+    </footer>
+
+    <script>
+        var navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', function() {
+            navbar.classList.toggle('scrolled', window.scrollY > 40);
+        }, { passive: true });
+
+        var mobileBtn = document.getElementById('mobileMenuBtn');
+        var mobilePanel = document.getElementById('mobilePanel');
+        mobileBtn.addEventListener('click', function() {
+            var open = mobilePanel.classList.toggle('open');
+            mobileBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+        mobilePanel.querySelectorAll('a').forEach(function(a) {
+            a.addEventListener('click', function() {
+                mobilePanel.classList.remove('open');
+                mobileBtn.setAttribute('aria-expanded', 'false');
+            });
+        });
+
+        var revealObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(function(el) {
+            revealObserver.observe(el);
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+            anchor.addEventListener('click', function(e) {
+                var target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        function toggleDropdown(id) {
+            var dropdown = document.getElementById(id);
+            var isActive = dropdown.classList.contains('active');
+            document.querySelectorAll('.dropdown').forEach(function(d) {
+                d.classList.remove('active');
+            });
+            if (!isActive) {
+                dropdown.classList.add('active');
+            }
+        }
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown').forEach(function(d) {
+                    d.classList.remove('active');
+                });
+            }
+        });
+
+        /* 页面顶上那个窗口就是体验区：进屏幕后自动播一遍启动流程 */
+        var heroFrame = document.querySelector('#heroWindow iframe');
+        var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        function tell(frame, message) {
+            if (!frame || !frame.contentWindow) return;
+            frame.contentWindow.postMessage(message, '*');
+        }
+
+        /* iframe 是异步加载的，等它报 ready 之后再发指令，否则消息会丢 */
+        var heroFrameReady = false;
+        var wantHeroAutoplay = false;
+        window.addEventListener('message', function(e) {
+            var data = e.data || {};
+            if (data.gpcl === 'ready') {
+                heroFrameReady = true;
+                if (wantHeroAutoplay) {
+                    wantHeroAutoplay = false;
+                    setTimeout(function() { tell(heroFrame, { gpcl: 'autoplay' }); }, 400);
+                }
+            }
+        });
+
+        if (heroFrame && !reduced) {
+            var heroSeen = false;
+            new IntersectionObserver(function(entries, obs) {
+                entries.forEach(function(entry) {
+                    if (!entry.isIntersecting || heroSeen) return;
+                    heroSeen = true;
+                    if (heroFrameReady) {
+                        setTimeout(function() { tell(heroFrame, { gpcl: 'autoplay' }); }, 600);
+                    } else {
+                        wantHeroAutoplay = true;
+                    }
+                    obs.disconnect();
+                });
+            }, { threshold: 0.35 }).observe(document.getElementById('heroWindow'));
+        }
+
+        /* 鼠标挪过窗口时给一点极轻的倾斜，键盘和触摸设备不动 */
+        if (window.matchMedia('(hover: hover) and (pointer: fine)').matches && !reduced) {
+            document.querySelectorAll('.window').forEach(function(win) {
+                var stage = win.closest('.window-stage');
+                stage.addEventListener('mousemove', function(e) {
+                    var r = stage.getBoundingClientRect();
+                    var x = (e.clientX - r.left) / r.width - 0.5;
+                    var y = (e.clientY - r.top) / r.height - 0.5;
+                    win.style.setProperty('--tilt-y', (x * 2.4).toFixed(2) + 'deg');
+                    win.style.setProperty('--tilt-x', (-y * 1.8).toFixed(2) + 'deg');
+                });
+                stage.addEventListener('mouseleave', function() {
+                    win.style.setProperty('--tilt-y', '0deg');
+                    win.style.setProperty('--tilt-x', '0deg');
+                });
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+---
+title: Mods downloaden
+description: Mods van Modrinth en CurseForge zoeken en installeren in GPCL, verplichte afhankelijkheden en zoeken in het Chinees.
+---
+
+Met de sectie ‘Mods’ op de downloadpagina zoek je mods, kies je bestanden en installeer je ze in een gekozen versie, zonder ze op de website te downloaden en in de map te slepen.
+
+## Zoeken
+
+Er zijn twee bronnen: **Modrinth** en **CurseForge**. Standaard worden beide doorzocht, en in de resultatenlijst staat de bron vermeld.
+
+Je kunt ook in het Chinees typen. Bevat de zoekopdracht Chinese tekens, dan zoekt GPCL eerst in de openbare resultaten van MCMOD, haalt de Engelse naam uit de haakjes van de titel (bijvoorbeeld ‘雾中人 (The Man From The Fog)’ → `The Man From The Fog`) en zoekt die naam op Modrinth. Is er geen Engelse naam, dan wordt de oorspronkelijke zoekopdracht gebruikt.
+
+## Filters
+
+Standaard worden **geen** versie- of loaderfilters toegepast: net als in PCL begint het zoeken met alles, zodat nieuwe mods niet door filters verborgen blijven. Wil je beperken, kies dan handmatig:
+
+- Minecraft-versie;
+- loader (Forge / Fabric / NeoForge / Quilt);
+- sorteervolgorde.
+
+De bestandenlijst zet bestanden voor de in de launcher gekozen Minecraft-versie bovenaan, zodat je minder snel de verkeerde versie installeert.
+
+## Installeren
+
+Het doel wordt pas gevraagd als je op ‘Installeren’ bij een bestandsregel klikt:
+
+- een lijst met geïnstalleerde modversies, waaruit je er één kiest en direct installeert;
+- ‘Map kiezen’, om in de `mods`-map van een willekeurige map te installeren.
+
+Het bestand komt in de `mods`-map die de doelversie echt gebruikt: bij geïsoleerde versies `versions/<version-name>/mods`, anders de `mods` in de hoofdmap van het spel.
+
+Bij de eerste mod-installatie in een niet-geïsoleerde versie wordt versie-isolatie aangezet; het doelvenster vermeldt dat en er komt geen extra bevestiging.
+
+### Verplichte afhankelijkheden
+
+Bij een Modrinth-bestandsregel staat ‘N afhankelijkheden’. Bij de installatie worden verplichte afhankelijkheden recursief meegenomen, en de melding bij succes zegt hoeveel dat er waren.
+
+De linkmodus van CurseForge installeert alleen het gekozen bestand en **installeert geen afhankelijkheden**; de interface vermeldt dat ook.
+
+## CurseForge zonder API Key
+
+Normaal zoeken op CurseForge vereist een API Key (**Instellingen → Downloaden → CurseForge API Key**, optioneel) of een beschikbare openbare mirror. Zonder Key en zonder mirror is er een alternatief:
+
+plak het adres van het project in het zoekveld of typ `cf:<short-name>`:
+
+```text
+https://www.curseforge.com/minecraft/mc-mods/sodium
+cf:sodium
+```
+
+GPCL zoekt project en bestanden op via `api.cfwidget.com` en downloadt via de directe link van ForgeCDN. Deze route **installeert alleen het gekozen bestand en lost geen afhankelijkheden op**.
+
+## Geïnstalleerd maar geen effect
+
+- controleer of de door de mod ondersteunde MC-versie en loader overeenkomen met de gebruikte versie;
+- controleer of de mod in de juiste `mods`-map staat (met versie-isolatie is dat niet die in de hoofdmap);
+- ontbreekt een afhankelijkheid, installeer die dan eerst;
+- werkt het nog niet, volg dan de logboekstappen in [Spelcrashes](./mc-game.mdx).

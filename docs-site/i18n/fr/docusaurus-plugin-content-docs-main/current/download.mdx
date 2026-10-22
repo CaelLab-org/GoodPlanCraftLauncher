@@ -1,0 +1,72 @@
+---
+title: Téléchargements et miroirs
+description: Sources de téléchargement des fichiers et des listes de versions, threads, limite de vitesse, miroirs Java et miroir de fichiers personnalisé.
+---
+
+Un téléchargement lent ne vient généralement pas du lanceur. Changez d'abord de source, puis voyez les threads et la limite de vitesse.
+
+## Les téléchargements passent par une file
+
+Après un clic sur « Télécharger », la tâche rejoint une file sans bloquer l'interface : les tâches en attente se retirent avec ×, les tâches en cours s'annulent, et la file continue ensuite.
+
+La page de téléchargement affiche l'état de chaque tâche : en attente, en cours, terminée, échouée.
+
+## Source des fichiers et source des listes de versions
+
+Dans **Paramètres → Téléchargements → Source de téléchargement**, deux listes indépendantes :
+
+- **Source des fichiers** : jars client, ressources, bibliothèques ;
+- **Source des listes de versions** : manifeste, JSON de version, index des ressources.
+
+Les deux proposent les mêmes quatre options :
+
+| Option | Comportement |
+| --- | --- |
+| Officiel d'abord, miroir si lent | Par défaut. Officiel d'abord, BMCLAPI après quelques secondes sans réponse |
+| Miroir en priorité | Miroir direct sur les réseaux chinois |
+| Officiel en priorité | Officiel d'abord, retour au miroir en cas d'échec |
+| Officiel uniquement | Officiel seulement, échec si la connexion échoue |
+
+## Miroir de fichiers personnalisé
+
+**Paramètres → Téléchargements → Miroir de fichiers personnalisé** accepte une adresse racine de miroir (BMCLAPI par défaut, par exemple `https://bmclapi2.bangbang93.com`). Une fois renseignée, manifeste, client, bibliothèques et ressources passent d'abord par elle, puis reviennent à l'ordre d'origine si elle ne répond pas.
+
+Laisser vide revient à BMCLAPI.
+
+## Dossier de jeu
+
+**Paramètres → Téléchargements → Dossier de jeu** permet de placer versions, bibliothèques, ressources et mods dans n'importe quel dossier ; vide, on revient à `%APPDATA%\gpcl\.minecraft`.
+
+Changer de dossier **ne déplace pas** les fichiers existants. Les versions de l'ancien dossier ne suivent pas ; copiez-les vous-même si besoin. La configuration et les journaux restent dans `%APPDATA%\gpcl`.
+
+## Nombre maximal de threads
+
+64 par défaut, de 1 à 128. Beaucoup de petits fichiers profitent d'un parallélisme plus élevé, mais trop de threads peuvent être limités par le réseau ou les miroirs. Réduisez si la connexion est instable.
+
+## Limite de vitesse
+
+0 signifie pas de limite ; une valeur fixe la vitesse **globale partagée par toutes les tâches**, en Mo/s, appliquée au prochain téléchargement. Sur un réseau partagé, mieux vaut baisser.
+
+Cette limite ne concerne que le téléchargement des ressources du jeu. Le runtime Java passe par un miroir séparé et n'est pas affecté.
+
+## Miroirs Java
+
+**Paramètres → Téléchargements → Téléchargement de Java** propose l'Université Tsinghua, l'Université de Nanjing, Huawei Cloud ou personnalisé. Si la source choisie échoue, la suivante est essayée automatiquement, avec Adoptium officiel en dernier recours.
+
+Les adresses personnalisées acceptent deux variables :
+
+- `{v}` : version majeure de Java, par exemple `8`, `17`, `21` ;
+- `{version}` : version complète amont, par exemple `17.0.20.1_1`, qui change au fil des publications amont.
+
+Exemple :
+
+```text
+https://cdn.example.com/java/{v}/OpenJDK{v}U-jre_x64_windows_hotspot_{v}.zip
+```
+
+## Que faire en cas d'échec de téléchargement
+
+1. Changez de source.
+2. Passez les threads à 32 ou 16 et réessayez.
+3. Vérifiez l'heure système — un écart trop important fait échouer la validation des certificats HTTPS.
+4. Sinon, écrivez-nous avec le journal le plus récent de `%APPDATA%\gpcl\gpcl\log`.

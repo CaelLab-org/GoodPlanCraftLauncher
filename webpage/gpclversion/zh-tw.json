@@ -1,0 +1,355 @@
+{
+  "schema": 1,
+  "latest": "1.8.0",
+  "updated": "2026-10-22",
+  "versions": [
+    {
+      "version": "1.8.0",
+      "anchor": "v1-8-0",
+      "date": "2026-10-22",
+      "title": "25 種語言，從啟動器到官網",
+      "log": [
+        "啟動器現在支援 25 種語言：在設定 → 外觀 → 介面語言裡切換，清單可以直接搜尋",
+        "首次啟動跟隨系統語言，歡迎引導裡也能先選好再開始",
+        "新增首次使用的歡迎引導：語言、介面風格、簡短介紹共 4 步，可以跳過",
+        "新增三種介面風格：Minecraft、進階（原本的樣子）、簡約",
+        "安裝程式也翻成同樣的 25 種語言，依系統語言自動選擇",
+        "說明中心支援 25 種語言，啟動器裡的說明連結會開啟與介面語言對應的頁面",
+        "官網和官網裡的互動示範也支援 25 種語言",
+        "阿拉伯語、波斯語、希伯來語會把整個介面切換成從右到左的排版",
+        "啟動不再閃一下：啟動頁和主介面合成一個頁面，視窗底色跟隨主題；切換語言重新載入時也不會黑一下"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.8.0-Setup.exe",
+        "file": "GPCL-1.8.0-Setup.exe",
+        "size": "94 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.7.2",
+      "anchor": "v1-7-2",
+      "date": "2026-10-22",
+      "title": "自訂頭像，以及可以搜尋的版本列表",
+      "log": [
+        "現在可以更換啟動頁頭像：點擊頭像，或在「設定 → 外觀 → 頭像」選擇圖片；支援 PNG / JPG / GIF / WebP",
+        "超過 1 MB 的圖片會詢問是否壓縮；上限為 4 MB，也能一鍵還原預設頭像",
+        "外觀設定新增「頭像大小」滑桿，範圍 32–160 像素",
+        "版本列表新增搜尋框；每個版本會顯示對應的遊戲版本與模組載入器，選取中的版本會醒目標示",
+        "重新整理版本列表不再整個重建，捲動位置會保留；「匯入本機版本」移到列表右上角",
+        "1.20 以上選擇「加入伺服器」會直接連線；沒填位址時會提示，而不是默默開單人遊戲",
+        "版本設定自動儲存不再每次都彈出「已儲存」",
+        "安裝包從約 103 MB 縮小到 93 MB：只保留中文與英文語言包，其他語言回退為英文",
+        "1.7.1 是未發布的內部測試版，已撤下；1.7.2 已包含它的全部變更"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.7.2-Setup.exe",
+        "file": "GPCL-1.7.2-Setup.exe",
+        "size": "93 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.7.0",
+      "anchor": "v1-7-0",
+      "date": "2026-10-22",
+      "title": "光影、資源包與整合包，一鍵安裝",
+      "log": [
+        "下載頁新增「光影」與「資源包」分頁：可搜尋 Modrinth / CurseForge，並直接安裝到所選版本對應的資料夾",
+        "新增「整合包」分頁，支援 Modrinth（.mrpack）與 CurseForge 整合包，會自動安裝對應的遊戲版本、模組載入器與所有模組",
+        "每個整合包都是獨立版本，模組、設定與存檔都放在自己的資料夾，整合包之間不會互相混在一起",
+        "也支援匯入本機整合包：在版本管理裡選擇 zip / .mrpack，輸入名稱後就開始安裝",
+        "整合包檔案會依清單核對大小與 SHA1，下載不完整的 jar 會重新抓取，而不是裝出一個開不起來的遊戲",
+        "NeoForge 現在也能像 Forge / Fabric 一樣依版本安裝（1.20.1 以上）",
+        "「更多」選單預設收合；需要時在「設定 → 外觀」開啟，重新啟動後又冒出來的問題也已修正"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.7.0-Setup.exe",
+        "file": "GPCL-1.7.0-Setup.exe",
+        "size": "103 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.6.1",
+      "anchor": "v1-6-1",
+      "date": "2026-10-21",
+      "title": "崩潰原因，直接說清楚",
+      "log": [
+        "崩潰會自動診斷（記憶體不足、Java 版本錯誤、缺少前置、顯示卡驅動、OptiFine / Forge 不相容等），彈窗直接給出 1–2 條結論",
+        "「查看詳情」可看到全部線索與證據行；「查看日誌」會開啟發生崩潰那個版本所屬的遊戲資料夾",
+        "錯誤報告會匯出完整 zip：分析結果、錯誤摘要、系統與顯示卡、Java 版本、版本與模組載入器、模組 / 資源包 / 光影清單、啟動參數、遊戲輸出與崩潰報告",
+        "報告會遮蔽 --accessToken 與系統使用者名稱，可以直接傳給別人協助排查",
+        "同時開多個遊戲時，每個工作階段各自保留輸出，崩潰現場不會混到別的版本",
+        "模組詳情頁重做：中英文名稱、下載量、分類標籤、依 MC 版本分組的檔案清單、前置卡片、前往 Modrinth / CurseForge / MCMOD 的連結，以及一鍵複製名稱",
+        "修正在 1.20.1 安裝時把前置當成 1.20 解析，導致 Fabric API / GeckoLib 出現重複版本、Fabric 回報 Incompatible mods found 而拒絕啟動",
+        "安裝模組時會清掉同專案的舊 jar，不會再堆積多個版本"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.6.1-Setup.exe",
+        "file": "GPCL-1.6.1-Setup.exe",
+        "size": "103 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.6.0",
+      "anchor": "v1-6-0",
+      "date": "2026-10-20",
+      "title": "裝模組不用自己找檔案",
+      "log": [
+        "下載頁新增「模組」分頁：搜尋 Modrinth / CurseForge，挑選符合目前遊戲版本的檔案，並選擇要裝進哪個版本",
+        "Modrinth 會自動帶上必要前置；支援中文搜尋（查詢會先經由 MCMOD 取得英文名稱）",
+        "沒有 CurseForge API Key 也能用：貼上專案連結或 cf:slug，即可透過鏡像安裝單一檔案",
+        "下載改為任務佇列：連點多個版本會排隊，等待中的任務可以移除，取消目前任務後佇列會繼續",
+        "自動更新改為靜默安裝：背景下載，離開啟動器時安裝，右上角圓形徽章會顯示進度",
+        "新增：自動設定遊戲語言（預設簡體中文）、自訂遊戲資料夾與自訂檔案鏡像",
+        "新增：從版本資料夾或 zip / jar 匯入本機版本",
+        "Fabric 現在真的能安裝，預設一併安裝 Fabric API；開啟版本隔離後，模組與存檔會跟著版本走",
+        "Forge 安裝只執行 --installClient，會顯示進度，Java 版本太舊時也會直接說明",
+        "OptiFine 改為靜默安裝，不再彈出圖形化安裝程式",
+        "修正 0 位元組下載被當成成功、相對位址轉址，以及第二次下載沒有進度的問題"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.6.0-Setup.exe",
+        "file": "GPCL-1.6.0-Setup.exe",
+        "size": "103 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.5.2",
+      "anchor": "v1-5-2",
+      "date": "2026-10-18",
+      "title": "設定頁重做",
+      "log": [
+        "設定頁重做：記憶體、視窗、啟動行為、下載來源與 Java 參數重新分組，可用滑桿、開關與分段按鈕調整",
+        "記憶體預設改為「自動」：實體記憶體的 30%，最少 1 GB、最多 8 GB，並保留 2 GB 給系統；也可以手動設定",
+        "記憶體管理現在真的會釋放：只清理啟動器自己的行程，絕不碰正在跑的遊戲，還能設定啟動前自動最佳化",
+        "下載來源有四種模式（自動 / 鏡像優先 / 官方優先 / 僅官方），檔案與版本清單可分開設定；新增 0–20 MB/s 全域限速",
+        "新增：G1GC 調校、自訂 JVM 參數、行程優先順序、視窗大小預設值與啟動器顯示模式",
+        "關於頁現在包含專案資訊、執行環境與完整授權條款；官網與說明頁也一併重寫",
+        "修正：執行緒數設定沒有生效、404 頁面被存成檔案，以及下載失敗後殘留部分檔案"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.5.2-Setup.exe",
+        "file": "GPCL-1.5.2-Setup.exe",
+        "size": "103 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.5.1",
+      "anchor": "v1-5-1",
+      "date": "2026-10-16",
+      "title": "崩了？我看看",
+      "log": [
+        "新增崩潰提示：遊戲異常結束時說明原因，可一鍵匯出錯誤報告（崩潰報告 + 日誌 + 系統資訊，權杖已遮蔽）",
+        "新增執行中面板：啟動後右側顯示版本、PID、執行時間與記憶體用量，隨時能結束遊戲",
+        "使用者名稱欄位會用下拉選單記住最近 5 個名稱，每個都能刪除",
+        "遊戲改為獨立行程執行，關掉啟動器不會跟著結束；關閉遊戲視窗也會被視為結束",
+        "新增自訂遊戲視窗標題，支援魔術字（{mc_version}、{time} 等）",
+        "啟動小知識改為隨機出現（可在設定調整），條目也大幅增加",
+        "啟動動畫與頁面切換更順暢"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.5.1-Setup.exe",
+        "file": "GPCL-1.5.1-Setup.exe",
+        "size": "103 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.5.0",
+      "anchor": "v1-5-0",
+      "date": "2026-10-16",
+      "title": "Java 修好了，順便換新裝",
+      "log": [
+        "修正 Java 執行環境下載：鏡像改了檔名導致安裝失敗，現在改為動態取得",
+        "安裝程式改用 Inno Setup，可從舊版直接就地升級",
+        "統一全域配色（主色天藍、深色模式深海藍），並換上新的啟動動畫與官網",
+        "修正啟動畫面不跟隨淺色主題，以及部分按鈕樣式沒有生效"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.5.0-Setup.exe",
+        "file": "GPCL-1.5.0-Setup.exe",
+        "size": "103 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.4.4",
+      "anchor": "v1-4-4",
+      "date": "2026-07-11",
+      "title": "光影支援！",
+      "log": [
+        "新增 OptiFine（光影）支援",
+        "一鍵安裝，自動處理繼承、函式庫與 tweakClass",
+        "支援 inheritsFrom 版本繼承機制"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.4.4-Setup.exe",
+        "file": "GPCL-1.4.4-Setup.exe",
+        "size": "104 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.4.3",
+      "anchor": "v1-4-3",
+      "date": "2026-06-02",
+      "title": "修復",
+      "log": [
+        "修正雙重捲軸的問題",
+        "關於頁內容擴充，加入工具箱"
+      ],
+      "download": {
+        "url": "https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases/download/1.4.3/GPCL-1.4.3-Setup.exe",
+        "file": "GPCL-1.4.3-Setup.exe",
+        "size": "101 MB",
+        "github": true
+      }
+    },
+    {
+      "version": "1.4.2",
+      "anchor": "v1-4-2",
+      "date": "2026-06-02",
+      "title": "修好了？我不信",
+      "log": [
+        "上個版本的啟動畫面有些問題",
+        "把設定整理了一番",
+        "取消啟動現在真的會結束行程了！"
+      ],
+      "download": {
+        "url": "https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases/download/1.4.2/GPCL-1.4.2-Setup.exe",
+        "file": "GPCL-1.4.2-Setup.exe",
+        "size": "101 MB",
+        "github": true
+      }
+    },
+    {
+      "version": "1.4.1",
+      "anchor": "v1-4-1",
+      "date": "2026-06-02",
+      "title": "初次見面！",
+      "log": [
+        "首次啟動加入歡迎動畫",
+        "移除過度的防除錯，開放開發者模式"
+      ],
+      "download": {
+        "url": "https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases/download/1.4.1/GPCL-1.4.1-Setup.exe",
+        "file": "GPCL-1.4.1-Setup.exe",
+        "size": "101 MB",
+        "github": true
+      }
+    },
+    {
+      "version": "1.4.0",
+      "anchor": "v1-4-0",
+      "date": "2026-06-01",
+      "title": "起飛！",
+      "log": [
+        "嘗試真正支援 Forge",
+        "立即啟動！這是安裝程式版本，已編譯為機器碼！",
+        "修了一堆 bug，感謝論壇",
+        "大幅精簡流程；更新詳情現在可以顯示完整日誌"
+      ],
+      "download": {
+        "url": "https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases/download/1.4.0/GPCL-1.4.0-Setup.exe",
+        "file": "GPCL-1.4.0-Setup.exe",
+        "size": "99 MB",
+        "github": true
+      }
+    },
+    {
+      "version": "1.3.3",
+      "anchor": "v1-3-3",
+      "date": "2026-05-28",
+      "title": "",
+      "log": [
+        "Forge / Fabric / OptiFine 終於能用了！",
+        "這是第一個開源版本！"
+      ],
+      "download": {
+        "url": "https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases/download/1.3.3/GoodPlanCraftLauncher.1.3.3.exe",
+        "file": "GoodPlanCraftLauncher.1.3.3.exe",
+        "size": "90 MB",
+        "github": true
+      }
+    },
+    {
+      "version": "1.3.2",
+      "anchor": "v1-3-2",
+      "date": "2026-05-23",
+      "title": "",
+      "log": [
+        "新增每個版本的詳細設定，預設啟用；遊戲版本可以刪除",
+        "更多淺色模式支援；「還原預設值」移入新的相容性設定區；API 更新",
+        "打磨下拉選單與各種細節"
+      ],
+      "download": null
+    },
+    {
+      "version": "1.3.0–1.3.1",
+      "anchor": "v1-3-1",
+      "date": "2026-05-22",
+      "title": "",
+      "log": [
+        "修正下載曲線消失（安裝版裡沒有呼叫到）",
+        "自動檢查更新的設定移到關於頁",
+        "下載頁現在完整列出 Alpha、Beta、快照與正式版，修正正式版顯示不全的問題",
+        "重做啟動頁，加入依最後啟動時間排序的版本管理",
+        "啟動時新增「你知道嗎」小知識與日誌自動清理（間隔可在設定中調整）",
+        "外觀裡的介面縮放現在真的有效；1.3.1 修正了縮放不顯示的問題"
+      ],
+      "download": null
+    },
+    {
+      "version": "1.2.1",
+      "anchor": "v1-2-1",
+      "date": "2026-05-22",
+      "title": "",
+      "log": [
+        "把動態函式庫一併打包",
+        "加入防止重複啟動 / 重複執行個體",
+        "移除無用設定，下載頁內容現在可以收合"
+      ],
+      "download": null
+    },
+    {
+      "version": "1.2.0",
+      "anchor": "v1-2-0",
+      "date": "2026-05-21",
+      "title": "",
+      "log": [
+        "加入捲軸與淺色模式",
+        "加入完整的啟動器啟動動畫，減少啟動時的白畫面",
+        "左側邊欄移到上方並放大介面；打磨下載頁並加入 Java 執行環境",
+        "加入大量設定，分為遊戲、下載、外觀、進階與關於"
+      ],
+      "download": null
+    },
+    {
+      "version": "1.1.0",
+      "anchor": "v1-1-0",
+      "date": "2026-05-21",
+      "title": "",
+      "log": [
+        "新增 Java 自動安裝，下載來源可設定（感謝清華！）",
+        "效能改善，加入啟動動畫，並改善以日誌排查問題的體驗",
+        "修正大量下載清單的 bug，例如無法取消、取消後仍殘留"
+      ],
+      "download": null
+    },
+    {
+      "version": "1.0.0",
+      "anchor": "v1-0-0",
+      "date": "2026-05-20",
+      "title": "",
+      "log": [
+        "首個穩定版"
+      ],
+      "download": null
+    }
+  ]
+}

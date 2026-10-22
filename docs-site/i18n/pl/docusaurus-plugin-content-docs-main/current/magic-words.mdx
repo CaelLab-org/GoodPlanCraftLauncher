@@ -1,0 +1,52 @@
+---
+title: Magiczne słowa w tytule okna
+slug: /magic-words
+description: Dostosowanie tytułu okna Minecrafta za pomocą symboli zastępczych, takich jak {mc_version} i {time}.
+---
+
+Tytuł okna gry obsługuje symbole zastępcze, które GPCL przy uruchomieniu zamienia na rzeczywiste wartości.
+
+Opcja jest w **Ustawienia → Gra → Tytuł okna gry**. Puste pole oznacza, że tytuł okna nie jest zmieniany.
+
+## Przykład
+
+Przy tytule:
+
+```text
+{time} · {mc_version} · {gpcl_version}
+```
+
+Po uruchomieniu może wyglądać tak:
+
+```text
+20:09:58 · Minecraft 1.21.3 · 1.6.0
+```
+
+## Dostępne symbole zastępcze
+
+| Symbol | Zamienia się na |
+| --- | --- |
+| `{mc_version}` | Nazwa wyświetlana wersji, np. Minecraft 1.21.3, albo nazwa z loaderem |
+| `{mc_id}` | Nazwa katalogu wersji, np. 1.21.3-Fabric |
+| `{username}` | Nazwa gracza użyta w tym uruchomieniu |
+| `{gpcl_version}` | Numer wersji GPCL, np. 1.6.0 |
+| `{date}` | Data uruchomienia, format 2026/10/20 |
+| `{time}` | Bieżąca godzina, format 20:09:58 |
+| `{datetime}` | Data i godzina rozdzielone spacją |
+| `{java}` | Nazwa katalogu używanego środowiska Java |
+| `{memory}` | Maksymalna pamięć przydzielona w tym uruchomieniu, np. 4096MB |
+
+Wielkość liter musi się zgadzać. Błędnie wpisane symbole są pokazywane dosłownie, co ułatwia zauważenie pomyłki.
+
+## Czy tytuł się utrzyma?
+
+Poniżej jest opcja „Utrzymuj ten tytuł, gdy to możliwe”, domyślnie wyłączona.
+
+- **Wyłączona**: po pojawieniu się okna gry GPCL koryguje tytuł przez 20 sekund. Potem, jeśli gra lub mod zmieni tytuł, launcher już nie ingeruje. Tytuły z `{time}` też zatrzymują się na tej godzinie.
+- **Włączona**: ustawiony tytuł utrzymuje się przez całą sesję i po wejściu do świata nie jest zastępowany przez „ - Singleplayer”.
+
+Niektóre paczki modów lub mody również zmieniają tytuł okna — wzajemne nadpisywanie się jest normalne.
+
+:::note
+Na razie magiczne słowa działają tylko w tytule okna gry, w innych ustawieniach nie mają efektu.
+:::

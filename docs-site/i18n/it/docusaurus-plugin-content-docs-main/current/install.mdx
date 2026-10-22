@@ -1,0 +1,73 @@
+---
+title: Installazione e aggiornamento
+description: Scaricare, installare, aggiornare e disinstallare GPCL; gioco e impostazioni si trovano in %APPDATA%\gpcl.
+---
+
+GPCL supporta solo **Windows 10 / 11 a 64 bit**. Il programma di installazione non include Java: il launcher scarica quello adatto alla versione del gioco.
+
+## Download
+
+Scarica il programma di installazione dalla [sezione download del sito ufficiale](https://gamets.caellab.com/gpcl/#download) o dalle [GitHub Releases](https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases). Il nome del file è `GPCL-<version>-Setup.exe`.
+
+Non scaricare il programma di installazione da servizi cloud, gruppi di messaggistica o siti di download di terze parti: quei file possono essere stati sostituiti e il launcher non è in grado di verificarne la provenienza.
+
+## Installazione
+
+1. Fai doppio clic sul programma di installazione e scegli la cartella di installazione.
+2. Al termine, avvia GPCL dal collegamento sul desktop o dal menu Start.
+3. Al primo avvio vengono creati configurazione, log e la cartella di gioco predefinita.
+
+Per aggiornare da una versione precedente non serve disinstallare. Il programma di installazione rileva l'installazione esistente (anche quelle fatte con i vecchi pacchetti NSIS) e la sostituisce sul posto, mantenendo il collegamento sul desktop e i dati.
+
+## Dove stanno gioco e impostazioni
+
+Tutto in `%APPDATA%\gpcl`, fuori dalla cartella di installazione:
+
+| Percorso | Contenuto |
+| --- | --- |
+| `%APPDATA%\gpcl\.minecraft` | Versioni del gioco, librerie, asset, mod e mondi |
+| `%APPDATA%\gpcl\gpcl\config\setting.ini` | Impostazioni del launcher |
+| `%APPDATA%\gpcl\gpcl\log` | Log del launcher |
+| `%APPDATA%\gpcl\gpcl\updata` | Programmi di installazione scaricati dall'aggiornamento automatico e stato del download |
+
+Se hai cambiato la cartella di gioco, versioni e asset vanno nella nuova posizione, ma configurazione e log restano in `%APPDATA%\gpcl`.
+
+### Impostare automaticamente la lingua del gioco
+
+**Impostazioni → Gioco → Impostazione automatica della lingua del gioco** è attiva per impostazione predefinita, con il cinese semplificato come lingua selezionata. Prima di ogni avvio GPCL modifica il valore di `lang:` nel `options.txt` effettivamente usato dalla versione corrente, lasciando invariate le altre righe.
+
+Nelle versioni isolate la modifica finisce in `versions/<version-name>/options.txt`, in quelle non isolate nel `options.txt` della cartella radice del gioco. Se disattivi l'opzione, GPCL non tocca nessuna impostazione del gioco.
+
+## Aggiornamento
+
+Due opzioni sono attive per impostazione predefinita:
+
+- **Controllo automatico degli aggiornamenti**: controlla all'avvio e, se c'è una nuova versione, mostra un avviso in alto a destra.
+- **Installazione automatica degli aggiornamenti**: scarica in background, senza usare la pagina di download e senza modificare la barra di stato. Dopo la verifica, l'installazione silenziosa avviene quando **chiudi il launcher**.
+
+Il badge circolare in alto a destra mostra l'avanzamento del download; aprendolo si vedono il numero di versione e le novità di quella versione. Da lì puoi anche fare clic su «Scarica ora»: al termine dell'installazione il launcher si riapre automaticamente.
+
+In **Impostazioni → Informazioni** puoi disattivare il controllo o l'installazione automatica, oppure fare clic su «Controlla aggiornamenti».
+
+Il pacchetto di aggiornamento viene verificato con SHA1 prima dell'installazione; se la verifica fallisce non viene installato nulla. Se l'installazione si interrompe, al successivo avvio compare l'avviso «l'ultimo aggiornamento non è stato completato» con la possibilità di riprovare; dopo tre tentativi falliti il launcher indica di scaricare di nuovo il programma di installazione dal sito ufficiale.
+
+:::warning Aggiornamento da 1.5.2 o precedenti
+Le versioni precedenti non conoscono ancora i parametri dell'installazione silenziosa, quindi questo aggiornamento apre ancora una volta la vecchia procedura guidata. Da 1.6.0 in poi tutto avviene in modo silenzioso.
+:::
+
+Se dopo l'aggiornamento il launcher non si apre, controlla prima il log più recente in `%APPDATA%\gpcl\gpcl\log` e poi invialo per e-mail insieme alla descrizione.
+
+## Importare una versione locale
+
+Nella schermata iniziale, apri il pannello «Selezione versione» e fai clic su «Importa versione locale». Puoi importare:
+
+- una cartella di versione (con dentro `<version-name>.json`);
+- un archivio zip o jar: il launcher lo estrae e cerca ricorsivamente la cartella che contiene `<version-name>.json`.
+
+I modpack (quelli con una sezione `minecraft` nel `manifest.json`) al momento non si possono importare: il launcher li rifiuta subito, senza lasciare installazioni a metà.
+
+## Disinstallazione
+
+Disinstalla GPCL da «App e funzionalità» di Windows. Il programma di disinstallazione **non** elimina `%APPDATA%\gpcl`: dopo la reinstallazione gioco e impostazioni sono ancora lì.
+
+Se non hai più intenzione di usare il launcher, puoi eliminare manualmente l'intera cartella `%APPDATA%\gpcl`. Prima di farlo, salva una copia dei mondi.

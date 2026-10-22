@@ -1,0 +1,59 @@
+---
+title: Muat turun mod
+description: Cari dan pasang mod Modrinth dan CurseForge dalam GPCL, kebergantungan prasyarat dan carian bahasa Cina.
+---
+
+Bahagian "Mod" di halaman muat turun membolehkan anda mencari mod, memilih fail dan memasang ke versi yang ditentukan, tanpa perlu memuat turun dari laman web sendiri dan kemudian menyeretnya ke folder.
+
+## Carian
+
+Dua sumber: **Modrinth** dan **CurseForge**. Secara lalai kedua-duanya dicari serentak, dan sumber akan ditandakan dalam senarai hasil.
+
+Kotak carian boleh menerima bahasa Cina dahulu. Apabila pertanyaan mengandungi bahasa Cina, GPCL akan mencari hasil carian awam MCMOD dahulu, mengambil nama Inggeris daripada kurungan dalam tajuk (contohnya "雾中人 (The Man From The Fog)" mengambil `The Man From The Fog`), kemudian menggunakan nama Inggeris itu untuk mencari Modrinth. Jika nama Inggeris tidak dapat diperoleh, carian asal akan digunakan.
+
+## Penapisan
+
+Secara lalai **tanpa** penapisan versi dan pemuat, sama seperti PCL: cari semua dahulu supaya mod baharu tidak tersembunyi disebabkan syarat penapisan. Pilih secara manual apabila perlu menyempitkan:
+
+- Versi Minecraft;
+- Pemuat (Forge / Fabric / NeoForge / Quilt);
+- Cara susunan.
+
+Senarai fail akan mengutamakan versi MC bagi versi pelancaran semasa di hadapan, mengurangkan kemungkinan memasang versi yang salah.
+
+## Pemasangan
+
+Hanya selepas mengklik "Pasang" pada baris fail, pemilihan sasaran akan muncul:
+
+- Senarai versi Mod yang telah dipasang; pilih satu untuk dipasang terus;
+- "Pilih folder" untuk memasang ke `mods` dalam mana-mana direktori.
+
+Fail akan diletakkan dalam `mods` yang benar-benar digunakan oleh versi sasaran: versi terasing ialah `versions/<version-name>/mods`, jika tidak `mods` dalam direktori akar permainan.
+
+Versi tidak terasing akan mendayakan pengasingan versi apabila mod dipasang buat kali pertama; perkara ini akan dinyatakan dalam kotak sasaran, dan tiada pengesahan tambahan akan dipaparkan.
+
+### Kebergantungan prasyarat
+
+Baris fail Modrinth akan memaparkan "N prasyarat". Semasa pemasangan, kebergantungan yang diperlukan akan dipasang secara rekursif, dan petunjuk kejayaan juga akan menyatakan berapa banyak prasyarat dibawa.
+
+Mod pautan CurseForge hanya memasang satu fail yang dipilih dan **tidak memasang prasyarat secara automatik**; perkara ini juga dinyatakan pada antara muka.
+
+## CurseForge tanpa API Key
+
+Carian biasa CurseForge memerlukan API Key (**Tetapan → Muat turun → CurseForge API Key**, pilihan), atau tunggu sumber cermin awam tersedia. Jika tiada Key dan cermin juga tidak tersedia, masih ada satu sandaran:
+
+Tampal alamat projek dalam kotak carian, atau tulis `cf:<short-name>`:
+
+```text
+https://www.curseforge.com/minecraft/mc-mods/sodium
+cf:sodium
+```
+
+GPCL akan menyemak projek dan fail melalui `api.cfwidget.com`, kemudian memuat turun melalui pautan terus ForgeCDN. Laluan ini **hanya memasang satu fail yang dipilih dan tidak menyelesaikan kebergantungan**.
+
+## Tidak berkesan selepas pemasangan
+
+- Pastikan versi MC dan pemuat yang disokong oleh mod sepadan dengan versi semasa;
+- Pastikan ia dipasang ke `mods` yang betul (selepas pengasingan versi, bukan yang di direktori akar);
+- Jika prasyarat hilang, pasang prasyarat dahulu;
+- Jika masih tidak berjaya, lihat urutan penyiasatan log dalam [Permainan ranap](./mc-game.mdx).

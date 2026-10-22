@@ -1,0 +1,206 @@
+{
+  "meta": {
+    "title": "GoodPlanCraftLauncher - Pelancar Minecraft ringan dan cekap - CaelLabGameTS",
+    "description": "GoodPlanCraftLauncher ialah pelancar Minecraft yang ringkas dan cekap dengan log masuk Microsoft dan luar talian, pengurusan versi, serta pemasangan mod Forge/NeoForge/Fabric/OptiFine, supaya anda boleh masuk ke dunia blok dengan satu klik. Sumber terbuka dan percuma.",
+    "keywords": "GoodPlanCraftLauncher,pelancar Minecraft,pelancar MC,Minecraft Java Edition,CaelLab,sumber terbuka",
+    "ogTitle": "GoodPlanCraftLauncher - Pelancar Minecraft ringan dan cekap",
+    "ogDescription": "Ringan · cekap · sumber terbuka. Log masuk Microsoft dan luar talian, pengurusan versi, serta pemasangan Forge/NeoForge/Fabric/OptiFine dengan satu klik."
+  },
+  "historyMeta": {
+    "title": "Log Perubahan - GoodPlanCraftLauncher - CaelLabGameTS",
+    "description": "Log perubahan dan muat turun pemasang untuk setiap versi GoodPlanCraftLauncher: dari 1.0.0 hingga versi terkini, setiap perubahan ada di halaman ini.",
+    "ogTitle": "Log Perubahan - GoodPlanCraftLauncher",
+    "ogDescription": "Nota keluaran dan muat turun pemasang untuk setiap versi."
+  },
+  "nav": {
+    "source": "Sumber",
+    "language": "Bahasa",
+    "download": "Muat turun v{version}",
+    "mobileGitHub": "Sumber GitHub",
+    "openMenu": "Buka menu"
+  },
+  "hero": {
+    "tags": [
+      "Sumber terbuka",
+      "Percuma",
+      "Pelancar Minecraft"
+    ],
+    "subtitle": "Ringan · Cekap · Sumber terbuka",
+    "desc": "Pelancar Minecraft yang ditulis untuk Windows: log masuk Microsoft dan luar talian, pengurusan versi, serta pemasangan Forge / Fabric / OptiFine dengan satu klik. Apabila permainan ranap, ia memberitahu puncanya dan bukan sekadar menunjukkan kotak kosong.",
+    "download": "Muat turun sekarang",
+    "versionLabel": "Versi",
+    "updatedLabel": "Dikemas kini",
+    "platformLabel": "Platform",
+    "platform": "Windows 10+",
+    "iframeTitle": "Antara muka GoodPlanCraftLauncher",
+    "windowNote": "Tetingkap di atas boleh <b>diklik</b> — ia ialah antara muka pelancar itu sendiri, yang berjalan di dalam halaman web.",
+    "iconAlt": "Ikon GoodPlanCraftLauncher"
+  },
+  "features": {
+    "tag": "Ciri",
+    "title": "Ciri utama",
+    "desc": "Alat praktikal untuk pemain, setiap satu bertujuan memudahkan anda masuk ke permainan dengan lebih cepat",
+    "items": [
+      {
+        "title": "Dua mod log masuk",
+        "desc": "Log masuk Microsoft dan luar talian, boleh ditukar bila-bila masa; mod luar talian tidak memerlukan pengesahan dalam talian."
+      },
+      {
+        "title": "Muat turun mod terbina dalam",
+        "desc": "Cari di Modrinth dan CurseForge, kemudian pasang mod, shader atau pek sumber ke folder yang benar-benar digunakan versi dipilih."
+      },
+      {
+        "title": "Empat pemuat mod",
+        "desc": "Forge, NeoForge, Fabric dan OptiFine dipasang dari sumber rasmi, dengan versi Java disemak dahulu."
+      },
+      {
+        "title": "25 bahasa antara muka",
+        "desc": "Mengikut bahasa sistem pada pelancaran pertama; boleh ditukar bila-bila masa dalam tetapan."
+      },
+      {
+        "title": "Pengurusan versi automatik",
+        "desc": "Muat turun, pasang dan tukar versi Minecraft dengan satu klik, dengan pustaka dan aset diuruskan secara automatik."
+      },
+      {
+        "title": "Permulaan pantas",
+        "desc": "Laluan pelancaran dan cache yang dipermudahkan, jadi anda klik dan terus bermain tanpa menunggu."
+      },
+      {
+        "title": "Pengurusan runtime Java",
+        "desc": "Mengesan dan memasang runtime Java secara automatik; sumber muat turun boleh ditetapkan kepada Tsinghua, Universiti Nanjing, Huawei Cloud atau sumber rasmi, dan beralih ke sumber seterusnya jika gagal."
+      },
+      {
+        "title": "Sokongan tema",
+        "desc": "Sokongan penuh mod cerah dan gelap, dengan penskalaan antara muka yang boleh dilaras untuk rupa yang konsisten."
+      },
+      {
+        "title": "Kemas kini dan penyelenggaraan automatik",
+        "desc": "Semakan kemas kini terbina dalam dan pembersihan log automatik yang boleh dikonfigurasikan memastikan pelancar kekal ringan dari semasa ke semasa."
+      },
+      {
+        "title": "Notis ranap dan laporan ralat",
+        "desc": "Apabila permainan keluar secara tidak normal, ia menerangkan puncanya dan boleh mengeksport laporan ralat dengan satu klik (laporan ranap + log + maklumat sistem)."
+      },
+      {
+        "title": "Panel berjalan",
+        "desc": "Selepas dilancarkan, panel di sebelah kanan menunjukkan versi, PID, tempoh berjalan dan penggunaan memori, serta boleh menamatkan permainan bila-bila masa."
+      },
+      {
+        "title": "Tajuk tetingkap tersuai",
+        "desc": "Tulis tajuk tetingkap permainan anda sendiri, dengan kata ajaib seperti {mc_version} dan {time}."
+      }
+    ]
+  },
+  "shots": {
+    "tag": "Tangkapan skrin",
+    "title": "Tangkapan skrin sebenar",
+    "desc": "Tetingkap di atas ialah replika web bagi antara muka pelancar, boleh diklik tanpa memasang apa-apa. Empat di bawah ialah pelancar yang benar-benar berjalan di Windows, tanpa suntingan.",
+    "items": [
+      {
+        "alt": "Skrin pelancaran GoodPlanCraftLauncher",
+        "caption": "Skrin pelancaran · pilih versi, masukkan nama pemain, mula permainan"
+      },
+      {
+        "alt": "Skrin muat turun GoodPlanCraftLauncher",
+        "caption": "Skrin muat turun · versi permainan, mod, shader, pek sumber dan pek mod"
+      },
+      {
+        "alt": "Tetapan permainan GoodPlanCraftLauncher",
+        "caption": "Tetapan · memori permainan, mod tetingkap, tajuk tetingkap dan kata ajaib"
+      },
+      {
+        "alt": "Tetapan penampilan GoodPlanCraftLauncher",
+        "caption": "Tetapan · bahasa, gaya antara muka, tema dan skala"
+      }
+    ]
+  },
+  "download": {
+    "tag": "Muat turun",
+    "title": "Muat turun sekarang",
+    "desc": "Pilih platform anda dan mulakan pengembaraan blok",
+    "button": "Lancarkan dunia blok!",
+    "updatedLabel": "Dikemas kini",
+    "platformLabel": "Platform",
+    "licenseLabel": "Lesen",
+    "platform": "Windows 10 64-bit",
+    "license": "Sumber terbuka, percuma",
+    "github": "Lihat di GitHub"
+  },
+  "requirements": {
+    "tag": "Sistem",
+    "title": "Keperluan sistem",
+    "desc": "Sederhana, tetapi wajar diketahui",
+    "items": [
+      {
+        "label": "Sistem pengendalian",
+        "text": "Windows 10 64-bit (1709+); Windows 11 juga berfungsi"
+      },
+      {
+        "label": "Runtime Java",
+        "text": "Dipasang secara automatik oleh pelancar; digalakkan membersihkan pemasangan Java berlebihan atau bercanggah pada sistem"
+      },
+      {
+        "label": "Storan",
+        "text": "Sekurang-kurangnya 90 MB ruang kosong untuk pelancar itu sendiri (tidak termasuk fail permainan)"
+      },
+      {
+        "label": "Memori",
+        "text": "Disyorkan 2 GB memori tersedia atau lebih"
+      }
+    ]
+  },
+  "openSource": {
+    "tag": "Sumber Terbuka",
+    "title": "Sumber terbuka dan sumbangan",
+    "desc": "GPCL ialah projek 100% sumber terbuka, dengan sumbernya dihoskan di GitHub. PR dialu-alukan, begitu juga cadangan di <a href=\"https://forum.xmuer.online/\" target=\"_blank\">forum</a>, untuk membina pelancar Minecraft yang lebih baik bersama-sama.",
+    "items": [
+      {
+        "title": "Lesen",
+        "desc": "Dikeluarkan di bawah CaelLab BY-SA Code License, Versi 3 (atau mana-mana versi yang lebih baru). Anda boleh menggunakannya, mengubah suai dan mengedarkannya semula secara bebas; versi yang diubah suai mesti mengekalkan lesen sumber terbuka yang sama. Halaman projek: <a href=\"https://gamets.caellab.com/gpcl/\">gamets.caellab.com/gpcl</a>.",
+        "action": "Baca lesen penuh →"
+      },
+      {
+        "title": "Menyumbang",
+        "desc": "Repositori sumber utama berada di GitHub, di mana isu dan PR diuruskan. Laporan pepijat, cadangan ciri dan sumbangan kod dialu-alukan.",
+        "action": "Lawati GitHub →"
+      }
+    ],
+    "licenseSummary": "RINGKASAN LESEN — CaelLab BY-SA Code License v3"
+  },
+  "history": {
+    "tag": "Sejarah",
+    "title": "Sejarah versi",
+    "desc": "Versi lalu dan log perubahannya",
+    "older": "Tunjukkan {n} versi lama",
+    "more": "Lihat log perubahan penuh (semua {total} versi dan pemasang) →",
+    "page": {
+      "back": "← Kembali ke laman utama",
+      "tag": "Log Perubahan",
+      "heading": "Log Perubahan",
+      "intro": "Dari 1.0.0 hingga keluaran terkini, setiap versi — apa yang berubah, dan sama ada ia boleh dimuat turun — ada di halaman ini.",
+      "note": "Pemasang tidak disimpan untuk 1.3.2 dan lebih awal; pengemas kini terbina dalam pada versi lama mungkin tidak lagi berfungsi, jadi disyorkan memasang keluaran terkini untuk kegunaan harian.",
+      "indexLabel": "Indeks versi",
+      "latest": "Terkini",
+      "download": "Muat turun v{version}",
+      "unavailable": "Tiada pemasang disimpan untuk versi ini",
+      "fileNote": "{file} · {size} · Windows 64-bit"
+    }
+  },
+  "footer": {
+    "brand": "Pasukan pembangunan permainan dan alat bebas di CaelLab. Menjelajah pinggir masa depan, membawa pembaharuan tanpa had.",
+    "projects": "Projek",
+    "community": "Komuniti",
+    "openSource": "Sumber terbuka",
+    "help": "Pusat bantuan",
+    "changelog": "Log Perubahan",
+    "forum": "Forum",
+    "license": "Lesen",
+    "copyright": "&copy; 2026 GameTS oleh <a href=\"https://www.caellab.com/\" target=\"_blank\" class=\"footer-inline-link\">CaelLab</a>. Hak cipta terpelihara. Halaman projek: <a href=\"https://gamets.caellab.com/gpcl/\" class=\"footer-inline-link\">gamets.caellab.com/gpcl</a>",
+    "disclaimer": "GoodPlanCraftLauncher ialah alat sumber terbuka pihak ketiga dan tidak mempunyai kaitan rasmi dengan <a href=\"https://www.minecraft.net/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Mojang Studios</a>, <a href=\"https://www.microsoft.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Microsoft</a>, <a href=\"https://www.xbox.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Xbox</a>. Minecraft ialah tanda dagangan Mojang Studios; penggunaan pelancar ini memerlukan lesen Minecraft yang sah.",
+    "licenseLine": "Lesen sumber terbuka: <a href=\"https://www.caellab.com/license/cbs-v3\" target=\"_blank\" class=\"footer-inline-link\">CaelLab BY-SA Code License v3</a> | Sumber Terbuka di <a href=\"https://github.com/CaelLab-org/GoodPlanCraftLauncher\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">GitHub</a>"
+  },
+  "labels": {
+    "platform": "Windows 64-bit",
+    "github": "GitHub"
+  }
+}

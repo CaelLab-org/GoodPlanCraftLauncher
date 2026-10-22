@@ -1,0 +1,611 @@
+<!--
+ Copyright (c) 2026 Yunyun(云云) By 虚舟实验室(CaelLab) / CaelLabGameTS
+ Licensed under the CaelLab BY-SA Code License, Version 3
+ or any later version. https://www.caellab.com/license/cbs-v3.txt
+ Source: https://github.com/CaelLab-org/GoodPlanCraftLauncher
+ Project: https://gamets.caellab.com/gpcl/
+-->
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journal des modifications - GoodPlanCraftLauncher - CaelLabGameTS</title>
+    <meta name="description" content="Journaux des modifications et téléchargements de l'installeur pour chaque version de GoodPlanCraftLauncher : de la 1.0.0 à la dernière, chaque changement figure sur cette page.">
+    <meta name="author" content="CaelLabGameTS">
+    <meta name="theme-color" content="#f6fafd">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Journal des modifications - GoodPlanCraftLauncher">
+    <meta property="og:description" content="Notes de version et téléchargements de l'installeur pour chaque version.">
+    <meta property="og:url" content="https://gamets.caellab.com/gpcl/history/">
+    <meta property="og:site_name" content="CaelLabGameTS">
+        <link rel="alternate" hreflang="en-US" href="https://gamets.caellab.com/gpcl/history/index.en-us">
+    <link rel="alternate" hreflang="zh-CN" href="https://gamets.caellab.com/gpcl/history/index.zh-cn">
+    <link rel="alternate" hreflang="zh-TW" href="https://gamets.caellab.com/gpcl/history/index.zh-tw">
+    <link rel="alternate" hreflang="ar" href="https://gamets.caellab.com/gpcl/history/index.ar">
+    <link rel="alternate" hreflang="bn" href="https://gamets.caellab.com/gpcl/history/index.bn">
+    <link rel="alternate" hreflang="de" href="https://gamets.caellab.com/gpcl/history/index.de">
+    <link rel="alternate" hreflang="el" href="https://gamets.caellab.com/gpcl/history/index.el">
+    <link rel="alternate" hreflang="es" href="https://gamets.caellab.com/gpcl/history/index.es">
+    <link rel="alternate" hreflang="fa" href="https://gamets.caellab.com/gpcl/history/index.fa">
+    <link rel="alternate" hreflang="fr" href="https://gamets.caellab.com/gpcl/history/index.fr">
+    <link rel="alternate" hreflang="he" href="https://gamets.caellab.com/gpcl/history/index.he">
+    <link rel="alternate" hreflang="hi" href="https://gamets.caellab.com/gpcl/history/index.hi">
+    <link rel="alternate" hreflang="id" href="https://gamets.caellab.com/gpcl/history/index.id">
+    <link rel="alternate" hreflang="it" href="https://gamets.caellab.com/gpcl/history/index.it">
+    <link rel="alternate" hreflang="ja" href="https://gamets.caellab.com/gpcl/history/index.ja">
+    <link rel="alternate" hreflang="ko" href="https://gamets.caellab.com/gpcl/history/index.ko">
+    <link rel="alternate" hreflang="ms" href="https://gamets.caellab.com/gpcl/history/index.ms">
+    <link rel="alternate" hreflang="nl" href="https://gamets.caellab.com/gpcl/history/index.nl">
+    <link rel="alternate" hreflang="pl" href="https://gamets.caellab.com/gpcl/history/index.pl">
+    <link rel="alternate" hreflang="pt" href="https://gamets.caellab.com/gpcl/history/index.pt">
+    <link rel="alternate" hreflang="ru" href="https://gamets.caellab.com/gpcl/history/index.ru">
+    <link rel="alternate" hreflang="th" href="https://gamets.caellab.com/gpcl/history/index.th">
+    <link rel="alternate" hreflang="tr" href="https://gamets.caellab.com/gpcl/history/index.tr">
+    <link rel="alternate" hreflang="uk" href="https://gamets.caellab.com/gpcl/history/index.uk">
+    <link rel="alternate" hreflang="vi" href="https://gamets.caellab.com/gpcl/history/index.vi">
+    <link rel="alternate" hreflang="x-default" href="https://gamets.caellab.com/gpcl/history/index.en-us">
+    <link rel="icon" type="image/png" href="../icon.png">
+    <link rel="stylesheet" href="../style.css?v=n5q8v2k7">
+    <link rel="stylesheet" href="./history.css?v=j7w3r9c5">
+</head>
+<body class="cl-page">
+
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="https://gamets.caellab.com" class="logo">
+                <img src="/logo.png" alt="GameTS">
+            </a>
+            <ul class="nav-links">
+                <li>
+                    <div class="dropdown" id="sourceDropdown">
+                        <button class="dropdown-toggle" onclick="toggleDropdown('sourceDropdown')">
+                            <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                            Code source
+                            <span class="arrow">&#9662;</span>
+                        </button>
+                        <div class="dropdown-menu">
+                            <div class="menu-label">GitHub</div>
+                            <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener">
+                                <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                                GoodPlanCraftLauncher
+                            </a>
+                        </div>
+                    </div>
+                </li>
+                <li class="lang-switch"><select aria-label="Langue" onchange="if(this.value)location.href=this.value"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr" selected>Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select></li>
+                <li><a href="../index.fr#download" class="nav-cta">&#9662; Télécharger v1.8.0</a></li>
+            </ul>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Ouvrir le menu" aria-expanded="false">&#9776;</button>
+        </div>
+    </nav>
+    <div class="mobile-panel" id="mobilePanel">
+        <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener">Code source GitHub</a>
+        <select aria-label="Langue" onchange="if(this.value)location.href=this.value" style="width:100%;margin-top:8px;padding:10px;background:var(--surface);border:1px solid var(--line);border-radius:8px;color:var(--text-2);font:inherit;font-size:0.95rem;"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr" selected>Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select>
+    </div>
+
+    <header class="cl-hero">
+        <div class="container">
+            <a href="../index.fr" class="cl-back">← Retour à l'accueil</a>
+            <div class="section-tag">Journal des modifications</div>
+            <h1>Journal des modifications</h1>
+            <p class="cl-intro">De la 1.0.0 à la dernière version, chaque version — ce qui a changé et si elle peut être téléchargée — figure sur cette page.</p>
+            <p class="cl-note">Les installeurs n'ont pas été conservés pour la 1.3.2 et les versions antérieures ; le programme de mise à jour intégré des anciennes versions peut ne plus fonctionner, il est donc recommandé d'installer la dernière version pour un usage quotidien.</p>
+            <div class="cl-index" role="navigation" aria-label="Index des versions">
+                <a href="#v1-8-0">1.8.0</a>
+                <a href="#v1-7-2">1.7.2</a>
+                <a href="#v1-7-0">1.7.0</a>
+                <a href="#v1-6-1">1.6.1</a>
+                <a href="#v1-6-0">1.6.0</a>
+                <a href="#v1-5-2">1.5.2</a>
+                <a href="#v1-5-1">1.5.1</a>
+                <a href="#v1-5-0">1.5.0</a>
+                <a href="#v1-4-4">1.4.4</a>
+                <a href="#v1-4-3">1.4.3</a>
+                <a href="#v1-4-2">1.4.2</a>
+                <a href="#v1-4-1">1.4.1</a>
+                <a href="#v1-4-0">1.4.0</a>
+                <a href="#v1-3-3">1.3.3</a>
+                <a href="#v1-3-2">1.3.2</a>
+                <a href="#v1-3-1">1.3.0–1.3.1</a>
+                <a href="#v1-2-1">1.2.1</a>
+                <a href="#v1-2-0">1.2.0</a>
+                <a href="#v1-1-0">1.1.0</a>
+                <a href="#v1-0-0">1.0.0</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="history cl-history">
+        <div class="container">
+            <div class="timeline">
+                <article class="timeline-item" id="v1-8-0">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.8.0</span>
+                        <span class="version-title">25 langues, du lanceur au site web</span>
+                        <span class="latest-chip">Dernière</span>
+                        <span class="version-date">2026-10-22</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Le lanceur parle désormais 25 langues : à choisir dans Paramètres → Apparence → Langue de l'interface, avec une recherche dans la liste</li>
+                        <li>Au premier lancement, il suit la langue du système ; l'assistant de bienvenue permet aussi de la choisir d'abord</li>
+                        <li>Nouvel assistant de bienvenue : langue, style d'interface et courte présentation en 4 étapes, avec possibilité de passer</li>
+                        <li>Trois styles d'interface : Minecraft, Avancé (l'apparence habituelle) et Minimal</li>
+                        <li>L'installateur est traduit dans les mêmes 25 langues et choisit automatiquement la langue du système</li>
+                        <li>Le centre d'aide est disponible en 25 langues ; les liens d'aide du lanceur ouvrent la page correspondant à la langue de l'interface</li>
+                        <li>Le site et la démo interactive qu'il contient sont aussi disponibles en 25 langues</li>
+                        <li>L'arabe, le persan et l'hébreu passent toute l'interface en écriture de droite à gauche</li>
+                        <li>Plus de clignotement au démarrage : l'écran de lancement et la fenêtre principale ne font qu'une page, et le fond de fenêtre suit le thème ; changer de langue ne produit plus d'écran noir</li>
+                    </ul>
+                    <div class="cl-download">
+                        <a class="cl-dl-btn" href="https://dl.caellab.com/file/games/gpcl/GPCL-1.8.0-Setup.exe">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                            Télécharger v1.8.0
+                        </a>
+                        <span class="cl-file">GPCL-1.8.0-Setup.exe · 94 MB · Windows 64 bits</span>
+                    </div>
+                </article>
+                <article class="timeline-item" id="v1-7-2">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.7.2</span>
+                        <span class="version-title">Avatars personnalisés et liste de versions avec recherche</span>
+                        <span class="version-date">2026-10-22</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Vous pouvez désormais changer l'avatar de l'écran de lancement : cliquez dessus, ou choisissez une image dans Paramètres → Apparence → Avatar ; PNG / JPG / GIF / WebP sont pris en charge</li>
+                        <li>Les images de plus de 1 Mo demandent si elles doivent être compressées ; la limite est de 4 Mo, et l'avatar par défaut peut être restauré en un clic</li>
+                        <li>Les paramètres d'apparence ajoutent un curseur « Taille de l'avatar », de 32 à 160 pixels</li>
+                        <li>La liste des versions gagne un champ de recherche ; chaque version affiche sa version de jeu et son mod loader, et celle sélectionnée est mise en évidence</li>
+                        <li>Rafraîchir la liste des versions ne la reconstruit plus : la position de défilement est conservée ; « Importer une version locale » est passé en haut à droite de la liste</li>
+                        <li>À partir de la 1.20, choisir « Rejoindre un serveur » connecte directement ; une adresse manquante affiche désormais un message au lieu de lancer discrètement le mode solo</li>
+                        <li>L'enregistrement automatique des paramètres de version n'affiche plus « Enregistré » à chaque fois</li>
+                        <li>L'installeur est passé d'environ 103 Mo à 93 Mo : seuls les packs de langue chinois et anglais sont conservés, les autres langues retombant sur l'anglais</li>
+                        <li>La 1.7.1 était une version de test interne non publiée et a été retirée ; la 1.7.2 inclut tous ses changements</li>
+                    </ul>
+                    <div class="cl-download">
+                        <a class="cl-dl-btn" href="https://dl.caellab.com/file/games/gpcl/GPCL-1.7.2-Setup.exe">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                            Télécharger v1.7.2
+                        </a>
+                        <span class="cl-file">GPCL-1.7.2-Setup.exe · 93 MB · Windows 64 bits</span>
+                    </div>
+                </article>
+                <article class="timeline-item" id="v1-7-0">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.7.0</span>
+                        <span class="version-title">Shaders, packs de ressources et modpacks, installés en un clic</span>
+                        <span class="version-date">2026-10-22</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>La page de téléchargement ajoute les onglets Shaders et Packs de ressources : recherchez sur Modrinth / CurseForge et installez directement dans le dossier correspondant à la version choisie</li>
+                        <li>Un nouvel onglet Modpacks prend en charge les modpacks Modrinth (.mrpack) et CurseForge, en installant automatiquement la version de jeu, le mod loader et tous les mods correspondants</li>
+                        <li>Chaque modpack devient sa propre version, avec ses mods, configurations et sauvegardes dans son propre dossier, afin que les modpacks ne se mélangent pas entre eux</li>
+                        <li>Les modpacks locaux peuvent aussi être importés : choisissez un zip / .mrpack dans la gestion des versions, saisissez un nom, et l'installation démarre</li>
+                        <li>Les fichiers des modpacks sont vérifiés (taille et SHA1) par rapport au manifeste : les jars téléchargés à moitié sont récupérés de nouveau au lieu de donner un jeu qui ne démarre pas</li>
+                        <li>NeoForge peut désormais être installé par version comme Forge / Fabric (1.20.1 et versions ultérieures)</li>
+                        <li>Le menu « Plus » est replié par défaut ; activez-le dans Paramètres → Apparence si nécessaire, et le bug où il réapparaissait après un redémarrage a été corrigé</li>
+                    </ul>
+                    <div class="cl-download">
+                        <a class="cl-dl-btn" href="https://dl.caellab.com/file/games/gpcl/GPCL-1.7.0-Setup.exe">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                            Télécharger v1.7.0
+                        </a>
+                        <span class="cl-file">GPCL-1.7.0-Setup.exe · 103 MB · Windows 64 bits</span>
+                    </div>
+                </article>
+                <article class="timeline-item" id="v1-6-1">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.6.1</span>
+                        <span class="version-title">Les raisons des plantages, dites clairement</span>
+                        <span class="version-date">2026-10-21</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Les plantages sont diagnostiqués automatiquement (mémoire insuffisante, mauvaise version de Java, dépendances manquantes, pilotes graphiques, incompatibilité OptiFine / Forge, etc.), et la fenêtre donne 1 à 2 conclusions</li>
+                        <li>« Voir les détails » affiche chaque indice et chaque ligne de preuve ; « Voir les journaux » ouvre le dossier de jeu de la version qui a planté</li>
+                        <li>Les rapports d'erreur exportent un zip complet : résultats d'analyse, résumé de l'erreur, système et GPU, version de Java, version et mod loader, listes de mods / packs de ressources / shaders, arguments de lancement, sortie du jeu et rapports de plantage</li>
+                        <li>Le rapport masque --accessToken et le nom d'utilisateur du système, il peut donc être transmis à d'autres pour un diagnostic</li>
+                        <li>Avec plusieurs jeux lancés en même temps, chaque session conserve sa propre sortie : le contexte d'un plantage ne fuit plus vers une autre version</li>
+                        <li>La page de détails des mods a été refaite : noms chinois et anglais, nombre de téléchargements, étiquettes de catégorie, listes de fichiers groupées par version de MC, cartes de dépendances, liens vers Modrinth / CurseForge / MCMod et copie du nom en un clic</li>
+                        <li>Correction : les dépendances d'une installation 1.20.1 étaient résolues comme 1.20, ce qui dupliquait les versions de Fabric API / GeckoLib et faisait afficher Incompatible mods found à Fabric, qui refusait de démarrer</li>
+                        <li>Installer un mod supprime les anciens jars du même projet : plusieurs versions ne s'accumulent plus</li>
+                    </ul>
+                    <div class="cl-download">
+                        <a class="cl-dl-btn" href="https://dl.caellab.com/file/games/gpcl/GPCL-1.6.1-Setup.exe">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                            Télécharger v1.6.1
+                        </a>
+                        <span class="cl-file">GPCL-1.6.1-Setup.exe · 103 MB · Windows 64 bits</span>
+                    </div>
+                </article>
+                <article class="timeline-item" id="v1-6-0">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.6.0</span>
+                        <span class="version-title">Installez des mods sans chercher les fichiers</span>
+                        <span class="version-date">2026-10-20</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>La page de téléchargement ajoute un onglet Mods : recherchez sur Modrinth / CurseForge, choisissez les fichiers pour la version de jeu actuelle et sélectionnez la version dans laquelle installer</li>
+                        <li>Modrinth récupère automatiquement les dépendances requises ; la recherche en chinois est prise en charge (la requête passe d'abord par MCMod pour obtenir le nom anglais)</li>
+                        <li>Cela fonctionne aussi sans clé d'API CurseForge : collez un lien de projet ou cf:slug et installez un seul fichier via le miroir</li>
+                        <li>Les téléchargements sont désormais une file de tâches : cliquer sur plusieurs versions les met en file d'attente, les tâches en attente peuvent être supprimées, et annuler la tâche en cours laisse la file continuer</li>
+                        <li>La mise à jour automatique s'installe maintenant en silence : elle télécharge en arrière-plan et s'installe à la fermeture du lanceur, avec un badge rond en haut à droite indiquant la progression</li>
+                        <li>Nouveau : langue de jeu automatique (chinois simplifié par défaut), dossier de jeu personnalisé et miroir de fichiers personnalisé</li>
+                        <li>Nouveau : import d'une version locale depuis un dossier de version ou un zip / jar</li>
+                        <li>Fabric s'installe vraiment maintenant, avec Fabric API par défaut ; avec l'isolation des versions, les mods et les sauvegardes suivent la version</li>
+                        <li>L'installation de Forge n'exécute plus que --installClient, affiche la progression et indique clairement quand la version de Java est trop ancienne</li>
+                        <li>OptiFine s'installe en silence au lieu d'ouvrir l'installeur graphique</li>
+                        <li>Correction des téléchargements de zéro octet comptés comme réussis, des redirections d'adresse relative et du deuxième téléchargement sans progression</li>
+                    </ul>
+                    <div class="cl-download">
+                        <a class="cl-dl-btn" href="https://dl.caellab.com/file/games/gpcl/GPCL-1.6.0-Setup.exe">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                            Télécharger v1.6.0
+                        </a>
+                        <span class="cl-file">GPCL-1.6.0-Setup.exe · 103 MB · Windows 64 bits</span>
+                    </div>
+                </article>
+                <article class="timeline-item" id="v1-5-2">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.5.2</span>
+                        <span class="version-title">Les paramètres, refaits</span>
+                        <span class="version-date">2026-10-18</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>La page des paramètres a été refaite : mémoire, fenêtre, comportement au lancement, sources de téléchargement et arguments Java sont regroupés et réglables avec des curseurs, des interrupteurs et des boutons segmentés</li>
+                        <li>La mémoire est désormais réglée sur « Auto » par défaut : 30 % de la mémoire physique, au moins 1 Go et au plus 8 Go, en laissant 2 Go au système ; elle peut aussi être définie manuellement</li>
+                        <li>La gestion de la mémoire libère vraiment de la mémoire : elle ne nettoie que les processus du lanceur, jamais un jeu en cours, et peut être réglée pour optimiser automatiquement avant le lancement</li>
+                        <li>Les sources de téléchargement ont quatre modes (auto / miroir d'abord / officiel d'abord / officiel uniquement), choisis séparément pour les fichiers et les listes de versions ; une limite de vitesse globale de 0 à 20 Mo/s a été ajoutée</li>
+                        <li>Nouveau : réglage G1GC, arguments JVM personnalisés, priorité du processus, tailles de fenêtre prédéfinies et visibilité du lanceur</li>
+                        <li>La page À propos couvre désormais les informations du projet, l'environnement d'exécution et la licence complète ; le site web et les pages d'aide ont aussi été réécrits</li>
+                        <li>Correction : le réglage du nombre de threads ignoré, les pages 404 enregistrées comme fichiers et les fichiers partiels laissés après un téléchargement échoué</li>
+                    </ul>
+                    <div class="cl-download">
+                        <a class="cl-dl-btn" href="https://dl.caellab.com/file/games/gpcl/GPCL-1.5.2-Setup.exe">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                            Télécharger v1.5.2
+                        </a>
+                        <span class="cl-file">GPCL-1.5.2-Setup.exe · 103 MB · Windows 64 bits</span>
+                    </div>
+                </article>
+                <article class="timeline-item" id="v1-5-1">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.5.1</span>
+                        <span class="version-title">Ça a planté ? Laissez-moi voir</span>
+                        <span class="version-date">2026-10-16</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Nouvel avis de plantage : quand le jeu se ferme anormalement, il explique pourquoi, avec des rapports d'erreur en un clic (rapport de plantage + journaux + infos système, jetons masqués)</li>
+                        <li>Nouveau panneau d'exécution : après le lancement, il affiche à droite la version, le PID, la durée et la mémoire, et permet de fermer le jeu à tout moment</li>
+                        <li>Le champ de nom d'utilisateur conserve les 5 derniers noms dans une liste déroulante, chacun pouvant être supprimé</li>
+                        <li>Le jeu s'exécute désormais dans son propre processus : fermer le lanceur ne l'arrête plus ; fermer la fenêtre du jeu est aussi reconnu comme une sortie</li>
+                        <li>Nouveaux titres de fenêtre de jeu personnalisés avec des mots magiques ({mc_version}, {time}, etc.)</li>
+                        <li>Les astuces de lancement apparaissent maintenant au hasard (configurable dans les paramètres), avec beaucoup plus d'entrées ajoutées</li>
+                        <li>Animation de démarrage et transitions de page plus fluides</li>
+                    </ul>
+                    <div class="cl-download">
+                        <a class="cl-dl-btn" href="https://dl.caellab.com/file/games/gpcl/GPCL-1.5.1-Setup.exe">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                            Télécharger v1.5.1
+                        </a>
+                        <span class="cl-file">GPCL-1.5.1-Setup.exe · 103 MB · Windows 64 bits</span>
+                    </div>
+                </article>
+                <article class="timeline-item" id="v1-5-0">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.5.0</span>
+                        <span class="version-title">Java réparé et un nouveau look</span>
+                        <span class="version-date">2026-10-16</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Correction des téléchargements du runtime Java : un nom de fichier de miroir modifié cassait l'installation, il est désormais récupéré dynamiquement</li>
+                        <li>L'installeur passe à Inno Setup et effectue une mise à niveau sur place depuis les anciennes versions</li>
+                        <li>Couleurs globales unifiées (bleu ciel comme couleur principale, bleu profond pour le mode sombre), avec une nouvelle animation de démarrage et un nouveau site web</li>
+                        <li>Correction de l'écran de démarrage ignorant le thème clair et de plusieurs styles de boutons non appliqués</li>
+                    </ul>
+                    <div class="cl-download">
+                        <a class="cl-dl-btn" href="https://dl.caellab.com/file/games/gpcl/GPCL-1.5.0-Setup.exe">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                            Télécharger v1.5.0
+                        </a>
+                        <span class="cl-file">GPCL-1.5.0-Setup.exe · 103 MB · Windows 64 bits</span>
+                    </div>
+                </article>
+                <article class="timeline-item" id="v1-4-4">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.4.4</span>
+                        <span class="version-title">Prise en charge des shaders !</span>
+                        <span class="version-date">2026-07-11</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Ajout de la prise en charge d'OptiFine (shaders)</li>
+                        <li>Installation en un clic qui gère automatiquement l'héritage, les bibliothèques et tweakClass</li>
+                        <li>Prise en charge du mécanisme d'héritage de versions inheritsFrom</li>
+                    </ul>
+                    <div class="cl-download">
+                        <a class="cl-dl-btn" href="https://dl.caellab.com/file/games/gpcl/GPCL-1.4.4-Setup.exe">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                            Télécharger v1.4.4
+                        </a>
+                        <span class="cl-file">GPCL-1.4.4-Setup.exe · 104 MB · Windows 64 bits</span>
+                    </div>
+                </article>
+                <article class="timeline-item" id="v1-4-3">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.4.3</span>
+                        <span class="version-title">Corrigé</span>
+                        <span class="version-date">2026-06-02</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Correction du problème de double barre de défilement</li>
+                        <li>Page À propos enrichie avec plus de contenu, dont une boîte à outils</li>
+                    </ul>
+                    <div class="cl-download">
+                        <a class="cl-dl-btn" href="https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases/download/1.4.3/GPCL-1.4.3-Setup.exe">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                            Télécharger v1.4.3
+                        </a>
+                        <span class="cl-file">GPCL-1.4.3-Setup.exe · 101 MB · Windows 64 bits · GitHub</span>
+                    </div>
+                </article>
+                <article class="timeline-item" id="v1-4-2">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.4.2</span>
+                        <span class="version-title">Corrigé ? J'en doute</span>
+                        <span class="version-date">2026-06-02</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>L'écran de démarrage avait quelques problèmes dans la version précédente</li>
+                        <li>Remise en ordre des paramètres</li>
+                        <li>Annuler un lancement tue maintenant vraiment le processus !</li>
+                    </ul>
+                    <div class="cl-download">
+                        <a class="cl-dl-btn" href="https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases/download/1.4.2/GPCL-1.4.2-Setup.exe">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                            Télécharger v1.4.2
+                        </a>
+                        <span class="cl-file">GPCL-1.4.2-Setup.exe · 101 MB · Windows 64 bits · GitHub</span>
+                    </div>
+                </article>
+                <article class="timeline-item" id="v1-4-1">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.4.1</span>
+                        <span class="version-title">Bienvenue !</span>
+                        <span class="version-date">2026-06-02</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Ajout d'une animation de bienvenue au premier lancement</li>
+                        <li>Suppression de l'anti-débogage excessif et activation du mode développeur</li>
+                    </ul>
+                    <div class="cl-download">
+                        <a class="cl-dl-btn" href="https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases/download/1.4.1/GPCL-1.4.1-Setup.exe">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                            Télécharger v1.4.1
+                        </a>
+                        <span class="cl-file">GPCL-1.4.1-Setup.exe · 101 MB · Windows 64 bits · GitHub</span>
+                    </div>
+                </article>
+                <article class="timeline-item" id="v1-4-0">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.4.0</span>
+                        <span class="version-title">Décollage !</span>
+                        <span class="version-date">2026-06-01</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Tentative de prise en charge réelle de Forge</li>
+                        <li>Démarrage instantané ! C'est une version installeur, compilée en code machine !</li>
+                        <li>Correction de bugs, grâce au forum</li>
+                        <li>Parcours largement simplifié ; les détails de mise à jour peuvent désormais afficher un journal complet</li>
+                    </ul>
+                    <div class="cl-download">
+                        <a class="cl-dl-btn" href="https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases/download/1.4.0/GPCL-1.4.0-Setup.exe">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                            Télécharger v1.4.0
+                        </a>
+                        <span class="cl-file">GPCL-1.4.0-Setup.exe · 99 MB · Windows 64 bits · GitHub</span>
+                    </div>
+                </article>
+                <article class="timeline-item" id="v1-3-3">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.3.3</span>
+                        <span class="version-date">2026-05-28</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Forge / Fabric / OptiFine fonctionnent vraiment maintenant !</li>
+                        <li>C'est la première version open source !</li>
+                    </ul>
+                    <div class="cl-download">
+                        <a class="cl-dl-btn" href="https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases/download/1.3.3/GoodPlanCraftLauncher.1.3.3.exe">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                            Télécharger v1.3.3
+                        </a>
+                        <span class="cl-file">GoodPlanCraftLauncher.1.3.3.exe · 90 MB · Windows 64 bits · GitHub</span>
+                    </div>
+                </article>
+                <article class="timeline-item" id="v1-3-2">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.3.2</span>
+                        <span class="version-date">2026-05-23</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Ajout de paramètres détaillés par version, gérés par défaut ; les versions de jeu peuvent être supprimées</li>
+                        <li>Meilleure prise en charge du mode clair ; « Restaurer les valeurs par défaut » déplacé dans une nouvelle section de paramètres de compatibilité ; API mise à jour</li>
+                        <li>Listes déroulantes et divers autres détails peaufinés</li>
+                    </ul>
+                    <div class="cl-download">
+                        <span class="cl-unavailable">Aucun installeur conservé pour cette version</span>
+                    </div>
+                </article>
+                <article class="timeline-item" id="v1-3-1">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.3.0–1.3.1</span>
+                        <span class="version-date">2026-05-22</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Correction du graphique de téléchargement manquant (il n'était pas appelé dans la version installée)</li>
+                        <li>Déplacement du réglage de vérification automatique des mises à jour vers À propos</li>
+                        <li>La page de téléchargement liste désormais intégralement les Alpha, Beta, snapshots et versions stables, corrigeant l'affichage incomplet des versions stables</li>
+                        <li>Écran de lancement refait, avec une gestion des versions triée par dernière date de lancement</li>
+                        <li>Ajout des astuces « Le saviez-vous ? » au démarrage et du nettoyage automatique des journaux (l'intervalle se règle dans les paramètres)</li>
+                        <li>La mise à l'échelle de l'interface dans Apparence fonctionne enfin ; la 1.3.1 a corrigé le fait qu'elle ne s'affichait pas</li>
+                    </ul>
+                    <div class="cl-download">
+                        <span class="cl-unavailable">Aucun installeur conservé pour cette version</span>
+                    </div>
+                </article>
+                <article class="timeline-item" id="v1-2-1">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.2.1</span>
+                        <span class="version-date">2026-05-22</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Bibliothèques dynamiques intégrées localement</li>
+                        <li>Ajout d'une protection contre les doubles lancements / instances</li>
+                        <li>Suppression des paramètres inutiles, et le contenu de la page de téléchargement peut désormais être replié</li>
+                    </ul>
+                    <div class="cl-download">
+                        <span class="cl-unavailable">Aucun installeur conservé pour cette version</span>
+                    </div>
+                </article>
+                <article class="timeline-item" id="v1-2-0">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.2.0</span>
+                        <span class="version-date">2026-05-21</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Ajout des barres de défilement et du mode clair</li>
+                        <li>Ajout d'une animation de démarrage complète du lanceur, réduisant l'écran blanc au lancement</li>
+                        <li>Déplacement de la barre latérale gauche vers le haut et agrandissement de l'interface ; page de téléchargement peaufinée et ajout du runtime Java</li>
+                        <li>Ajout d'un large ensemble de paramètres, organisés en Jeu, Téléchargement, Apparence, Avancé et À propos</li>
+                    </ul>
+                    <div class="cl-download">
+                        <span class="cl-unavailable">Aucun installeur conservé pour cette version</span>
+                    </div>
+                </article>
+                <article class="timeline-item" id="v1-1-0">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.1.0</span>
+                        <span class="version-date">2026-05-21</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Ajout de la configuration automatique de Java, avec une source de téléchargement configurable (merci Tsinghua !)</li>
+                        <li>Performances améliorées, animation de démarrage ajoutée et diagnostic basé sur les journaux amélioré</li>
+                        <li>Correction de nombreux bugs de la liste de téléchargement, comme l'impossibilité d'annuler et les restes après annulation</li>
+                    </ul>
+                    <div class="cl-download">
+                        <span class="cl-unavailable">Aucun installeur conservé pour cette version</span>
+                    </div>
+                </article>
+                <article class="timeline-item" id="v1-0-0">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.0.0</span>
+                        <span class="version-date">2026-05-20</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Première version stable</li>
+                    </ul>
+                    <div class="cl-download">
+                        <span class="cl-unavailable">Aucun installeur conservé pour cette version</span>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <a href="https://gamets.caellab.com" class="logo">
+                    <img src="/logo.png" alt="GameTS">
+                </a>
+                <p>Une équipe indépendante de développement de jeux et d'outils au sein de CaelLab. Explorer les confins du futur, porter un renouveau sans limites.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Projets</h4>
+                <ul>
+                    <li><a href="../index.fr">GoodPlanCraftLauncher</a></li>
+                    <li><a href="/gpcl/docs/fr/">Centre d'aide</a></li>
+                    <li><a href="./index.fr">Journal des modifications</a></li>
+                    <li><a href="/areyouok/">Are You OK?</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Communauté</h4>
+                <ul>
+                    <li><a href="https://forum.xmuer.online" target="_blank" rel="noopener">Forum</a></li>
+                    <li><a href="mailto:gamets@caellab.com">gamets@caellab.com</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Open source</h4>
+                <ul>
+                    <li><a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener">GitHub</a></li>
+                    <li><a href="https://www.caellab.com/license/cbs-v3" target="_blank">Licence</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 GameTS by <a href="https://www.caellab.com/" target="_blank" class="footer-inline-link">CaelLab</a>. Tous droits réservés. Site du projet : <a href="https://gamets.caellab.com/gpcl/" class="footer-inline-link">gamets.caellab.com/gpcl</a></p>
+            <p>GoodPlanCraftLauncher est un outil open source tiers et n'a aucune affiliation officielle avec <a href="https://www.minecraft.net/" target="_blank" rel="noopener" class="footer-inline-link">Mojang Studios</a>, <a href="https://www.microsoft.com/" target="_blank" rel="noopener" class="footer-inline-link">Microsoft</a>, <a href="https://www.xbox.com/" target="_blank" rel="noopener" class="footer-inline-link">Xbox</a>. Minecraft est une marque de Mojang Studios ; l'utilisation de ce lanceur nécessite une licence Minecraft valide.</p>
+            <p>Licence open source : <a href="https://www.caellab.com/license/cbs-v3" target="_blank" class="footer-inline-link">CaelLab BY-SA Code License v3</a> | Open source sur <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener" class="footer-inline-link">GitHub</a></p>
+        </div>
+    </footer>
+
+    <script>
+        var navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', function() {
+            navbar.classList.toggle('scrolled', window.scrollY > 40);
+        }, { passive: true });
+
+        var mobileBtn = document.getElementById('mobileMenuBtn');
+        var mobilePanel = document.getElementById('mobilePanel');
+        mobileBtn.addEventListener('click', function() {
+            var open = mobilePanel.classList.toggle('open');
+            mobileBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+        mobilePanel.querySelectorAll('a').forEach(function(a) {
+            a.addEventListener('click', function() {
+                mobilePanel.classList.remove('open');
+                mobileBtn.setAttribute('aria-expanded', 'false');
+            });
+        });
+
+        function toggleDropdown(id) {
+            var dropdown = document.getElementById(id);
+            var isActive = dropdown.classList.contains('active');
+            document.querySelectorAll('.dropdown').forEach(function(d) {
+                d.classList.remove('active');
+            });
+            if (!isActive) {
+                dropdown.classList.add('active');
+            }
+        }
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown').forEach(function(d) {
+                    d.classList.remove('active');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

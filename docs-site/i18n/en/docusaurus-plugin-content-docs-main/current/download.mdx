@@ -1,0 +1,72 @@
+---
+title: Downloads & mirrors
+description: File download sources, version list sources, thread count, speed limits, Java mirrors, and custom file mirrors.
+---
+
+Slow downloads are usually not the launcher's fault. Switch the download source first, then look at thread count and speed limits.
+
+## Download tasks are queued
+
+After you click "Download", the task goes into a queue and does not freeze the whole interface: waiting tasks can be removed with ×, a running task can be cancelled, and the queue continues after a cancellation.
+
+The download page lists each task's state: waiting, downloading, done, failed.
+
+## File source vs version list source
+
+**Settings → Downloads → Download source** has two independent dropdowns:
+
+- **File download source**: client jar, assets, dependency libraries;
+- **Version list source**: version manifest, version JSON, asset index.
+
+Both offer the same four options:
+
+| Option | Behaviour |
+| --- | --- |
+| Prefer official, switch to mirror when slow | Default. Connect to official first; switch to BMCLAPI if there is no response for a few seconds |
+| Prefer mirrors | On networks in mainland China, use the mirror directly |
+| Prefer official | Official first, fall back to the mirror on failure |
+| Official only | Official only; fail if official is unreachable |
+
+## Custom file mirror
+
+**Settings → Downloads → Custom file mirror** accepts a mirror root address (BMCLAPI by default, for example `https://bmclapi2.bangbang93.com`). Once set, the version manifest, client, libraries, and assets all prefer it, falling back to the normal source order if it cannot fetch.
+
+Leave it empty for the default BMCLAPI.
+
+## Game directory
+
+**Settings → Downloads → Game directory** lets you put versions, libraries, assets, and mods in any folder; leave it empty to return to `%APPDATA%\gpcl\.minecraft`.
+
+Switching directories **does not move** existing files. Versions in the old directory do not come along; copy them yourself if needed. Configuration and logs still stay in `%APPDATA%\gpcl`.
+
+## Maximum threads
+
+Default 64, range 1-128. With many small files, raising concurrency helps; too high and network equipment or the mirror may throttle you. Lower it when the network is unstable.
+
+## Speed limit
+
+0 means no limit; once a value is set, **all download tasks share this total cap**, in MB/s, effective from the next download start. Lower it when several people share the connection.
+
+This limit applies only to game asset downloads. The Java runtime uses a separate mirror and is not affected.
+
+## Java mirrors
+
+**Settings → Downloads → Java download** offers Tsinghua University, Nanjing University, Huawei Cloud, or a custom mirror. If the selected source fails, the next one is tried automatically, with official Adoptium as the final fallback.
+
+Custom addresses support two variables:
+
+- `{v}`: Java major version, for example `8`, `17`, `21`;
+- `{version}`: the full upstream version number, for example `17.0.20.1_1`, which changes as upstream releases.
+
+Example:
+
+```text
+https://cdn.example.com/java/{v}/OpenJDK{v}U-jre_x64_windows_hotspot_{v}.zip
+```
+
+## When a download fails
+
+1. Switch to another download source.
+2. Lower the thread count to 32 or 16 and retry.
+3. Make sure the system clock is correct - a large time skew makes HTTPS certificate validation fail.
+4. Still stuck: send email with the newest log from `%APPDATA%\gpcl\gpcl\log`.

@@ -1,0 +1,26 @@
+{
+  "version.label": {
+    "message": "Suivant",
+    "description": "The label for version current"
+  },
+  "sidebar.mainSidebar.category.开始使用": {
+    "message": "Premiers pas",
+    "description": "The label for category '开始使用' in sidebar 'mainSidebar'"
+  },
+  "sidebar.mainSidebar.category.游戏与模组": {
+    "message": "Jeu et mods",
+    "description": "The label for category '游戏与模组' in sidebar 'mainSidebar'"
+  },
+  "sidebar.mainSidebar.category.出问题了": {
+    "message": "Problèmes",
+    "description": "The label for category '出问题了' in sidebar 'mainSidebar'"
+  },
+  "sidebar.mainSidebar.doc.概述": {
+    "message": "Vue d'ensemble",
+    "description": "The label for the doc item '概述' in sidebar 'mainSidebar', linking to the doc index"
+  },
+  "sidebar.mainSidebar.doc.下载与镜像源": {
+    "message": "Téléchargements et miroirs",
+    "description": "The label for the doc item '下载与镜像源' in sidebar 'mainSidebar', linking to the doc download"
+  }
+}

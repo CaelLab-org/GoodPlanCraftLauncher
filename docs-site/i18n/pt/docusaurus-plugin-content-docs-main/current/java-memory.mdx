@@ -1,0 +1,59 @@
+---
+title: Java e memória
+description: Qual versão do Java corresponde a cada versão do Minecraft, como o GPCL aloca memória automaticamente e o que ajustar quando a memória falta.
+---
+
+O GPCL escolhe o Java conforme a versão do jogo e aloca memória de acordo com a memória do computador. Na maioria dos casos não é preciso ajustar nada manualmente.
+
+## Correspondência das versões do Java
+
+| Versão do Minecraft | Java necessário |
+| --- | --- |
+| 1.16.5 e anteriores | Java 8 |
+| 1.17 – 1.20.4 | Java 17 |
+| 1.20.5 e posteriores | Java 21 |
+
+Se o Java necessário não estiver presente na inicialização, o GPCL baixa e instala automaticamente. Se o download falhar, vá em **Configurações → Download → Download do Java** e tente outra fonte de espelho.
+
+O Java fica numa pasta própria do GPCL, não interfere em outros Java do sistema e não altera o `JAVA_HOME`.
+
+## Memória: automática
+
+O padrão é “automática”. A lógica tem duas etapas:
+
+1. estima **30%** da memória física, arredonda para baixo em GB e limita o resultado a **2 – 8 GB**;
+2. em seguida considera a memória disponível no momento: deixa pelo menos 1 GB para o sistema, com piso de 2 GB e arredondamento para baixo em 512 MB; por fim, usa o menor valor entre as duas etapas.
+
+Alguns resultados reais:
+
+| Memória física | Disponível no momento | Alocação automática |
+| --- | --- | --- |
+| 16 GB | 8 GB | 4 GB |
+| 16 GB | 3.9 GB | 2.5 GB |
+| 8 GB | 4 GB | 2 GB |
+
+A página de configurações mostra a memória em uso / total e a memória disponível. Quando a memória livre fica apertada, a alocação automática diminui e o launcher sugere fechar alguns programas.
+
+`-Xmx` é um limite máximo, não uma reserva imediata. Por isso, alocar com base na memória disponível no momento é mais estável do que fixar um valor muito alto.
+
+## Memória: personalizada
+
+Quando um modpack ou um pacote grande de mods precisar de mais memória, selecione “personalizada” e arraste o controle. Deixe espaço para o sistema e outros programas; não entregue toda a memória física ao jogo.
+
+Um `OutOfMemoryError` significa memória insuficiente:
+
+1. aumente a alocação um nível e tente de novo;
+2. se continuar, reduza a quantidade de mods;
+3. feche também o navegador e outros programas que consomem memória.
+
+## Ajuste do G1GC
+
+Em **Configurações → Avançado → Gerenciamento de memória** existe o ajuste do G1GC, desativado por padrão. Só vale ativar quando houver variação de FPS ou travadas claras por GC; ao ativar, um conjunto de parâmetros G1GC usuais é adicionado.
+
+Os parâmetros JVM personalizados ficam na mesma seção. Um parâmetro errado impede o jogo de iniciar; se não tiver certeza, não altere.
+
+## Otimizar memória antes de iniciar
+
+Com a opção ativa, o GPCL libera parte da memória que ele próprio ocupa antes de iniciar o jogo. Ela atua apenas no processo do launcher, não mexe no Minecraft em execução nem apaga o estado de login.
+
+Em discos rígidos, essa etapa pode causar uma breve travada; isso é normal.

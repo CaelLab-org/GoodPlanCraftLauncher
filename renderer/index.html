@@ -12,8 +12,52 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GoodPlanCraftLauncher</title>
   <link rel="stylesheet" href="style.css">
+  <script>
+    // 页面解析前先按上次的设置把主题 / 缩放 / 恢复页应用到 <html>，否则会先用默认深色英文界面画一帧
+    (function () {
+      try {
+        var info = window.gpcl && window.gpcl.initialI18n;
+        if (!info) return;
+        var root = document.documentElement;
+        if (info.theme === 'light') root.classList.add('light-mode');
+        if (info.locale) {
+          root.lang = info.locale;
+          root.dir = info.dir || 'ltr';
+        }
+        var factor = parseInt(info.scale, 10) / 100 || 1;
+        root.style.setProperty('--app-zoom', String(factor));
+        root.classList.add('gpcl-zoom');
+        if (info.skipSplash) root.classList.add('gpcl-skip-splash');
+
+        var restore = null;
+        try {
+          restore = JSON.parse(sessionStorage.getItem('gpcl:restore') || 'null');
+        } catch (e) {}
+        if (restore) {
+          root.classList.add('gpcl-reloading');
+          if (restore.page === 'settings') root.classList.add('gpcl-boot-settings');
+        }
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body>
+  <div id="boot-splash" class="boot-splash">
+    <div class="boot-particles" id="boot-particles"></div>
+    <div class="boot-splash-content" id="boot-splash-content">
+      <div class="boot-logo">
+        <img src="logo.png" alt="GPCL Logo">
+      </div>
+      <div class="boot-brand">
+        <span class="highlight">G</span>ood <span class="highlight">P</span>lan <span class="highlight">C</span>raft <span class="highlight">L</span>auncher
+      </div>
+      <div class="boot-version" id="boot-version">-</div>
+      <div class="boot-powered">
+        Powered by <a href="https://www.caellab.com/" target="_blank">虚舟实验室(CaelLab)</a> &amp; You
+      </div>
+    </div>
+  </div>
+
   <div class="app-layout">
     <div class="titlebar">
       <div class="titlebar-left">
@@ -22,28 +66,28 @@
       <div class="titlebar-center">
         <nav class="menu-bar">
           <ul class="menu">
-            <li id="menu-launch" class="menu-item"><span class="menu-icon icon icon-play" ></span>启动</li>
-            <li id="menu-download" class="menu-item"><span class="menu-icon icon icon-download" ></span>下载</li>
-            <li id="menu-settings" class="menu-item"><span class="menu-icon icon icon-gear" ></span>设置</li>
-            <li id="menu-more" class="menu-item hidden"><span class="menu-icon icon icon-more" ></span>更多</li>
+            <li id="menu-launch" class="menu-item"><span class="menu-icon icon icon-play" ></span>Launch</li>
+            <li id="menu-download" class="menu-item"><span class="menu-icon icon icon-download" ></span>Download</li>
+            <li id="menu-settings" class="menu-item"><span class="menu-icon icon icon-gear" ></span>Settings</li>
+            <li id="menu-more" class="menu-item hidden"><span class="menu-icon icon icon-more" ></span>More</li>
           </ul>
         </nav>
       </div>
       <div class="window-controls">
-        <button id="minimize-btn" class="min-btn" aria-label="最小化"><span class="icon icon-minimize"></span></button>
-        <button id="close-btn" class="close-btn" aria-label="关闭"><span class="icon icon-close"></span></button>
+        <button id="minimize-btn" class="min-btn" data-i18n-aria-label="ui.minimize" aria-label="Minimize"><span class="icon icon-minimize"></span></button>
+        <button id="close-btn" class="close-btn" data-i18n-aria-label="ui.close" aria-label="Close"><span class="icon icon-close"></span></button>
       </div>
     </div>
 
     <div id="update-widget" class="update-widget hidden">
-      <button id="update-widget-btn" class="update-widget-btn" type="button" aria-label="更新">
+      <button id="update-widget-btn" class="update-widget-btn" type="button" data-i18n-aria-label="ui.update" aria-label="Update">
         <span id="update-widget-icon" class="icon icon-download"></span>
       </button>
       <div id="update-popover" class="update-popover hidden">
-        <button id="update-popover-close" class="update-popover-close" type="button" aria-label="关闭">
+        <button id="update-popover-close" class="update-popover-close" type="button" data-i18n-aria-label="ui.close" aria-label="Close">
           <span class="icon icon-close"></span>
         </button>
-        <div class="update-popover-heading"><span id="update-popover-heading-text">发现新版本</span> <span id="update-popover-version" class="update-popover-version"></span></div>
+        <div class="update-popover-heading"><span id="update-popover-heading-text" data-i18n="ui.new_version_available">New version available</span> <span id="update-popover-version" class="update-popover-version"></span></div>
         <div id="update-popover-title" class="update-popover-title hidden"></div>
         <div id="update-popover-log" class="update-popover-log hidden"></div>
         <div class="update-popover-progress-block">
@@ -53,7 +97,7 @@
           <div id="update-status-text" class="update-status-text"></div>
         </div>
         <div class="update-popover-actions">
-          <button id="update-install-btn" class="update-action-primary" type="button" disabled>立即下载</button>
+          <button id="update-install-btn" class="update-action-primary" type="button" disabled data-i18n="ui.download_now">Download now</button>
         </div>
       </div>
     </div>
@@ -68,15 +112,15 @@
           <div class="launch-sidebar">
             <div class="auth-tabs">
               <button id="auth-microsoft" class="auth-tab auth-tab-disabled" disabled>
-                <span class="auth-label"><span class="icon icon-diamond" ></span> 正版</span>
+                <span class="auth-label"><span class="icon icon-diamond" ></span> Microsoft</span>
               </button>
               <button id="auth-offline" class="auth-tab auth-tab-active">
-                <span class="auth-label"><span class="icon icon-user" ></span> 离线</span>
+                <span class="auth-label"><span class="icon icon-user" ></span> Offline</span>
               </button>
             </div>
             
             <div class="skin-container">
-              <div class="skin-wrapper" id="skin-wrapper" role="button" tabindex="0" title="点击更换头像">
+              <div class="skin-wrapper" id="skin-wrapper" role="button" tabindex="0" data-i18n-title="ui.click_to_change_avatar" title="Click to change avatar">
                 <img src="skin/Alex.png" alt="Skin" class="skin-image">
               </div>
               <div class="skin-reflection"></div>
@@ -85,27 +129,27 @@
             <div class="username-input-group">
               <label for="username" class="username-label"></label>
               <div class="username-field">
-                <input type="text" id="username" placeholder="输入用户名" value="GPCL_Player" class="username-input" autocomplete="off">
-                <button id="username-history-btn" class="username-history-btn" type="button" aria-label="最近使用的名字"><span class="icon icon-chevron"></span></button>
+                <input type="text" id="username" data-i18n-placeholder="ui.enter_username" placeholder="Enter username" value="GPCL_Player" class="username-input" autocomplete="off">
+                <button id="username-history-btn" class="username-history-btn" type="button" data-i18n-aria-label="ui.recent_names" aria-label="Recent names"><span class="icon icon-chevron"></span></button>
                 <div id="username-history" class="username-history hidden"></div>
               </div>
             </div>
             
             <button id="launch-btn" class="launch-button">
-              <span class="launch-text"><span class="icon icon-play" ></span> 开始游戏</span>
+              <span class="launch-text"><span class="icon icon-play" ></span> Launch game</span>
             </button>
 
             <div id="selected-version-display" class="selected-version-display hidden">
-              <span class="version-display-label">将启动:</span>
+              <span class="version-display-label" data-i18n="ui.launching">Launching:</span>
               <span id="selected-version-text" class="version-display-text">-</span>
             </div>
 
             <div class="launch-footer">
               <button id="version-settings" class="footer-btn">
-                <span class="footer-text">版本设置</span>
+                <span class="footer-text" data-i18n="ui.version_settings">Version settings</span>
               </button>
               <button id="version-select" class="footer-btn">
-                <span class="footer-text">版本选择</span>
+                <span class="footer-text" data-i18n="ui.select_version">Select version</span>
               </button>
             </div>
           </div>
@@ -116,41 +160,41 @@
                 <button class="version-settings-back" id="version-settings-back-btn">
                   <span class="icon icon-arrow-left" ></span>
                 </button>
-                <h3 class="version-settings-title" id="version-settings-title">版本设置</h3>
+                <h3 class="version-settings-title" id="version-settings-title" data-i18n="ui.version_settings">Version settings</h3>
               </div>
               
               <div class="version-settings-body">
                 <div class="version-settings-section">
-                  <h4 class="section-title">版本操作</h4>
+                  <h4 class="section-title" data-i18n="ui.version_actions">Version actions</h4>
                   
                   <div class="setting-item">
                     <div class="setting-info">
-                      <div class="setting-label">版本文件夹</div>
-                      <div class="setting-desc">打开此版本所在的版本文件夹</div>
+                      <div class="setting-label" data-i18n="ui.version_folder">Version folder</div>
+                      <div class="setting-desc" data-i18n="ui.open_this_version_s_folder">Open this version's folder</div>
                     </div>
-                    <button class="setting-btn" id="version-open-folder-btn">打开</button>
+                    <button class="setting-btn" id="version-open-folder-btn" data-i18n="ui.open">Open</button>
                   </div>
 
                   <div class="setting-item hidden" id="version-mod-folder-item">
                     <div class="setting-info">
-                      <div class="setting-label">Mod 文件夹</div>
-                      <div class="setting-desc">打开此版本实际使用的 mods 文件夹</div>
+                      <div class="setting-label" data-i18n="ui.mods_folder">Mods folder</div>
+                      <div class="setting-desc" data-i18n="ui.open_the_mods_folder_this_version_actually_uses">Open the mods folder this version actually uses</div>
                     </div>
-                    <button class="setting-btn" id="version-open-mods-btn">打开</button>
+                    <button class="setting-btn" id="version-open-mods-btn" data-i18n="ui.open">Open</button>
                   </div>
 
                   <div class="setting-item hidden" id="version-shader-folder-item">
                     <div class="setting-info">
-                      <div class="setting-label">光影文件夹</div>
-                      <div class="setting-desc">打开此版本实际使用的 shaderpacks 文件夹</div>
+                      <div class="setting-label" data-i18n="ui.shader_packs_folder">Shader packs folder</div>
+                      <div class="setting-desc" data-i18n="ui.open_the_shaderpacks_folder_this_version_actually_uses">Open the shaderpacks folder this version actually uses</div>
                     </div>
-                    <button class="setting-btn" id="version-open-shaders-btn">打开</button>
+                    <button class="setting-btn" id="version-open-shaders-btn" data-i18n="ui.open">Open</button>
                   </div>
                   
                   <div class="setting-item">
                     <div class="setting-info">
-                      <div class="setting-label">删除版本</div>
-                      <div class="setting-desc">删除此版本的全部文件</div>
+                      <div class="setting-label" data-i18n="ui.delete_version">Delete version</div>
+                      <div class="setting-desc" data-i18n="ui.delete_all_files_for_this_version">Delete all files for this version</div>
                     </div>
                     <label class="toggle-switch">
                       <input type="checkbox" id="version-delete-enable">
@@ -160,21 +204,21 @@
                 </div>
                 
                 <div class="version-settings-section">
-                  <h4 class="section-title">游戏设置</h4>
-                  <p class="section-desc">由全局设置托管表示使用全局设置</p>
+                  <h4 class="section-title" data-i18n="ui.game_settings">Game settings</h4>
+                  <p class="section-desc" data-i18n="ui.use_global_setting_follows_the_value_in_settings">Use global setting follows the value in Settings</p>
                   
                   <div class="setting-item">
                     <div class="setting-info">
-                      <div class="setting-label">游戏最大内存</div>
-                      <div class="setting-desc">设置游戏分配的最大内存（GB）</div>
+                      <div class="setting-label" data-i18n="ui.maximum_game_memory">Maximum game memory</div>
+                      <div class="setting-desc" data-i18n="ui.maximum_memory_for_the_game_gb">Maximum memory for the game (GB)</div>
                     </div>
                     <div class="custom-select" data-select-id="version-memory">
                       <div class="custom-select-trigger">
-                        <span class="custom-select-value">由全局设置托管</span>
+                        <span class="custom-select-value" data-i18n="ui.use_global_setting">Use global setting</span>
                         <span class="custom-select-arrow icon icon-chevron" ></span>
                       </div>
                       <div class="custom-select-dropdown">
-                        <div class="custom-select-option selected" data-value="global">由全局设置托管</div>
+                        <div class="custom-select-option selected" data-value="global" data-i18n="ui.use_global_setting">Use global setting</div>
                         <div class="custom-select-option" data-value="0.5">512 MB</div>
                         <div class="custom-select-option" data-value="1">1 GB</div>
                         <div class="custom-select-option" data-value="2">2 GB</div>
@@ -188,45 +232,45 @@
                   
                   <div class="setting-item">
                     <div class="setting-info">
-                      <div class="setting-label">窗口模式</div>
-                      <div class="setting-desc">设置游戏启动时的窗口模式</div>
+                      <div class="setting-label" data-i18n="ui.window_mode">Window mode</div>
+                      <div class="setting-desc" data-i18n="ui.window_mode_used_when_the_game_starts">Window mode used when the game starts</div>
                     </div>
                     <div class="custom-select" data-select-id="version-window-mode">
                       <div class="custom-select-trigger">
-                        <span class="custom-select-value">由全局设置托管</span>
+                        <span class="custom-select-value" data-i18n="ui.use_global_setting">Use global setting</span>
                         <span class="custom-select-arrow icon icon-chevron" ></span>
                       </div>
                       <div class="custom-select-dropdown">
-                        <div class="custom-select-option selected" data-value="global">由全局设置托管</div>
-                        <div class="custom-select-option" data-value="fullscreen">全屏</div>
-                        <div class="custom-select-option" data-value="windowed">窗口</div>
-                        <div class="custom-select-option" data-value="borderless">无边框窗口</div>
-                        <div class="custom-select-option" data-value="minimized">最小化</div>
+                        <div class="custom-select-option selected" data-value="global" data-i18n="ui.use_global_setting">Use global setting</div>
+                        <div class="custom-select-option" data-value="fullscreen" data-i18n="ui.fullscreen">Fullscreen</div>
+                        <div class="custom-select-option" data-value="windowed" data-i18n="ui.windowed">Windowed</div>
+                        <div class="custom-select-option" data-value="borderless" data-i18n="ui.borderless_window">Borderless window</div>
+                        <div class="custom-select-option" data-value="minimized" data-i18n="ui.minimize">Minimize</div>
                       </div>
                     </div>
                   </div>
                   
                   <div class="setting-item">
                     <div class="setting-info">
-                      <div class="setting-label">默认启动状态</div>
-                      <div class="setting-desc">设置开始游戏按钮的默认状态</div>
+                      <div class="setting-label" data-i18n="ui.default_launch_state">Default launch state</div>
+                      <div class="setting-desc" data-i18n="ui.default_state_of_the_launch_game_button">Default state of the Launch game button</div>
                     </div>
                     <div class="custom-select" data-select-id="version-startup-mode">
                       <div class="custom-select-trigger">
-                        <span class="custom-select-value">主界面（常规）</span>
+                        <span class="custom-select-value" data-i18n="ui.main_window_normal">Main window (normal)</span>
                         <span class="custom-select-arrow icon icon-chevron" ></span>
                       </div>
                       <div class="custom-select-dropdown">
-                        <div class="custom-select-option selected" data-value="default">主界面（常规）</div>
-                        <div class="custom-select-option" data-value="join">加入服务器</div>
+                        <div class="custom-select-option selected" data-value="default" data-i18n="ui.main_window_normal">Main window (normal)</div>
+                        <div class="custom-select-option" data-value="join" data-i18n="ui.join_server">Join server</div>
                       </div>
                     </div>
                   </div>
                   
                   <div class="setting-item" id="version-server-ip-container">
                     <div class="setting-info">
-                      <div class="setting-label">服务器地址</div>
-                      <div class="setting-desc">填写要加入的服务器，例如 mc.caellab.com；必填</div>
+                      <div class="setting-label" data-i18n="ui.server_address">Server address</div>
+                      <div class="setting-desc" data-i18n="ui.server_to_join_e_g_mc_caellab_com_required">Server to join, e.g. mc.caellab.com (required)</div>
                     </div>
                     <input type="text" id="version-server-ip" class="setting-input" placeholder="mc.caellab.com" spellcheck="false">
                   </div>
@@ -237,37 +281,37 @@
             <div id="version-select-panel" class="version-select-panel hidden">
               <div class="version-panel-header">
                 <div class="version-panel-heading">
-                  <h3 class="version-panel-title">版本列表</h3>
-                  <div id="version-count" class="version-count">加载中...</div>
+                  <h3 class="version-panel-title" data-i18n="ui.versions">Versions</h3>
+                  <div id="version-count" class="version-count" data-i18n="ui.loading">Loading...</div>
                 </div>
                 <button id="local-install-btn" class="version-import-btn" type="button">
                   <span class="icon icon-plus"></span>
-                  导入
+                  Import
                 </button>
               </div>
               <div class="version-search-row">
                 <span class="icon icon-search"></span>
-                <input id="launch-version-search" class="version-search-input" type="text" placeholder="搜索已安装的版本" autocomplete="off" spellcheck="false">
+                <input id="launch-version-search" class="version-search-input" type="text" data-i18n-placeholder="ui.search_installed_versions" placeholder="Search installed versions" autocomplete="off" spellcheck="false">
               </div>
               <div id="launch-version-list" class="version-list-container">
-                <div class="version-list-loading">正在扫描本地版本...</div>
+                <div class="version-list-loading" data-i18n="ui.scanning_local_versions">Scanning local versions...</div>
               </div>
               <div id="selected-version-info" class="selected-version-info hidden">
-                <div class="selected-version-label">已选择</div>
+                <div class="selected-version-label" data-i18n="ui.selected">Selected</div>
                 <div id="selected-version-name" class="selected-version-name">-</div>
               </div>
             </div>
-            <div id="status" class="status">准备就绪</div>
+            <div id="status" class="status" data-i18n="ui.ready">Ready</div>
           </div>
 
           <div id="game-monitor" class="game-monitor">
             <div class="game-monitor-header">
               <span id="game-monitor-dot" class="game-monitor-dot"></span>
-              <span id="game-monitor-state" class="game-monitor-state">未运行</span>
+              <span id="game-monitor-state" class="game-monitor-state" data-i18n="ui.not_running">Not running</span>
             </div>
             <div class="game-monitor-body">
               <div class="game-monitor-row">
-                <span class="game-monitor-label">版本</span>
+                <span class="game-monitor-label" data-i18n="ui.version">Version</span>
                 <span id="game-monitor-version" class="game-monitor-value">-</span>
               </div>
               <div class="game-monitor-row">
@@ -275,35 +319,35 @@
                 <span id="game-monitor-pid" class="game-monitor-value">-</span>
               </div>
               <div class="game-monitor-row">
-                <span class="game-monitor-label">时长</span>
+                <span class="game-monitor-label" data-i18n="ui.duration">Duration</span>
                 <span id="game-monitor-uptime" class="game-monitor-value">-</span>
               </div>
               <div class="game-monitor-row">
-                <span class="game-monitor-label">内存</span>
+                <span class="game-monitor-label" data-i18n="ui.memory">Memory</span>
                 <span id="game-monitor-memory" class="game-monitor-value">-</span>
               </div>
             </div>
             <div class="game-monitor-actions">
-              <button id="game-monitor-log-btn" class="game-monitor-btn" type="button">查看日志</button>
-              <button id="game-monitor-stop-btn" class="game-monitor-btn game-monitor-btn-danger" type="button">结束游戏</button>
+              <button id="game-monitor-log-btn" class="game-monitor-btn" type="button" data-i18n="ui.view_log">View log</button>
+              <button id="game-monitor-stop-btn" class="game-monitor-btn game-monitor-btn-danger" type="button" data-i18n="ui.end_game">End game</button>
             </div>
           </div>
         </div>
 
         <div id="download-page" class="download-page hidden">
           <div class="download-header">
-            <h3>下载</h3>
+            <h3 data-i18n="ui.download">Download</h3>
             <div class="download-header-actions">
-              <button id="refresh-btn-page" class="refresh-btn hidden">刷新版本列表</button>
+              <button id="refresh-btn-page" class="refresh-btn hidden" data-i18n="ui.refresh_versions">Refresh versions</button>
             </div>
           </div>
 
           <div class="download-tabs">
-            <button id="download-tab-versions" class="download-tab active" type="button">游戏版本</button>
-            <button id="download-tab-mods" class="download-tab" type="button">模组</button>
-            <button id="download-tab-shaders" class="download-tab" type="button">光影</button>
-            <button id="download-tab-resourcepacks" class="download-tab" type="button">资源包</button>
-            <button id="download-tab-modpacks" class="download-tab" type="button">整合包</button>
+            <button id="download-tab-versions" class="download-tab active" type="button" data-i18n="ui.game_version">Game version</button>
+            <button id="download-tab-mods" class="download-tab" type="button" data-i18n="ui.mods">Mods</button>
+            <button id="download-tab-shaders" class="download-tab" type="button" data-i18n="ui.shaders">Shaders</button>
+            <button id="download-tab-resourcepacks" class="download-tab" type="button" data-i18n="ui.resource_packs">Resource packs</button>
+            <button id="download-tab-modpacks" class="download-tab" type="button" data-i18n="ui.modpacks">Modpacks</button>
           </div>
 
           <div id="download-panel" class="download-status-panel hidden">
@@ -315,11 +359,11 @@
               <div class="progress-section">
                 <div class="speed-info">
                   <div class="speed-item">
-                    <span class="speed-label">当前</span>
+                    <span class="speed-label" data-i18n="ui.current">Current</span>
                     <span id="current-speed" class="speed-value">0.00 Mbps</span>
                   </div>
                   <div class="speed-item">
-                    <span class="speed-label">峰值</span>
+                    <span class="speed-label" data-i18n="ui.peak">Peak</span>
                     <span id="peak-speed" class="speed-value">0.00 Mbps</span>
                   </div>
                 </div>
@@ -331,9 +375,9 @@
                   <div id="progress-text" class="progress-text">0%</div>
                 </div>
 
-                <div id="download-filename" class="download-filename">文件名</div>
+                <div id="download-filename" class="download-filename" data-i18n="ui.file_name">File name</div>
 
-                <button id="cancel-download-btn" class="cancel-download-btn">取消下载</button>
+                <button id="cancel-download-btn" class="cancel-download-btn" data-i18n="ui.cancel_download">Cancel download</button>
               </div>
             </div>
           </div>
@@ -343,20 +387,20 @@
 
           <div id="mod-download-section" class="mod-download-section hidden">
             <div class="mod-search-row">
-              <input id="mod-search-input" class="mod-search-input" type="text" placeholder="搜索模组；也可以粘贴 CurseForge 项目链接">
-              <button id="mod-search-btn" class="mod-search-btn" type="button">搜索</button>
+              <input id="mod-search-input" class="mod-search-input" type="text" data-i18n-placeholder="ui.search_mods_or_paste_a_curseforge_project_link" placeholder="Search mods, or paste a CurseForge project link">
+              <button id="mod-search-btn" class="mod-search-btn" type="button" data-i18n="ui.search">Search</button>
             </div>
             <div class="mod-filter-row">
               <select id="mod-game-version" class="mod-select"></select>
               <select id="mod-loader" class="mod-select">
-                <option value="">全部加载器</option>
+                <option value="" data-i18n="ui.all_loaders">All loaders</option>
                 <option value="fabric">Fabric</option>
                 <option value="forge">Forge</option>
                 <option value="neoforge">NeoForge</option>
                 <option value="quilt">Quilt</option>
               </select>
               <select id="mod-source" class="mod-select">
-                <option value="both" selected>全部来源</option>
+                <option value="both" selected data-i18n="ui.all_sources">All sources</option>
                 <option value="modrinth">Modrinth</option>
                 <option value="curseforge">CurseForge</option>
               </select>
@@ -364,7 +408,7 @@
             <div id="mod-status" class="status-message"></div>
             <div id="mod-results" class="mod-results"></div>
             <div id="mod-detail" class="mod-detail hidden">
-              <button id="mod-detail-back" class="detail-back-btn" type="button"><span class="icon icon-arrow-left"></span> 返回搜索结果</button>
+              <button id="mod-detail-back" class="detail-back-btn" type="button"><span class="icon icon-arrow-left"></span> Back to search results</button>
               <div id="mod-detail-head" class="mod-detail-head"></div>
               <div id="mod-detail-versions" class="mod-detail-versions"></div>
             </div>
@@ -372,16 +416,16 @@
 
           <div id="version-list-section" class="version-list-section">
             <div class="version-list-header">
-              <h4 class="section-title">游戏版本</h4>
-              <span id="version-count-label" class="version-count-label">加载中...</span>
+              <h4 class="section-title" data-i18n="ui.game_version">Game version</h4>
+              <span id="version-count-label" class="version-count-label" data-i18n="ui.loading">Loading...</span>
             </div>
             <div id="version-list-container" class="version-list-container">
-              <div class="version-list-loading">正在加载版本列表...</div>
+              <div class="version-list-loading" data-i18n="ui.loading_versions">Loading versions...</div>
             </div>
           </div>
 
           <div id="version-detail-page" class="version-detail-page hidden">
-            <button id="detail-back-btn" class="detail-back-btn"><span class="icon icon-arrow-left"></span> 返回列表</button>
+            <button id="detail-back-btn" class="detail-back-btn"><span class="icon icon-arrow-left"></span> Back to list</button>
             <div class="detail-content">
               <div class="detail-header">
                 <div class="detail-version-id" id="detail-version-id">-</div>
@@ -389,11 +433,11 @@
               </div>
               <div class="detail-info-grid">
                 <div class="detail-info-item">
-                  <span class="detail-info-label">版本类型</span>
+                  <span class="detail-info-label" data-i18n="ui.version_type">Version type</span>
                   <span class="detail-info-value" id="detail-type-label">-</span>
                 </div>
                 <div class="detail-info-item">
-                  <span class="detail-info-label">发布时间</span>
+                  <span class="detail-info-label" data-i18n="ui.released">Released</span>
                   <span class="detail-info-value" id="detail-release-time">-</span>
                 </div>
               </div>
@@ -404,18 +448,18 @@
                       <span class="detail-option-icon icon icon-gear" ></span>
                       <div class="detail-option-text">
                         <span class="detail-option-name">Forge</span>
-                        <span class="detail-option-desc">Forge 模组加载器</span>
+                        <span class="detail-option-desc" data-i18n="ui.forge_mod_loader">Forge mod loader</span>
                       </div>
                     </div>
                     <div class="detail-option-right">
-                      <span class="detail-option-badge" id="forge-badge">检测中...</span>
+                      <span class="detail-option-badge" id="forge-badge" data-i18n="ui.checking_2">Checking...</span>
                       <span class="detail-option-arrow icon icon-chevron" ></span>
                     </div>
                   </div>
                   <div class="detail-option-content hidden" id="forge-content">
-                    <div class="detail-option-loading" id="forge-loading">正在检测可用版本...</div>
+                    <div class="detail-option-loading" id="forge-loading" data-i18n="ui.checking_available_versions">Checking available versions...</div>
                     <div class="detail-option-versions hidden" id="forge-versions"></div>
-                    <div class="detail-option-error hidden" id="forge-error">该版本暂不支持 Forge</div>
+                    <div class="detail-option-error hidden" id="forge-error" data-i18n="ui.this_version_does_not_support_forge_yet">This version does not support Forge yet</div>
                   </div>
                 </div>
 
@@ -425,18 +469,18 @@
                       <span class="detail-option-icon icon icon-loader" ></span>
                       <div class="detail-option-text">
                         <span class="detail-option-name">NeoForge</span>
-                        <span class="detail-option-desc">NeoForge 模组加载器</span>
+                        <span class="detail-option-desc" data-i18n="ui.neoforge_mod_loader">NeoForge mod loader</span>
                       </div>
                     </div>
                     <div class="detail-option-right">
-                      <span class="detail-option-badge" id="neoforge-badge">检测中...</span>
+                      <span class="detail-option-badge" id="neoforge-badge" data-i18n="ui.checking_2">Checking...</span>
                       <span class="detail-option-arrow icon icon-chevron" ></span>
                     </div>
                   </div>
                   <div class="detail-option-content hidden" id="neoforge-content">
-                    <div class="detail-option-loading" id="neoforge-loading">正在检测可用版本...</div>
+                    <div class="detail-option-loading" id="neoforge-loading" data-i18n="ui.checking_available_versions">Checking available versions...</div>
                     <div class="detail-option-versions hidden" id="neoforge-versions"></div>
-                    <div class="detail-option-error hidden" id="neoforge-error">该版本暂不支持 NeoForge</div>
+                    <div class="detail-option-error hidden" id="neoforge-error" data-i18n="ui.this_version_does_not_support_neoforge_yet">This version does not support NeoForge yet</div>
                   </div>
                 </div>
 
@@ -446,21 +490,21 @@
                       <span class="detail-option-icon icon icon-thread" ></span>
                       <div class="detail-option-text">
                         <span class="detail-option-name">Fabric</span>
-                        <span class="detail-option-desc">Fabric 模组加载器</span>
+                        <span class="detail-option-desc" data-i18n="ui.fabric_mod_loader">Fabric mod loader</span>
                       </div>
                     </div>
                     <div class="detail-option-right">
-                      <span class="detail-option-badge" id="fabric-badge">检测中...</span>
+                      <span class="detail-option-badge" id="fabric-badge" data-i18n="ui.checking_2">Checking...</span>
                       <span class="detail-option-arrow icon icon-chevron" ></span>
                     </div>
                   </div>
                   <div class="detail-option-content hidden" id="fabric-content">
-                    <div class="detail-option-loading" id="fabric-loading">正在检测可用版本...</div>
+                    <div class="detail-option-loading" id="fabric-loading" data-i18n="ui.checking_available_versions">Checking available versions...</div>
                     <div class="detail-option-versions hidden" id="fabric-versions"></div>
-                    <div class="detail-option-error hidden" id="fabric-error">该版本暂不支持 Fabric</div>
+                    <div class="detail-option-error hidden" id="fabric-error" data-i18n="ui.this_version_does_not_support_fabric_yet">This version does not support Fabric yet</div>
                     <label class="detail-option-auto">
                       <input type="checkbox" id="fabric-api-auto" checked>
-                      <span>同时安装 Fabric API（推荐）</span>
+                      <span data-i18n="ui.also_install_fabric_api_recommended">Also install Fabric API (recommended)</span>
                     </label>
                   </div>
                 </div>
@@ -471,28 +515,28 @@
                       <span class="detail-option-icon icon icon-eye" ></span>
                       <div class="detail-option-text">
                         <span class="detail-option-name">OptiFine</span>
-                        <span class="detail-option-desc">OptiFine 高清修复</span>
+                        <span class="detail-option-desc" data-i18n="ui.optifine">OptiFine</span>
                       </div>
                     </div>
                     <div class="detail-option-right">
-                      <span class="detail-option-badge" id="optifine-badge">检测中...</span>
+                      <span class="detail-option-badge" id="optifine-badge" data-i18n="ui.checking_2">Checking...</span>
                       <span class="detail-option-arrow icon icon-chevron" ></span>
                     </div>
                   </div>
                   <div class="detail-option-content hidden" id="optifine-content">
-                    <div class="detail-option-loading" id="optifine-loading">正在检测可用版本...</div>
+                    <div class="detail-option-loading" id="optifine-loading" data-i18n="ui.checking_available_versions">Checking available versions...</div>
                     <div class="detail-option-versions hidden" id="optifine-versions"></div>
-                    <div class="detail-option-error hidden" id="optifine-error">该版本暂不支持 OptiFine</div>
+                    <div class="detail-option-error hidden" id="optifine-error" data-i18n="ui.this_version_does_not_support_optifine_yet">This version does not support OptiFine yet</div>
                   </div>
                 </div>
               </div>
-              <button id="detail-download-btn" class="detail-download-btn">下载</button>
+              <button id="detail-download-btn" class="detail-download-btn" data-i18n="ui.download">Download</button>
             </div>
           </div>
 
           <div id="java-download-section" class="java-download-section">
-            <h4 class="section-title">Java 运行时</h4>
-            <p class="section-desc">下载并安装 Minecraft 所需的 Java 运行时环境</p>
+            <h4 class="section-title" data-i18n="ui.java_runtime">Java runtime</h4>
+            <p class="section-desc" data-i18n="ui.download_and_install_the_java_runtime_minecraft_needs">Download and install the Java runtime Minecraft needs</p>
             <div id="java-install-status" class="java-install-status"></div>
             <div class="java-version-selector">
               <div class="java-version-grid" id="java-version-grid">
@@ -503,27 +547,27 @@
                   </div>
                   <div class="java-version-info">
                     <div class="java-info-row">
-                      <span class="info-label">适用版本:</span>
+                      <span class="info-label" data-i18n="ui.for_versions">For versions:</span>
                       <span class="info-value">Minecraft 1.7.10 - 1.16.5</span>
                     </div>
 
                   </div>
-                  <button class="java-install-btn" data-version="8">安装</button>
+                  <button class="java-install-btn" data-version="8" data-i18n="ui.install">Install</button>
                 </div>
 
                 <div class="java-version-card" data-version="17">
                   <div class="java-version-header">
                     <span class="java-version-num">Java 17</span>
-                    <span class="java-version-badge" id="java-17-status">推荐</span>
+                    <span class="java-version-badge" id="java-17-status" data-i18n="ui.recommended_2">Recommended</span>
                   </div>
                   <div class="java-version-info">
                     <div class="java-info-row">
-                      <span class="info-label">适用版本:</span>
+                      <span class="info-label" data-i18n="ui.for_versions">For versions:</span>
                       <span class="info-value">Minecraft 1.17 - 1.20.4</span>
                     </div>
 
                   </div>
-                  <button class="java-install-btn" data-version="17">安装</button>
+                  <button class="java-install-btn" data-version="17" data-i18n="ui.install">Install</button>
                 </div>
 
                 <div class="java-version-card" data-version="21">
@@ -533,12 +577,12 @@
                   </div>
                   <div class="java-version-info">
                     <div class="java-info-row">
-                      <span class="info-label">适用版本:</span>
+                      <span class="info-label" data-i18n="ui.for_versions">For versions:</span>
                       <span class="info-value">Minecraft 1.20.5 - 1.21+</span>
                     </div>
 
                   </div>
-                  <button class="java-install-btn" data-version="21">安装</button>
+                  <button class="java-install-btn" data-version="21" data-i18n="ui.install">Install</button>
                 </div>
 
                 <div class="java-version-card" data-version="25">
@@ -548,12 +592,12 @@
                   </div>
                   <div class="java-version-info">
                     <div class="java-info-row">
-                      <span class="info-label">适用版本:</span>
-                      <span class="info-value">Minecraft 1.21+ (最新)</span>
+                      <span class="info-label" data-i18n="ui.for_versions">For versions:</span>
+                      <span class="info-value" data-i18n="ui.minecraft_1_21_latest">Minecraft 1.21+ (latest)</span>
                     </div>
 
                   </div>
-                  <button class="java-install-btn" data-version="25">安装</button>
+                  <button class="java-install-btn" data-version="25" data-i18n="ui.install">Install</button>
                 </div>
               </div>
             </div>
@@ -565,27 +609,27 @@
             <ul class="settings-sidebar-menu">
               <li id="settings-tab-game" class="settings-sidebar-item active" data-tab="game">
                 <span class="sidebar-icon icon icon-gamepad" ></span>
-                <span class="sidebar-label">游戏</span>
+                <span class="sidebar-label" data-i18n="ui.game">Game</span>
               </li>
               <li id="settings-tab-compatibility" class="settings-sidebar-item" data-tab="compatibility">
                 <span class="sidebar-icon icon icon-sliders" ></span>
-                <span class="sidebar-label">兼容性</span>
+                <span class="sidebar-label" data-i18n="ui.compatibility">Compatibility</span>
               </li>
               <li id="settings-tab-appearance" class="settings-sidebar-item" data-tab="appearance">
                 <span class="sidebar-icon icon icon-palette" ></span>
-                <span class="sidebar-label">外观</span>
+                <span class="sidebar-label" data-i18n="ui.appearance">Appearance</span>
               </li>
               <li id="settings-tab-download" class="settings-sidebar-item" data-tab="download">
                 <span class="sidebar-icon icon icon-download"></span>
-                <span class="sidebar-label">下载</span>
+                <span class="sidebar-label" data-i18n="ui.download">Download</span>
               </li>
               <li id="settings-tab-advanced" class="settings-sidebar-item" data-tab="advanced">
                 <span class="sidebar-icon icon icon-gear" ></span>
-                <span class="sidebar-label">高级</span>
+                <span class="sidebar-label" data-i18n="ui.advanced">Advanced</span>
               </li>
               <li id="settings-tab-about" class="settings-sidebar-item" data-tab="about">
                 <span class="sidebar-icon icon icon-info" ></span>
-                <span class="sidebar-label">关于</span>
+                <span class="sidebar-label" data-i18n="ui.about">About</span>
               </li>
             </ul>
           </div>
@@ -595,35 +639,35 @@
             <div id="settings-content-game" class="settings-content-panel active">
               <div class="settings-page-inner">
                 <div class="settings-group">
-                  <h2 class="settings-group-title">游戏设置</h2>
-                  <p class="settings-group-desc">内存、窗口和启动方式</p>
+                  <h2 class="settings-group-title" data-i18n="ui.game_settings">Game settings</h2>
+                  <p class="settings-group-desc" data-i18n="ui.memory_window_and_launch_options">Memory, window and launch options</p>
 
                   <div class="setting-card setting-card--group">
                     <div class="setting-card-head">
                       <span class="setting-card-icon"><span class="icon icon-thread"></span></span>
                       <div>
-                        <div class="setting-card-title">内存分配</div>
-                        <div class="setting-card-desc">自动模式会根据电脑内存给系统留出空间</div>
+                        <div class="setting-card-title" data-i18n="ui.memory_allocation">Memory allocation</div>
+                        <div class="setting-card-desc" data-i18n="ui.automatic_mode_leaves_headroom_for_the_system_based_on_installed_memory">Automatic mode leaves headroom for the system based on installed memory</div>
                       </div>
                     </div>
 
                     <div class="setting-row">
                       <div class="setting-left">
-                        <div class="setting-label">分配方式</div>
-                        <div class="setting-desc">由 GPCL 自动控制，或手动指定上限</div>
+                        <div class="setting-label" data-i18n="ui.allocation_mode">Allocation mode</div>
+                        <div class="setting-desc" data-i18n="ui.managed_by_gpcl_or_set_a_manual_limit">Managed by GPCL, or set a manual limit</div>
                       </div>
                       <div class="setting-control">
                         <div class="segmented" id="settings-memory-mode">
-                          <label><input type="radio" name="memory-mode" value="auto" checked><span>自动</span></label>
-                          <label><input type="radio" name="memory-mode" value="custom"><span>自定义</span></label>
+                          <label><input type="radio" name="memory-mode" value="auto" checked><span data-i18n="ui.automatic_2">Automatic</span></label>
+                          <label><input type="radio" name="memory-mode" value="custom"><span data-i18n="ui.custom">Custom</span></label>
                         </div>
                       </div>
                     </div>
 
                     <div class="setting-row" id="memory-custom-row">
                       <div class="setting-left">
-                        <div class="setting-label">自定义上限</div>
-                        <div class="setting-desc">拖动选择分配给游戏的最大内存</div>
+                        <div class="setting-label" data-i18n="ui.custom_limit">Custom limit</div>
+                        <div class="setting-desc" data-i18n="ui.drag_to_set_the_maximum_memory_for_the_game">Drag to set the maximum memory for the game</div>
                       </div>
                       <div class="setting-control setting-control-slider">
                         <input type="range" id="settings-memory-slider" class="range-input" min="1" max="16" step="1" value="4">
@@ -632,16 +676,16 @@
                     </div>
 
                     <div class="memory-usage">
-                      <div class="memory-usage-head"><span>系统内存（已用 / 总计）</span><span id="memory-usage-label">-- / --</span></div>
+                      <div class="memory-usage-head"><span data-i18n="ui.system_memory_used_total">System memory (used / total)</span><span id="memory-usage-label">-- / --</span></div>
                       <div class="memory-usage-track"><div class="memory-usage-used" id="memory-usage-used"></div></div>
-                      <div class="memory-usage-foot"><span>当前可用 <b id="memory-free-label">--</b></span><span>GPCL 将分配 <b id="memory-alloc-label">--</b></span></div>
+                      <div class="memory-usage-foot"><span>Available now <b id="memory-free-label">--</b></span><span>GPCL will allocate <b id="memory-alloc-label">--</b></span></div>
                     </div>
-                    <div class="setting-hint memory-warning hidden" id="memory-warning">当前可用内存较少，自动分配已按可用内存下调；启动前建议关闭一些程序。</div>
+                    <div class="setting-hint memory-warning hidden" id="memory-warning" data-i18n="ui.available_memory_is_low_so_the_automatic_value_was_reduced_consider_clos_3a1baa">Available memory is low, so the automatic value was reduced. Consider closing some programs before launching.</div>
 
                     <div class="setting-row">
                       <div class="setting-left">
-                        <div class="setting-label">启动游戏前优化内存</div>
-                        <div class="setting-desc">启动前回收 GPCL 自身占用的内存，不影响正在运行的游戏</div>
+                        <div class="setting-label" data-i18n="ui.optimize_memory_before_launching">Optimize memory before launching</div>
+                        <div class="setting-desc" data-i18n="ui.free_gpcl_s_own_memory_before_launch_running_games_are_not_affected">Free GPCL's own memory before launch; running games are not affected</div>
                       </div>
                       <div class="setting-control">
                         <label class="switch">
@@ -656,27 +700,27 @@
                     <div class="setting-card-head">
                       <span class="setting-card-icon"><span class="icon icon-gamepad"></span></span>
                       <div>
-                        <div class="setting-card-title">显示</div>
-                        <div class="setting-card-desc">窗口模式、尺寸和标题</div>
+                        <div class="setting-card-title" data-i18n="ui.display">Display</div>
+                        <div class="setting-card-desc" data-i18n="ui.window_mode_size_and_title">Window mode, size and title</div>
                       </div>
                     </div>
 
                     <div class="setting-row">
                       <div class="setting-left">
-                        <div class="setting-label">窗口模式</div>
-                        <div class="setting-desc">设置游戏启动时的窗口模式</div>
+                        <div class="setting-label" data-i18n="ui.window_mode">Window mode</div>
+                        <div class="setting-desc" data-i18n="ui.window_mode_used_when_the_game_starts">Window mode used when the game starts</div>
                       </div>
                       <div class="setting-control">
                         <div class="custom-select" data-select-id="settings-window-mode">
                           <div class="custom-select-trigger">
-                            <span class="custom-select-value">窗口</span>
+                            <span class="custom-select-value" data-i18n="ui.windowed">Windowed</span>
                             <span class="custom-select-arrow icon icon-chevron" ></span>
                           </div>
                           <div class="custom-select-dropdown">
-                            <div class="custom-select-option" data-value="fullscreen">全屏</div>
-                            <div class="custom-select-option selected" data-value="windowed">窗口</div>
-                            <div class="custom-select-option" data-value="borderless">无边框窗口</div>
-                            <div class="custom-select-option" data-value="minimized">最小化</div>
+                            <div class="custom-select-option" data-value="fullscreen" data-i18n="ui.fullscreen">Fullscreen</div>
+                            <div class="custom-select-option selected" data-value="windowed" data-i18n="ui.windowed">Windowed</div>
+                            <div class="custom-select-option" data-value="borderless" data-i18n="ui.borderless_window">Borderless window</div>
+                            <div class="custom-select-option" data-value="minimized" data-i18n="ui.minimize">Minimize</div>
                           </div>
                         </div>
                       </div>
@@ -684,21 +728,21 @@
 
                     <div class="setting-row">
                       <div class="setting-left">
-                        <div class="setting-label">窗口大小</div>
-                        <div class="setting-desc">窗口模式下使用的游戏分辨率</div>
+                        <div class="setting-label" data-i18n="ui.window_size">Window size</div>
+                        <div class="setting-desc" data-i18n="ui.game_resolution_in_windowed_mode">Game resolution in windowed mode</div>
                       </div>
                       <div class="setting-control">
                         <div class="custom-select" data-select-id="settings-window-size">
                           <div class="custom-select-trigger">
-                            <span class="custom-select-value">默认</span>
+                            <span class="custom-select-value" data-i18n="ui.default">Default</span>
                             <span class="custom-select-arrow icon icon-chevron" ></span>
                           </div>
                           <div class="custom-select-dropdown">
-                            <div class="custom-select-option selected" data-value="default">默认</div>
+                            <div class="custom-select-option selected" data-value="default" data-i18n="ui.default">Default</div>
                             <div class="custom-select-option" data-value="1280x720">1280 × 720</div>
                             <div class="custom-select-option" data-value="1600x900">1600 × 900</div>
                             <div class="custom-select-option" data-value="1920x1080">1920 × 1080</div>
-                            <div class="custom-select-option" data-value="custom">自定义</div>
+                            <div class="custom-select-option" data-value="custom" data-i18n="ui.custom">Custom</div>
                           </div>
                         </div>
                       </div>
@@ -706,8 +750,8 @@
 
                     <div class="setting-row hidden" id="window-size-custom-row">
                       <div class="setting-left">
-                        <div class="setting-label">自定义尺寸</div>
-                        <div class="setting-desc">宽 × 高（像素）</div>
+                        <div class="setting-label" data-i18n="ui.custom_size">Custom size</div>
+                        <div class="setting-desc" data-i18n="ui.width_height_px">Width × height (px)</div>
                       </div>
                       <div class="setting-control">
                         <input type="number" id="settings-window-width" class="num-display" min="320" max="7680" value="854">
@@ -718,23 +762,23 @@
 
                     <div class="setting-row">
                       <div class="setting-left">
-                        <div class="setting-label">游戏窗口标题</div>
-                        <div class="setting-desc">支持 {mc_version}、{time} 等魔术字</div>
+                        <div class="setting-label" data-i18n="ui.game_window_title">Game window title</div>
+                        <div class="setting-desc" data-i18n="ui.supports_magic_words_such_as_mc_version_and_time">Supports magic words such as {mc_version} and {time}</div>
                       </div>
                       <div class="setting-control setting-control-wide">
                         <input type="text" id="settings-window-title" class="setting-input" placeholder="Minecraft {mc_version} (GPCL)" spellcheck="false">
                       </div>
                     </div>
                     <div class="setting-hint">
-                      可用：<code>{mc_version}</code> <code>{mc_id}</code> <code>{username}</code> <code>{gpcl_version}</code> <code>{date}</code> <code>{time}</code> <code>{datetime}</code> <code>{java}</code> <code>{memory}</code>
-                      <a href="#" id="window-title-help">魔术字说明</a><br>
-                      留空表示不修改游戏窗口标题
+                      Available:<code>{mc_version}</code> <code>{mc_id}</code> <code>{username}</code> <code>{gpcl_version}</code> <code>{date}</code> <code>{time}</code> <code>{datetime}</code> <code>{java}</code> <code>{memory}</code>
+                      <a href="#" id="window-title-help" data-i18n="ui.magic_words">Magic words</a><br>
+                      Leave empty to keep the game window title unchanged
                     </div>
 
                     <div class="setting-row">
                       <div class="setting-left">
-                        <div class="setting-label">尽量保持该名称</div>
-                        <div class="setting-desc">关闭时只在窗口出现后校正 20 秒；开启后整局游戏一直保持</div>
+                        <div class="setting-label" data-i18n="ui.keep_this_name_when_possible">Keep this name when possible</div>
+                        <div class="setting-desc" data-i18n="ui.when_off_the_title_is_corrected_for_20_seconds_after_the_window_appears_baa262">When off, the title is corrected for 20 seconds after the window appears; when on, it is kept for the whole session</div>
                       </div>
                       <div class="setting-control">
                         <label class="switch">
@@ -746,8 +790,8 @@
 
                     <div class="setting-row">
                       <div class="setting-left">
-                        <div class="setting-label">自动设置游戏语言</div>
-                        <div class="setting-desc">每次启动前把游戏语言改成下面选定的值；关掉就完全不动游戏里的设置</div>
+                        <div class="setting-label" data-i18n="ui.set_the_game_language_automatically">Set the game language automatically</div>
+                        <div class="setting-desc" data-i18n="ui.write_the_selected_language_into_options_txt_before_each_launch_when_off_a35af2">Write the selected language into options.txt before each launch; when off, the game's settings are left untouched</div>
                       </div>
                       <div class="setting-control">
                         <label class="switch">
@@ -759,17 +803,17 @@
 
                     <div class="setting-row" id="game-language-row">
                       <div class="setting-left">
-                        <div class="setting-label">游戏语言</div>
-                        <div class="setting-desc">启动前写入游戏的 options.txt，进游戏后就是这里选的语言</div>
+                        <div class="setting-label" data-i18n="ui.game_language">Game language</div>
+                        <div class="setting-desc" data-i18n="ui.written_to_options_txt_before_launch_this_becomes_the_in_game_language">Written to options.txt before launch; this becomes the in-game language</div>
                       </div>
                       <div class="setting-control">
                         <div class="custom-select" data-select-id="settings-game-language">
                           <div class="custom-select-trigger">
-                            <span class="custom-select-value">中文（中国大陆）</span>
+                            <span class="custom-select-value" data-i18n="ui.chinese_mainland_china">Chinese (Mainland China)</span>
                             <span class="custom-select-arrow icon icon-chevron"></span>
                           </div>
                           <div class="custom-select-dropdown custom-select-dropdown--scroll">
-                            <div class="custom-select-option selected" data-value="zh_cn">中文（中国大陆）</div>
+                            <div class="custom-select-option selected" data-value="zh_cn" data-i18n="ui.chinese_mainland_china">Chinese (Mainland China)</div>
                             <div class="custom-select-option" data-value="zh_tw">繁體中文（台灣）</div>
                             <div class="custom-select-option" data-value="zh_hk">繁體中文（香港）</div>
                             <div class="custom-select-option" data-value="en_us">English (US)</div>
@@ -797,26 +841,26 @@
                     <div class="setting-card-head">
                       <span class="setting-card-icon"><span class="icon icon-sliders"></span></span>
                       <div>
-                        <div class="setting-card-title">启动行为</div>
-                        <div class="setting-card-desc">游戏进程和启动器窗口</div>
+                        <div class="setting-card-title" data-i18n="ui.launch_behavior">Launch behavior</div>
+                        <div class="setting-card-desc" data-i18n="ui.game_process_and_launcher_window">Game process and launcher window</div>
                       </div>
                     </div>
 
                     <div class="setting-row">
                       <div class="setting-left">
-                        <div class="setting-label">进程优先级</div>
-                        <div class="setting-desc">让游戏更积极地抢 CPU，或把资源让给其他程序</div>
+                        <div class="setting-label" data-i18n="ui.process_priority">Process priority</div>
+                        <div class="setting-desc" data-i18n="ui.let_the_game_compete_for_cpu_or_leave_resources_for_other_programs">Let the game compete for CPU, or leave resources for other programs</div>
                       </div>
                       <div class="setting-control">
                         <div class="custom-select" data-select-id="settings-process-priority">
                           <div class="custom-select-trigger">
-                            <span class="custom-select-value">中（默认）</span>
+                            <span class="custom-select-value" data-i18n="ui.medium_default">Medium (default)</span>
                             <span class="custom-select-arrow icon icon-chevron" ></span>
                           </div>
                           <div class="custom-select-dropdown">
-                            <div class="custom-select-option" data-value="low">低</div>
-                            <div class="custom-select-option selected" data-value="normal">中（默认）</div>
-                            <div class="custom-select-option" data-value="high">高</div>
+                            <div class="custom-select-option" data-value="low" data-i18n="ui.low">Low</div>
+                            <div class="custom-select-option selected" data-value="normal" data-i18n="ui.medium_default">Medium (default)</div>
+                            <div class="custom-select-option" data-value="high" data-i18n="ui.high">High</div>
                           </div>
                         </div>
                       </div>
@@ -824,13 +868,13 @@
 
                     <div class="setting-row">
                       <div class="setting-left">
-                        <div class="setting-label">启动器可见性</div>
-                        <div class="setting-desc">游戏启动后怎么处理启动器窗口</div>
+                        <div class="setting-label" data-i18n="ui.launcher_visibility">Launcher visibility</div>
+                        <div class="setting-desc" data-i18n="ui.what_to_do_with_the_launcher_window_after_the_game_starts">What to do with the launcher window after the game starts</div>
                       </div>
                       <div class="setting-control">
                         <div class="segmented" id="settings-launcher-visibility">
-                          <label><input type="radio" name="launcher-visibility" value="keep" checked><span>保持不变</span></label>
-                          <label><input type="radio" name="launcher-visibility" value="minimize"><span>最小化</span></label>
+                          <label><input type="radio" name="launcher-visibility" value="keep" checked><span data-i18n="ui.keep_unchanged">Keep unchanged</span></label>
+                          <label><input type="radio" name="launcher-visibility" value="minimize"><span data-i18n="ui.minimize">Minimize</span></label>
                         </div>
                       </div>
                     </div>
@@ -842,14 +886,14 @@
             <div id="settings-content-compatibility" class="settings-content-panel hidden">
               <div class="settings-page-inner">
                 <div class="settings-group">
-                  <h2 class="settings-group-title">兼容性设置</h2>
-                  <p class="settings-group-desc">解决启动器兼容性问题</p>
+                  <h2 class="settings-group-title" data-i18n="ui.compatibility_2">Compatibility</h2>
+                  <p class="settings-group-desc" data-i18n="ui.fix_launcher_compatibility_issues">Fix launcher compatibility issues</p>
                   
                   <div class="setting-card setting-card--group">
                     <div class="setting-row">
                       <div class="setting-left">
-                        <div class="setting-label">恢复默认设置</div>
-                        <div class="setting-desc">将所有设置恢复为默认值，此操作会重启启动器</div>
+                        <div class="setting-label" data-i18n="ui.reset_all_settings">Reset all settings</div>
+                        <div class="setting-desc" data-i18n="ui.restore_every_setting_to_its_default_value_and_restart_the_launcher">Restore every setting to its default value and restart the launcher</div>
                       </div>
                       <div class="setting-control">
                         <label class="toggle-switch">
@@ -866,40 +910,86 @@
             <div id="settings-content-appearance" class="settings-content-panel hidden">
               <div class="settings-page-inner">
                 <div class="settings-group">
-                  <h2 class="settings-group-title">外观设置</h2>
-                  <p class="settings-group-desc">主题、缩放和启动时的显示</p>
+                  <h2 class="settings-group-title" data-i18n="ui.appearance_2">Appearance</h2>
+                  <p class="settings-group-desc" data-i18n="ui.language_theme_scale_and_startup_display">Language, theme, scale and startup display</p>
 
                   <div class="setting-card setting-card--group">
                     <div class="setting-card-head">
-                      <span class="setting-card-icon"><span class="icon icon-palette"></span></span>
+                      <span class="setting-card-icon"><span class="icon icon-globe"></span></span>
                       <div>
-                        <div class="setting-card-title">外观</div>
-                        <div class="setting-card-desc">启动器本身的显示方式</div>
+                        <div class="setting-card-title" data-i18n="ui.language">Language</div>
+                        <div class="setting-card-desc" data-i18n="ui.language_used_by_the_launcher_interface">Language used by the launcher interface</div>
                       </div>
                     </div>
 
                     <div class="setting-row">
                       <div class="setting-left">
-                        <div class="setting-label">主题模式</div>
-                        <div class="setting-desc">选择启动器主题</div>
+                        <div class="setting-label" data-i18n="ui.interface_language">Interface language</div>
+                        <div class="setting-desc" data-i18n="ui.follows_your_system_on_first_launch_you_can_change_it_anytime">Follows your system on first launch; you can change it anytime</div>
+                      </div>
+                      <div class="setting-control">
+                        <div class="custom-select language-select" id="settings-language-select">
+                          <div class="custom-select-trigger" id="settings-language-trigger" role="combobox" aria-expanded="false" aria-controls="settings-language-dropdown">
+                            <span class="custom-select-value" id="settings-language-value">简体中文</span>
+                            <span class="custom-select-arrow icon icon-chevron"></span>
+                          </div>
+                          <div class="custom-select-dropdown language-dropdown" id="settings-language-dropdown">
+                            <div class="language-search">
+                              <span class="icon icon-search"></span>
+                              <input type="text" id="settings-language-search" data-i18n-placeholder="ui.search_languages" placeholder="Search languages" autocomplete="off">
+                            </div>
+                            <div class="language-options" id="settings-language-options" role="listbox"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="setting-card setting-card--group">
+                    <div class="setting-card-head">
+                      <span class="setting-card-icon"><span class="icon icon-palette"></span></span>
+                      <div>
+                        <div class="setting-card-title" data-i18n="ui.appearance">Appearance</div>
+                        <div class="setting-card-desc" data-i18n="ui.how_the_launcher_itself_looks">How the launcher itself looks</div>
+                      </div>
+                    </div>
+
+                    <div class="setting-row">
+                      <div class="setting-left">
+                        <div class="setting-label" data-i18n="ui.theme">Theme</div>
+                        <div class="setting-desc" data-i18n="ui.choose_the_launcher_theme">Choose the launcher theme</div>
                       </div>
                       <div class="setting-control">
                         <div class="segmented" id="settings-theme">
-                          <label><input type="radio" name="theme" value="dark"><span>深色</span></label>
-                          <label><input type="radio" name="theme" value="light" checked><span>浅色</span></label>
+                          <label><input type="radio" name="theme" value="dark"><span data-i18n="ui.dark">Dark</span></label>
+                          <label><input type="radio" name="theme" value="light" checked><span data-i18n="ui.light">Light</span></label>
                         </div>
                       </div>
                     </div>
 
                     <div class="setting-row">
                       <div class="setting-left">
-                        <div class="setting-label">界面缩放</div>
-                        <div class="setting-desc">调整界面元素大小</div>
+                        <div class="setting-label" data-i18n="ui.interface_style">Interface style</div>
+                        <div class="setting-desc" data-i18n="ui.choose_the_interface_style">Choose the overall look of the launcher</div>
+                      </div>
+                      <div class="setting-control">
+                        <div class="segmented" id="settings-style">
+                          <label><input type="radio" name="style" value="mc"><span data-i18n="ui.style_mc">Minecraft</span></label>
+                          <label><input type="radio" name="style" value="advanced" checked><span data-i18n="ui.style_advanced">Advanced</span></label>
+                          <label><input type="radio" name="style" value="minimal"><span data-i18n="ui.style_minimal">Minimal</span></label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="setting-row">
+                      <div class="setting-left">
+                        <div class="setting-label" data-i18n="ui.interface_scale">Interface scale</div>
+                        <div class="setting-desc" data-i18n="ui.adjust_the_size_of_interface_elements">Adjust the size of interface elements</div>
                       </div>
                       <div class="setting-control">
                         <div class="custom-select" data-select-id="settings-scale">
                           <div class="custom-select-trigger">
-                            <span class="custom-select-value">100% (默认)</span>
+                            <span class="custom-select-value" data-i18n="ui.100_default">100% (default)</span>
                             <span class="custom-select-arrow icon icon-chevron" ></span>
                           </div>
                           <div class="custom-select-dropdown">
@@ -920,15 +1010,15 @@
                     <div class="setting-card-head">
                       <span class="setting-card-icon"><span class="icon icon-user"></span></span>
                       <div>
-                        <div class="setting-card-title">头像</div>
-                        <div class="setting-card-desc">启动页左侧显示的头像，也可以直接点击它更换</div>
+                        <div class="setting-card-title" data-i18n="ui.avatar">Avatar</div>
+                        <div class="setting-card-desc" data-i18n="ui.avatar_shown_on_the_launch_page_click_it_to_change">Avatar shown on the launch page; click it to change</div>
                       </div>
                     </div>
 
                     <div class="setting-row">
                       <div class="setting-left">
-                        <div class="setting-label">头像大小</div>
-                        <div class="setting-desc">拖动调整，范围 32–160 像素</div>
+                        <div class="setting-label" data-i18n="ui.avatar_size">Avatar size</div>
+                        <div class="setting-desc" data-i18n="ui.drag_to_adjust_32_160_px">Drag to adjust, 32–160 px</div>
                       </div>
                       <div class="setting-control setting-control-slider">
                         <input type="range" id="settings-avatar-size" class="range-input" min="32" max="160" step="2" value="50">
@@ -938,12 +1028,12 @@
 
                     <div class="setting-row">
                       <div class="setting-left">
-                        <div class="setting-label">头像图片</div>
-                        <div class="setting-desc">支持 PNG / JPG / GIF / WebP；超过 1 MB 会询问是否压缩，最大 4 MB</div>
+                        <div class="setting-label" data-i18n="ui.avatar_image">Avatar image</div>
+                        <div class="setting-desc" data-i18n="ui.png_jpg_gif_webp_files_over_1_mb_can_be_compressed_up_to_4_mb">PNG / JPG / GIF / WebP; files over 1 MB can be compressed, up to 4 MB</div>
                       </div>
                       <div class="setting-control">
-                        <button id="settings-change-avatar" class="settings-action-btn" type="button">选择图片</button>
-                        <button id="settings-reset-avatar" class="settings-action-btn settings-action-btn-secondary" type="button">恢复默认</button>
+                        <button id="settings-change-avatar" class="settings-action-btn" type="button" data-i18n="ui.choose_image">Choose image</button>
+                        <button id="settings-reset-avatar" class="settings-action-btn settings-action-btn-secondary" type="button" data-i18n="ui.reset">Reset</button>
                       </div>
                     </div>
                   </div>
@@ -952,15 +1042,15 @@
                     <div class="setting-card-head">
                       <span class="setting-card-icon"><span class="icon icon-play"></span></span>
                       <div>
-                        <div class="setting-card-title">启动显示</div>
-                        <div class="setting-card-desc">进入游戏前的动画和提示</div>
+                        <div class="setting-card-title" data-i18n="ui.startup_display">Startup display</div>
+                        <div class="setting-card-desc" data-i18n="ui.animation_and_tips_before_the_game_starts">Animation and tips before the game starts</div>
                       </div>
                     </div>
 
                     <div class="setting-row">
                       <div class="setting-left">
-                        <div class="setting-label">播放启动动画</div>
-                        <div class="setting-desc">启动游戏时全屏播放 Minecraft 欢迎动画</div>
+                        <div class="setting-label" data-i18n="ui.play_startup_animation">Play startup animation</div>
+                        <div class="setting-desc" data-i18n="ui.play_the_full_screen_minecraft_welcome_animation_when_launching">Play the full-screen Minecraft welcome animation when launching</div>
                       </div>
                       <div class="setting-control">
                         <label class="switch">
@@ -972,8 +1062,8 @@
 
                     <div class="setting-row">
                       <div class="setting-left">
-                        <div class="setting-label">不渲染 Splash</div>
-                        <div class="setting-desc">启动时不渲染 Splash 直接进入主界面，但可能延长白屏时间</div>
+                        <div class="setting-label" data-i18n="ui.skip_splash_screen">Skip splash screen</div>
+                        <div class="setting-desc" data-i18n="ui.go_straight_to_the_main_window_without_the_splash_screen_may_show_a_whit_a2bb2a">Go straight to the main window without the splash screen; may show a white screen for longer</div>
                       </div>
                       <div class="setting-control">
                         <label class="switch">
@@ -985,20 +1075,20 @@
 
                     <div class="setting-row">
                       <div class="setting-left">
-                        <div class="setting-label">启动小知识</div>
-                        <div class="setting-desc">启动游戏时显示一条 Minecraft 小知识</div>
+                        <div class="setting-label" data-i18n="ui.launch_tips">Launch tips</div>
+                        <div class="setting-desc" data-i18n="ui.show_a_minecraft_tip_when_the_game_starts">Show a Minecraft tip when the game starts</div>
                       </div>
                       <div class="setting-control">
                         <div class="custom-select" data-select-id="settings-tip-frequency">
                           <div class="custom-select-trigger">
-                            <span class="custom-select-value">偶尔（1/3）</span>
+                            <span class="custom-select-value" data-i18n="ui.occasionally_1_3">Occasionally (1/3)</span>
                             <span class="custom-select-arrow icon icon-chevron" ></span>
                           </div>
                           <div class="custom-select-dropdown">
-                            <div class="custom-select-option" data-value="off">从不显示</div>
-                            <div class="custom-select-option selected" data-value="rare">偶尔（1/3）</div>
-                            <div class="custom-select-option" data-value="half">一半概率</div>
-                            <div class="custom-select-option" data-value="always">每次显示</div>
+                            <div class="custom-select-option" data-value="off" data-i18n="ui.never">Never</div>
+                            <div class="custom-select-option selected" data-value="rare" data-i18n="ui.occasionally_1_3">Occasionally (1/3)</div>
+                            <div class="custom-select-option" data-value="half" data-i18n="ui.half_the_time">Half the time</div>
+                            <div class="custom-select-option" data-value="always" data-i18n="ui.every_time">Every time</div>
                           </div>
                         </div>
                       </div>
@@ -1006,8 +1096,8 @@
 
                     <div class="setting-row">
                       <div class="setting-left">
-                        <div class="setting-label">启用更多</div>
-                        <div class="setting-desc">显示顶部导航栏中的「更多」菜单</div>
+                        <div class="setting-label" data-i18n="ui.enable_more">Enable More</div>
+                        <div class="setting-desc" data-i18n="ui.show_the_more_menu_in_the_top_navigation_bar">Show the More menu in the top navigation bar</div>
                       </div>
                       <div class="setting-control">
                         <label class="switch">
@@ -1024,34 +1114,34 @@
             <div id="settings-content-download" class="settings-content-panel hidden">
               <div class="settings-page-inner">
                 <div class="settings-group">
-                  <h2 class="settings-group-title">下载设置</h2>
-                  <p class="settings-group-desc">下载源、并发和速度</p>
+                  <h2 class="settings-group-title" data-i18n="ui.download_settings">Download settings</h2>
+                  <p class="settings-group-desc" data-i18n="ui.sources_concurrency_and_speed">Sources, concurrency and speed</p>
 
                   <div class="setting-card setting-card--group">
                     <div class="setting-card-head">
                       <span class="setting-card-icon"><span class="icon icon-download"></span></span>
                       <div>
-                        <div class="setting-card-title">下载源</div>
-                        <div class="setting-card-desc">官方源和 BMCLAPI 镜像的优先顺序</div>
+                        <div class="setting-card-title" data-i18n="ui.download_source">Download source</div>
+                        <div class="setting-card-desc" data-i18n="ui.priority_of_official_sources_and_the_bmclapi_mirror">Priority of official sources and the BMCLAPI mirror</div>
                       </div>
                     </div>
 
                     <div class="setting-row">
                       <div class="setting-left">
-                        <div class="setting-label">文件下载源</div>
-                        <div class="setting-desc">客户端、资源文件和依赖库</div>
+                        <div class="setting-label" data-i18n="ui.file_download_source">File download source</div>
+                        <div class="setting-desc" data-i18n="ui.client_assets_and_libraries">Client, assets and libraries</div>
                       </div>
                       <div class="setting-control">
                         <div class="custom-select" data-select-id="settings-file-source">
                           <div class="custom-select-trigger">
-                            <span class="custom-select-value">优先官方，缓慢时换镜像</span>
+                            <span class="custom-select-value" data-i18n="ui.official_first_mirror_when_slow">Official first, mirror when slow</span>
                             <span class="custom-select-arrow icon icon-chevron" ></span>
                           </div>
                           <div class="custom-select-dropdown">
-                            <div class="custom-select-option selected" data-value="auto">优先官方，缓慢时换镜像</div>
-                            <div class="custom-select-option" data-value="mirror-first">尽量使用镜像源</div>
-                            <div class="custom-select-option" data-value="official-first">优先使用官方源</div>
-                            <div class="custom-select-option" data-value="official-only">尽量使用官方源</div>
+                            <div class="custom-select-option selected" data-value="auto" data-i18n="ui.official_first_mirror_when_slow">Official first, mirror when slow</div>
+                            <div class="custom-select-option" data-value="mirror-first" data-i18n="ui.prefer_mirrors">Prefer mirrors</div>
+                            <div class="custom-select-option" data-value="official-first" data-i18n="ui.prefer_official_sources">Prefer official sources</div>
+                            <div class="custom-select-option" data-value="official-only" data-i18n="ui.prefer_official_sources_2">Prefer official sources</div>
                           </div>
                         </div>
                       </div>
@@ -1059,20 +1149,20 @@
 
                     <div class="setting-row">
                       <div class="setting-left">
-                        <div class="setting-label">版本列表源</div>
-                        <div class="setting-desc">版本清单、版本 JSON 和资源索引</div>
+                        <div class="setting-label" data-i18n="ui.version_list_source">Version list source</div>
+                        <div class="setting-desc" data-i18n="ui.version_manifest_version_json_and_asset_index">Version manifest, version JSON and asset index</div>
                       </div>
                       <div class="setting-control">
                         <div class="custom-select" data-select-id="settings-version-source">
                           <div class="custom-select-trigger">
-                            <span class="custom-select-value">优先官方，缓慢时换镜像</span>
+                            <span class="custom-select-value" data-i18n="ui.official_first_mirror_when_slow">Official first, mirror when slow</span>
                             <span class="custom-select-arrow icon icon-chevron" ></span>
                           </div>
                           <div class="custom-select-dropdown">
-                            <div class="custom-select-option selected" data-value="auto">优先官方，缓慢时换镜像</div>
-                            <div class="custom-select-option" data-value="mirror-first">尽量使用镜像源</div>
-                            <div class="custom-select-option" data-value="official-first">优先使用官方源</div>
-                            <div class="custom-select-option" data-value="official-only">尽量使用官方源</div>
+                            <div class="custom-select-option selected" data-value="auto" data-i18n="ui.official_first_mirror_when_slow">Official first, mirror when slow</div>
+                            <div class="custom-select-option" data-value="mirror-first" data-i18n="ui.prefer_mirrors">Prefer mirrors</div>
+                            <div class="custom-select-option" data-value="official-first" data-i18n="ui.prefer_official_sources">Prefer official sources</div>
+                            <div class="custom-select-option" data-value="official-only" data-i18n="ui.prefer_official_sources_2">Prefer official sources</div>
                           </div>
                         </div>
                       </div>
@@ -1080,8 +1170,8 @@
 
                     <div class="setting-row">
                       <div class="setting-left">
-                        <div class="setting-label">自定义文件镜像</div>
-                        <div class="setting-desc">填镜像根地址（如 https://bmclapi2.bangbang93.com），留空使用默认 BMCLAPI</div>
+                        <div class="setting-label" data-i18n="ui.custom_file_mirror">Custom file mirror</div>
+                        <div class="setting-desc" data-i18n="ui.mirror_root_url_e_g_https_bmclapi2_bangbang93_com_leave_empty_for_bmclapi">Mirror root URL (e.g. https://bmclapi2.bangbang93.com); leave empty for BMCLAPI</div>
                       </div>
                       <div class="setting-control setting-control-column">
                         <input type="text" id="settings-custom-file-mirror" class="setting-input" placeholder="https://bmclapi2.bangbang93.com">
@@ -1093,20 +1183,20 @@
                     <div class="setting-card-head">
                       <span class="setting-card-icon"><span class="icon icon-save"></span></span>
                       <div>
-                        <div class="setting-card-title">游戏目录</div>
-                        <div class="setting-card-desc">版本、库、资源和模组都放在这里；切换后不会自动搬迁已有文件</div>
+                        <div class="setting-card-title" data-i18n="ui.game_directory">Game directory</div>
+                        <div class="setting-card-desc" data-i18n="ui.versions_libraries_assets_and_mods_go_here_existing_files_are_not_moved_549759">Versions, libraries, assets and mods go here; existing files are not moved when you switch</div>
                       </div>
                     </div>
 
                     <div class="setting-row">
                       <div class="setting-left">
-                        <div class="setting-label">安装位置</div>
+                        <div class="setting-label" data-i18n="ui.install_location">Install location</div>
                         <div class="setting-desc" id="settings-install-dir-label">--</div>
                       </div>
                       <div class="setting-control setting-control-column">
                         <div class="install-dir-actions">
-                          <button id="settings-install-dir-change" class="settings-action-btn" type="button">更改目录</button>
-                          <button id="settings-install-dir-reset" class="settings-action-btn settings-action-btn-secondary" type="button">恢复默认</button>
+                          <button id="settings-install-dir-change" class="settings-action-btn" type="button" data-i18n="ui.change_folder">Change folder</button>
+                          <button id="settings-install-dir-reset" class="settings-action-btn settings-action-btn-secondary" type="button" data-i18n="ui.reset">Reset</button>
                         </div>
                       </div>
                     </div>
@@ -1116,18 +1206,18 @@
                     <div class="setting-card-head">
                       <span class="setting-card-icon"><span class="icon icon-box"></span></span>
                       <div>
-                        <div class="setting-card-title">模组来源</div>
-                        <div class="setting-card-desc">CurseForge 官方接口需要 API Key；镜像不可用时会自动改用它</div>
+                        <div class="setting-card-title" data-i18n="ui.mod_source">Mod source</div>
+                        <div class="setting-card-desc" data-i18n="ui.the_official_curseforge_api_needs_an_api_key_the_public_mirror_is_used_w_bc3de1">The official CurseForge API needs an API key; the public mirror is used when it is not configured</div>
                       </div>
                     </div>
 
                     <div class="setting-row">
                       <div class="setting-left">
                         <div class="setting-label">CurseForge API Key</div>
-                        <div class="setting-desc">可选。没有 Key 时只能走公共镜像，镜像维护期间会搜不到 CurseForge</div>
+                        <div class="setting-desc" data-i18n="ui.optional_without_a_key_only_the_public_mirror_is_used_curseforge_search_6223ec">Optional. Without a key, only the public mirror is used; CurseForge search may be unavailable while it is down</div>
                       </div>
                       <div class="setting-control setting-control-column">
-                        <input type="text" id="settings-curseforge-key" class="setting-input" placeholder="留空则只使用 Modrinth + 镜像">
+                        <input type="text" id="settings-curseforge-key" class="setting-input" data-i18n-placeholder="ui.leave_empty_to_use_modrinth_and_the_mirror_only" placeholder="Leave empty to use Modrinth and the mirror only">
                       </div>
                     </div>
                   </div>
@@ -1136,15 +1226,15 @@
                     <div class="setting-card-head">
                       <span class="setting-card-icon"><span class="icon icon-thread"></span></span>
                       <div>
-                        <div class="setting-card-title">速度</div>
-                        <div class="setting-card-desc">并发连接数和总下载速度上限</div>
+                        <div class="setting-card-title" data-i18n="ui.speed">Speed</div>
+                        <div class="setting-card-desc" data-i18n="ui.concurrent_connections_and_overall_speed_limit">Concurrent connections and overall speed limit</div>
                       </div>
                     </div>
 
                     <div class="setting-row">
                       <div class="setting-left">
-                        <div class="setting-label">最大线程数</div>
-                        <div class="setting-desc">小文件较多时提高并发能加快下载，建议 64–128</div>
+                        <div class="setting-label" data-i18n="ui.maximum_threads">Maximum threads</div>
+                        <div class="setting-desc" data-i18n="ui.more_threads_help_with_many_small_files_64_128_is_recommended">More threads help with many small files; 64–128 is recommended</div>
                       </div>
                       <div class="setting-control setting-control-slider">
                         <input type="range" id="num-threads" class="range-input" min="1" max="128" step="1" value="64">
@@ -1154,12 +1244,12 @@
 
                     <div class="setting-row">
                       <div class="setting-left">
-                        <div class="setting-label">速度限制</div>
-                        <div class="setting-desc">所有下载任务共享这个上限，0 表示不限速；下次下载开始时生效</div>
+                        <div class="setting-label" data-i18n="ui.speed_limit">Speed limit</div>
+                        <div class="setting-desc" data-i18n="ui.shared_by_all_downloads_0_means_unlimited_takes_effect_on_the_next_download">Shared by all downloads; 0 means unlimited. Takes effect on the next download</div>
                       </div>
                       <div class="setting-control setting-control-slider">
                         <input type="range" id="settings-speed-limit" class="range-input" min="0" max="20" step="1" value="0">
-                        <span class="range-value" id="settings-speed-limit-value">不限速</span>
+                        <span class="range-value" id="settings-speed-limit-value" data-i18n="ui.unlimited">Unlimited</span>
                       </div>
                     </div>
                   </div>
@@ -1168,27 +1258,27 @@
                     <div class="setting-card-head">
                       <span class="setting-card-icon"><span class="icon icon-save"></span></span>
                       <div>
-                        <div class="setting-card-title">Java 下载</div>
-                        <div class="setting-card-desc">Java 运行时单独使用下面的镜像源</div>
+                        <div class="setting-card-title" data-i18n="ui.java_downloads">Java downloads</div>
+                        <div class="setting-card-desc" data-i18n="ui.java_uses_the_mirror_below_independently">Java uses the mirror below independently</div>
                       </div>
                     </div>
 
                     <div class="setting-row">
                       <div class="setting-left">
-                        <div class="setting-label">Java 镜像源</div>
-                        <div class="setting-desc">优选的下载镜像源，失败时会自动切换其他镜像与官方源</div>
+                        <div class="setting-label" data-i18n="ui.java_mirror">Java mirror</div>
+                        <div class="setting-desc" data-i18n="ui.preferred_download_mirror_falls_back_to_other_mirrors_and_official_sourc_de74aa">Preferred download mirror; falls back to other mirrors and official sources on failure</div>
                       </div>
                       <div class="setting-control">
                         <div class="custom-select" data-select-id="java-mirror-select">
                           <div class="custom-select-trigger">
-                            <span class="custom-select-value">清华大学镜像（推荐）</span>
+                            <span class="custom-select-value" data-i18n="ui.tsinghua_mirror_recommended">Tsinghua mirror (recommended)</span>
                             <span class="custom-select-arrow icon icon-chevron" ></span>
                           </div>
                           <div class="custom-select-dropdown">
-                            <div class="custom-select-option selected" data-value="tsinghua">清华大学镜像（推荐）</div>
-                            <div class="custom-select-option" data-value="nju">南京大学镜像</div>
-                            <div class="custom-select-option" data-value="huawei">华为云镜像</div>
-                            <div class="custom-select-option" data-value="custom">自定义镜像源</div>
+                            <div class="custom-select-option selected" data-value="tsinghua" data-i18n="ui.tsinghua_mirror_recommended">Tsinghua mirror (recommended)</div>
+                            <div class="custom-select-option" data-value="nju" data-i18n="ui.nanjing_university_mirror">Nanjing University mirror</div>
+                            <div class="custom-select-option" data-value="huawei" data-i18n="ui.huawei_cloud_mirror">Huawei Cloud mirror</div>
+                            <div class="custom-select-option" data-value="custom" data-i18n="ui.custom_mirror">Custom mirror</div>
                           </div>
                         </div>
                       </div>
@@ -1196,22 +1286,22 @@
 
                     <div id="custom-java-mirror-container" class="setting-row hidden">
                       <div class="setting-left">
-                        <div class="setting-label">自定义镜像源地址</div>
-                        <div class="setting-desc">支持使用 {v} 变量代表 Java 版本</div>
+                        <div class="setting-label" data-i18n="ui.custom_mirror_url">Custom mirror URL</div>
+                        <div class="setting-desc" data-i18n="ui.use_the_v_variable_to_insert_the_java_version">Use the {v} variable to insert the Java version</div>
                       </div>
                       <div class="setting-control setting-control-column">
                         <input type="text" id="custom-java-mirror-url" class="setting-input" placeholder="https://example.com/java/{v}/OpenJDK{v}U-jre_x64_windows_hotspot_{v}.zip">
                         <div class="setting-desc mirror-help">
-                          <strong>支持的变量：</strong>
+                          <strong data-i18n="ui.supported_variables">Supported variables:</strong>
                           <ul>
-                            <li><code>{v}</code> - Java 版本号（如 8、17、21、25）</li>
-                            <li><code>{version}</code> - 完整版本号（形如 17.0.20.1_1，随上游发布变化）</li>
+                            <li><code>{v}</code> - Java version number (e.g. 8, 17, 21, 25)</li>
+                            <li><code>{version}</code> - Full version string (e.g. 17.0.20.1_1; changes with upstream releases)</li>
                           </ul>
-                          <strong>示例：</strong>
+                          <strong data-i18n="ui.example">Example:</strong>
                           <div class="mirror-help-code">
-                            <div class="mirror-help-label">清华大学：</div>
+                            <div class="mirror-help-label" data-i18n="ui.tsinghua">Tsinghua:</div>
                             <div class="mirror-help-url">https://mirrors.tuna.tsinghua.edu.cn/Adoptium/{v}/jre/x64/windows/</div>
-                            <div class="mirror-help-label">自定义：</div>
+                            <div class="mirror-help-label" data-i18n="ui.custom_2">Custom:</div>
                             <div class="mirror-help-url">https://cdn.example.com/java/{v}/OpenJDK{v}U-jre_x64_windows_hotspot_{v}.zip</div>
                           </div>
                         </div>
@@ -1225,22 +1315,22 @@
             <div id="settings-content-advanced" class="settings-content-panel hidden">
               <div class="settings-page-inner">
                 <div class="settings-group">
-                  <h2 class="settings-group-title">高级设置</h2>
-                  <p class="settings-group-desc">启动行为、日志和 Java 参数</p>
+                  <h2 class="settings-group-title" data-i18n="ui.advanced_2">Advanced</h2>
+                  <p class="settings-group-desc" data-i18n="ui.launch_behavior_logs_and_java_arguments">Launch behavior, logs and Java arguments</p>
 
                   <div class="setting-card setting-card--group">
                     <div class="setting-card-head">
                       <span class="setting-card-icon"><span class="icon icon-gear"></span></span>
                       <div>
-                        <div class="setting-card-title">启动与日志</div>
-                        <div class="setting-card-desc">启动器自身的行为</div>
+                        <div class="setting-card-title" data-i18n="ui.launch_and_logs">Launch and logs</div>
+                        <div class="setting-card-desc" data-i18n="ui.launcher_behavior">Launcher behavior</div>
                       </div>
                     </div>
 
                     <div class="setting-row">
                       <div class="setting-left">
-                        <div class="setting-label">防止多次启动</div>
-                        <div class="setting-desc">开启后将阻止启动器重复运行</div>
+                        <div class="setting-label" data-i18n="ui.prevent_multiple_instances">Prevent multiple instances</div>
+                        <div class="setting-desc" data-i18n="ui.keep_the_launcher_from_running_more_than_once">Keep the launcher from running more than once</div>
                       </div>
                       <div class="setting-control">
                         <label class="switch">
@@ -1252,8 +1342,8 @@
 
                     <div class="setting-row">
                       <div class="setting-left">
-                        <div class="setting-label">开发者选项</div>
-                        <div class="setting-desc">允许打开 DevTools、右键菜单及刷新页面</div>
+                        <div class="setting-label" data-i18n="ui.developer_options">Developer options</div>
+                        <div class="setting-desc" data-i18n="ui.allow_devtools_the_context_menu_and_page_reloads">Allow DevTools, the context menu and page reloads</div>
                       </div>
                       <div class="setting-control">
                         <label class="switch">
@@ -1265,8 +1355,8 @@
 
                     <div class="setting-row">
                       <div class="setting-left">
-                        <div class="setting-label">自动清除日志</div>
-                        <div class="setting-desc">启动时自动清理过期的日志文件</div>
+                        <div class="setting-label" data-i18n="ui.clean_up_logs_automatically">Clean up logs automatically</div>
+                        <div class="setting-desc" data-i18n="ui.delete_expired_log_files_at_startup">Delete expired log files at startup</div>
                       </div>
                       <div class="setting-control">
                         <label class="switch">
@@ -1278,21 +1368,21 @@
 
                     <div id="log-retention-container" class="setting-row setting-row-indent">
                       <div class="setting-left">
-                        <div class="setting-label">保留日志时间</div>
-                        <div class="setting-desc">设置日志文件的保留时长</div>
+                        <div class="setting-label" data-i18n="ui.keep_logs_for">Keep logs for</div>
+                        <div class="setting-desc" data-i18n="ui.how_long_log_files_are_kept">How long log files are kept</div>
                       </div>
                       <div class="setting-control">
                         <input type="number" id="log-retention-value" class="num-display" value="7" min="1">
                         <div class="custom-select small" data-select-id="log-retention-unit">
                           <div class="custom-select-trigger">
-                            <span class="custom-select-value">天</span>
+                            <span class="custom-select-value" data-i18n="ui.days">days</span>
                             <span class="custom-select-arrow icon icon-chevron" ></span>
                           </div>
                           <div class="custom-select-dropdown">
-                            <div class="custom-select-option" data-value="hour">时</div>
-                            <div class="custom-select-option selected" data-value="day">天</div>
-                            <div class="custom-select-option" data-value="month">月</div>
-                            <div class="custom-select-option" data-value="year">年</div>
+                            <div class="custom-select-option" data-value="hour" data-i18n="ui.hours">hours</div>
+                            <div class="custom-select-option selected" data-value="day" data-i18n="ui.days">days</div>
+                            <div class="custom-select-option" data-value="month" data-i18n="ui.months">months</div>
+                            <div class="custom-select-option" data-value="year" data-i18n="ui.years">years</div>
                           </div>
                         </div>
                       </div>
@@ -1303,15 +1393,15 @@
                     <div class="setting-card-head">
                       <span class="setting-card-icon"><span class="icon icon-bolt"></span></span>
                       <div>
-                        <div class="setting-card-title">Java 高级</div>
-                        <div class="setting-card-desc">不懂就不要改，错误参数会让游戏直接起不来</div>
+                        <div class="setting-card-title" data-i18n="ui.java_advanced">Java advanced</div>
+                        <div class="setting-card-desc" data-i18n="ui.don_t_change_these_unless_you_know_what_you_re_doing_bad_arguments_can_s_d8e975">Don't change these unless you know what you're doing; bad arguments can stop the game from starting</div>
                       </div>
                     </div>
 
                     <div class="setting-row setting-row-stack">
                       <div class="setting-left">
-                        <div class="setting-label">自定义 JVM 参数</div>
-                        <div class="setting-desc">空格分隔，支持引号；留空使用默认参数</div>
+                        <div class="setting-label" data-i18n="ui.custom_jvm_arguments">Custom JVM arguments</div>
+                        <div class="setting-desc" data-i18n="ui.space_separated_quotes_supported_leave_empty_for_defaults">Space-separated, quotes supported; leave empty for defaults</div>
                       </div>
                       <div class="setting-control-column">
                         <textarea id="settings-jvm-args" class="setting-input setting-textarea" rows="3" placeholder="-XX:+UseG1GC" spellcheck="false"></textarea>
@@ -1320,18 +1410,18 @@
 
                     <div class="setting-row">
                       <div class="setting-left">
-                        <div class="setting-label">内存管理</div>
-                        <div class="setting-desc">G1GC 调优会追加一组常用的垃圾回收参数</div>
+                        <div class="setting-label" data-i18n="ui.memory_2">Memory</div>
+                        <div class="setting-desc" data-i18n="ui.g1gc_tuning_appends_a_set_of_common_garbage_collection_flags">G1GC tuning appends a set of common garbage-collection flags</div>
                       </div>
                       <div class="setting-control">
                         <div class="custom-select" data-select-id="settings-gc-preset">
                           <div class="custom-select-trigger">
-                            <span class="custom-select-value">默认</span>
+                            <span class="custom-select-value" data-i18n="ui.default">Default</span>
                             <span class="custom-select-arrow icon icon-chevron" ></span>
                           </div>
                           <div class="custom-select-dropdown">
-                            <div class="custom-select-option selected" data-value="default">默认</div>
-                            <div class="custom-select-option" data-value="g1gc">G1GC 调优</div>
+                            <div class="custom-select-option selected" data-value="default" data-i18n="ui.default">Default</div>
+                            <div class="custom-select-option" data-value="g1gc" data-i18n="ui.g1gc_tuning">G1GC tuning</div>
                           </div>
                         </div>
                       </div>
@@ -1344,30 +1434,30 @@
             <div id="settings-content-about" class="settings-content-panel hidden">
               <div class="settings-page-inner">
                 <div class="settings-group">
-                  <h2 class="settings-group-title">关于</h2>
-                  <p class="settings-group-desc">项目信息、链接和许可证</p>
+                  <h2 class="settings-group-title" data-i18n="ui.about">About</h2>
+                  <p class="settings-group-desc" data-i18n="ui.project_information_links_and_license">Project information, links and license</p>
 
                   <div class="setting-card about-card about-hero">
                     <div class="about-header">
-                      <img src="../static/icon/GPCL.png" alt="图标" class="about-icon">
+                      <img src="../static/icon/GPCL.png" data-i18n-alt="ui.icon" alt="Icon" class="about-icon">
                       <div class="about-info">
                         <div class="about-title">GoodPlanCraftLauncher</div>
-                        <div class="about-version" id="about-version">版本: -</div>
-                        <div class="about-byline">虚舟实验室（CaelLab）</div>
+                        <div class="about-version" id="about-version" data-i18n="ui.version_2">Version: -</div>
+                        <div class="about-byline" data-i18n="ui.caellab_2">CaelLab</div>
                       </div>
                     </div>
                     <div class="about-actions">
-                      <button id="check-update-btn" class="check-update-btn">检查更新</button>
-                      <button id="go-download-btn" class="go-download-btn hidden">立即下载</button>
-                      <button id="open-website-btn" class="go-download-btn go-download-btn-secondary hidden">打开官网</button>
+                      <button id="check-update-btn" class="check-update-btn" data-i18n="ui.check_for_updates">Check for updates</button>
+                      <button id="go-download-btn" class="go-download-btn hidden" data-i18n="ui.download_now">Download now</button>
+                      <button id="open-website-btn" class="go-download-btn go-download-btn-secondary hidden" data-i18n="ui.open_website">Open website</button>
                     </div>
                     <div id="update-status" class="update-status"></div>
 
                     <div class="auto-update-setting">
                       <div class="setting-row">
                         <div class="setting-left">
-                          <div class="setting-label">自动检查更新</div>
-                          <div class="setting-desc">启动时自动检查是否有新版本可用</div>
+                          <div class="setting-label" data-i18n="ui.check_for_updates_automatically">Check for updates automatically</div>
+                          <div class="setting-desc" data-i18n="ui.check_for_a_new_version_at_startup">Check for a new version at startup</div>
                         </div>
                         <div class="setting-control">
                           <label class="switch">
@@ -1378,8 +1468,8 @@
                       </div>
                       <div class="setting-row setting-row-indent">
                         <div class="setting-left">
-                          <div class="setting-label">自动安装更新</div>
-                          <div class="setting-desc">发现新版本后在后台下载，退出启动器时自动安装</div>
+                          <div class="setting-label" data-i18n="ui.install_updates_automatically">Install updates automatically</div>
+                          <div class="setting-desc" data-i18n="ui.download_new_versions_in_the_background_and_install_them_when_the_launcher_exits">Download new versions in the background and install them when the launcher exits</div>
                         </div>
                         <div class="setting-control">
                           <label class="switch">
@@ -1392,55 +1482,55 @@
                   </div>
 
                   <div class="setting-card about-section">
-                    <h3 class="about-section-title">链接</h3>
+                    <h3 class="about-section-title" data-i18n="ui.links">Links</h3>
                     <div class="about-links">
                       <a class="about-link" href="https://gamets.caellab.com/gpcl/">
                         <span class="icon icon-globe"></span>
-                        <span><b>官网</b><small>gamets.caellab.com/gpcl</small></span>
+                        <span><b data-i18n="ui.website">Website</b><small>gamets.caellab.com/gpcl</small></span>
                       </a>
                       <a class="about-link" href="https://github.com/CaelLab-org/GoodPlanCraftLauncher">
                         <span class="icon icon-github"></span>
-                        <span><b>GitHub 仓库</b><small>CaelLab-org/GoodPlanCraftLauncher</small></span>
+                        <span><b data-i18n="ui.github_repository">GitHub repository</b><small>CaelLab-org/GoodPlanCraftLauncher</small></span>
                       </a>
                       <a class="about-link" href="mailto:gamets@caellab.com">
                         <span class="icon icon-mail"></span>
-                        <span><b>邮箱</b><small>gamets@caellab.com</small></span>
+                        <span><b data-i18n="ui.email">Email</b><small>gamets@caellab.com</small></span>
                       </a>
-                      <a class="about-link" href="https://gamets.caellab.com/gpcl/docs/">
+                      <a class="about-link" id="about-help-link" href="https://gamets.caellab.com/gpcl/docs/zh-Hans/">
                         <span class="icon icon-book"></span>
-                        <span><b>帮助</b><small>安装、登录、Java 和模组</small></span>
+                        <span><b data-i18n="ui.help">Help</b><small data-i18n="ui.installation_sign_in_java_and_mods">Installation, sign-in, Java and mods</small></span>
                       </a>
                     </div>
                   </div>
 
                   <div class="setting-card about-section">
-                    <h3 class="about-section-title">开发者</h3>
+                    <h3 class="about-section-title" data-i18n="ui.developer">Developer</h3>
                     <div class="about-developer">
                       <img src="../static/more/avatar/yunyun.jpg" alt="Yunyun" class="developer-avatar">
                       <div class="developer-info">
                         <div class="developer-name">Yunyun</div>
-                        <div class="developer-role">GoodPlanCraftLauncher 的开发者</div>
+                        <div class="developer-role" data-i18n="ui.developer_of_goodplancraftlauncher">Developer of GoodPlanCraftLauncher</div>
                       </div>
                     </div>
                   </div>
 
                   <div class="setting-card about-section">
-                    <h3 class="about-section-title">许可证</h3>
-                    <p class="about-text">CaelLab BY-SA Code License, Version 3（或任何更新版本）。完整条款随程序保存在本地，下面可以直接展开。项目主页：<a href="https://gamets.caellab.com/gpcl/" target="_blank" rel="noopener">gamets.caellab.com/gpcl</a>。</p>
+                    <h3 class="about-section-title" data-i18n="ui.license">License</h3>
+                    <p class="about-text">CaelLab BY-SA Code License, Version 3 (or any later version). The full terms ship with the launcher and can be expanded below. Project home:<a href="https://gamets.caellab.com/gpcl/" target="_blank" rel="noopener">gamets.caellab.com/gpcl</a>。</p>
                     <details class="license-details" id="license-details">
-                      <summary>查看许可证原文 <span class="icon icon-chevron"></span></summary>
-                      <pre class="license-text" id="license-text">许可证加载中…</pre>
+                      <summary>View the full license <span class="icon icon-chevron"></span></summary>
+                      <pre class="license-text" id="license-text">Loading license…</pre>
                     </details>
                   </div>
 
                   <div class="setting-card about-section">
-                    <h3 class="about-section-title">运行环境</h3>
+                    <h3 class="about-section-title" data-i18n="ui.runtime">Runtime</h3>
                     <div class="runtime-grid" id="about-runtime-grid">
-                      <div class="runtime-item"><span>启动器</span><b id="runtime-app">-</b></div>
+                      <div class="runtime-item"><span data-i18n="ui.launcher">Launcher</span><b id="runtime-app">-</b></div>
                       <div class="runtime-item"><span>Electron</span><b id="runtime-electron">-</b></div>
                       <div class="runtime-item"><span>Chromium</span><b id="runtime-chrome">-</b></div>
                       <div class="runtime-item"><span>Node</span><b id="runtime-node">-</b></div>
-                      <div class="runtime-item runtime-item-wide"><span>系统</span><b id="runtime-platform">-</b></div>
+                      <div class="runtime-item runtime-item-wide"><span data-i18n="ui.system">System</span><b id="runtime-platform">-</b></div>
                     </div>
                   </div>
                 </div>
@@ -1454,11 +1544,11 @@
             <ul class="settings-sidebar-menu">
               <li id="more-tab-toolbox" class="settings-sidebar-item active" data-tab="toolbox">
                 <span class="sidebar-icon icon icon-box" ></span>
-                <span class="sidebar-label">百宝箱</span>
+                <span class="sidebar-label" data-i18n="ui.toolbox">Toolbox</span>
               </li>
               <li id="more-tab-forum" class="settings-sidebar-item" data-tab="forum">
                 <span class="sidebar-icon icon icon-chat" ></span>
-                <span class="sidebar-label">论坛</span>
+                <span class="sidebar-label" data-i18n="ui.forum">Forum</span>
               </li>
             </ul>
           </div>
@@ -1467,18 +1557,18 @@
             <div id="more-content-toolbox" class="settings-content-panel active">
               <div class="settings-page-inner">
                 <div class="settings-group">
-                  <h2 class="settings-group-title">百宝箱</h2>
-                  <p class="settings-group-desc">实用工具和资源集合</p>
+                  <h2 class="settings-group-title" data-i18n="ui.toolbox">Toolbox</h2>
+                  <p class="settings-group-desc" data-i18n="ui.utilities_and_resources">Utilities and resources</p>
                   
                   <div class="toolbox-row">
                     <div class="toolbox-card-wide">
                       <div class="toolbox-icon-large"><span class="icon icon-save"></span></div>
                       <div class="toolbox-content">
-                        <div class="toolbox-title">内存优化</div>
-                        <div class="toolbox-description">回收 GPCL 自身进程占用的物理内存，不会影响正在运行的游戏；机械硬盘上可能出现短暂卡顿</div>
+                        <div class="toolbox-title" data-i18n="ui.memory_optimization">Memory optimization</div>
+                        <div class="toolbox-description" data-i18n="ui.free_physical_memory_used_by_gpcl_running_games_are_not_affected_may_cau_93da42">Free physical memory used by GPCL; running games are not affected. May cause a brief stutter on hard drives</div>
                         <button id="memory-optimize-btn" class="toolbox-btn-primary">
                           <span class="btn-icon icon icon-bolt" ></span>
-                          <span class="btn-text">立即优化</span>
+                          <span class="btn-text" data-i18n="ui.optimize_now">Optimize now</span>
                         </button>
                       </div>
                     </div>
@@ -1492,7 +1582,7 @@
                 id="forum-iframe" 
                 class="forum-iframe-full"
                 sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-top-navigation"
-                title="社区论坛"
+                data-i18n-title="ui.community_forum" title="Community forum"
               ></iframe>
             </div>
           </div>
@@ -1507,17 +1597,17 @@
     <div class="dialog-box">
       <div class="dialog-header">
         <span id="dialog-icon" class="dialog-icon">ℹ️</span>
-        <h3 id="dialog-title" class="dialog-title">提示</h3>
+        <h3 id="dialog-title" class="dialog-title" data-i18n="ui.notice">Notice</h3>
       </div>
       <div class="dialog-body">
-        <p id="dialog-message" class="dialog-message">消息内容</p>
+        <p id="dialog-message" class="dialog-message" data-i18n="ui.message">Message</p>
       </div>
       <div class="dialog-footer" id="dialog-footer-single">
-        <button id="dialog-btn-ok" class="dialog-btn dialog-btn-primary">确定</button>
+        <button id="dialog-btn-ok" class="dialog-btn dialog-btn-primary" data-i18n="ui.ok">OK</button>
       </div>
       <div class="dialog-footer hidden" id="dialog-footer-confirm">
-        <button id="dialog-btn-cancel" class="dialog-btn dialog-btn-secondary">否</button>
-        <button id="dialog-btn-yes" class="dialog-btn dialog-btn-primary">是</button>
+        <button id="dialog-btn-cancel" class="dialog-btn dialog-btn-secondary" data-i18n="ui.no">No</button>
+        <button id="dialog-btn-yes" class="dialog-btn dialog-btn-primary" data-i18n="ui.yes">Yes</button>
       </div>
     </div>
 
@@ -1584,19 +1674,19 @@
       </div>
       
       <div class="launch-status">
-        <div id="launch-status-text" class="status-text">正在启动游戏...</div>
+        <div id="launch-status-text" class="status-text" data-i18n="ui.launching_game">Launching game...</div>
         <div id="launch-progress-bar" class="progress-bar-container">
           <div id="launch-progress-fill" class="progress-bar-fill"></div>
         </div>
         <div id="launch-version-info" class="version-info"></div>
       </div>
       
-      <button id="launch-cancel-btn" class="launch-cancel-btn">取消启动</button>
+      <button id="launch-cancel-btn" class="launch-cancel-btn" data-i18n="ui.cancel_launch">Cancel launch</button>
       
       <div id="launch-tip-card" class="launch-tip-card">
         <div class="launch-tip-header">
           <span class="launch-tip-icon icon icon-bulb" ></span>
-          <span class="launch-tip-label">你知道吗？</span>
+          <span class="launch-tip-label" data-i18n="ui.did_you_know">Did you know?</span>
         </div>
         <div id="launch-tip-text" class="launch-tip-text"></div>
       </div>
@@ -1606,23 +1696,23 @@
     <div class="dialog-box crash-dialog-box">
       <div class="dialog-header">
         <span class="dialog-icon crash-dialog-icon icon icon-x-circle" ></span>
-        <h3 class="dialog-title">Minecraft 出现错误</h3>
+        <h3 class="dialog-title" data-i18n="ui.minecraft_encountered_an_error">Minecraft encountered an error</h3>
         <span class="crash-dialog-brand">GPCL</span>
       </div>
       <div class="dialog-body">
-        <p class="dialog-message">很抱歉，你的游戏出现了一些问题……</p>
+        <p class="dialog-message" data-i18n="ui.sorry_your_game_ran_into_a_problem">Sorry — your game ran into a problem…</p>
         <div id="crash-dialog-analysis" class="crash-dialog-analysis"></div>
-        <p class="dialog-message">如果要寻求帮助，请向他人发送错误报告文件，而不是发送这个窗口的截图。</p>
-        <p class="dialog-message crash-dialog-more"><a href="#" id="crash-dialog-detail">查看详情</a></p>
+        <p class="dialog-message" data-i18n="ui.if_you_need_help_send_the_error_report_file_rather_than_a_screenshot_of_cd6013">If you need help, send the error report file rather than a screenshot of this window.</p>
+        <p class="dialog-message crash-dialog-more"><a href="#" id="crash-dialog-detail" data-i18n="ui.view_details">View details</a></p>
         <div class="crash-dialog-help">
-          <span class="crash-dialog-help-label">GPCL 帮助文档</span>
-          <a href="https://gamets.caellab.com/gpcl/docs/mc-game/" id="crash-dialog-help-link" class="crash-dialog-help-url">gamets.caellab.com/gpcl/docs/mc-game/</a>
+          <span class="crash-dialog-help-label" data-i18n="ui.gpcl_help">GPCL help</span>
+          <a href="https://gamets.caellab.com/gpcl/docs/zh-Hans/mc-game/" id="crash-dialog-help-link" class="crash-dialog-help-url">gamets.caellab.com/gpcl/docs/zh-Hans/mc-game/</a>
         </div>
       </div>
       <div class="dialog-footer">
-        <button id="crash-dialog-ok" class="dialog-btn dialog-btn-primary" type="button">确定</button>
-        <button id="crash-dialog-log" class="dialog-btn dialog-btn-secondary" type="button">查看日志</button>
-        <button id="crash-dialog-export" class="dialog-btn dialog-btn-secondary" type="button">导出错误报告</button>
+        <button id="crash-dialog-ok" class="dialog-btn dialog-btn-primary" type="button" data-i18n="ui.ok">OK</button>
+        <button id="crash-dialog-log" class="dialog-btn dialog-btn-secondary" type="button" data-i18n="ui.view_log">View log</button>
+        <button id="crash-dialog-export" class="dialog-btn dialog-btn-secondary" type="button" data-i18n="ui.export_error_report">Export error report</button>
       </div>
     </div>
   </div>
@@ -1631,16 +1721,16 @@
   <div id="mod-target-overlay" class="mod-target-overlay hidden">
     <div class="mod-target-dialog">
       <div class="mod-target-header">
-        <h3>安装到哪个版本？</h3>
-        <button id="mod-target-close" class="mod-target-close" type="button" aria-label="关闭"><span class="icon icon-close"></span></button>
+        <h3 data-i18n="ui.install_to_which_version">Install to which version?</h3>
+        <button id="mod-target-close" class="mod-target-close" type="button" data-i18n-aria-label="ui.close" aria-label="Close"><span class="icon icon-close"></span></button>
       </div>
       <div id="mod-target-file" class="mod-target-file"></div>
       <div id="mod-target-list" class="mod-target-list"></div>
       <div class="mod-target-actions">
-        <button id="mod-target-browse" class="mod-target-btn" type="button">选择文件夹…</button>
+        <button id="mod-target-browse" class="mod-target-btn" type="button" data-i18n="ui.choose_folder">Choose folder…</button>
         <div class="mod-target-actions-right">
-          <button id="mod-target-cancel" class="mod-target-btn" type="button">取消</button>
-          <button id="mod-target-confirm" class="mod-target-btn primary" type="button">安装</button>
+          <button id="mod-target-cancel" class="mod-target-btn" type="button" data-i18n="ui.cancel">Cancel</button>
+          <button id="mod-target-confirm" class="mod-target-btn primary" type="button" data-i18n="ui.install">Install</button>
         </div>
       </div>
     </div>
@@ -1649,22 +1739,145 @@
   <div id="modpack-name-overlay" class="mod-target-overlay hidden">
     <div class="mod-target-dialog">
       <div class="mod-target-header">
-        <h3>安装整合包</h3>
-        <button id="modpack-name-close" class="mod-target-close" type="button" aria-label="关闭"><span class="icon icon-close"></span></button>
+        <h3 data-i18n="ui.install_modpack">Install modpack</h3>
+        <button id="modpack-name-close" class="mod-target-close" type="button" data-i18n-aria-label="ui.close" aria-label="Close"><span class="icon icon-close"></span></button>
       </div>
       <div id="modpack-name-file" class="mod-target-file"></div>
-      <label class="modpack-name-label" for="modpack-name-input">实例名称</label>
+      <label class="modpack-name-label" for="modpack-name-input" data-i18n="ui.instance_name">Instance name</label>
       <input id="modpack-name-input" class="modpack-name-input" type="text" maxlength="64" spellcheck="false">
-      <div class="modpack-name-note">会新建一个版本，游戏、模组和存档都放在它自己的文件夹里。重名会自动加序号。</div>
+      <div class="modpack-name-note" data-i18n="ui.creates_a_new_version_with_its_own_folder_for_the_game_mods_and_saves_a_96cc71">Creates a new version with its own folder for the game, mods and saves. A number is added if the name is taken.</div>
       <div class="mod-target-actions">
         <div class="mod-target-actions-right">
-          <button id="modpack-name-cancel" class="mod-target-btn" type="button">取消</button>
-          <button id="modpack-name-confirm" class="mod-target-btn primary" type="button">开始安装</button>
+          <button id="modpack-name-cancel" class="mod-target-btn" type="button" data-i18n="ui.cancel">Cancel</button>
+          <button id="modpack-name-confirm" class="mod-target-btn primary" type="button" data-i18n="ui.start_installation">Start installation</button>
         </div>
       </div>
     </div>
   </div>
 
-  <script src="renderer.js"></script>
+  <div id="welcome-overlay" class="welcome-overlay hidden">
+    <div class="welcome-card" role="dialog" aria-modal="true" aria-labelledby="welcome-heading">
+      <div class="welcome-top">
+        <span class="welcome-brand">
+          <span class="welcome-brand-mark" aria-hidden="true"></span>
+          <span>GoodPlanCraftLauncher</span>
+        </span>
+        <span class="welcome-brand-by" data-i18n="ui.caellab">CaelLab</span>
+      </div>
+
+      <div class="welcome-viewport">
+        <div class="welcome-track" id="welcome-track">
+          <section class="welcome-slide is-active" data-slide="0">
+            <div class="welcome-art welcome-art-hero" aria-hidden="true">
+              <svg viewBox="0 0 200 200">
+                <circle cx="100" cy="100" r="78" class="welcome-art-bg"/>
+                <g class="welcome-block">
+                  <path d="M100 40 L157 72 L100 104 L43 72 Z" class="welcome-block-top"/>
+                  <path d="M43 72 L100 104 L100 167 L43 135 Z" class="welcome-block-left"/>
+                  <path d="M157 72 L100 104 L100 167 L157 135 Z" class="welcome-block-right"/>
+                  <rect x="66" y="76" width="9" height="9" class="welcome-block-pixel"/>
+                  <rect x="117" y="86" width="8" height="8" class="welcome-block-pixel"/>
+                  <rect x="59" y="103" width="7" height="7" class="welcome-block-pixel"/>
+                  <rect x="127" y="114" width="9" height="9" class="welcome-block-pixel"/>
+                </g>
+                <circle cx="154" cy="48" r="7" class="welcome-spark"/>
+                <circle cx="48" cy="128" r="4" class="welcome-spark welcome-spark-dim"/>
+              </svg>
+            </div>
+            <h2 id="welcome-heading" class="welcome-heading" data-i18n="ui.welcome_title">Welcome to GoodPlanCraftLauncher</h2>
+            <p class="welcome-copy" data-i18n="ui.welcome_subtitle">A clean, lightweight Minecraft launcher. Take a minute to set things up your way.</p>
+          </section>
+
+          <section class="welcome-slide" data-slide="1" inert>
+            <h2 class="welcome-heading" data-i18n="ui.welcome_language_title">Choose your language</h2>
+            <p class="welcome-copy" data-i18n="ui.welcome_language_desc">The launcher follows your system by default. You can change this later in Settings → Appearance.</p>
+            <div class="welcome-language-search">
+              <span class="icon icon-search"></span>
+              <input id="welcome-language-search" type="text" data-i18n-placeholder="ui.search_languages" placeholder="Search languages" autocomplete="off" spellcheck="false">
+            </div>
+            <div id="welcome-language-list" class="welcome-language-list" role="listbox" data-i18n-skip></div>
+          </section>
+
+          <section class="welcome-slide" data-slide="2" inert>
+            <h2 class="welcome-heading" data-i18n="ui.welcome_style_title">Pick a look</h2>
+            <p class="welcome-copy" data-i18n="ui.welcome_style_desc">You can switch this anytime under Settings → Appearance.</p>
+            <div class="welcome-style-grid">
+              <button type="button" class="welcome-style-card" data-style="mc">
+                <span class="welcome-style-preview preview-mc" aria-hidden="true">
+                  <span class="preview-bar"></span>
+                  <span class="preview-line preview-line-1"></span>
+                  <span class="preview-line preview-line-2"></span>
+                  <span class="preview-chip"></span>
+                </span>
+                <span class="welcome-style-name" data-i18n="ui.style_mc">Minecraft</span>
+                <span class="welcome-style-desc" data-i18n="ui.style_mc_desc">Blocky edges and grass green</span>
+              </button>
+              <button type="button" class="welcome-style-card" data-style="advanced">
+                <span class="welcome-style-preview preview-advanced" aria-hidden="true">
+                  <span class="preview-bar"></span>
+                  <span class="preview-line preview-line-1"></span>
+                  <span class="preview-line preview-line-2"></span>
+                  <span class="preview-chip"></span>
+                </span>
+                <span class="welcome-style-name" data-i18n="ui.style_advanced">Advanced</span>
+                <span class="welcome-style-desc" data-i18n="ui.style_advanced_desc">The signature GPCL blue</span>
+              </button>
+              <button type="button" class="welcome-style-card" data-style="minimal">
+                <span class="welcome-style-preview preview-minimal" aria-hidden="true">
+                  <span class="preview-bar"></span>
+                  <span class="preview-line preview-line-1"></span>
+                  <span class="preview-line preview-line-2"></span>
+                  <span class="preview-chip"></span>
+                </span>
+                <span class="welcome-style-name" data-i18n="ui.style_minimal">Minimal</span>
+                <span class="welcome-style-desc" data-i18n="ui.style_minimal_desc">Quiet greys, no glow</span>
+              </button>
+            </div>
+          </section>
+
+          <section class="welcome-slide" data-slide="3" inert>
+            <div class="welcome-art welcome-art-ready" aria-hidden="true">
+              <svg viewBox="0 0 200 200">
+                <circle cx="100" cy="100" r="78" class="welcome-art-bg"/>
+                <circle cx="100" cy="100" r="52" class="welcome-ready-ring"/>
+                <path d="M76 102 L93 121 L128 80" class="welcome-ready-check"/>
+              </svg>
+            </div>
+            <h2 class="welcome-heading" data-i18n="ui.welcome_ready_title">You're all set</h2>
+            <p class="welcome-copy" data-i18n="ui.welcome_ready_desc">Install Java, add a game version and sign in whenever you like — everything lives in Settings.</p>
+          </section>
+        </div>
+      </div>
+
+      <div class="welcome-footer">
+        <div class="welcome-dots" id="welcome-dots">
+          <button type="button" class="welcome-dot is-on"></button>
+          <button type="button" class="welcome-dot"></button>
+          <button type="button" class="welcome-dot"></button>
+          <button type="button" class="welcome-dot"></button>
+        </div>
+        <div class="welcome-actions">
+          <button type="button" id="welcome-skip" class="welcome-skip" data-i18n="ui.welcome_skip">Skip</button>
+          <button type="button" id="welcome-next" class="welcome-next" data-i18n="ui.welcome_continue">Continue</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 等首帧（启动页）画出来再加载应用脚本：脚本 2.5 MB，同步加载会让窗口先空 1 秒多
+    (function () {
+      var started = false;
+      function boot() {
+        if (started) return;
+        started = true;
+        var script = document.createElement('script');
+        script.src = 'renderer.js';
+        document.body.appendChild(script);
+      }
+      requestAnimationFrame(function () { requestAnimationFrame(boot); });
+      setTimeout(boot, 200);
+    })();
+  </script>
 </body>
 </html>

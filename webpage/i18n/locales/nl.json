@@ -1,0 +1,206 @@
+{
+  "meta": {
+    "title": "GoodPlanCraftLauncher - Een lichte, efficiënte Minecraft-launcher - CaelLabGameTS",
+    "description": "GoodPlanCraftLauncher is een eenvoudige, efficiënte Minecraft-launcher met Microsoft- en offlinelogin, versiebeheer en installatie van Forge/NeoForge/Fabric/OptiFine-modificaties, zodat je met één klik de blokkenwereld in gaat. Open source en gratis.",
+    "keywords": "GoodPlanCraftLauncher,Minecraft-launcher,MC-launcher,Minecraft Java Edition,CaelLab,open source",
+    "ogTitle": "GoodPlanCraftLauncher - Lichte, efficiënte Minecraft-launcher",
+    "ogDescription": "Licht · efficiënt · open source. Microsoft- en offlinelogin, versiebeheer en Forge/NeoForge/Fabric/OptiFine installeren met één klik."
+  },
+  "historyMeta": {
+    "title": "Wijzigingen - GoodPlanCraftLauncher - CaelLabGameTS",
+    "description": "Wijzigingen en installatieprogramma's voor elke versie van GoodPlanCraftLauncher: van 1.0.0 tot de nieuwste, elke wijziging staat op deze pagina.",
+    "ogTitle": "Wijzigingen - GoodPlanCraftLauncher",
+    "ogDescription": "Release-opmerkingen en installatieprogramma's voor elke versie."
+  },
+  "nav": {
+    "source": "Broncode",
+    "language": "Taal",
+    "download": "Download v{version}",
+    "mobileGitHub": "GitHub-broncode",
+    "openMenu": "Menu openen"
+  },
+  "hero": {
+    "tags": [
+      "Open source",
+      "Gratis",
+      "Minecraft-launcher"
+    ],
+    "subtitle": "Licht · Efficiënt · Open source",
+    "desc": "Een Minecraft-launcher voor Windows: Microsoft- en offlinelogin, versiebeheer en Forge / Fabric / OptiFine installeren met één klik. Als het spel crasht, lees je waarom in plaats van naar een leeg venster te staren.",
+    "download": "Nu downloaden",
+    "versionLabel": "Versie",
+    "updatedLabel": "Bijgewerkt",
+    "platformLabel": "Platform",
+    "platform": "Windows 10+",
+    "iframeTitle": "Interface van GoodPlanCraftLauncher",
+    "windowNote": "Het venster hierboven is <b>klikbaar</b> — het is de launcher-interface zelf, die in de webpagina draait.",
+    "iconAlt": "Pictogram van GoodPlanCraftLauncher"
+  },
+  "features": {
+    "tag": "Functies",
+    "title": "Belangrijkste functies",
+    "desc": "Praktische hulpmiddelen voor spelers, allemaal gericht op sneller in het spel komen",
+    "items": [
+      {
+        "title": "Twee manieren om in te loggen",
+        "desc": "Microsoft- en offlinelogin, altijd te wisselen; de offlinemodus heeft geen online verificatie nodig."
+      },
+      {
+        "title": "Mod-downloads ingebouwd",
+        "desc": "Zoek op Modrinth en CurseForge en installeer mods, shaders of resourcepacks in de map die de gekozen versie echt gebruikt."
+      },
+      {
+        "title": "Vier modladers",
+        "desc": "Forge, NeoForge, Fabric en OptiFine worden uit officiële bronnen geïnstalleerd, met eerst een controle van de Java-versie."
+      },
+      {
+        "title": "25 interfacetalen",
+        "desc": "Volgt bij de eerste start je systeemtaal; later altijd aan te passen in de instellingen."
+      },
+      {
+        "title": "Automatisch versiebeheer",
+        "desc": "Minecraft-versies downloaden, installeren en wisselen met één klik; bibliotheken en assets worden automatisch geregeld."
+      },
+      {
+        "title": "Snel opstarten",
+        "desc": "Een korte opstartroute met caching, zodat je klikt en speelt in plaats van te wachten."
+      },
+      {
+        "title": "Beheer van de Java-runtime",
+        "desc": "Detecteert en installeert automatisch een Java-runtime; als downloadbron kun je Tsinghua, de Universiteit van Nanjing, Huawei Cloud of de officiële bron kiezen, met automatische terugval naar de volgende bij een fout."
+      },
+      {
+        "title": "Thema-ondersteuning",
+        "desc": "Volledige ondersteuning voor licht en donker thema, met instelbare schaal van de interface voor een consistent uiterlijk."
+      },
+      {
+        "title": "Automatische updates en onderhoud",
+        "desc": "Ingebouwde updatecontrole en instelbaar automatisch opschonen van logs houden de launcher op termijn slank."
+      },
+      {
+        "title": "Crashmeldingen en foutrapporten",
+        "desc": "Als het spel abnormaal afsluit, lees je waarom, en kun je met één klik een foutrapport exporteren (crashrapport + logs + systeeminformatie)."
+      },
+      {
+        "title": "Paneel tijdens het spelen",
+        "desc": "Na het starten toont een paneel rechts de versie, PID, speelduur en geheugengebruik, en kun je het spel altijd afsluiten."
+      },
+      {
+        "title": "Eigen venstertitel",
+        "desc": "Schrijf je eigen titel voor het spelvenster, met magische woorden zoals {mc_version} en {time}."
+      }
+    ]
+  },
+  "shots": {
+    "tag": "Schermafbeeldingen",
+    "title": "Echte schermafbeeldingen",
+    "desc": "Het venster bovenaan is een webversie van de launcher-interface, klikbaar zonder iets te installeren. De vier hieronder zijn de launcher die echt op Windows draait, zonder nabewerking.",
+    "items": [
+      {
+        "alt": "Startscherm van GoodPlanCraftLauncher",
+        "caption": "Startscherm · kies een versie, vul een spelersnaam in, start het spel"
+      },
+      {
+        "alt": "Downloadscherm van GoodPlanCraftLauncher",
+        "caption": "Downloadscherm · gameversies, mods, shaders, resourcepacks en modpacks"
+      },
+      {
+        "alt": "Spelinstellingen van GoodPlanCraftLauncher",
+        "caption": "Instellingen · spelgeheugen, venstermodus, venstertitel en magische woorden"
+      },
+      {
+        "alt": "Weergave-instellingen van GoodPlanCraftLauncher",
+        "caption": "Instellingen · taal, interfacestijl, thema en schaal"
+      }
+    ]
+  },
+  "download": {
+    "tag": "Download",
+    "title": "Nu downloaden",
+    "desc": "Kies je platform en begin aan het blokkenavontuur",
+    "button": "Start de blokkenwereld!",
+    "updatedLabel": "Bijgewerkt",
+    "platformLabel": "Platform",
+    "licenseLabel": "Licentie",
+    "platform": "Windows 10 64-bit",
+    "license": "Open source, gratis",
+    "github": "Bekijk op GitHub"
+  },
+  "requirements": {
+    "tag": "Systeem",
+    "title": "Systeemvereisten",
+    "desc": "Bescheiden, maar wel handig om te weten",
+    "items": [
+      {
+        "label": "Besturingssysteem",
+        "text": "Windows 10 64-bit (1709+); Windows 11 werkt ook"
+      },
+      {
+        "label": "Java-runtime",
+        "text": "Wordt automatisch door de launcher geïnstalleerd; het opruimen van overbodige of conflicterende Java-installaties op het systeem wordt aanbevolen"
+      },
+      {
+        "label": "Opslag",
+        "text": "Minimaal 90 MB vrij voor de launcher zelf (spelbestanden niet meegerekend)"
+      },
+      {
+        "label": "Geheugen",
+        "text": "2 GB of meer beschikbaar geheugen aanbevolen"
+      }
+    ]
+  },
+  "openSource": {
+    "tag": "Open source",
+    "title": "Open source en bijdragen",
+    "desc": "GPCL is een 100% open source project, met de broncode op GitHub. PR's zijn welkom, net als suggesties op het <a href=\"https://forum.xmuer.online/\" target=\"_blank\">forum</a>, om samen een betere Minecraft-launcher te bouwen.",
+    "items": [
+      {
+        "title": "Licentie",
+        "desc": "Uitgegeven onder de CaelLab BY-SA Code License, versie 3 (of een latere versie). Je mag het vrij gebruiken, aanpassen en verspreiden; aangepaste versies moeten dezelfde open source-licentie houden. Projectpagina: <a href=\"https://gamets.caellab.com/gpcl/\">gamets.caellab.com/gpcl</a>.",
+        "action": "Lees de volledige licentie →"
+      },
+      {
+        "title": "Bijdragen",
+        "desc": "De belangrijkste broncode-repository staat op GitHub, waar issues en PR's worden beheerd. Bugmeldingen, functiesuggesties en code zijn welkom.",
+        "action": "Naar GitHub →"
+      }
+    ],
+    "licenseSummary": "SAMENVATTING LICENTIE — CaelLab BY-SA Code License v3"
+  },
+  "history": {
+    "tag": "Geschiedenis",
+    "title": "Versiegeschiedenis",
+    "desc": "Eerdere versies en hun wijzigingen",
+    "older": "Toon {n} oudere versies",
+    "more": "Bekijk het volledige wijzigingslogboek (alle {total} versies en installatieprogramma's) →",
+    "page": {
+      "back": "← Terug naar de startpagina",
+      "tag": "Wijzigingen",
+      "heading": "Wijzigingen",
+      "intro": "Van 1.0.0 tot de nieuwste release: elke versie — wat er is veranderd en of hij te downloaden is — staat op deze pagina.",
+      "note": "Voor 1.3.2 en eerder zijn geen installatieprogramma's bewaard; de ingebouwde updater in oude versies werkt mogelijk niet meer, dus voor dagelijks gebruik wordt de nieuwste release aanbevolen.",
+      "indexLabel": "Versieoverzicht",
+      "latest": "Nieuwste",
+      "download": "Download v{version}",
+      "unavailable": "Voor deze versie is geen installatieprogramma bewaard",
+      "fileNote": "{file} · {size} · Windows 64-bit"
+    }
+  },
+  "footer": {
+    "brand": "Een onafhankelijk team voor gameontwikkeling en -tools bij CaelLab. De toekomst verkennen, grenzeloos vernieuwen.",
+    "projects": "Projecten",
+    "community": "Community",
+    "openSource": "Open source",
+    "help": "Helpcentrum",
+    "changelog": "Wijzigingen",
+    "forum": "Forum",
+    "license": "Licentie",
+    "copyright": "&copy; 2026 GameTS van <a href=\"https://www.caellab.com/\" target=\"_blank\" class=\"footer-inline-link\">CaelLab</a>. Alle rechten voorbehouden. Projectpagina: <a href=\"https://gamets.caellab.com/gpcl/\" class=\"footer-inline-link\">gamets.caellab.com/gpcl</a>",
+    "disclaimer": "GoodPlanCraftLauncher is een open source hulpmiddel van derden en is niet officieel verbonden met <a href=\"https://www.minecraft.net/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Mojang Studios</a>, <a href=\"https://www.microsoft.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Microsoft</a> of <a href=\"https://www.xbox.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Xbox</a>. Minecraft is een handelsmerk van Mojang Studios; voor het gebruik van deze launcher heb je een geldige Minecraft-licentie nodig.",
+    "licenseLine": "Open source-licentie: <a href=\"https://www.caellab.com/license/cbs-v3\" target=\"_blank\" class=\"footer-inline-link\">CaelLab BY-SA Code License v3</a> | Open source op <a href=\"https://github.com/CaelLab-org/GoodPlanCraftLauncher\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">GitHub</a>"
+  },
+  "labels": {
+    "platform": "Windows 64-bit",
+    "github": "GitHub"
+  }
+}

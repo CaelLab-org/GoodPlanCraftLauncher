@@ -1,0 +1,59 @@
+---
+title: Java i pamięć
+description: Która wersja Javy odpowiada której wersji Minecrafta, jak GPCL przydziela pamięć i co zmienić, gdy jej brakuje.
+---
+
+GPCL dobiera Javę do wersji gry i przydziela pamięć na podstawie pamięci komputera. W większości przypadków nie trzeba nic zmieniać ręcznie.
+
+## Która Java do której wersji
+
+| Wersja Minecrafta | Wymagana Java |
+| --- | --- |
+| 1.16.5 i starsze | Java 8 |
+| 1.17 – 1.20.4 | Java 17 |
+| 1.20.5 i nowsze | Java 21 |
+
+Jeśli przy uruchomieniu brakuje odpowiedniej Javy, GPCL pobierze ją i zainstaluje. Gdy pobieranie się nie uda, przejdź do **Ustawienia → Pobieranie → Pobieranie Javy** i wybierz inny serwer lustrzany.
+
+Java jest instalowana we własnym katalogu GPCL — nie wpływa na inne instalacje Javy w systemie i nie zmienia `JAVA_HOME`.
+
+## Pamięć: automatycznie
+
+Domyślne ustawienie to „automatycznie”. Przydział przebiega w dwóch krokach:
+
+1. najpierw szacowane jest **30%** pamięci fizycznej, zaokrąglane w dół do pełnych GB i ograniczone do **2 – 8 GB**;
+2. potem brana jest pod uwagę pamięć dostępna w danej chwili: co najmniej 1 GB zostaje dla systemu, z dolnym limitem 2 GB, wynik zaokrąglany w dół do 512 MB; na końcu wybierana jest mniejsza z dwóch wartości.
+
+Kilka rzeczywistych wyników:
+
+| Pamięć fizyczna | Dostępna w danej chwili | Przydział automatyczny |
+| --- | --- | --- |
+| 16 GB | 8 GB | 4 GB |
+| 16 GB | 3.9 GB | 2.5 GB |
+| 8 GB | 4 GB | 2 GB |
+
+Strona ustawień pokazuje pamięć używaną / całkowitą oraz dostępną. Gdy wolnej pamięci jest mało, automatyczny przydział się zmniejsza, a launcher sugeruje zamknięcie kilku programów.
+
+`-Xmx` to górny limit, a nie rezerwacja od razu. Dlatego przydzielanie na podstawie pamięci dostępnej w danej chwili jest stabilniejsze niż ustawienie bardzo dużej wartości na stałe.
+
+## Pamięć: ręcznie
+
+Gdy paczka modów lub duży zestaw modów potrzebuje więcej, wybierz „ręcznie” i przesuń suwak. Zostaw miejsce dla systemu i innych programów; nie oddawaj całej pamięci fizycznej grze.
+
+`OutOfMemoryError` oznacza za mało pamięci:
+
+1. zwiększ przydział o jeden stopień i spróbuj ponownie;
+2. jeśli to nie pomoże, zmniejsz liczbę modów;
+3. zamknij też przeglądarkę i inne programy zajmujące pamięć.
+
+## Strojenie G1GC
+
+W **Ustawienia → Zaawansowane → Zarządzanie pamięcią** znajduje się strojenie G1GC, domyślnie wyłączone. Warto je włączyć tylko przy wahaniach FPS lub wyraźnych przycięciach od GC; po włączeniu dodawany jest zestaw typowych parametrów G1GC.
+
+Własne parametry JVM są w tej samej sekcji. Błędny parametr sprawia, że gra w ogóle nie startuje — jeśli nie masz pewności, nie zmieniaj ich.
+
+## Optymalizacja pamięci przed uruchomieniem
+
+Po włączeniu tej opcji GPCL zwalnia część zajmowanej przez siebie pamięci przed uruchomieniem gry. Działa tylko na proces launcha, nie dotyka działającego Minecrafta i nie usuwa stanu logowania.
+
+Na dyskach talerzowych ten krok może chwilowo przyciąć — to normalne.

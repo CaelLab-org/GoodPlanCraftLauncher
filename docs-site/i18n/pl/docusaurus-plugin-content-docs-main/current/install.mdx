@@ -1,0 +1,73 @@
+---
+title: Instalacja i aktualizacje
+description: Pobieranie, instalacja, aktualizacja i odinstalowanie GPCL; gra i ustawienia znajdują się w %APPDATA%\gpcl.
+---
+
+GPCL obsługuje wyłącznie **Windows 10 / 11 64-bit**. Instalator nie zawiera Javy — launcher sam pobiera wersję odpowiednią dla danej wersji gry.
+
+## Pobieranie
+
+Pobierz instalator z [sekcji pobierania na stronie projektu](https://gamets.caellab.com/gpcl/#download) lub z [GitHub Releases](https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases). Nazwa pliku to `GPCL-<version>-Setup.exe`.
+
+Nie pobieraj instalatora z dysków w chmurze, grup komunikatorów ani serwisów zewnętrznych: takie pliki mogły zostać podmienione, a launcher nie potrafi zweryfikować ich pochodzenia.
+
+## Instalacja
+
+1. Kliknij dwukrotnie instalator i wybierz katalog instalacji.
+2. Po zakończeniu uruchom GPCL ze skrótu na pulpicie lub z menu Start.
+3. Przy pierwszym uruchomieniu tworzone są konfiguracja, logi i domyślny katalog gry.
+
+Aktualizacja ze starszej wersji nie wymaga wcześniejszego odinstalowania. Instalator przejmuje istniejącą instalację (także starsze instalacje NSIS), zachowując skrót na pulpicie i dane.
+
+## Gdzie są gra i ustawienia
+
+Wszystko w `%APPDATA%\gpcl`, poza katalogiem instalacji:
+
+| Ścieżka | Zawartość |
+| --- | --- |
+| `%APPDATA%\gpcl\.minecraft` | Wersje gry, biblioteki, zasoby, mody i światy |
+| `%APPDATA%\gpcl\gpcl\config\setting.ini` | Ustawienia launcha |
+| `%APPDATA%\gpcl\gpcl\log` | Logi launcha |
+| `%APPDATA%\gpcl\gpcl\updata` | Instalatory pobrane przez automatyczną aktualizację i stan pobierania |
+
+Jeśli zmieniłeś katalog gry, wersje i zasoby trafią do nowej lokalizacji, ale konfiguracja i logi pozostają w `%APPDATA%\gpcl`.
+
+### Automatyczne ustawianie języka gry
+
+**Ustawienia → Gra → Automatyczne ustawianie języka gry** jest domyślnie włączone, z chińskim uproszczonym jako wybranym językiem. Przed każdym uruchomieniem GPCL zmienia wartość `lang:` w pliku `options.txt` faktycznie używanym przez daną wersję, pozostawiając pozostałe wiersze bez zmian.
+
+W wersjach izolowanych zmiana trafia do `versions/<version-name>/options.txt`, w nieizolowanych do `options.txt` w katalogu głównym gry. Po wyłączeniu tej opcji GPCL nie dotyka żadnych ustawień gry.
+
+## Aktualizacje
+
+Dwie opcje są domyślnie włączone:
+
+- **Automatyczne sprawdzanie aktualizacji**: sprawdza przy uruchomieniu i pokazuje powiadomienie w prawym górnym rogu, gdy dostępna jest nowa wersja.
+- **Automatyczne instalowanie aktualizacji**: pobiera w tle, bez użycia strony pobierania i bez zmiany paska stanu. Po weryfikacji aktualizacja instaluje się po cichu, gdy **zamkniesz launcher**.
+
+Okrągła plakietka w prawym górnym rogu pokazuje postęp pobierania; po kliknięciu widać numer wersji i zmiany w niej. Można tam też kliknąć „Pobierz teraz” — po instalacji launcher otworzy się ponownie automatycznie.
+
+W **Ustawienia → Informacje** można wyłączyć automatyczne sprawdzanie lub instalowanie albo ręcznie kliknąć „Sprawdź aktualizacje”.
+
+Pakiet aktualizacji jest weryfikowany przez SHA1 przed instalacją; jeśli weryfikacja się nie powiedzie, nic nie zostanie zainstalowane. Jeśli instalacja zostanie przerwana, następne uruchomienie poinformuje, że „poprzednia aktualizacja nie została ukończona”, i pozwoli spróbować ponownie; po trzech nieudanych próbach launcher wskaże ponowne pobranie instalatora ze strony projektu.
+
+:::warning Aktualizacja z wersji 1.5.2 lub starszej
+Starsze wersje nie znają jeszcze parametrów cichej instalacji, więc ta aktualizacja jeszcze raz otworzy stare okno instalatora. Od wersji 1.6.0 wszystko przebiega po cichu.
+:::
+
+Jeśli po aktualizacji launcher się nie otwiera, sprawdź najpierw najnowszy log w `%APPDATA%\gpcl\gpcl\log` i dołącz go do wiadomości.
+
+## Importowanie wersji lokalnej
+
+Na stronie startowej otwórz panel „Wybór wersji” i kliknij „Importuj wersję lokalną”. Możesz zaimportować:
+
+- katalog wersji (z plikiem `<version-name>.json` w środku);
+- archiwum zip lub jar — launcher je rozpakuje i rekurencyjnie znajdzie katalog z `<version-name>.json`.
+
+Paczek modów (tych z sekcją `minecraft` w `manifest.json`) na razie nie można importować: launcher od razu je odrzuca i nie zostawia niedokończonej instalacji.
+
+## Odinstalowanie
+
+Odinstaluj GPCL w „Aplikacje i funkcje” systemu Windows. Deinstalator **nie usuwa** `%APPDATA%\gpcl` — po ponownej instalacji gra i ustawienia nadal tam są.
+
+Jeśli nie zamierzasz już korzystać z launcha, możesz ręcznie usunąć cały katalog `%APPDATA%\gpcl`. Przed usunięciem zrób kopię zapasową światów.

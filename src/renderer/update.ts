@@ -8,6 +8,7 @@
 
 
 // __IMPORTS_BEGIN__
+import { getLocale, t } from '../i18n';
 import { initChart, loadChartJs, resetChart, updateChart } from './chart';
 import { setStatus, showDialog, showToast } from './dom';
 import { updateSettingsBadge } from './settings';
@@ -55,25 +56,35 @@ export function compareVersions(current: string, latest: string): number {
 
 
 export function parseLauncherVersions(launcherData: any[]): { version: string; title: string; log: string }[] {
-  const versions: { version: string; title: string; log: string }[] = [];
-  let current: { version: string; title: string; log: string } | null = null;
+  const versions: { version: string; title: string; log: string; titleEn: string; logEn: string }[] = [];
+  let current: { version: string; title: string; log: string; titleEn: string; logEn: string } | null = null;
 
   for (const item of launcherData) {
     if (item.name === 'version' && item.key) {
       if (current) versions.push(current);
-      current = { version: item.key, title: '', log: '' };
+      current = { version: item.key, title: '', log: '', titleEn: '', logEn: '' };
     } else if (current) {
       if (item.name === 'versionlog' && item.key) {
         current.log = item.key;
+      } else if (item.name === 'versionlog_en' && item.key) {
+        current.logEn = item.key;
       } else if (item.name === 'versiontitle' && item.key) {
         current.title = item.key;
+      } else if (item.name === 'versiontitle_en' && item.key) {
+        current.titleEn = item.key;
       } else if (!item.key && item.name && item.name !== 'versionlog' && item.name !== 'versiontitle') {
         current.title = item.name;
       }
     }
   }
   if (current) versions.push(current);
-  return versions;
+
+  const english: boolean = getLocale() === 'en-US';
+  return versions.map((version) => ({
+    version: version.version,
+    title: english && version.titleEn ? version.titleEn : version.title,
+    log: english && version.logEn ? version.logEn : version.log
+  }));
 }
 
 
@@ -86,7 +97,7 @@ export function renderUpdateVersionCards(newerVersions: any[]): string {
     const logHtml: string = v.log ? `<div class="update-card-log">${v.log}</div>` : '';
     return `<div class="update-version-card ${isNewest ? 'newest' : ''}">` +
       `<div class="update-card-header"><span class="update-card-version">${v.version}</span>` +
-      `${isNewest ? '<span class="update-card-badge">最新</span>' : ''}</div>` +
+      `${isNewest ? `<span class="update-card-badge">${t('ui.newest')}</span>` : ''}</div>` +
       `${titleHtml}${logHtml}</div>`;
   }).reverse().join('');
 
@@ -95,27 +106,31 @@ export function renderUpdateVersionCards(newerVersions: any[]): string {
 
 
 export async function checkForUpdates(silent: boolean = false): Promise<void> {
-  setStatus('[版本检查] 开始检查更新...');
+  setStatus(t('ui.update_check_checking_for_updates'));
   
   try {
-    const result = await window.gpcl.checkForUpdates();
+    const result = await window.gpcl.checkForUpdates(getLocale());
     
     if (!result.success) {
-      throw new Error(result.error || '检查更新失败');
+      throw new Error(result.error || t('ui.could_not_check_for_updates'));
     }
     
     const data = result.data;
-    const launcherData = data.Launcher || [];
+    const parsedVersions = Array.isArray(data.versions)
+      ? data.versions.map((version: any) => ({
+          version: String(version.version || ''),
+          title: String(version.title || ''),
+          log: Array.isArray(version.log) ? version.log.join('<br>') : String(version.log || '')
+        }))
+      : parseLauncherVersions(data.Launcher || []);
     
-    const parsedVersions = parseLauncherVersions(launcherData);
-    
-    if (parsedVersions.length === 0) throw new Error('无法获取版本信息');
+    if (parsedVersions.length === 0) throw new Error(t('ui.could_not_get_version_information'));
     
     latestVersion = parsedVersions[0].version;
     latestVersionLog = parsedVersions[0].log;
     
     const currentVersion: string = await getCurrentVersion();
-    setStatus(`[版本检查] 当前版本: ${currentVersion}, 最新版本: ${latestVersion}`);
+    setStatus(t('ui.update_check_current_current_latest_latest', { current: currentVersion, latest: latestVersion }));
     
     allNewerVersions = parsedVersions
       .filter((v: any) => compareVersions(currentVersion, v.version) > 0)
@@ -123,11 +138,11 @@ export async function checkForUpdates(silent: boolean = false): Promise<void> {
     
     updateAvailable = allNewerVersions.length > 0;
     
-    setStatus(`[版本检查] 有更新: ${updateAvailable}, 新版本数: ${allNewerVersions.length}`);
+    setStatus(t('ui.update_check_update_available_available_newer_versions_count', { available: updateAvailable, count: allNewerVersions.length }));
     
     if (!silent) {
       if (updateAvailable) {
-        setStatus(`发现 ${allNewerVersions.length} 个新版本`, 'warning');
+        setStatus(t('ui.count_new_version_s_available', { count: allNewerVersions.length }), 'warning');
       } else {
         setStatus('当前已是最新版本', 'success');
       }
@@ -146,10 +161,10 @@ export async function checkForUpdates(silent: boolean = false): Promise<void> {
     await updateSettingsBadge();
     
   } catch (e: any) {
-    setStatus(`[版本检查] 错误: ${e.message}`, 'error');
+    setStatus(t('ui.update_check_error_message', { message: e.message }), 'error');
     console.error('[版本检查] 详细错误:', e);
     if (!silent) {
-      setStatus('检查更新失败: ' + e.message, 'error');
+      setStatus(t('ui.could_not_check_for_updates_message', { message: e.message }), 'error');
     }
     updateAvailable = false;
     allNewerVersions = [];
@@ -161,12 +176,12 @@ export async function checkForUpdates(silent: boolean = false): Promise<void> {
 async function installNow(installerPath: string): Promise<void> {
   const result = await window.gpcl.installUpdate(installerPath, true);
   if (result && result.success) {
-    showToast('正在更新', '启动器即将关闭并安装新版本...', 'info');
+    showToast('ui.updating', '启动器即将关闭并安装新版本...', 'info');
     setTimeout((): void => {
       if (window.gpcl.closeWindow) window.gpcl.closeWindow();
     }, 800);
   } else {
-    showToast('执行失败', (result && result.error) || '无法启动安装程序', 'error');
+    showToast('ui.failed_2', (result && result.error) || '无法启动安装程序', 'error');
   }
 }
 
@@ -189,7 +204,7 @@ export async function showUpdateStartupNotice(): Promise<void> {
     if (!state || !state.success) return;
 
     if (state.justUpdatedTo) {
-      showToast('更新完成', `GoodPlanCraftLauncher 已更新到 ${state.justUpdatedTo}`, 'success');
+      showToast('ui.update_complete', t('ui.goodplancraftlauncher_updated_to_version', { version: state.justUpdatedTo }), 'success');
     }
 
     if (state.readyInstallerPath && state.readyVersion) {
@@ -207,7 +222,7 @@ export async function showUpdateStartupNotice(): Promise<void> {
       const openSite: boolean = await showDialog({
         type: 'warning',
         title: '更新未完成',
-        message: `更新已经尝试 ${attempts} 次仍未完成，当前版本仍是 ${state.currentVersion}。\n建议到官网重新下载安装包。`,
+        message: t('更新已经尝试 {attempts} 次仍未完成，当前版本仍是 {version}。\n建议到官网重新下载安装包。', { attempts, version: state.currentVersion }),
         confirmText: '打开官网',
         cancelText: '稍后'
       });
@@ -220,7 +235,7 @@ export async function showUpdateStartupNotice(): Promise<void> {
     const retry: boolean = await showDialog({
       type: 'warning',
       title: '上次更新未完成',
-      message: `上次更新没有完成，当前仍是 ${state.currentVersion}。\n可以直接重试安装，游戏和设置不会受影响。`,
+      message: t('上次更新没有完成，当前仍是 {version}。\n可以直接重试安装，游戏和设置不会受影响。', { version: state.currentVersion }),
       confirmText: '重试安装',
       cancelText: '稍后'
     });
@@ -233,7 +248,7 @@ export async function showUpdateStartupNotice(): Promise<void> {
 
 async function runUpdateDownload(version: string, manual: boolean): Promise<void> {
   if (!window.gpcl || !window.gpcl.downloadUpdate) {
-    showToast('更新失败', '更新功能不可用', 'error');
+    showToast('ui.update_failed', '更新功能不可用', 'error');
     return;
   }
 
@@ -259,8 +274,8 @@ async function runUpdateDownload(version: string, manual: boolean): Promise<void
     resetChart();
 
     if (downloadPanelEl) downloadPanelEl.classList.remove('hidden');
-    if (filenameEl) filenameEl.textContent = `正在下载: GPCL ${version} 安装程序`;
-    if (downloadStatusEl) downloadStatusEl.textContent = `正在下载 GPCL ${version} ...`;
+    if (filenameEl) filenameEl.textContent = t('ui.downloading_the_gpcl_version_installer', { version });
+    if (downloadStatusEl) downloadStatusEl.textContent = t('ui.downloading_gpcl_version', { version });
     if (progressFill) progressFill.style.width = '0%';
     if (progressText) progressText.textContent = '0%';
     if (cancelBtn) {
@@ -281,8 +296,8 @@ async function runUpdateDownload(version: string, manual: boolean): Promise<void
         if (progressText) progressText.textContent = percent.toFixed(1) + '%';
         if (downloadStatusEl) {
           downloadStatusEl.textContent = percent >= 100
-            ? '下载完成，正在校验安装包...'
-            : `正在下载 GPCL ${version}: ${percent.toFixed(1)}%`;
+            ? t('ui.download_complete_verifying_the_installer')
+            : t('ui.downloading_gpcl_version_percent', { version, percent: percent.toFixed(1) });
         }
 
         const currentSpeedEl: HTMLElement | null = document.getElementById('current-speed');
@@ -318,8 +333,8 @@ async function runUpdateDownload(version: string, manual: boolean): Promise<void
         await window.gpcl.cancelUpdateDownload();
       }
       if (downloadPanelEl) downloadPanelEl.classList.add('hidden');
-      if (downloadStatusEl) downloadStatusEl.textContent = '下载已取消';
-      showToast('已取消', '更新下载已取消', 'info');
+      if (downloadStatusEl) downloadStatusEl.textContent = t('ui.download_cancelled');
+      showToast('ui.cancelled', '更新下载已取消', 'info');
       if (cancelBtn) cancelBtn.onclick = null;
     };
     if (cancelBtn) {
@@ -368,17 +383,17 @@ async function runUpdateDownload(version: string, manual: boolean): Promise<void
         if (downloadStatusEl) downloadStatusEl.textContent = '下载已取消';
       }
     } else {
-      throw new Error(result.error || '下载失败');
+      throw new Error(result.error || t('ui.download_failed'));
     }
   } catch (err: any) {
     setUpdateBadgeFailed(err.message);
-    if (manual && downloadStatusEl) downloadStatusEl.textContent = `下载失败: ${err.message}`;
+    if (manual && downloadStatusEl) downloadStatusEl.textContent = t('ui.download_failed_message', { message: err.message });
     if (manual) {
       if (cancelBtn) {
         (cancelBtn as HTMLButtonElement).disabled = true;
         cancelBtn.onclick = null;
       }
-      if (/校验/.test(err.message)) {
+      if (/校验|verif/i.test(err.message)) {
         const retry: boolean = await showDialog({
           type: 'warning',
           title: '更新包校验失败',
@@ -392,7 +407,7 @@ async function runUpdateDownload(version: string, manual: boolean): Promise<void
           return;
         }
       }
-      showToast('更新下载失败', err.message, 'error');
+      showToast('ui.update_download_failed', err.message, 'error');
     } else {
       console.error('[更新] 后台下载失败:', err.message);
     }

@@ -1,0 +1,206 @@
+{
+  "meta": {
+    "title": "GoodPlanCraftLauncher - Hafif, verimli Minecraft başlatıcısı - CaelLabGameTS",
+    "description": "GoodPlanCraftLauncher; Microsoft ve çevrimdışı giriş, sürüm yönetimi ve Forge/NeoForge/Fabric/OptiFine mod kurulumu sunan basit ve verimli bir Minecraft başlatıcısıdır; blok dünyasına tek tıkla girersiniz. Açık kaynak ve ücretsiz.",
+    "keywords": "GoodPlanCraftLauncher,Minecraft başlatıcısı,MC başlatıcısı,Minecraft Java Edition,CaelLab,açık kaynak",
+    "ogTitle": "GoodPlanCraftLauncher - Hafif, verimli Minecraft başlatıcısı",
+    "ogDescription": "Hafif · verimli · açık kaynak. Microsoft ve çevrimdışı giriş, sürüm yönetimi ve tek tıkla Forge/NeoForge/Fabric/OptiFine kurulumu."
+  },
+  "historyMeta": {
+    "title": "Sürüm notları - GoodPlanCraftLauncher - CaelLabGameTS",
+    "description": "Tüm GoodPlanCraftLauncher sürümlerinin değişiklik notları ve kurulum dosyaları: 1.0.0'dan en son sürüme kadar her değişiklik bu sayfada.",
+    "ogTitle": "Sürüm notları - GoodPlanCraftLauncher",
+    "ogDescription": "Her sürüm için sürüm notları ve kurulum dosyaları."
+  },
+  "nav": {
+    "source": "Kaynak kodu",
+    "language": "Dil",
+    "download": "v{version} indir",
+    "mobileGitHub": "GitHub kaynak kodu",
+    "openMenu": "Menüyü aç"
+  },
+  "hero": {
+    "tags": [
+      "Açık kaynak",
+      "Ücretsiz",
+      "Minecraft başlatıcısı"
+    ],
+    "subtitle": "Hafif · Verimli · Açık kaynak",
+    "desc": "Windows için yazılmış bir Minecraft başlatıcısı: Microsoft ve çevrimdışı giriş, sürüm yönetimi ve tek tıkla Forge / Fabric / OptiFine kurulumu. Oyun çöktüğünde boş bir kutu göstermek yerine nedenini söyler.",
+    "download": "Hemen indir",
+    "versionLabel": "Sürüm",
+    "updatedLabel": "Güncellendi",
+    "platformLabel": "Platform",
+    "platform": "Windows 10+",
+    "iframeTitle": "GoodPlanCraftLauncher arayüzü",
+    "windowNote": "Yukarıdaki pencere <b>tıklanabilir</b> — bu, web sayfası içinde çalışan başlatıcı arayüzünün kendisi.",
+    "iconAlt": "GoodPlanCraftLauncher simgesi"
+  },
+  "features": {
+    "tag": "Özellikler",
+    "title": "Temel özellikler",
+    "desc": "Oyunculara yönelik pratik araçlar; her biri sizi oyuna daha hızlı sokmayı amaçlıyor",
+    "items": [
+      {
+        "title": "İki giriş modu",
+        "desc": "Microsoft ve çevrimdışı giriş, istediğiniz an değiştirilebilir; çevrimdışı modda çevrimiçi doğrulama gerekmez."
+      },
+      {
+        "title": "Yerleşik mod indirme",
+        "desc": "Modrinth ve CurseForge'da arayın; modları, shader'ları veya kaynak paketlerini seçili sürümün gerçekten kullandığı klasöre kurun."
+      },
+      {
+        "title": "Dört mod yükleyici",
+        "desc": "Forge, NeoForge, Fabric ve OptiFine resmi kaynaklardan kurulur; Java sürümü önce kontrol edilir."
+      },
+      {
+        "title": "25 arayüz dili",
+        "desc": "İlk açılışta sistem dilini izler; ayarlardan istediğiniz zaman değiştirebilirsiniz."
+      },
+      {
+        "title": "Otomatik sürüm yönetimi",
+        "desc": "Minecraft sürümlerini tek tıkla indirin, kurun ve değiştirin; kütüphaneler ve varlıklar otomatik halledilir."
+      },
+      {
+        "title": "Hızlı başlatma",
+        "desc": "Sadeleştirilmiş başlatma yolu ve önbellekleme, böylece beklemek yerine tıklayıp oynarsınız."
+      },
+      {
+        "title": "Java çalışma zamanı yönetimi",
+        "desc": "Java çalışma zamanını otomatik algılar ve kurar; indirme kaynağı Tsinghua, Nanjing University, Huawei Cloud veya resmi kaynak olarak ayarlanabilir, başarısız olursa bir sonrakine geçilir."
+      },
+      {
+        "title": "Tema desteği",
+        "desc": "Tam açık ve koyu mod desteği, tutarlı bir görünüm için ayarlanabilir arayüz ölçekleme."
+      },
+      {
+        "title": "Otomatik güncelleme ve bakım",
+        "desc": "Yerleşik güncelleme denetimi ve yapılandırılabilir otomatik günlük temizliği, başlatıcıyı zamanla yalın tutar."
+      },
+      {
+        "title": "Çökme bildirimleri ve hata raporları",
+        "desc": "Oyun anormal sonlanınca nedenini açıklar ve tek tıkla hata raporu dışa aktarabilir (çökme raporu + günlükler + sistem bilgisi)."
+      },
+      {
+        "title": "Çalışma paneli",
+        "desc": "Başlatmadan sonra sağdaki panel sürümü, PID'yi, çalışma süresini ve bellek kullanımını gösterir, oyunu istediğiniz an sonlandırabilir."
+      },
+      {
+        "title": "Özel pencere başlığı",
+        "desc": "Oyun penceresinin başlığını kendiniz yazın; {mc_version} ve {time} gibi sihirli sözcükler desteklenir."
+      }
+    ]
+  },
+  "shots": {
+    "tag": "Ekran görüntüleri",
+    "title": "Gerçek ekran görüntüleri",
+    "desc": "Üstteki pencere başlatıcı arayüzünün web üzerinde yeniden oluşturulmuş halidir, hiçbir şey kurmadan tıklayabilirsiniz. Aşağıdaki dördü Windows'ta çalışan başlatıcıdan, düzenlenmeden alınmıştır.",
+    "items": [
+      {
+        "alt": "GoodPlanCraftLauncher başlatma ekranı",
+        "caption": "Başlatma ekranı · sürüm seç, oyuncu adı gir, oyunu başlat"
+      },
+      {
+        "alt": "GoodPlanCraftLauncher indirme ekranı",
+        "caption": "İndirme ekranı · oyun sürümleri, modlar, shader'lar, kaynak paketleri ve modpack'ler"
+      },
+      {
+        "alt": "GoodPlanCraftLauncher oyun ayarları",
+        "caption": "Ayarlar · oyun belleği, pencere modu, pencere başlığı ve sihirli sözcükler"
+      },
+      {
+        "alt": "GoodPlanCraftLauncher görünüm ayarları",
+        "caption": "Ayarlar · dil, arayüz stili, tema ve ölçek"
+      }
+    ]
+  },
+  "download": {
+    "tag": "İndirme",
+    "title": "Hemen indir",
+    "desc": "Platformunuzu seçin ve bloklu maceraya başlayın",
+    "button": "Blok dünyasını başlat!",
+    "updatedLabel": "Güncellendi",
+    "platformLabel": "Platform",
+    "licenseLabel": "Lisans",
+    "platform": "Windows 10 64-bit",
+    "license": "Açık kaynak, ücretsiz",
+    "github": "GitHub'da görüntüle"
+  },
+  "requirements": {
+    "tag": "Sistem",
+    "title": "Sistem gereksinimleri",
+    "desc": "Mütevazı, ama bilmekte fayda var",
+    "items": [
+      {
+        "label": "İşletim sistemi",
+        "text": "Windows 10 64-bit (1709+); Windows 11 de çalışır"
+      },
+      {
+        "label": "Java çalışma zamanı",
+        "text": "Başlatıcı tarafından otomatik kurulur; sistemdeki gereksiz veya çakışan Java kurulumlarının temizlenmesi önerilir"
+      },
+      {
+        "label": "Depolama",
+        "text": "Başlatıcının kendisi için en az 90 MB boş alan (oyun dosyaları hariç)"
+      },
+      {
+        "label": "Bellek",
+        "text": "En az 2 GB kullanılabilir bellek önerilir"
+      }
+    ]
+  },
+  "openSource": {
+    "tag": "Açık Kaynak",
+    "title": "Açık kaynak ve katkılar",
+    "desc": "GPCL %100 açık kaynak bir projedir ve kaynak kodu GitHub'da barındırılır. PR'lar ve <a href=\"https://forum.xmuer.online/\" target=\"_blank\">forum</a> üzerindeki öneriler memnuniyetle karşılanır; birlikte daha iyi bir Minecraft başlatıcısı yapalım.",
+    "items": [
+      {
+        "title": "Lisans",
+        "desc": "CaelLab BY-SA Code License, Sürüm 3 (veya sonraki herhangi bir sürüm) altında yayımlanmıştır. Özgürce kullanabilir, değiştirebilir ve yeniden dağıtabilirsiniz; değiştirilmiş sürümler aynı açık kaynak lisansını korumalıdır. Proje ana sayfası: <a href=\"https://gamets.caellab.com/gpcl/\">gamets.caellab.com/gpcl</a>.",
+        "action": "Tam lisansı okuyun →"
+      },
+      {
+        "title": "Katkıda bulunma",
+        "desc": "Ana kaynak deposu GitHub'dadır; sorunlar ve PR'lar orada yönetilir. Hata bildirimleri, özellik önerileri ve kod katkıları memnuniyetle karşılanır.",
+        "action": "GitHub'ı ziyaret edin →"
+      }
+    ],
+    "licenseSummary": "LİSANS ÖZETİ — CaelLab BY-SA Code License v3"
+  },
+  "history": {
+    "tag": "Geçmiş",
+    "title": "Sürüm geçmişi",
+    "desc": "Geçmiş sürümler ve değişiklik notları",
+    "older": "{n} eski sürümü göster",
+    "more": "Tam değişiklik notlarını görüntüle (tüm {total} sürüm ve kurulum dosyaları) →",
+    "page": {
+      "back": "← Ana sayfaya dön",
+      "tag": "Sürüm notları",
+      "heading": "Sürüm notları",
+      "intro": "1.0.0'dan en son sürüme kadar her sürüm — neyin değiştiği ve indirilebilir olup olmadığı — bu sayfada.",
+      "note": "1.3.2 ve öncesi için kurulum dosyaları saklanmadı; eski sürümlerdeki yerleşik güncelleyici artık çalışmayabilir, bu yüzden günlük kullanım için en son sürümü kurmanız önerilir.",
+      "indexLabel": "Sürüm dizini",
+      "latest": "En son",
+      "download": "v{version} indir",
+      "unavailable": "Bu sürüm için kurulum dosyası saklanmadı",
+      "fileNote": "{file} · {size} · Windows 64-bit"
+    }
+  },
+  "footer": {
+    "brand": "CaelLab bünyesindeki bağımsız bir oyun geliştirme ve araç ekibi. Geleceğin sınırını keşfediyor, sınırsız yeniliği taşıyoruz.",
+    "projects": "Projeler",
+    "community": "Topluluk",
+    "openSource": "Açık kaynak",
+    "help": "Yardım merkezi",
+    "changelog": "Sürüm notları",
+    "forum": "Forum",
+    "license": "Lisans",
+    "copyright": "&copy; 2026 GameTS by <a href=\"https://www.caellab.com/\" target=\"_blank\" class=\"footer-inline-link\">CaelLab</a>. Tüm hakları saklıdır. Proje ana sayfası: <a href=\"https://gamets.caellab.com/gpcl/\" class=\"footer-inline-link\">gamets.caellab.com/gpcl</a>",
+    "disclaimer": "GoodPlanCraftLauncher üçüncü taraf bir açık kaynak araçtır ve <a href=\"https://www.minecraft.net/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Mojang Studios</a>, <a href=\"https://www.microsoft.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Microsoft</a>, <a href=\"https://www.xbox.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Xbox</a> ile resmi bir bağlantısı yoktur. Minecraft, Mojang Studios'un ticari markasıdır; bu başlatıcıyı kullanmak geçerli bir Minecraft lisansı gerektirir.",
+    "licenseLine": "Açık kaynak lisansı: <a href=\"https://www.caellab.com/license/cbs-v3\" target=\"_blank\" class=\"footer-inline-link\">CaelLab BY-SA Code License v3</a> | Açık kaynak: <a href=\"https://github.com/CaelLab-org/GoodPlanCraftLauncher\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">GitHub</a>"
+  },
+  "labels": {
+    "platform": "Windows 64-bit",
+    "github": "GitHub"
+  }
+}

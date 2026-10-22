@@ -15,6 +15,7 @@ import path from 'path';
 
 import { GAME_DIR, markVersionIsolated, writeLog } from './config';
 import { downloadFile, downloadWithPool, installVersion, setOverallProgressMode } from './download';
+import { t, translateText } from './i18n';
 import { installVersionWithModLoader } from './modloader';
 import { curseForgeApi, resolveProjectFile } from './mods';
 import { setCompletedDownloadFiles, setTotalDownloadFiles, shouldCancelDownload } from './state';
@@ -43,9 +44,10 @@ interface PackFileJob {
 }
 
 function writeStage(message: string): void {
-  writeLog(`[整合包] ${message}`);
+  const localized: string = translateText(message);
+  writeLog(`[整合包] ${localized}`);
   for (const win of BrowserWindow.getAllWindows()) {
-    win.webContents.send('install-stage', { message });
+    win.webContents.send('install-stage', { message: localized });
   }
 }
 
@@ -110,14 +112,14 @@ function parsePack(extractDir: string): PackInfo {
   if (!found) {
     const reason: string = unsupportedFormatReason(extractDir);
     if (reason) throw new Error(`暂不支持${reason}，目前只支持 Modrinth（.mrpack）和 CurseForge 整合包`);
-    throw new Error('这个压缩包里没有整合包清单（modrinth.index.json 或 manifest.json）');
+    throw new Error('This archive has no modpack manifest (modrinth.index.json or manifest.json)');
   }
 
   if (found.format === 'modrinth') {
     const index: any = readJson(path.join(found.root, 'modrinth.index.json'));
     const deps: any = index.dependencies || {};
     const mcVersion: string = String(deps.minecraft || '').trim();
-    if (!mcVersion) throw new Error('整合包清单里没有写 Minecraft 版本');
+    if (!mcVersion) throw new Error('The modpack manifest does not specify a Minecraft version');
     let loaderType: PackInfo['loaderType'] = '';
     let loaderVersion: string = '';
     if (deps['fabric-loader']) {
@@ -130,7 +132,7 @@ function parsePack(extractDir: string): PackInfo {
       loaderType = 'neoforge';
       loaderVersion = String(deps.neoforge || deps['neo-forge']);
     } else if (deps['quilt-loader']) {
-      throw new Error('暂不支持 Quilt 整合包');
+      throw new Error('Quilt modpacks are not supported yet');
     }
     return {
       format: 'modrinth',
@@ -145,7 +147,7 @@ function parsePack(extractDir: string): PackInfo {
 
   const manifest: any = readJson(path.join(found.root, 'manifest.json'));
   const mcVersion: string = String(manifest?.minecraft?.version || '').trim();
-  if (!mcVersion) throw new Error('整合包清单里没有写 Minecraft 版本');
+  if (!mcVersion) throw new Error('The modpack manifest does not specify a Minecraft version');
   const loaders: any[] = Array.isArray(manifest?.minecraft?.modLoaders) ? manifest.minecraft.modLoaders : [];
   const primary: any = loaders.find((l: any) => l?.primary) || loaders[0] || null;
   const loaderId: string = String(primary?.id || '').trim();
@@ -154,7 +156,7 @@ function parsePack(extractDir: string): PackInfo {
   const match: RegExpMatchArray | null = loaderId.match(/^(forge|neoforge|fabric|quilt)-(.+)$/i);
   if (match) {
     const kind: string = match[1].toLowerCase();
-    if (kind === 'quilt') throw new Error('暂不支持 Quilt 整合包');
+    if (kind === 'quilt') throw new Error('Quilt modpacks are not supported yet');
     loaderType = kind as PackInfo['loaderType'];
     loaderVersion = match[2];
   }
@@ -348,7 +350,7 @@ async function downloadPackFiles(jobs: PackFileJob[]): Promise<{ downloaded: num
     }
     downloaded += 1;
   }));
-  if (shouldCancelDownload) throw new Error('下载已取消');
+  if (shouldCancelDownload) throw new Error('Download cancelled');
 
   const failed: any[] = results.filter((item: PromiseSettledResult<void>) => item.status === 'rejected');
   if (failed.length > 0) {
@@ -408,7 +410,7 @@ export async function installModpack(options: { archivePath: string; instanceNam
 
     let loaderVersionId: string = info.mcVersion;
     if (info.loaderType) {
-      writeStage(`正在安装 Minecraft ${info.mcVersion} + ${info.loaderType} ${info.loaderVersion}…`);
+      writeStage(t('ui.installing_minecraft_mcversion_loadertype_loaderversion', { mcVersion: info.mcVersion, loaderType: info.loaderType, loaderVersion: info.loaderVersion }));
       const loaderResult: any = await installVersionWithModLoader(
         info.mcVersion,
         info.loaderType,
@@ -419,12 +421,12 @@ export async function installModpack(options: { archivePath: string; instanceNam
       if (!loaderResult?.success) {
         throw new Error(loaderResult?.error || '游戏版本或模组加载器安装失败');
       }
-      if (shouldCancelDownload) throw new Error('下载已取消');
+      if (shouldCancelDownload) throw new Error('Download cancelled');
       loaderVersionId = String(loaderResult.finalVersionId || info.mcVersion);
     } else {
-      writeStage(`正在安装 Minecraft ${info.mcVersion}…`);
+      writeStage(t('ui.installing_minecraft_mcversion', { mcVersion: info.mcVersion }));
       await installVersion(info.mcVersion, maxConcurrent);
-      if (shouldCancelDownload) throw new Error('下载已取消');
+      if (shouldCancelDownload) throw new Error('Download cancelled');
     }
 
     writeStage('正在整理整合包文件…');
@@ -432,7 +434,7 @@ export async function installModpack(options: { archivePath: string; instanceNam
       ? await collectCurseForgeFiles(info.root, instanceDir)
       : await collectModrinthFiles(info.root, instanceDir);
 
-    writeStage(`正在下载整合包文件（共 ${collected.jobs.length} 个）…`);
+    writeStage(t('ui.downloading_modpack_files_count_total', { count: collected.jobs.length }));
     setOverallProgressMode(true);
     let downloaded: number = 0;
     let existing: number = 0;
@@ -486,15 +488,15 @@ ipcMain.handle('modpack-install', async (_, options: any) => {
   const projectId: string = String(options?.projectId || '').trim();
   const versionId: string = String(options?.versionId || '').trim();
   const gameVersion: string = String(options?.gameVersion || '').trim();
-  if (!projectId) return { success: false, error: '缺少项目 ID' };
+  if (!projectId) return { success: false, error: 'Missing project ID' };
 
   const archivePath: string = path.join(tempDir(), `pack-${Date.now()}.mrpack`);
   try {
     fs.mkdirSync(tempDir(), { recursive: true });
     const file: { fileName: string; downloadUrl: string } = await resolveProjectFile(source, projectId, versionId, gameVersion, '');
-    writeStage(`正在下载整合包：${file.fileName}`);
-    await downloadFile(file.downloadUrl, archivePath, `整合包：${file.fileName}`, [file.downloadUrl]);
-    if (shouldCancelDownload) throw new Error('下载已取消');
+    writeStage(t('ui.downloading_modpack_file', { file: file.fileName }));
+    await downloadFile(file.downloadUrl, archivePath, t('ui.modpack_file', { file: file.fileName }), [file.downloadUrl]);
+    if (shouldCancelDownload) throw new Error('Download cancelled');
     return await installModpack({
       archivePath,
       instanceName: String(options?.instanceName || ''),

@@ -1,0 +1,206 @@
+{
+  "meta": {
+    "title": "GoodPlanCraftLauncher - משגר Minecraft קל ומהיר - CaelLabGameTS",
+    "description": "GoodPlanCraftLauncher הוא משגר Minecraft פשוט ויעיל עם התחברות Microsoft ומצב לא מקוון, ניהול גרסאות והתקנת מודים של Forge/NeoForge/Fabric/OptiFine, כדי להיכנס לעולם הקוביות בלחיצה אחת. קוד פתוח וחינמי.",
+    "keywords": "GoodPlanCraftLauncher,משגר Minecraft,משגר MC,Minecraft Java Edition,CaelLab,קוד פתוח",
+    "ogTitle": "GoodPlanCraftLauncher - משגר Minecraft קל ומהיר",
+    "ogDescription": "קל · מהיר · קוד פתוח. התחברות Microsoft ומצב לא מקוון, ניהול גרסאות והתקנה בלחיצה אחת של Forge/NeoForge/Fabric/OptiFine."
+  },
+  "historyMeta": {
+    "title": "יומן שינויים - GoodPlanCraftLauncher - CaelLabGameTS",
+    "description": "יומני שינויים והורדות מתקין לכל גרסה של GoodPlanCraftLauncher: מ-1.0.0 ועד האחרונה, כל שינוי נמצא בעמוד הזה.",
+    "ogTitle": "יומן שינויים - GoodPlanCraftLauncher",
+    "ogDescription": "הערות שחרור והורדות מתקין לכל גרסה."
+  },
+  "nav": {
+    "source": "קוד מקור",
+    "language": "שפה",
+    "download": "הורדה v{version}",
+    "mobileGitHub": "קוד מקור ב-GitHub",
+    "openMenu": "פתיחת תפריט"
+  },
+  "hero": {
+    "tags": [
+      "קוד פתוח",
+      "חינמי",
+      "משגר Minecraft"
+    ],
+    "subtitle": "קל · מהיר · קוד פתוח",
+    "desc": "משגר Minecraft שנכתב ל-Windows: התחברות Microsoft ומצב לא מקוון, ניהול גרסאות והתקנה בלחיצה אחת של Forge / Fabric / OptiFine. כשהמשחק קורס, הוא אומר לך למה במקום פשוט להציג חלון ריק.",
+    "download": "הורדה עכשיו",
+    "versionLabel": "גרסה",
+    "updatedLabel": "עודכן",
+    "platformLabel": "פלטפורמה",
+    "platform": "Windows 10+",
+    "iframeTitle": "ממשק GoodPlanCraftLauncher",
+    "windowNote": "החלון שלמעלה הוא <b>לחיץ</b> — זהו ממשק המשגר עצמו, שרץ בתוך דף האינטרנט.",
+    "iconAlt": "סמל GoodPlanCraftLauncher"
+  },
+  "features": {
+    "tag": "יכולות",
+    "title": "יכולות עיקריות",
+    "desc": "כלים שימושיים לשחקנים, כל אחד מהם מכוון להכניס אותך למשחק מהר יותר",
+    "items": [
+      {
+        "title": "שני מצבי התחברות",
+        "desc": "התחברות Microsoft ומצב לא מקוון, עם אפשרות החלפה בכל רגע; מצב לא מקוון לא דורש אימות מקוון."
+      },
+      {
+        "title": "הורדת מודים מובנית",
+        "desc": "חפשו ב-Modrinth וב-CurseForge והתקינו מודים, שיידרים או חבילות משאבים בתיקייה שבה הגרסה הנבחרת באמת משתמשת."
+      },
+      {
+        "title": "ארבעה טועני מודים",
+        "desc": "Forge, NeoForge, Fabric ו-OptiFine מותקנים מהמקורות הרשמיים, עם בדיקת גרסת Java מראש."
+      },
+      {
+        "title": "25 שפות ממשק",
+        "desc": "עוקב אחר שפת המערכת בהפעלה הראשונה; ניתן לשנות בהגדרות בכל עת."
+      },
+      {
+        "title": "ניהול גרסאות אוטומטי",
+        "desc": "הורדה, התקנה והחלפה של גרסאות Minecraft בלחיצה אחת, כשהספריות והנכסים מטופלים אוטומטית."
+      },
+      {
+        "title": "הפעלה מהירה",
+        "desc": "מסלול הפעלה מצומצם ומטמון, כך שלוחצים ומשחקים במקום לחכות."
+      },
+      {
+        "title": "ניהול סביבת Java",
+        "desc": "מזהה ומתקין סביבת Java אוטומטית; אפשר לבחור מקור הורדה — Tsinghua, אוניברסיטת נאנג'ינג, Huawei Cloud או המקור הרשמי, עם מעבר לבא בתור אם נכשל."
+      },
+      {
+        "title": "תמיכה בערכות נושא",
+        "desc": "תמיכה מלאה במצב בהיר וכהה, עם קנה מידה מתכוונן של הממשק למראה אחיד."
+      },
+      {
+        "title": "עדכונים ותחזוקה אוטומטיים",
+        "desc": "בדיקות עדכון מובנות וניקוי יומנים אוטומטי הניתן להגדרה שומרים על המשגר רזה לאורך זמן."
+      },
+      {
+        "title": "התראות קריסה ודוחות שגיאה",
+        "desc": "כשהמשחק יוצא באופן חריג הוא מסביר למה, ויכול לייצא דוח שגיאה בלחיצה אחת (דוח קריסה + יומנים + מידע מערכת)."
+      },
+      {
+        "title": "פאנל ריצה",
+        "desc": "לאחר ההפעלה, פאנל בצד ימין מציג את הגרסה, ה-PID, משך הריצה והשימוש בזיכרון, ומאפשר לסיים את המשחק בכל רגע."
+      },
+      {
+        "title": "כותרת חלון מותאמת",
+        "desc": "כתבו כותרת משלכם לחלון המשחק, עם מילות קסם כמו {mc_version} ו-{time}."
+      }
+    ]
+  },
+  "shots": {
+    "tag": "צילומי מסך",
+    "title": "צילומי מסך אמיתיים",
+    "desc": "החלון למעלה הוא שחזור וובי של ממשק המשגר, לחיץ בלי להתקין דבר. ארבעת אלה שלמטה הם המשגר שרץ בפועל על Windows, ללא עריכה.",
+    "items": [
+      {
+        "alt": "מסך ההפעלה של GoodPlanCraftLauncher",
+        "caption": "מסך הפעלה · בחירת גרסה, הזנת שם שחקן, התחלת המשחק"
+      },
+      {
+        "alt": "מסך ההורדה של GoodPlanCraftLauncher",
+        "caption": "מסך ההורדה · גרסאות משחק, מודים, שיידרים, חבילות משאבים וחבילות מודים"
+      },
+      {
+        "alt": "הגדרות המשחק של GoodPlanCraftLauncher",
+        "caption": "הגדרות · זיכרון המשחק, מצב חלון, כותרת חלון ומילות קסם"
+      },
+      {
+        "alt": "הגדרות המראה של GoodPlanCraftLauncher",
+        "caption": "הגדרות · שפה, סגנון ממשק, ערכת נושא וקנה מידה"
+      }
+    ]
+  },
+  "download": {
+    "tag": "הורדה",
+    "title": "הורדה עכשיו",
+    "desc": "בחרו פלטפורמה והתחילו את הרפתקת הקוביות",
+    "button": "צאו לעולם הקוביות!",
+    "updatedLabel": "עודכן",
+    "platformLabel": "פלטפורמה",
+    "licenseLabel": "רישיון",
+    "platform": "Windows 10 64-bit",
+    "license": "קוד פתוח, חינמי",
+    "github": "צפייה ב-GitHub"
+  },
+  "requirements": {
+    "tag": "מערכת",
+    "title": "דרישות מערכת",
+    "desc": "צנועות, אבל שווה לדעת",
+    "items": [
+      {
+        "label": "מערכת הפעלה",
+        "text": "Windows 10 64-bit (1709+); Windows 11 גם עובד"
+      },
+      {
+        "label": "סביבת Java",
+        "text": "מותקנת אוטומטית על ידי המשגר; מומלץ לנקות התקנות Java כפולות או מתנגשות במערכת"
+      },
+      {
+        "label": "אחסון",
+        "text": "לפחות 90 MB פנויים עבור המשגר עצמו (לא כולל קבצי המשחק)"
+      },
+      {
+        "label": "זיכרון",
+        "text": "מומלץ 2 GB זיכרון פנוי ומעלה"
+      }
+    ]
+  },
+  "openSource": {
+    "tag": "קוד פתוח",
+    "title": "קוד פתוח ותרומות",
+    "desc": "GPCL הוא פרויקט בקוד פתוח ב-100%, והקוד שלו מתארח ב-GitHub. PRs מתקבלים בברכה, וכך גם הצעות ב<a href=\"https://forum.xmuer.online/\" target=\"_blank\">פורום</a>, כדי לבנות יחד משגר Minecraft טוב יותר.",
+    "items": [
+      {
+        "title": "רישיון",
+        "desc": "מופץ תחת CaelLab BY-SA Code License, גרסה 3 (או כל גרסה מאוחרת יותר). אפשר להשתמש, לשנות ולהפיץ בחופשיות; גרסאות ששונו חייבות לשמור על אותו רישיון קוד פתוח. בית הפרויקט: <a href=\"https://gamets.caellab.com/gpcl/\">gamets.caellab.com/gpcl</a>.",
+        "action": "קראו את הרישיון המלא ←"
+      },
+      {
+        "title": "תרומה",
+        "desc": "מאגר הקוד הראשי נמצא ב-GitHub, ושם מנוהלים issues ו-PRs. דיווחי באגים, הצעות תכונות ותרומות קוד מתקבלים בברכה.",
+        "action": "בקרו ב-GitHub ←"
+      }
+    ],
+    "licenseSummary": "תקציר הרישיון — CaelLab BY-SA Code License v3"
+  },
+  "history": {
+    "tag": "היסטוריה",
+    "title": "היסטוריית גרסאות",
+    "desc": "גרסאות קודמות ויומני השינויים שלהן",
+    "older": "הצג {n} גרסאות ישנות יותר",
+    "more": "לצפייה ביומן השינויים המלא (כל {total} הגרסאות והמתקינים) ←",
+    "page": {
+      "back": "← חזרה לדף הבית",
+      "tag": "יומן שינויים",
+      "heading": "יומן שינויים",
+      "intro": "מ-1.0.0 ועד הגרסה האחרונה, כל גרסה — מה השתנה והאם אפשר להוריד אותה — נמצאת בעמוד הזה.",
+      "note": "מתקינים לא נשמרו עבור 1.3.2 ומטה; מעדכן הגרסאות המובנה בגרסאות ישנות עשוי כבר לא לעבוד, ולכן מומלץ להתקין את הגרסה האחרונה לשימוש יומיומי.",
+      "indexLabel": "אינדקס גרסאות",
+      "latest": "אחרונה",
+      "download": "הורדה v{version}",
+      "unavailable": "לא נשמר מתקין לגרסה הזו",
+      "fileNote": "{file} · {size} · Windows 64-bit"
+    }
+  },
+  "footer": {
+    "brand": "צוות עצמאי לפיתוח משחקים וכלים ב-CaelLab. חוקרים את קצה העתיד, נושאים התחדשות ללא גבולות.",
+    "projects": "פרויקטים",
+    "community": "קהילה",
+    "openSource": "קוד פתוח",
+    "help": "מרכז עזרה",
+    "changelog": "יומן שינויים",
+    "forum": "פורום",
+    "license": "רישיון",
+    "copyright": "&copy; 2026 GameTS מאת <a href=\"https://www.caellab.com/\" target=\"_blank\" class=\"footer-inline-link\">CaelLab</a>. כל הזכויות שמורות. בית הפרויקט: <a href=\"https://gamets.caellab.com/gpcl/\" class=\"footer-inline-link\">gamets.caellab.com/gpcl</a>",
+    "disclaimer": "GoodPlanCraftLauncher הוא כלי צד שלישי בקוד פתוח ואינו קשור רשמית ל-<a href=\"https://www.minecraft.net/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Mojang Studios</a>, <a href=\"https://www.microsoft.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Microsoft</a>, <a href=\"https://www.xbox.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Xbox</a>. Minecraft הוא סימן מסחרי של Mojang Studios; שימוש במשגר זה מחייב רישיון Minecraft תקף.",
+    "licenseLine": "רישיון קוד פתוח: <a href=\"https://www.caellab.com/license/cbs-v3\" target=\"_blank\" class=\"footer-inline-link\">CaelLab BY-SA Code License v3</a> | קוד פתוח ב-<a href=\"https://github.com/CaelLab-org/GoodPlanCraftLauncher\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">GitHub</a>"
+  },
+  "labels": {
+    "platform": "Windows 64-bit",
+    "github": "GitHub"
+  }
+}

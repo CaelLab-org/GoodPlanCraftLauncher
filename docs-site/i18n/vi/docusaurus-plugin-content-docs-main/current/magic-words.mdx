@@ -1,0 +1,52 @@
+---
+title: Từ khóa ma thuật cho tiêu đề cửa sổ
+slug: /magic-words
+description: Dùng các placeholder như {mc_version}, {time} để tùy chỉnh tiêu đề cửa sổ trò chơi Minecraft.
+---
+
+Tiêu đề cửa sổ trò chơi có thể viết placeholder, khi khởi chạy GPCL sẽ thay bằng giá trị thật.
+
+Vị trí ở **Cài đặt → Trò chơi → Tiêu đề cửa sổ trò chơi**. Tiêu đề để trống nghĩa là không sửa tiêu đề cửa sổ trò chơi.
+
+## Ví dụ
+
+Viết tiêu đề là:
+
+```text
+{time} · {mc_version} · {gpcl_version}
+```
+
+Sau khi khởi chạy có thể hiển thị là:
+
+```text
+20:09:58 · Minecraft 1.21.3 · 1.6.0
+```
+
+## Placeholder có thể dùng
+
+| Placeholder | Sẽ thành |
+| --- | --- |
+| `{mc_version}` | Tên hiển thị phiên bản, ví dụ Minecraft 1.21.3, hoặc tên có loader |
+| `{mc_id}` | Tên thư mục phiên bản, ví dụ 1.21.3-Fabric |
+| `{username}` | Tên người chơi dùng cho lần khởi chạy này |
+| `{gpcl_version}` | Số phiên bản GPCL, ví dụ 1.6.0 |
+| `{date}` | Ngày khởi chạy, định dạng 2026/10/20 |
+| `{time}` | Thời gian hiện tại, định dạng 20:09:58 |
+| `{datetime}` | Ngày và giờ, cách nhau bằng dấu cách |
+| `{java}` | Tên thư mục Java runtime hiện tại |
+| `{memory}` | Bộ nhớ tối đa được cấp lần này, ví dụ 4096MB |
+
+Phân biệt chữ hoa chữ thường. Placeholder viết sai sẽ hiển thị nguyên văn, để bạn dễ thấy cái nào sai.
+
+## Tiêu đề có giữ mãi không
+
+Bên dưới có công tắc "Cố gắng giữ tên này", mặc định tắt.
+
+- **Tắt**: Sau khi cửa sổ trò chơi xuất hiện, GPCL sẽ liên tục chỉnh lại trong 20 giây. Sau đó nếu trò chơi hoặc mod đổi tiêu đề, sẽ không quan tâm nữa. Tiêu đề chứa `{time}` cũng sẽ dừng ở thời điểm đó.
+- **Bật**: Giữ tiêu đề bạn đặt suốt ván chơi, vào thế giới cũng không bị " - Singleplayer" ghi đè.
+
+Một số modpack hoặc mod cũng đổi tiêu đề cửa sổ, hai bên ghi đè lẫn nhau là hiện tượng bình thường.
+
+:::note
+Hiện chỉ tiêu đề cửa sổ trò chơi hỗ trợ từ khóa ma thuật, các cài đặt khác không có tác dụng.
+:::

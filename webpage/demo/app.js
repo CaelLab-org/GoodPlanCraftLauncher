@@ -12,6 +12,7 @@
   var $ = function (id) { return document.getElementById(id); };
   var stage = $('stage');
   var body = document.body;
+  var t = window.DEMO_I18N.t;
 
   /* ===== 主题：默认跟随系统（判不出来就用浅色），设置里可以手动改 =====
      app.js 是 body 末尾的同步脚本，第一帧之前就跑完了，所以不会闪一下深色 */
@@ -67,23 +68,24 @@
       pages[k].classList.toggle('hidden', k !== name);
       menus[k].classList.toggle('active', k === name);
     });
-    if (name === 'download') { renderReleaseList(); drawChart(); }
+    if (name === 'download') { showDownloadTab(currentDownloadTab); drawChart(); }
   }
   Object.keys(menus).forEach(function (k) {
     menus[k].addEventListener('click', function () { showPage(k); });
   });
 
   document.querySelector('.min-btn').addEventListener('click', function () {
-    toast('最小化', '网页里的窗口最小化不了', 'info');
+    toast(t('Minimize'), t("You can't minimize a window in a web page"), 'info');
   });
   document.querySelector('.close-btn').addEventListener('click', function () {
-    toast('关不掉', '这只是一个网页窗口', 'info');
+    toast(t("Can't close it"), t('This is just a web page window'), 'info');
   });
 
   /* ===== 启动页：版本选择（版本数据都在 versions.js 里） ===== */
   var DATA = window.GPCL_VERSIONS;
   var installed = DATA.installed;
   var selectedVersion = installed[0].id;
+  var installedTimeLabels = { '2 小时前': '2 hours ago' };
 
   function renderLaunchVersions() {
     var box = $('launch-version-list');
@@ -95,7 +97,7 @@
         (v.recent ? 'star' : 'box') + '"></span>' +
         '<span class="version-item-id"></span><span class="version-item-time"></span>';
       el.querySelector('.version-item-id').textContent = v.id;
-      el.querySelector('.version-item-time').textContent = v.time;
+      el.querySelector('.version-item-time').textContent = t(installedTimeLabels[v.time] || v.time);
       el.addEventListener('click', function () {
         selectedVersion = v.id;
         renderLaunchVersions();
@@ -103,7 +105,7 @@
       });
       box.appendChild(el);
     });
-    $('version-count').textContent = installed.length + ' 个版本';
+    $('version-count').textContent = t('{n} versions', { n: installed.length });
     updateSelectedDisplay();
   }
 
@@ -129,7 +131,8 @@
   function renderHistory() {
     historyBox.innerHTML = '';
     if (!history.length) {
-      historyBox.innerHTML = '<div class="username-history-empty">还没有记录</div>';
+      historyBox.innerHTML = '<div class="username-history-empty"></div>';
+      historyBox.firstChild.textContent = t('No recent names yet');
       return;
     }
     history.forEach(function (name) {
@@ -168,23 +171,23 @@
   var uptimeSeconds = 0;
 
   var tips = [
-    'Minecraft 的方块贴图只有 16×16 像素，所以画风才能这么统一。',
-    '在下界走 1 格等于主世界 8 格，长途赶路走传送门比坐船快得多。',
-    '钻石镐挖一块黑曜石需要 9.4 秒，去下界之前记得带上。',
-    '落地之前对着脚下倒一桶水，可以抵消所有坠落伤害。',
-    '给生物用命名牌改过名之后，它就不会被刷掉了。',
-    '附魔台周围摆书架能提高附魔等级，最多需要 15 个书架。',
-    '床在下界和末地会爆炸，别想着在那边睡觉。',
-    '苦力怕的来源是建模时把猪的模型做歪了，于是干脆留下了它。',
-    '末影人的设计灵感来自网络怪谈里的“瘦长鬼影”。',
-    'GPCL 是云云一个人开发的启动器，并没有什么所谓的开发团队。'
+    "Minecraft block textures are only 16×16 pixels — that's why the art style stays so consistent.",
+    'One block in the Nether equals eight in the Overworld, so portals beat boats for long trips.',
+    'A diamond pickaxe needs 9.4 seconds per obsidian block — bring one before heading to the Nether.',
+    'Place a water bucket under your feet before you land to cancel all fall damage.',
+    'A mob renamed with a name tag will never despawn.',
+    'Bookshelves around an enchanting table raise its level — 15 is the maximum you need.',
+    "Beds explode in the Nether and the End, so don't try to sleep there.",
+    'Creepers began as a pig model with the dimensions mixed up, and the mistake was kept.',
+    'Endermen were inspired by the Slender Man internet legend.',
+    'GPCL is a launcher built by Yunyun alone — there is no development team behind it.'
   ];
 
   var statusMessages = [
-    '正在检查游戏文件...',
-    '正在准备Java运行时...',
-    '正在初始化游戏环境...',
-    '正在启动游戏窗口...'
+    'Checking game files...',
+    'Preparing the Java runtime...',
+    'Initializing the game environment...',
+    'Opening the game window...'
   ];
 
   var progressTimer = null;
@@ -219,8 +222,8 @@
     var tipCard = $('launch-tip-card');
 
     fill.style.width = '0%';
-    statusText.textContent = '正在启动游戏...';
-    $('launch-version-info').textContent = selectedVersion + ' · 离线模式 · ' + $('username').value;
+    statusText.textContent = t('Starting the game...');
+    $('launch-version-info').textContent = selectedVersion + ' · ' + t('Offline Mode') + ' · ' + $('username').value;
     tipCard.classList.add('hidden');
     overlay.classList.remove('hidden', 'fade-out');
     // 别用连续两帧 rAF 触发过渡：后台标签页里 rAF 不回调，元素会卡在初始态
@@ -233,10 +236,10 @@
       progress += Math.random() * 14 + 6;
       if (progress >= 90) { progress = 90; clearInterval(progressTimer); progressTimer = null; }
       fill.style.width = progress + '%';
-      statusText.textContent = statusMessages[Math.min(3, Math.floor(progress / 24))];
+      statusText.textContent = t(statusMessages[Math.min(3, Math.floor(progress / 24))]);
       if (!tipShown && progress > 40) {
         tipShown = true;
-        $('launch-tip-text').textContent = tips[Math.floor(Math.random() * tips.length)];
+        $('launch-tip-text').textContent = t(tips[Math.floor(Math.random() * tips.length)]);
         tipCard.classList.remove('hidden');
       }
     }, 220);
@@ -249,7 +252,7 @@
       clearInterval(particleTimer);
       particleTimer = null;
       fill.style.width = '100%';
-      statusText.textContent = 'Minecraft 已启动';
+      statusText.textContent = t('Minecraft started');
 
       setTimeout(function () {
         overlay.classList.add('fade-out');
@@ -267,7 +270,7 @@
     uptimeSeconds = 0;
     monitor.classList.add('active');
     $('game-monitor-dot').classList.add('running');
-    $('game-monitor-state').textContent = '运行中';
+    $('game-monitor-state').textContent = t('Running');
     $('mon-version').textContent = selectedVersion;
     $('mon-pid').textContent = String(10000 + Math.floor(Math.random() * 20000));
     $('mon-uptime').textContent = '00:00';
@@ -279,7 +282,7 @@
       $('mon-uptime').textContent = m + ':' + s;
       $('mon-memory').textContent = (1.8 + Math.random() * 1.2).toFixed(1) + ' GB / 4.0 GB';
     }, 1000);
-    toast('游戏已启动', 'Minecraft ' + selectedVersion + ' · 离线模式', 'success');
+    toast(t('Game started'), 'Minecraft ' + selectedVersion + ' · ' + t('Offline Mode'), 'success');
   }
 
   function endSession(silent) {
@@ -288,8 +291,8 @@
     uptimeTimer = null;
     monitor.classList.remove('active');
     $('game-monitor-dot').classList.remove('running');
-    $('game-monitor-state').textContent = '未运行';
-    if (!silent) toast('游戏已结束', '本次运行 ' + $('mon-uptime').textContent, 'info');
+    $('game-monitor-state').textContent = t('Not running');
+    if (!silent) toast(t('Game ended'), t('Ran for {time}', { time: $('mon-uptime').textContent }), 'info');
   }
 
   $('launch-btn').addEventListener('click', startLaunch);
@@ -299,7 +302,7 @@
     progressTimer = particleTimer = null;
     launchOverlay.classList.add('hidden');
     launchOverlay.classList.remove('show');
-    toast('已取消启动', '进程还没起来，什么都没有留下', 'info');
+    toast(t('Launch cancelled'), t('The process never started, so nothing was left behind'), 'info');
   });
   $('mon-stop-btn').addEventListener('click', function () { endSession(); });
 
@@ -312,7 +315,7 @@
     '[20:41:07] [Render thread/WARN]: Pack "vanilla" was not found, using built-in',
     '[20:41:09] [Render thread/INFO]: Sound engine started',
     '[20:41:11] [Render thread/INFO]: Created: 1024x512x4 minecraft:textures/atlas/blocks.png',
-    '[20:41:12] [Render thread/INFO]: OpenAL initialized on device 扬声器 (Realtek)',
+    '[20:41:12] [Render thread/INFO]: OpenAL initialized on device Speakers (Realtek)',
     '[20:41:14] [Render thread/INFO]: Narrator library for x64 loaded',
     '[20:41:15] [Render thread/INFO]: Done (11.842s)!'
   ];
@@ -323,7 +326,7 @@
       var div = document.createElement('div');
       if (line.indexOf('WARN') !== -1) div.className = 'log-warn';
       else if (line.indexOf('Done') !== -1) div.className = 'log-ok';
-      div.textContent = line;
+      div.textContent = t(line);
       view.appendChild(div);
     });
     $('log-overlay').classList.remove('hidden');
@@ -335,16 +338,24 @@
   var LOADERS = DATA.loaders;
   var releaseIndex = {};
   VERSIONS.forEach(function (row) { releaseIndex[row[0]] = row; });
+  var NEOFORGE = window.GPCL_NEOFORGE || {};
   var loaderMeta = {
-    forge: { name: 'Forge', desc: 'Forge 模组加载器', icon: 'gear' },
-    fabric: { name: 'Fabric', desc: 'Fabric 模组加载器', icon: 'thread' },
-    optifine: { name: 'OptiFine', desc: 'OptiFine 高清修复', icon: 'eye' }
+    forge: { name: 'Forge', desc: 'Forge mod loader', icon: 'gear' },
+    neoforge: { name: 'NeoForge', desc: 'NeoForge mod loader', icon: 'loader' },
+    fabric: { name: 'Fabric', desc: 'Fabric mod loader', icon: 'thread' },
+    optifine: { name: 'OptiFine', desc: 'OptiFine HD patches', icon: 'eye' }
   };
+  var releaseTypes = { '正式版': 'Release', '快照': 'Snapshot', '旧版': 'Old' };
+  function releaseTypeLabel(type) {
+    return t(releaseTypes[type] || type);
+  }
   var currentRelease = null;
   var pickedLoader = null;
 
   function releaseOf(row) {
-    return { id: row[0], type: row[1], date: row[2], loaders: LOADERS[row[0]] || {} };
+    var loaders = Object.assign({}, LOADERS[row[0]] || {});
+    if (NEOFORGE[row[0]]) loaders.neoforge = NEOFORGE[row[0]];
+    return { id: row[0], type: row[1], date: row[2], loaders: loaders };
   }
 
   /* 900 多个版本，一次性拼好塞进去；第一次打开下载页才渲染 */
@@ -361,8 +372,8 @@
       if (!byType[type]) return;
       html += '<div class="release-group">' +
         '<span class="release-group-dot' + (type === '正式版' ? ' on' : '') + '"></span>' +
-        '<span class="release-group-name">' + type + '</span>' +
-        '<span class="release-group-count">' + byType[type].length + ' 个版本</span></div>';
+        '<span class="release-group-name">' + releaseTypeLabel(type) + '</span>' +
+        '<span class="release-group-count">' + t('{n} versions', { n: byType[type].length }) + '</span></div>';
       byType[type].forEach(function (row) {
         html += '<div class="release-row" data-id="' + row[0] + '">' +
           '<span class="release-id">' + row[0] + '</span>' +
@@ -375,15 +386,15 @@
       var row = e.target.closest('.release-row');
       if (row) openDetail(releaseOf(releaseIndex[row.dataset.id]));
     });
-    $('version-count-label').textContent = '共 ' + VERSIONS.length + ' 个版本';
+    $('version-count-label').textContent = t('Total {n} versions', { n: VERSIONS.length });
   }
 
   function openDetail(release) {
     currentRelease = release;
     pickedLoader = null;
     $('detail-version-id').textContent = release.id;
-    $('detail-version-type').textContent = release.type;
-    $('detail-type-label').textContent = release.type;
+    $('detail-version-type').textContent = releaseTypeLabel(release.type);
+    $('detail-type-label').textContent = releaseTypeLabel(release.type);
     $('detail-release-time').textContent = release.date;
 
     var box = $('mod-loader-options');
@@ -406,13 +417,13 @@
         '</div>' +
         '<div class="detail-option-content hidden"></div>';
       card.querySelector('.detail-option-name').textContent = meta.name;
-      card.querySelector('.detail-option-desc').textContent = meta.desc;
+      card.querySelector('.detail-option-desc').textContent = t(meta.desc);
       var badge = card.querySelector('.detail-option-badge');
       if (!value || !value.length) {
-        badge.textContent = '暂不支持';
+        badge.textContent = t('Not supported');
         card.style.opacity = '0.55';
       } else {
-        badge.textContent = '可用';
+        badge.textContent = t('Available');
         badge.classList.add('available');
         card.querySelector('.detail-option-header').addEventListener('click', function () {
           toggleLoaderCard(key, card, value);
@@ -455,7 +466,9 @@
 
   function updateDetailButton() {
     var btn = $('detail-download-btn');
-    btn.textContent = pickedLoader ? '下载 ' + currentRelease.id + ' + ' + pickedLoader : '下载 ' + currentRelease.id;
+    btn.textContent = pickedLoader
+      ? t('Download') + ' ' + currentRelease.id + ' + ' + pickedLoader
+      : t('Download') + ' ' + currentRelease.id;
   }
 
   $('detail-back-btn').addEventListener('click', function () {
@@ -466,8 +479,12 @@
   $('cancel-download-btn').addEventListener('click', function () {
     if (this.classList.contains('complete')) return;
     stopDownload();
+    if (activeVersionTask) {
+      activeVersionTask.set('error', t('Cancelled'), 0);
+      activeVersionTask = null;
+    }
     $('download-panel').classList.add('hidden');
-    toast('已取消下载', '临时文件已清理', 'info');
+    toast(t('Download cancelled'), t('Temporary files cleaned up'), 'info');
   });
 
   /* ===== 速度曲线 ===== */
@@ -507,7 +524,7 @@
       ctx.fillStyle = dim;
       ctx.globalAlpha = 0.5;
       ctx.font = '12px -apple-system, "Segoe UI", sans-serif';
-      ctx.fillText('等待开始下载…', 10, h / 2);
+      ctx.fillText(t('Waiting for download to start…'), 10, h / 2);
       ctx.globalAlpha = 1;
       return;
     }
@@ -541,6 +558,7 @@
   /* ===== 下载流程 ===== */
   var downloadTimer = null;
   var downloadCancelled = false;
+  var activeVersionTask = null;
   var TOTAL_MB = 386;
   var files = [
     'client.jar', 'libraries/com/mojang/logging/1.2.7/logging-1.2.7.jar',
@@ -556,16 +574,19 @@
     var done = 0;
     var btn = $('cancel-download-btn');
     btn.classList.remove('complete');
-    btn.textContent = '取消下载';
+    btn.textContent = t('Cancel Download');
     btn.disabled = false;
     $('download-panel').classList.remove('hidden');
     $('current-speed').textContent = '0.00 Mbps';
     $('peak-speed').textContent = '0.00 Mbps';
     $('progress-fill').style.width = '0%';
     $('progress-text').textContent = '0%';
-    $('download-filename').textContent = '正在准备…';
+    $('download-filename').textContent = t('Preparing…');
     drawChart();
-    toast('开始下载', currentRelease.id + (pickedLoader ? ' + ' + pickedLoader : ''), 'info');
+    var versionTask = addTask('Minecraft ' + currentRelease.id + (pickedLoader ? ' + ' + pickedLoader : ''));
+    activeVersionTask = versionTask;
+    versionTask.set('running', t('Preparing…'), 0);
+    toast(t('Download started'), currentRelease.id + (pickedLoader ? ' + ' + pickedLoader : ''), 'info');
 
     downloadTimer = setInterval(function () {
       if (downloadCancelled) return;
@@ -584,17 +605,20 @@
       if (done < TOTAL_MB) {
         $('download-filename').textContent =
           files[Math.floor(Math.random() * files.length)] + '  ·  ' + Math.round(done) + ' / ' + TOTAL_MB + ' MB';
+        versionTask.set('running', pct.toFixed(0) + '%', pct);
       }
       drawChart();
 
       if (done >= TOTAL_MB) {
         clearInterval(downloadTimer);
         downloadTimer = null;
-        btn.textContent = '下载完成';
+        btn.textContent = t('Download complete');
         btn.classList.add('complete');
-        $('download-filename').textContent = currentRelease.id + ' · 安装完成，可以去「启动」页了';
+        $('download-filename').textContent = currentRelease.id + ' · ' + t('Installed — go to the Launch page');
         $('current-speed').textContent = '0.00 Mbps';
-        toast('下载完成', 'Minecraft ' + currentRelease.id + ' 已安装', 'success');
+        versionTask.set('done', t('Done'), 100);
+        activeVersionTask = null;
+        toast(t('Download complete'), 'Minecraft ' + currentRelease.id + ' ' + t('installed'), 'success');
       }
     }, 260);
   }
@@ -606,6 +630,300 @@
   }
 
   $('detail-download-btn').addEventListener('click', function () { startDownload(); });
+
+  /* ===== 下载页分区：游戏版本 / 模组 / 光影 / 资源包 / 整合包 ===== */
+  var downloadTabs = document.querySelectorAll('.download-tab');
+  var currentDownloadTab = 'versions';
+  var currentProjectType = 'mods';
+  var currentProject = null;
+
+  var typeCopy = {
+    mods: { placeholder: 'Search mods, or paste a CurseForge project link' },
+    shaders: { placeholder: 'Search shaders' },
+    resourcepacks: { placeholder: 'Search resource packs' },
+    modpacks: { placeholder: 'Search modpacks' }
+  };
+
+  var PROJECTS = {
+    mods: [
+      { title: 'Fabric API', desc: 'Lightweight and modular API providing common hooks and interoperability for mods.', icon: 'https://cdn.modrinth.com/data/P7dR8mSH/icon.png', downloads: 286109303, tags: ['fabric', 'library'], mc: ['1.21.11', '1.21.4', '1.20.1'], loaders: ['fabric', 'quilt'], version: '0.140.2+1.21.11' },
+      { title: 'Sodium', desc: 'A high-performance rendering engine replacement for Minecraft.', icon: 'https://cdn.modrinth.com/data/AANobbMI/295862f4724dc3f78df3447ad6072b2dcd3ef0c9_96.webp', downloads: 251328114, tags: ['fabric', 'neoforge', 'optimization'], mc: ['1.21.11', '1.21.4', '1.20.1'], loaders: ['fabric', 'neoforge'], version: '0.7.6+1.21.11' },
+      { title: 'Iris Shaders', desc: 'A modern shader pack loader for Minecraft, compatible with existing OptiFine shaderpacks.', icon: 'https://cdn.modrinth.com/data/YL57xq9U/18d0e7f076d3d6ed5bedd472b853909aac5da202_96.webp', downloads: 194790209, tags: ['fabric', 'neoforge', 'decoration'], mc: ['1.21.11', '1.21.4', '1.20.1'], loaders: ['fabric', 'neoforge'], version: '1.9.4+1.21.11' },
+      { title: 'Entity Culling', desc: 'Async path-tracing hides blocks and entities that are not visible.', icon: 'https://cdn.modrinth.com/data/NNAgCjsB/7873452d6cede4daed12da3d7d8c193ab88b4fd6_96.webp', downloads: 187905954, tags: ['fabric', 'forge', 'optimization'], mc: ['1.21.11', '1.21.4', '1.20.1'], loaders: ['fabric', 'forge'], version: '1.9.3+1.21.11' },
+      { title: 'Cloth Config API', desc: 'Configuration library for Minecraft mods.', icon: 'https://cdn.modrinth.com/data/9s6osm5g/ed8a2316cbb6f4fc5f510e8e13a59a85cbbbff4d_96.webp', downloads: 183927705, tags: ['fabric', 'forge', 'library'], mc: ['1.21.11', '1.21.4', '1.20.1'], loaders: ['fabric', 'forge', 'neoforge'], version: '18.0.145+1.21.11' },
+      { title: 'FerriteCore', desc: 'Memory usage optimizations for Minecraft.', icon: 'https://cdn.modrinth.com/data/uXXizFIs/222a126f26f8f9ae1eb339f3b767677f18bff31f_96.webp', downloads: 165338501, tags: ['fabric', 'forge', 'optimization'], mc: ['1.21.11', '1.21.4', '1.20.1'], loaders: ['fabric', 'forge', 'neoforge'], version: '8.0.0+1.21.11' },
+      { title: 'Mod Menu', desc: 'Adds a menu to view the list of mods you have installed.', icon: 'https://cdn.modrinth.com/data/mOgUt4GM/5a20ed1450a0e1e79a1fe04e61bb4e5878bf1d20.png', downloads: 159861313, tags: ['fabric', 'quilt', 'utility'], mc: ['1.21.11', '1.21.4', '1.20.1'], loaders: ['fabric', 'quilt'], version: '15.0.0+1.21.11' },
+      { title: 'Lithium', desc: 'No-compromises game logic optimization mod, for clients and servers.', icon: 'https://cdn.modrinth.com/data/gvQqBUqZ/bcc8686c13af0143adf4285d741256af824f70b7_96.webp', downloads: 141028859, tags: ['fabric', 'neoforge', 'optimization'], mc: ['1.21.11', '1.21.4', '1.20.1'], loaders: ['fabric', 'neoforge'], version: '0.18.1+1.21.11' }
+    ],
+    shaders: [
+      { title: 'Complementary Shaders - Reimagined', desc: 'Preserving the elements of Minecraft with exceptional quality and performance.', icon: 'https://cdn.modrinth.com/data/HVnmMxH1/79cb7c8123bbc54945305b2ebad6b8881efdf5f8_96.webp', downloads: 72307455, tags: ['atmosphere', 'bloom'], mc: ['1.21.11', '1.21.4', '1.20.1'], loaders: [], version: 'r5.5.1' },
+      { title: 'Complementary Shaders - Unbound', desc: 'Transforming the visuals of Minecraft with exceptional quality and performance.', icon: 'https://cdn.modrinth.com/data/R6NEzAwj/c85ce4049aac76360d2cd24fd9a7003de01ef312_96.webp', downloads: 46911064, tags: ['atmosphere', 'bloom'], mc: ['1.21.11', '1.21.4', '1.20.1'], loaders: [], version: 'r5.5.1' },
+      { title: 'BSL Shaders', desc: 'Bright, colorful and customizable shaderpack for Minecraft: Java Edition.', icon: 'https://cdn.modrinth.com/data/Q1vvjJYV/2a611a3cb434fb52fb81fa5dace13c5d8b67e55d_96.webp', downloads: 31675781, tags: ['atmosphere', 'bloom'], mc: ['1.21.11', '1.21.4', '1.20.1'], loaders: [], version: '10.0' },
+      { title: 'Photon Shaders', desc: 'A gameplay-focused shader pack with a semi-realistic style.', icon: 'https://cdn.modrinth.com/data/lLqFfGNs/39cb5f12e7dcc68d6cb666f225fcb2b801dd70fb_96.webp', downloads: 29257962, tags: ['atmosphere', 'colored-lighting'], mc: ['1.21.11', '1.21.4', '1.20.1'], loaders: [], version: '1.5b' },
+      { title: 'Solas Shader', desc: 'A modern fantasy stylized shaderpack with colored lighting.', icon: 'https://cdn.modrinth.com/data/EpQFjzrQ/e3efc6ba7a63f9e1cf473a794d0224a6daf243c7_96.webp', downloads: 18616113, tags: ['atmosphere', 'fantasy'], mc: ['1.21.11', '1.21.4', '1.20.1'], loaders: [], version: '2.3' },
+      { title: 'Bliss Shaders', desc: 'A well performing fantasy styled shaderpack with emphasis on color.', icon: 'https://cdn.modrinth.com/data/ZvMtQlho/90145c971ea24387775108fc86c89bed9bd2c8f1_96.webp', downloads: 15774159, tags: ['atmosphere', 'fantasy'], mc: ['1.21.11', '1.21.4', '1.20.1'], loaders: [], version: '2.1.1' },
+      { title: 'MakeUp - Ultra Fast', desc: 'The best quality and performance ratio, with a focus on speed.', icon: 'https://cdn.modrinth.com/data/izsIPI7a/a08432baa86b8ffd58c08f4b3a001ef976ff764d_96.webp', downloads: 14099462, tags: ['atmosphere', 'fantasy'], mc: ['1.21.11', '1.21.4', '1.20.1'], loaders: [], version: '9.7' },
+      { title: 'Rethinking Voxels', desc: 'A gameplay shaderpack based on Complementary Reimagined.', icon: 'https://cdn.modrinth.com/data/kmwfVOoi/fc89eadad417dd376b14c3b31e1a2b87acaca034_96.webp', downloads: 13778850, tags: ['atmosphere', 'colored-lighting'], mc: ['1.21.11', '1.21.4', '1.20.1'], loaders: [], version: 'r0.1b' }
+    ],
+    resourcepacks: [
+      { title: 'Fresh Animations', desc: 'Dynamic animated entities that make the game look like the trailers.', icon: 'https://cdn.modrinth.com/data/50dA9Sha/3132c10e9e3c73fde9799720fd3da5561071708c_96.webp', downloads: 51404735, tags: ['16x', 'entities'], mc: ['1.21.11', '1.21.4', '1.20.1'], loaders: [], version: '1.10.4' },
+      { title: 'Translations for Sodium', desc: 'Unofficial translations for the Sodium mod.', icon: 'https://cdn.modrinth.com/data/yfDziwn1/907581019df45903df237952ce8d10ac37134cb5_96.webp', downloads: 23163512, tags: ['locale', 'tweaks'], mc: ['1.21.11', '1.21.4', '1.20.1'], loaders: [], version: '1.4.0' },
+      { title: "Motschen's Better Leaves", desc: 'Improves the appearance of leaves with high mod compatibility.', icon: 'https://cdn.modrinth.com/data/uvpymuxq/fe1a61998ae57dc6ad1a4bb028334c3c3925d22f_96.webp', downloads: 21579362, tags: ['minecraft', 'models'], mc: ['1.21.11', '1.21.4', '1.20.1'], loaders: [], version: '2.8' },
+      { title: 'Chat Reporting Helper', desc: 'An educational tool that explains chat reporting in a simple way.', icon: 'https://cdn.modrinth.com/data/tN4E9NfV/c2d93fd85469a512f67e53baa7648c1abe6645ef.png', downloads: 18025820, tags: ['16x', 'gui'], mc: ['1.21.11', '1.21.4', '1.20.1'], loaders: [], version: '1.0' },
+      { title: 'Low On Fire', desc: 'Lower fire on your screen, vanilla friendly.', icon: 'https://cdn.modrinth.com/data/RRxvWKNC/06a7e7691a6da41798c255108a8563d7ffea171d.png', downloads: 17420241, tags: ['16x', 'combat'], mc: ['1.21.11', '1.21.4', '1.20.1'], loaders: [], version: '1.9' },
+      { title: 'Fresh Moves', desc: 'Fancy animated player and equipment models.', icon: 'https://cdn.modrinth.com/data/slufHzC2/02b78db6655ad8dd6cfd847f99c76f7552c053ec_96.webp', downloads: 15581522, tags: ['16x', 'equipment'], mc: ['1.21.11', '1.21.4', '1.20.1'], loaders: [], version: '3.1' },
+      { title: 'Fast Better Grass', desc: 'Makes grass and related blocks use the top texture on the sides.', icon: 'https://cdn.modrinth.com/data/dspVZXKP/5de0774f423d220fcd4e635b91f2bdfcb8a2b910.png', downloads: 14003714, tags: ['16x', 'decoration'], mc: ['1.21.11', '1.21.4', '1.20.1'], loaders: [], version: '1.6' },
+      { title: 'Fullbright UB', desc: 'Fullbright for Sodium, OptiFine and vanilla.', icon: 'https://cdn.modrinth.com/data/ItHr72Fy/c28c5e4ae4e1e5ac726ff192855d16d2c15c83e2_96.webp', downloads: 12308380, tags: ['core-shaders', 'environment'], mc: ['1.21.11', '1.21.4', '1.20.1'], loaders: [], version: '1.2' }
+    ],
+    modpacks: [
+      { title: 'Fabulously Optimized', desc: 'Beautiful graphics, speedy performance and familiar features.', icon: 'https://cdn.modrinth.com/data/1KVo5zza/d8152911f8fd5d7e9a8c499fe89045af81fe816e_96.webp', downloads: 19137209, tags: ['fabric', 'lightweight'], mc: ['1.21.11', '1.21.4', '1.20.1'], loaders: ['fabric'], version: '6.6.0' },
+      { title: 'Cobblemon Official Modpack', desc: 'The official modpack of Cobblemon, for Fabric.', icon: 'https://cdn.modrinth.com/data/5FFgwNNP/e7f9ee2e9d361623847853fe2ddce42f519ee64f.png', downloads: 11461739, tags: ['adventure', 'fabric'], mc: ['1.21.1', '1.20.1'], loaders: ['fabric'], version: '1.6.1' },
+      { title: 'COBBLEVERSE - Pokemon Adventure', desc: 'A full Pokemon adventure built on Cobblemon.', icon: 'https://cdn.modrinth.com/data/Jkb29YJU/581ecf54530972afb18a04660afd820f2f24f6c7.png', downloads: 7255195, tags: ['adventure', 'fabric'], mc: ['1.21.1', '1.20.1'], loaders: ['fabric'], version: '1.7.3' },
+      { title: 'Better MC - BMC2', desc: 'A proper vanilla+ modpack that expands the game without changing it.', icon: 'https://cdn.modrinth.com/data/shFhR8Vx/a19c2bcb51d38f32f138d3607e91cb2b7b8e387f_96.webp', downloads: 3705682, tags: ['adventure', 'fabric'], mc: ['1.20.1'], loaders: ['fabric'], version: '26' },
+      { title: 'Sodium Plus', desc: 'A client-side optimization modpack with a few extra tweaks.', icon: 'https://cdn.modrinth.com/data/ch7UHY2J/cf0150ba8d6c01144974709a27b23bba93c0fc9e.png', downloads: 2896946, tags: ['fabric', 'lightweight'], mc: ['1.21.11', '1.21.4'], loaders: ['fabric'], version: '3.2.1' },
+      { title: 'Vanilla Perfected', desc: 'A compilation of vanilla+ mods and packs to perfect Minecraft.', icon: 'https://cdn.modrinth.com/data/1ocGzRHv/ebec737126db7637001194ca5560ae58413d338f_96.webp', downloads: 2689848, tags: ['adventure', 'fabric'], mc: ['1.21.11', '1.21.4'], loaders: ['fabric'], version: '2.4.0' }
+    ]
+  };
+
+  function fmtDownloads(n) {
+    if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
+    if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K';
+    return String(n);
+  }
+
+  function renderProjectFilters() {
+    var select = $('mod-game-version');
+    if (!select.childElementCount) {
+      select.innerHTML = '<option value="" data-i18n="All versions">All versions</option>';
+      ['26.3', '26.2', '26.1.2', '1.21.11', '1.21.10', '1.21.4', '1.21.1', '1.20.1'].forEach(function (v) {
+        var o = document.createElement('option');
+        o.value = v;
+        o.textContent = v;
+        select.appendChild(o);
+      });
+      window.DEMO_I18N.apply(select);
+    }
+    $('mod-loader').classList.toggle('hidden', currentProjectType !== 'mods');
+  }
+
+  function projectVisible(item, q, mc, loader, source) {
+    if (q && (item.title + ' ' + item.desc).toLowerCase().indexOf(q) === -1) return false;
+    if (mc && item.mc.indexOf(mc) === -1) return false;
+    if (loader && item.loaders.indexOf(loader) === -1) return false;
+    if (source !== 'both' && (item.source || 'Modrinth').toLowerCase() !== source) return false;
+    return true;
+  }
+
+  function renderProjects() {
+    var q = $('mod-search-input').value.trim().toLowerCase();
+    var mc = $('mod-game-version').value;
+    var loader = $('mod-loader').value;
+    var source = $('mod-source').value;
+    var list = PROJECTS[currentProjectType].filter(function (item) {
+      return projectVisible(item, q, mc, loader, source);
+    });
+
+    $('mod-detail').classList.add('hidden');
+    $('mod-results').classList.remove('hidden');
+    var box = $('mod-results');
+    box.innerHTML = '';
+    $('mod-status').textContent = t('Found {n} results', { n: list.length });
+
+    if (!list.length) {
+      var empty = document.createElement('div');
+      empty.className = 'mod-empty';
+      empty.textContent = t('No results. Try another search.');
+      box.appendChild(empty);
+      return;
+    }
+
+    list.forEach(function (item) {
+      var card = document.createElement('div');
+      card.className = 'mod-card';
+      card.innerHTML =
+        '<img class="mod-card-icon" alt="" loading="lazy" referrerpolicy="no-referrer">' +
+        '<div class="mod-card-body">' +
+          '<div class="mod-card-title"><span class="mod-title"></span><span class="mod-source-tag"></span></div>' +
+          '<div class="mod-card-desc"></div>' +
+          '<div class="mod-card-meta"></div>' +
+        '</div>';
+      card.querySelector('img').src = item.icon;
+      card.querySelector('.mod-title').textContent = item.title;
+      card.querySelector('.mod-source-tag').textContent = item.source || 'Modrinth';
+      card.querySelector('.mod-card-desc').textContent = t(item.desc);
+      card.querySelector('.mod-card-meta').textContent =
+        t('{n} downloads', { n: fmtDownloads(item.downloads) }) + ' · ' + item.tags.join(' · ');
+      card.addEventListener('click', function () { openProject(item); });
+      box.appendChild(card);
+    });
+  }
+
+  function openProject(item) {
+    currentProject = item;
+    $('mod-results').classList.add('hidden');
+    $('mod-detail').classList.remove('hidden');
+    $('mod-status').textContent = '';
+
+    var head = $('mod-detail-head');
+    head.innerHTML =
+      '<img alt="" referrerpolicy="no-referrer">' +
+      '<div class="mod-detail-info">' +
+        '<div class="mod-detail-title"></div>' +
+        '<div class="mod-detail-meta"></div>' +
+        '<div class="mod-detail-desc"></div>' +
+      '</div>';
+    head.querySelector('img').src = item.icon;
+    head.querySelector('.mod-detail-title').textContent = item.title;
+    head.querySelector('.mod-detail-meta').textContent =
+      (item.source || 'Modrinth') + ' · ' + t('{n} downloads', { n: fmtDownloads(item.downloads) }) + ' · ' + item.tags.join(' · ');
+    head.querySelector('.mod-detail-desc').textContent = t(item.desc);
+
+    var versions = $('mod-detail-versions');
+    versions.innerHTML = '';
+    item.mc.forEach(function (mc) {
+      var row = document.createElement('div');
+      row.className = 'mod-version-row';
+      row.innerHTML =
+        '<div class="mod-version-info"><div class="mod-version-name"></div><div class="mod-version-meta"></div></div>' +
+        '<button class="mod-install-btn" type="button"></button>';
+      row.querySelector('.mod-version-name').textContent = item.title + ' ' + item.version;
+      row.querySelector('.mod-version-meta').textContent =
+        'Minecraft ' + mc + (item.loaders.length ? ' · ' + loaderLabel(item.loaders[0]) : '');
+      var btn = row.querySelector('.mod-install-btn');
+      btn.textContent = t('Install');
+      btn.addEventListener('click', function () { openTargetDialog(item, mc); });
+      versions.appendChild(row);
+    });
+  }
+
+  function loaderLabel(key) {
+    var map = { fabric: 'Fabric', forge: 'Forge', neoforge: 'NeoForge', quilt: 'Quilt', optifine: 'OptiFine' };
+    return map[key] || key;
+  }
+
+  function showDownloadTab(tab) {
+    currentDownloadTab = tab;
+    downloadTabs.forEach(function (b) { b.classList.toggle('active', b.dataset.downloadTab === tab); });
+    var isVersions = tab === 'versions';
+    $('version-list-section').classList.toggle('hidden', !isVersions);
+    $('version-detail-page').classList.add('hidden');
+    $('mod-download-section').classList.toggle('hidden', isVersions);
+    $('download-panel').classList.add('hidden');
+    if (isVersions) {
+      renderReleaseList();
+      return;
+    }
+    currentProjectType = tab;
+    currentProject = null;
+    $('mod-search-input').value = '';
+    $('mod-search-input').placeholder = t(typeCopy[tab].placeholder);
+    $('mod-game-version').value = '';
+    $('mod-loader').value = '';
+    renderProjectFilters();
+    renderProjects();
+  }
+
+  downloadTabs.forEach(function (tab) {
+    tab.addEventListener('click', function () { showDownloadTab(tab.dataset.downloadTab); });
+  });
+  $('mod-search-btn').addEventListener('click', renderProjects);
+  $('mod-search-input').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') renderProjects();
+  });
+  ['mod-game-version', 'mod-loader', 'mod-source'].forEach(function (id) {
+    $(id).addEventListener('change', renderProjects);
+  });
+  $('mod-detail-back').addEventListener('click', function () {
+    $('mod-detail').classList.add('hidden');
+    $('mod-results').classList.remove('hidden');
+    $('mod-status').textContent = t('Found {n} results', { n: PROJECTS[currentProjectType].length });
+  });
+
+  $('local-install-btn').addEventListener('click', function () {
+    toast(t('Not available in the demo'), '', 'info');
+  });
+
+  /* ===== 下载任务队列 ===== */
+  var taskSeq = 0;
+  function addTask(name) {
+    var list = $('download-task-list');
+    list.classList.remove('hidden');
+    var row = document.createElement('div');
+    row.className = 'download-task';
+    row.dataset.status = 'running';
+    row.innerHTML =
+      '<div class="download-task-head">' +
+        '<span class="download-task-name"></span>' +
+        '<span class="download-task-state"></span>' +
+        '<button class="download-task-remove" type="button">&times;</button>' +
+      '</div>' +
+      '<div class="download-task-bar"><div class="download-task-fill"></div></div>';
+    row.querySelector('.download-task-name').textContent = name;
+    row.querySelector('.download-task-remove').addEventListener('click', function () {
+      row.remove();
+      if (!list.childElementCount) list.classList.add('hidden');
+    });
+    list.appendChild(row);
+    return {
+      set: function (status, state, pct) {
+        if (!row.isConnected) return;
+        row.dataset.status = status;
+        row.querySelector('.download-task-state').textContent = state;
+        row.querySelector('.download-task-fill').style.width = Math.max(0, Math.min(100, pct || 0)) + '%';
+      }
+    };
+  }
+
+  /* ===== 安装目标选择 ===== */
+  var targetVersion = installed[0].id;
+  var pendingInstall = null;
+
+  function openTargetDialog(item, mc) {
+    pendingInstall = { item: item, mc: mc };
+    targetVersion = installed[0].id;
+    var list = $('mod-target-list');
+    list.innerHTML = '';
+    installed.forEach(function (v) {
+      var row = document.createElement('div');
+      row.className = 'mod-target-item' + (v.id === targetVersion ? ' selected' : '');
+      row.innerHTML = '<span class="mod-target-name"></span><span class="mod-target-meta"></span>';
+      row.querySelector('.mod-target-name').textContent = v.id;
+      row.querySelector('.mod-target-meta').textContent = 'Minecraft ' + v.id;
+      row.addEventListener('click', function () {
+        targetVersion = v.id;
+        Array.prototype.forEach.call(list.children, function (c) { c.classList.remove('selected'); });
+        row.classList.add('selected');
+      });
+      list.appendChild(row);
+    });
+    $('mod-target-overlay').classList.remove('hidden');
+  }
+
+  $('mod-target-cancel').addEventListener('click', function () {
+    $('mod-target-overlay').classList.add('hidden');
+  });
+  $('mod-target-choose').addEventListener('click', function () {
+    toast(t('Not available in the demo'), '', 'info');
+  });
+  $('mod-target-install').addEventListener('click', function () {
+    $('mod-target-overlay').classList.add('hidden');
+    if (!pendingInstall) return;
+    var item = pendingInstall.item;
+    var task = addTask(item.title + ' ' + item.version);
+    var pct = 0;
+    var timer = setInterval(function () {
+      pct += 12 + Math.random() * 18;
+      if (pct >= 100) {
+        pct = 100;
+        clearInterval(timer);
+        task.set('done', t('Installed to {version}', { version: targetVersion }), 100);
+        toast(t('Install complete'), item.title + ' · ' + targetVersion, 'success');
+      } else {
+        task.set('running', pct.toFixed(0) + '%', pct);
+      }
+    }, 260);
+    toast(t('Installing'), item.title + ' · ' + targetVersion, 'info');
+  });
 
   /* ===== 设置页 ===== */
   var sidebarItems = document.querySelectorAll('.settings-sidebar-item');
@@ -649,7 +967,10 @@
     document.querySelectorAll('.custom-select-dropdown.open').forEach(function (d) { d.classList.remove('open'); });
     document.querySelectorAll('.custom-select-trigger.active').forEach(function (t) { t.classList.remove('active'); });
   }
-  document.addEventListener('click', closeAllSelects);
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('.custom-select') || e.target.closest('.language-select')) return;
+    closeAllSelects();
+  });
 
   /* 设置页的主题分段按钮要跟当前主题对上（默认跟随系统时也一样） */
   var themeRadios = document.querySelectorAll('#demo-theme input');
@@ -666,6 +987,99 @@
     });
   });
 
+  var styleRadios = document.querySelectorAll('#demo-style input');
+  function applyStyle(style) {
+    body.classList.toggle('style-mc', style === 'mc');
+    body.classList.toggle('style-minimal', style === 'minimal');
+    drawChart();
+  }
+  styleRadios.forEach(function (r) {
+    r.addEventListener('change', function () {
+      if (!r.checked) return;
+      applyStyle(r.value);
+      toast(t('Saved'), t('Interface style: {value}', { value: t(r.value === 'mc' ? 'Minecraft' : r.value === 'minimal' ? 'Minimal' : 'Advanced') }), 'success');
+    });
+  });
+
+  var avatarSlider = $('demo-avatar-size');
+  avatarSlider.addEventListener('input', function () {
+    $('demo-avatar-size-value').textContent = avatarSlider.value + ' px';
+  });
+
+  document.querySelectorAll('.settings-action-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      toast(t('Not available in the demo'), '', 'info');
+    });
+  });
+
+  var resetSwitch = $('demo-reset-settings');
+  resetSwitch.addEventListener('change', function () {
+    if (!resetSwitch.checked) return;
+    applyTheme('light');
+    syncThemeSegmented();
+    applyStyle('advanced');
+    document.querySelectorAll('#demo-style input').forEach(function (r) { r.checked = r.value === 'advanced'; });
+    document.documentElement.style.setProperty('--app-zoom', '1');
+    document.querySelectorAll('.custom-select[data-select-id="scale"]').forEach(function (s) {
+      s.querySelector('.custom-select-value').textContent = t('100% (Default)');
+    });
+    resetSwitch.checked = false;
+    toast(t('Settings reset'), t('Every setting is back to its default value.'), 'success');
+  });
+
+  var LANGUAGES = [
+    { slug: 'en-us', name: 'English' }, { slug: 'zh-cn', name: '简体中文' }, { slug: 'zh-tw', name: '繁體中文' },
+    { slug: 'ja', name: '日本語' }, { slug: 'ko', name: '한국어' }, { slug: 'de', name: 'Deutsch' },
+    { slug: 'fr', name: 'Français' }, { slug: 'es', name: 'Español' }, { slug: 'pt', name: 'Português' },
+    { slug: 'it', name: 'Italiano' }, { slug: 'nl', name: 'Nederlands' }, { slug: 'pl', name: 'Polski' },
+    { slug: 'ru', name: 'Русский' }, { slug: 'uk', name: 'Українська' }, { slug: 'tr', name: 'Türkçe' },
+    { slug: 'ar', name: 'العربية' }, { slug: 'fa', name: 'فارسی' }, { slug: 'he', name: 'עברית' },
+    { slug: 'hi', name: 'हिन्दी' }, { slug: 'bn', name: 'বাংলা' }, { slug: 'id', name: 'Bahasa Indonesia' },
+    { slug: 'ms', name: 'Bahasa Melayu' }, { slug: 'vi', name: 'Tiếng Việt' }, { slug: 'th', name: 'ไทย' },
+    { slug: 'el', name: 'Ελληνικά' }
+  ];
+  var languageBox = $('demo-language-options');
+  var currentSlug = window.DEMO_SLUG || 'en-us';
+  function renderLanguages(filter) {
+    filter = (filter || '').toLowerCase();
+    languageBox.innerHTML = '';
+    LANGUAGES.forEach(function (lang) {
+      if (filter && lang.name.toLowerCase().indexOf(filter) === -1 && lang.slug.indexOf(filter) === -1) return;
+      var row = document.createElement('div');
+      row.className = 'language-option' + (lang.slug === currentSlug ? ' selected' : '');
+      row.textContent = lang.name;
+      row.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (lang.slug === currentSlug) {
+          closeAllSelects();
+          return;
+        }
+        var q = new URLSearchParams(location.search);
+        q.set('lang', lang.slug);
+        location.search = q.toString();
+      });
+      languageBox.appendChild(row);
+    });
+  }
+  renderLanguages();
+  var currentLang = LANGUAGES.filter(function (l) { return l.slug === currentSlug; })[0];
+  if (currentLang) $('demo-language-value').textContent = currentLang.name;
+  $('demo-language-search').addEventListener('input', function () {
+    renderLanguages(this.value.trim());
+  });
+  $('demo-language-search').addEventListener('click', function (e) { e.stopPropagation(); });
+
+  $('about-check-update').addEventListener('click', function () {
+    var btn = this;
+    btn.disabled = true;
+    btn.textContent = t('Checking...');
+    setTimeout(function () {
+      btn.disabled = false;
+      btn.textContent = t('Check for updates');
+      toast(t('Up to date'), 'GoodPlanCraftLauncher 1.7.2', 'success');
+    }, 900);
+  });
+
   var memorySlider = $('demo-memory-slider');
   var memoryValue = $('demo-memory-value');
   var memoryAlloc = $('demo-memory-alloc');
@@ -676,8 +1090,8 @@
       var auto = r.value === 'auto';
       memorySlider.disabled = auto;
       memoryCustomRow.classList.toggle('hidden', auto);
-      memoryAlloc.textContent = auto ? '4.0 GB（自动）' : memorySlider.value + '.0 GB';
-      toast('已保存', auto ? '内存交给 GPCL 自动控制' : '游戏内存设为 ' + memorySlider.value + ' GB', 'success');
+      memoryAlloc.textContent = auto ? t('4.0 GB (Auto)') : memorySlider.value + '.0 GB';
+      toast(t('Saved'), auto ? t('Memory is managed automatically by GPCL') : t('Game memory set to {size} GB', { size: memorySlider.value }), 'success');
     });
   });
   memorySlider.addEventListener('input', function () {
@@ -694,15 +1108,17 @@
       document.documentElement.style.setProperty('--app-zoom', String(Number(value) / 100));
       setTimeout(drawChart, 60);
     } else if (id === 'tip') {
-      toast('已保存', '启动小知识：' + label, 'success');
+      toast(t('Saved'), t('Launch tips: {value}', { value: label }), 'success');
     } else if (id === 'java-mirror') {
-      toast('已保存', 'Java 镜像源：' + label, 'success');
+      toast(t('Saved'), t('Java mirror: {value}', { value: label }), 'success');
     } else if (id === 'priority') {
-      toast('已保存', '进程优先级：' + label, 'success');
+      toast(t('Saved'), t('Process priority: {value}', { value: label }), 'success');
     } else if (id === 'file-source' || id === 'version-source') {
-      toast('已保存', '下载源：' + label, 'success');
+      toast(t('Saved'), t('Download source: {value}', { value: label }), 'success');
     } else if (id === 'gc') {
-      toast('已保存', '内存管理：' + label, 'success');
+      toast(t('Saved'), t('Memory management: {value}', { value: label }), 'success');
+    } else if (id === 'log-unit') {
+      toast(t('Saved'), t('Log retention: {value}', { value: label }), 'success');
     }
   }
 
@@ -715,7 +1131,7 @@
   var speedSlider = $('demo-speed');
   var speedValue = $('demo-speed-value');
   speedSlider.addEventListener('input', function () {
-    speedValue.textContent = Number(speedSlider.value) > 0 ? speedSlider.value + ' MB/s' : '不限速';
+    speedValue.textContent = Number(speedSlider.value) > 0 ? speedSlider.value + ' MB/s' : t('Unlimited');
   });
 
   /* ===== 和官网那一侧说话：它让自动播一遍、它把主题广播过来 ===== */

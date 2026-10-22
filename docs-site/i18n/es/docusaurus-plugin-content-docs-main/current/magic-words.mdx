@@ -1,0 +1,52 @@
+---
+title: Palabras mágicas del título de la ventana
+slug: /magic-words
+description: Personalizar el título de la ventana de Minecraft con marcadores como {mc_version} y {time}.
+---
+
+El título de la ventana del juego puede incluir marcadores que GPCL sustituye por valores reales al iniciar.
+
+Está en **Ajustes → Juego → Título de la ventana del juego**. Un título vacío significa que no se modifica el título de la ventana.
+
+## Un ejemplo
+
+Título:
+
+```text
+{time} · {mc_version} · {gpcl_version}
+```
+
+Tras iniciar puede mostrarse:
+
+```text
+20:09:58 · Minecraft 1.21.3 · 1.6.0
+```
+
+## Marcadores disponibles
+
+| Marcador | Se convierte en |
+| --- | --- |
+| `{mc_version}` | Nombre visible de la versión, por ejemplo Minecraft 1.21.3, o el nombre con cargador |
+| `{mc_id}` | Nombre de la carpeta de versión, por ejemplo 1.21.3-Fabric |
+| `{username}` | Nombre de jugador usado en este inicio |
+| `{gpcl_version}` | Versión de GPCL, por ejemplo 1.6.0 |
+| `{date}` | Fecha de inicio, formato 2026/10/20 |
+| `{time}` | Hora actual, formato 20:09:58 |
+| `{datetime}` | Fecha y hora, separadas por un espacio |
+| `{java}` | Nombre del directorio del runtime de Java actual |
+| `{memory}` | Memoria máxima asignada en este inicio, por ejemplo 4096MB |
+
+Las mayúsculas y minúsculas deben coincidir. Un marcador mal escrito se muestra tal cual, para que veas cuál corregir.
+
+## ¿Se mantiene el título?
+
+Debajo hay una opción «Mantener el nombre si es posible», desactivada de forma predeterminada.
+
+- **Desactivada**: tras aparecer la ventana, GPCL corrige el título durante 20 segundos. Si después el juego o un mod lo cambia, deja de tocar. Un título con `{time}` se queda congelado en ese momento.
+- **Activada**: el título definido se mantiene durante toda la partida, incluso al entrar en un mundo, sin que lo tape « - Singleplayer».
+
+Algunos modpacks o mods también cambian el título de la ventana; que se sobrescriban entre sí es normal.
+
+:::note
+Las palabras mágicas solo funcionan en el título de la ventana del juego, no en otros ajustes.
+:::

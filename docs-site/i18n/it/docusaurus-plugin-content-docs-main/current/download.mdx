@@ -1,0 +1,72 @@
+---
+title: Download e mirror
+description: Fonte dei file, fonte dell'elenco versioni, numero di thread, limite di velocità, mirror Java e mirror dei file personalizzato.
+---
+
+Un download lento di solito non dipende dal launcher. Cambia prima la fonte di download, poi valuta thread e limite di velocità.
+
+## I download finiscono in coda
+
+Dopo il clic su «Scarica» l'attività entra in coda e non blocca l'interfaccia: le attività in attesa si rimuovono con ×, quella in corso si può annullare e poi la coda prosegue.
+
+La pagina di download elenca lo stato di ogni attività: in attesa, in corso, completata, non riuscita.
+
+## Fonte dei file e fonte dell'elenco versioni
+
+In **Impostazioni → Download → Fonte di download** ci sono due elenchi a discesa indipendenti:
+
+- **Fonte dei file**: jar del client, asset, librerie;
+- **Fonte dell'elenco versioni**: manifest delle versioni, JSON delle versioni, indice degli asset.
+
+Entrambi hanno le stesse quattro opzioni:
+
+| Opzione | Comportamento |
+| --- | --- |
+| Ufficiale prima, passa al mirror se lento | Predefinita. Prova prima l'ufficiale e passa a BMCLAPI se non risponde entro pochi secondi |
+| Usa i mirror quando possibile | Nelle reti in Cina usa direttamente il mirror |
+| Dai priorità alla fonte ufficiale | Prova l'ufficiale e torna al mirror in caso di errore |
+| Usa la fonte ufficiale quando possibile | Solo ufficiale: se non si connette, l'operazione fallisce |
+
+## Mirror dei file personalizzato
+
+In **Impostazioni → Download → Mirror dei file personalizzato** puoi inserire un indirizzo radice di mirror (BMCLAPI per impostazione predefinita, per esempio `https://bmclapi2.bangbang93.com`). Una volta compilato, manifest delle versioni, client, librerie e asset passano prima da lì; se non arrivano, valgono le fonti nell'ordine normale.
+
+Lasciandolo vuoto resta BMCLAPI predefinito.
+
+## Cartella di gioco
+
+In **Impostazioni → Download → Cartella di gioco** puoi mettere versioni, librerie, asset e mod in una cartella qualsiasi; se la lasci vuota si torna a `%APPDATA%\gpcl\.minecraft`.
+
+Cambiare cartella **non sposta** i file esistenti. Le versioni nella cartella precedente non seguono; copiale a mano se ti servono. Configurazione e log restano in `%APPDATA%\gpcl`.
+
+## Numero massimo di thread
+
+Predefinito 64, intervallo 1–128. Con molti file piccoli aumentare la concorrenza velocizza un po', ma valori troppo alti possono essere limitati da apparati di rete o dal mirror. Con una rete instabile, abbassa.
+
+## Limite di velocità
+
+0 significa nessun limite; con un valore impostato **tutti i download condividono quel tetto complessivo**, in MB/s, valido dal download successivo. Su reti condivise da più persone, abbassalo.
+
+Il limite vale solo per il download delle risorse di gioco. Il runtime Java usa un mirror separato e non è interessato.
+
+## Mirror Java
+
+In **Impostazioni → Download → Download di Java** puoi scegliere Tsinghua University, Nanjing University, Huawei Cloud o personalizzato. Se la fonte scelta fallisce, GPCL passa automaticamente alla successiva, con l'ufficiale di Adoptium come ultima riserva.
+
+L'indirizzo personalizzato accetta due variabili:
+
+- `{v}`: versione principale di Java, per esempio `8`, `17`, `21`;
+- `{version}`: versione completa upstream, per esempio `17.0.20.1_1`, che cambia con le release upstream.
+
+Esempio:
+
+```text
+https://cdn.example.com/java/{v}/OpenJDK{v}U-jre_x64_windows_hotspot_{v}.zip
+```
+
+## Cosa fare se il download fallisce
+
+1. Cambia fonte di download.
+2. Riduci il numero di thread a 32 o 16 e riprova.
+3. Verifica che data e ora di sistema siano corrette: uno scostamento eccessivo fa fallire la verifica del certificato HTTPS.
+4. Se ancora non funziona, scrivi una e-mail allegando il log più recente di `%APPDATA%\gpcl\gpcl\log`.

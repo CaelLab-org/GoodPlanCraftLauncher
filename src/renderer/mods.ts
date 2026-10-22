@@ -8,6 +8,7 @@
 
 
 // __IMPORTS_BEGIN__
+import { getLocale, t } from '../i18n';
 import { escapeHtml, setStatus, showToast } from './dom';
 import { startModpackInstall } from './launch';
 import { allVersions, loadVersions, renderVersionSelectList, selectedVersionId } from './versions';
@@ -61,28 +62,28 @@ interface ResourceTypeConfig {
 
 const RESOURCE_TYPES: Record<ResourceProjectType, ResourceTypeConfig> = {
   mod: {
-    label: '模组',
+    label: 'Mods',
     folder: 'mods',
-    placeholder: '搜索模组；也可以粘贴 CurseForge 项目链接',
-    empty: '没有找到模组。换个关键词试试，或者把筛选改回「全部版本」。'
+    placeholder: 'Search mods, or paste a CurseForge project link',
+    empty: 'No mods found. Try another keyword, or set the version filter back to All versions.'
   },
   shader: {
-    label: '光影',
+    label: 'Shaders',
     folder: 'shaderpacks',
-    placeholder: '搜索光影，例如 Complementary、BSL、Photon',
-    empty: '没有找到光影。换个关键词试试，或者把筛选改回「全部版本」。'
+    placeholder: 'Search shaders, e.g. Complementary, BSL, Photon',
+    empty: 'No shaders found. Try another keyword, or set the version filter back to All versions.'
   },
   resourcepack: {
-    label: '资源包',
+    label: 'Resource packs',
     folder: 'resourcepacks',
-    placeholder: '搜索资源包，例如 Faithful、Stay True、Xray',
-    empty: '没有找到资源包。换个关键词试试，或者把筛选改回「全部版本」。'
+    placeholder: 'Search resource packs, e.g. Faithful, Stay True, Xray',
+    empty: 'No resource packs found. Try another keyword, or set the version filter back to All versions.'
   },
   modpack: {
-    label: '整合包',
+    label: 'Modpacks',
     folder: 'versions',
-    placeholder: '搜索整合包，例如 Create、RLCraft、Better MC',
-    empty: '没有找到整合包。换个关键词试试，或者把筛选改回「全部版本」。'
+    placeholder: 'Search modpacks, e.g. Create, RLCraft, Better MC',
+    empty: 'No modpacks found. Try another keyword, or set the version filter back to All versions.'
   }
 };
 
@@ -101,9 +102,11 @@ function setModStatus(text: string, type: string = 'muted'): void {
 
 function formatCount(count: number): string {
   if (!count) return '0';
-  if (count >= 100000000) return `${(count / 100000000).toFixed(2).replace(/\.0+$/, '')} 亿`;
-  if (count >= 10000) return `${(count / 10000).toFixed(1).replace(/\.0$/, '')} 万`;
-  return String(count);
+  try {
+    return new Intl.NumberFormat(getLocale(), { notation: 'compact', maximumFractionDigits: 1 }).format(count);
+  } catch (e) {
+    return String(count);
+  }
 }
 
 function relativeTime(dateText: string): string {
@@ -111,10 +114,10 @@ function relativeTime(dateText: string): string {
   const time: number = new Date(dateText).getTime();
   if (isNaN(time)) return '';
   const days: number = Math.max(0, Math.floor((Date.now() - time) / 86400000));
-  if (days < 1) return '今天';
-  if (days < 30) return `${days} 天前`;
-  if (days < 365) return `${Math.floor(days / 30)} 个月前`;
-  return `${Math.floor(days / 365)} 年前`;
+  if (days < 1) return t('ui.today');
+  if (days < 30) return t('ui.days_days_ago', { days });
+  if (days < 365) return t('ui.months_months_ago', { months: Math.floor(days / 30) });
+  return t('ui.years_years_ago', { years: Math.floor(days / 365) });
 }
 
 async function loadInstalledVersions(): Promise<void> {
@@ -133,7 +136,7 @@ function populateGameVersions(): void {
 
   const all: HTMLOptionElement = document.createElement('option');
   all.value = '';
-  all.textContent = '全部版本';
+  all.textContent = t('ui.all_versions');
   gameVersionSelect.appendChild(all);
 
   const releases: string[] = (allVersions || [])
@@ -164,7 +167,7 @@ function showResourceTab(projectType: ResourceProjectType): void {
   versionDetail?.classList.add('hidden');
   javaSection?.classList.add('hidden');
 
-  if (searchInput) searchInput.placeholder = config.placeholder;
+  if (searchInput) searchInput.placeholder = t(config.placeholder);
   loaderSelect?.classList.toggle('hidden', projectType !== 'mod');
 
   projectStack = [];
@@ -223,17 +226,17 @@ async function lookupCurseForge(slug: string): Promise<void> {
   if (!resultsEl || !detailEl || !detailHead || !detailVersions) return;
   resultsEl.classList.add('hidden');
   detailEl.classList.remove('hidden');
-  detailHead.innerHTML = '<div class="mod-detail-title">正在读取 CurseForge 项目…</div>';
+  detailHead.innerHTML = `<div class="mod-detail-title">${t('ui.reading_curseforge_project')}</div>`;
   detailVersions.innerHTML = '';
-  setModStatus('正在读取 CurseForge 项目…');
+  setModStatus(t('ui.reading_curseforge_project'));
 
   try {
     const filters = currentFilters();
     const result: any = await window.gpcl.curseforgeLookup({ slug, ...filters, preferGameVersion: preferredGameVersion() });
     if (!result || !result.success) {
-      detailHead.innerHTML = `<div class="mod-detail-title">CurseForge</div><div class="mod-detail-desc">${escapeHtml(result?.error || '读取失败')}</div>`;
-      detailVersions.innerHTML = '<div class="mod-empty">检查一下链接里的项目短名，或者改用搜索</div>';
-      setModStatus(result?.error || '读取失败', 'error');
+      detailHead.innerHTML = `<div class="mod-detail-title">CurseForge</div><div class="mod-detail-desc">${escapeHtml(result?.error || t('ui.failed_to_load'))}</div>`;
+      detailVersions.innerHTML = `<div class="mod-empty">${t('ui.check_the_project_slug_in_the_link_or_use_search_instead')}</div>`;
+      setModStatus(result?.error || t('ui.failed_to_load'), 'error');
       return;
     }
 
@@ -243,16 +246,16 @@ async function lookupCurseForge(slug: string): Promise<void> {
       <img src="${escapeHtml(result.project.iconUrl || '')}" alt="" onerror="this.style.visibility='hidden'">
       <div class="mod-detail-info">
         <div class="mod-detail-title">${escapeHtml(result.project.title)} <span class="mod-source-tag">CurseForge</span></div>
-        <div class="mod-detail-meta">${escapeHtml(result.project.author || '')}${result.project.downloads ? ` · ${formatCount(result.project.downloads)} 次下载` : ''}</div>
+        <div class="mod-detail-meta">${escapeHtml(result.project.author || '')}${result.project.downloads ? ` · ${t('ui.count_downloads', { count: formatCount(result.project.downloads) })}` : ''}</div>
         <div class="mod-detail-desc">${escapeHtml(result.project.description || '')}</div>
       </div>
     `;
-    resultsEl.innerHTML = '<div class="mod-empty">链接模式：返回后可以继续搜索</div>';
+    resultsEl.innerHTML = `<div class="mod-empty">${t('ui.link_mode_go_back_to_continue_searching')}</div>`;
     renderDetail(result.project, result.versions || []);
-    setModStatus(`共 ${result.total || 0} 个可用文件 · 链接模式不自动安装依赖`, 'muted');
+    setModStatus(t('ui.total_files_available_link_mode_does_not_install_dependencies', { total: result.total || 0 }), 'muted');
   } catch (e: any) {
-    detailHead.innerHTML = `<div class="mod-detail-title">CurseForge</div><div class="mod-detail-desc">${escapeHtml(e.message || '读取失败')}</div>`;
-    setModStatus(e.message || '读取失败', 'error');
+    detailHead.innerHTML = `<div class="mod-detail-title">CurseForge</div><div class="mod-detail-desc">${escapeHtml(e.message || t('ui.failed_to_load'))}</div>`;
+    setModStatus(e.message || t('ui.failed_to_load'), 'error');
   }
 }
 
@@ -276,21 +279,21 @@ async function searchMods(): Promise<void> {
   projectStack = [];
   detailEl?.classList.add('hidden');
   resultsEl.classList.remove('hidden');
-  resultsEl.innerHTML = '<div class="mod-empty">正在搜索…</div>';
-  setModStatus('正在搜索…');
+  resultsEl.innerHTML = `<div class="mod-empty">${t('ui.searching')}</div>`;
+  setModStatus(t('ui.searching'));
   if (searchBtn) (searchBtn as HTMLButtonElement).disabled = true;
 
   try {
     const result: any = await window.gpcl.modsSearch({ source, query, ...filters, projectType: currentProjectType, offset: 0, limit: 20 });
     if (!result || !result.success) {
-      const hint: string = currentProjectType === 'mod' ? '<br><span class="mod-link-hint">也可以把 CurseForge 项目链接粘贴到搜索框</span>' : '';
-      resultsEl.innerHTML = `<div class="mod-empty">${escapeHtml(result?.error || '搜索失败')}${hint}</div>`;
-      setModStatus(result?.error || '搜索失败', 'error');
+      const hint: string = currentProjectType === 'mod' ? `<br><span class="mod-link-hint">${t('ui.you_can_also_paste_a_curseforge_project_link_into_the_search_box')}</span>` : '';
+      resultsEl.innerHTML = `<div class="mod-empty">${escapeHtml(result?.error || t('ui.search_failed'))}${hint}</div>`;
+      setModStatus(result?.error || t('ui.search_failed'), 'error');
       return;
     }
 
     if (!result.items || result.items.length === 0) {
-      resultsEl.innerHTML = `<div class="mod-empty">${escapeHtml(RESOURCE_TYPES[currentProjectType].empty)}</div>`;
+      resultsEl.innerHTML = `<div class="mod-empty">${escapeHtml(t(RESOURCE_TYPES[currentProjectType].empty))}</div>`;
     } else {
       if (result.translatedTo && result.translatedFrom) {
         const english: string = String(result.translatedTo).toLowerCase();
@@ -303,15 +306,17 @@ async function searchMods(): Promise<void> {
     }
 
     const notes: string[] = [];
-    if (result.translatedTo) notes.push(`已按「${result.translatedTo}」搜索`);
+    if (result.translatedTo) notes.push(t('ui.searched_for_query', { query: result.translatedTo }));
     const errors: string[] = Array.isArray(result.errors) ? result.errors : [];
-    if (errors.length > 0) notes.push('CurseForge 暂时不可用');
+    if (errors.length > 0) notes.push(t('ui.curseforge_is_unavailable_right_now'));
     const total: number = result.total || result.items.length;
-    notes.push(total > result.items.length ? `找到 ${total} 个结果，先显示前 ${result.items.length} 个` : `找到 ${total} 个结果`);
+    notes.push(total > result.items.length
+      ? t('ui.found_total_results_showing_the_first_shown', { total, shown: result.items.length })
+      : t('ui.found_total_results', { total }));
     setModStatus(notes.join(' · '), 'muted');
   } catch (e: any) {
-    resultsEl.innerHTML = `<div class="mod-empty">${escapeHtml(e.message || '搜索失败')}</div>`;
-    setModStatus(e.message || '搜索失败', 'error');
+    resultsEl.innerHTML = `<div class="mod-empty">${escapeHtml(e.message || t('ui.search_failed'))}</div>`;
+    setModStatus(e.message || t('ui.search_failed'), 'error');
   } finally {
     if (searchBtn) (searchBtn as HTMLButtonElement).disabled = false;
   }
@@ -333,7 +338,7 @@ function renderResults(items: any[]): void {
           <span class="mod-source-tag">${item.source === 'curseforge' ? 'CurseForge' : 'Modrinth'}</span>
         </div>
         <div class="mod-card-desc">${escapeHtml(item.description || '')}</div>
-        <div class="mod-card-meta">${escapeHtml(item.author || '')} · ${formatCount(item.downloads)} 次下载${item.categories?.length ? ` · ${escapeHtml(item.categories.slice(0, 3).join(' / '))}` : ''}</div>
+        <div class="mod-card-meta">${escapeHtml(item.author || '')} · ${t('ui.count_downloads', { count: formatCount(item.downloads) })}${item.categories?.length ? ` · ${escapeHtml(item.categories.slice(0, 3).map((c: string) => t(CATEGORY_NAMES[String(c).toLowerCase()] || c)).join(' / '))}` : ''}</div>
       </div>
     `;
     card.addEventListener('click', () => void openProject(item));
@@ -342,22 +347,22 @@ function renderResults(items: any[]): void {
 }
 
 const CATEGORY_NAMES: Record<string, string> = {
-  adventure: '冒险',
-  decoration: '装饰',
-  equipment: '装备',
-  food: '食物',
-  magic: '魔法',
-  optimization: '优化',
-  technology: '科技',
-  worldgen: '世界生成',
-  utility: '实用',
-  library: '支持库',
-  mobs: '生物',
-  storage: '存储',
-  transportation: '交通',
-  combat: '战斗',
-  mobs_and_creatures: '生物',
-  game_mechanics: '游戏机制'
+  adventure: 'Adventure',
+  decoration: 'Decoration',
+  equipment: 'Equipment',
+  food: 'Food',
+  magic: 'Magic',
+  optimization: 'Optimization',
+  technology: 'Technology',
+  worldgen: 'World generation',
+  utility: 'Utility',
+  library: 'Library',
+  mobs: 'Mobs',
+  storage: 'Storage',
+  transportation: 'Transportation',
+  combat: 'Combat',
+  mobs_and_creatures: 'Mobs',
+  game_mechanics: 'Game mechanics'
 };
 
 let currentDetail: { item: any; versions: any[]; groups: Map<string, any[]>; depCache: Map<string, any[]> } | null = null;
@@ -365,7 +370,7 @@ let activeMcTab: string = '全部';
 const IMPLICIT_FABRIC_API: string = 'P7dR8mSH';
 
 function categoryLabel(list: string[]): string {
-  return (list || []).slice(0, 4).map((c: string) => CATEGORY_NAMES[String(c).toLowerCase()] || c).join(' · ');
+  return (list || []).slice(0, 4).map((c: string) => t(CATEGORY_NAMES[String(c).toLowerCase()] || c)).join(' · ');
 }
 
 function compareMcVersion(a: string, b: string): number {
@@ -379,7 +384,7 @@ function compareMcVersion(a: string, b: string): number {
 }
 
 function copyToClipboard(text: string): void {
-  const done = (): void => showToast('已复制名称', text, 'success', 'mod-name-copied');
+  const done = (): void => showToast('ui.name_copied', text, 'success', 'mod-name-copied');
   try {
     void navigator.clipboard.writeText(text).then(done).catch(() => {
       const area: HTMLTextAreaElement = document.createElement('textarea');
@@ -436,14 +441,14 @@ function renderProjectHeader(item: any, versions: any[]): void {
       <div class="mod-detail-meta">
         ${categoryLabel(item.categories || []) ? `${escapeHtml(categoryLabel(item.categories || []))} · ` : ''}
         ${loaderSummary ? `${escapeHtml(loaderSummary)} ` : ''}${versionSummary ? `${escapeHtml(versionSummary)} · ` : ''}
-        ${formatCount(item.downloads || 0)} 次下载
+        ${t('ui.count_downloads', { count: formatCount(item.downloads || 0) })}
         <span class="mod-source-tag">${item.source === 'curseforge' ? 'CurseForge' : 'Modrinth'}</span>
       </div>
       <div class="mod-detail-desc">${escapeHtml(item.description || '')}</div>
       <div class="mod-detail-actions">
-        ${webUrl ? `<button class="mod-detail-action" data-act="web" type="button">转到 ${item.source === 'curseforge' ? 'CurseForge' : 'Modrinth'}</button>` : ''}
-        ${(item.projectType || currentProjectType) === 'mod' ? '<button class="mod-detail-action" data-act="mcmod" type="button">转到 MC 百科</button>' : ''}
-        <button class="mod-detail-action" data-act="copy" type="button">复制名称</button>
+        ${webUrl ? `<button class="mod-detail-action" data-act="web" type="button">${t('ui.open_on_source', { source: item.source === 'curseforge' ? 'CurseForge' : 'Modrinth' })}</button>` : ''}
+        ${(item.projectType || currentProjectType) === 'mod' ? `<button class="mod-detail-action" data-act="mcmod" type="button">${t('ui.open_on_mcmod')}</button>` : ''}
+        <button class="mod-detail-action" data-act="copy" type="button">${t('ui.copy_name')}</button>
       </div>
     </div>
   `;
@@ -471,7 +476,7 @@ function groupVersionsByMc(versions: any[]): Map<string, any[]> {
 function versionRow(item: any, version: any): HTMLDivElement {
   const row: HTMLDivElement = document.createElement('div');
   row.className = 'mod-version-row';
-  const gameVersions: string = (version.gameVersions || []).slice(0, 3).join(', ') || '通用';
+  const gameVersions: string = (version.gameVersions || []).slice(0, 3).join(', ') || t('ui.general');
   const loaders: string = (version.loaders || []).join(' / ');
   const isFabricFile: boolean = (version.loaders || []).includes('fabric');
   const isMod: boolean = (item.projectType || currentProjectType) === 'mod';
@@ -480,9 +485,9 @@ function versionRow(item: any, version: any): HTMLDivElement {
   row.innerHTML = `
     <div class="mod-version-info">
       <div class="mod-version-name" title="${escapeHtml(version.fileName || version.name)}">${escapeHtml(version.name || version.fileName)}</div>
-      <div class="mod-version-meta">${escapeHtml(gameVersions)}${loaders ? ` · ${escapeHtml(loaders)}` : ''}${version.fileSize ? ` · ${(version.fileSize / 1024 / 1024).toFixed(1)} MB` : ''}${depCount ? ` · ${depCount} 项前置` : ''}${version.date ? ` · 更新于 ${relativeTime(version.date)}` : ''}</div>
+      <div class="mod-version-meta">${escapeHtml(gameVersions)}${loaders ? ` · ${escapeHtml(loaders)}` : ''}${version.fileSize ? ` · ${(version.fileSize / 1024 / 1024).toFixed(1)} MB` : ''}${depCount ? ` · ${t('ui.count_dependencies', { count: depCount })}` : ''}${version.date ? ` · ${t('ui.updated_time', { time: relativeTime(version.date) })}` : ''}</div>
     </div>
-    <button class="mod-install-btn" type="button">安装</button>
+    <button class="mod-install-btn" type="button">${t('ui.install')}</button>
   `;
   const btn: HTMLButtonElement | null = row.querySelector('.mod-install-btn') as HTMLButtonElement | null;
   if (btn) {
@@ -507,11 +512,11 @@ async function loadDependencies(section: HTMLElement, mcVersion: string, files: 
   ));
   if (ids.length === 0) {
     container.dataset.loaded = '1';
-    container.innerHTML = '<div class="mod-deps-empty">没有必需的前置</div>';
+    container.innerHTML = `<div class="mod-deps-empty">${t('ui.no_required_dependencies')}</div>`;
     return;
   }
 
-  container.innerHTML = '<div class="mod-deps-empty">正在读取前置…</div>';
+  container.innerHTML = `<div class="mod-deps-empty">${t('ui.loading_dependencies')}</div>`;
   const loader: string = (files[0]?.loaders || [])[0] || '';
 
   try {
@@ -524,7 +529,7 @@ async function loadDependencies(section: HTMLElement, mcVersion: string, files: 
     const projects: any[] = result?.success ? (result.projects || []) : [];
     container.dataset.loaded = '1';
     if (projects.length === 0) {
-      container.innerHTML = '<div class="mod-deps-empty">没有读取到前置信息</div>';
+      container.innerHTML = `<div class="mod-deps-empty">${t('ui.no_dependency_information_available')}</div>`;
       return;
     }
 
@@ -535,9 +540,9 @@ async function loadDependencies(section: HTMLElement, mcVersion: string, files: 
       card.innerHTML = `
         <img src="${escapeHtml(dep.iconUrl || '')}" alt="" onerror="this.style.visibility='hidden'">
         <div class="mod-dep-info">
-          <div class="mod-dep-name">${escapeHtml(dep.title)}${(dep.categories || []).some((c: string) => String(c).toLowerCase() === 'library') ? ' <span class="mod-dep-tag">支持库</span>' : ''}</div>
+          <div class="mod-dep-name">${escapeHtml(dep.title)}${(dep.categories || []).some((c: string) => String(c).toLowerCase() === 'library') ? ` <span class="mod-dep-tag">${t('ui.library')}</span>` : ''}</div>
           <div class="mod-dep-desc">${escapeHtml(dep.description || '')}</div>
-          <div class="mod-dep-meta">${formatCount(dep.downloads || 0)} 次下载${dep.updatedAt ? ` · 更新于 ${relativeTime(dep.updatedAt)}` : ''} · ${dep.source === 'curseforge' ? 'CurseForge' : 'Modrinth'}</div>
+          <div class="mod-dep-meta">${t('ui.count_downloads', { count: formatCount(dep.downloads || 0) })}${dep.updatedAt ? ` · ${t('ui.updated_time', { time: relativeTime(dep.updatedAt) })}` : ''} · ${dep.source === 'curseforge' ? 'CurseForge' : 'Modrinth'}</div>
         </div>
       `;
       card.addEventListener('click', () => void openProject({
@@ -554,7 +559,7 @@ async function loadDependencies(section: HTMLElement, mcVersion: string, files: 
     }
   } catch (e: any) {
     container.dataset.loaded = '1';
-    container.innerHTML = `<div class="mod-deps-empty">前置信息读取失败：${escapeHtml(e.message || '未知错误')}</div>`;
+    container.innerHTML = `<div class="mod-deps-empty">${t('ui.could_not_load_dependency_information_error', { error: escapeHtml(e.message || t('ui.unknown_error')) })}</div>`;
   }
 }
 
@@ -567,13 +572,13 @@ function renderMcSection(mcVersion: string, files: any[], item: any, expanded: b
   const head: HTMLButtonElement = document.createElement('button');
   head.className = 'mod-mc-section-head';
   head.type = 'button';
-  head.innerHTML = `<span>${escapeHtml(mcVersion)}</span><span class="icon icon-chevron mod-mc-chevron${expanded ? ' expanded' : ''}"></span>`;
+  head.innerHTML = `<span>${escapeHtml(mcVersion === '通用' ? t('ui.general') : mcVersion)}</span><span class="icon icon-chevron mod-mc-chevron${expanded ? ' expanded' : ''}"></span>`;
 
   const body: HTMLDivElement = document.createElement('div');
   body.className = `mod-mc-section-body${expanded ? '' : ' hidden'}`;
   body.innerHTML = `
-    ${isMod ? '<div class="mod-deps-block"><div class="mod-deps-title">前置资源</div><div class="mod-deps-list"></div></div>' : ''}
-    <div class="mod-version-heading">版本列表</div>
+    ${isMod ? `<div class="mod-deps-block"><div class="mod-deps-title">${t('ui.dependencies')}</div><div class="mod-deps-list"></div></div>` : ''}
+    <div class="mod-version-heading">${t('ui.versions')}</div>
   `;
 
   const list: HTMLDivElement = document.createElement('div');
@@ -606,7 +611,7 @@ function renderDetailBody(): void {
     const btn: HTMLButtonElement = document.createElement('button');
     btn.className = `mod-mc-tab${tab === activeMcTab ? ' active' : ''}`;
     btn.type = 'button';
-    btn.textContent = tab;
+    btn.textContent = tab === '全部' ? t('ui.all') : tab;
     btn.addEventListener('click', () => {
       activeMcTab = tab;
       renderDetailBody();
@@ -620,7 +625,7 @@ function renderDetailBody(): void {
       detailVersions.appendChild(renderMcSection(mc, groups.get(mc) || [], currentDetail.item, false));
     }
     if (groups.has('通用')) {
-      detailVersions.appendChild(renderMcSection('通用', groups.get('通用') || [], currentDetail.item, false));
+      detailVersions.appendChild(renderMcSection('通用', groups.get('ui.general') || [], currentDetail.item, false));
     }
   } else {
     detailVersions.appendChild(renderMcSection(activeMcTab, groups.get(activeMcTab) || [], currentDetail.item, true));
@@ -651,8 +656,8 @@ async function openProject(item: any, keepStack: boolean = false): Promise<void>
   resultsEl.classList.add('hidden');
   detailEl.classList.remove('hidden');
   renderProjectHeader(item, []);
-  detailVersions.innerHTML = '<div class="mod-empty">正在获取可用文件…</div>';
-  setModStatus('正在获取可用文件…');
+  detailVersions.innerHTML = `<div class="mod-empty">${t('ui.loading_available_files')}</div>`;
+  setModStatus(t('ui.loading_available_files'));
 
   try {
     const result: any = await window.gpcl.modsVersions({
@@ -663,15 +668,15 @@ async function openProject(item: any, keepStack: boolean = false): Promise<void>
       preferGameVersion: preferredGameVersion()
     });
     if (!result || !result.success) {
-      detailVersions.innerHTML = `<div class="mod-empty">${escapeHtml(result?.error || '获取文件失败')}</div>`;
-      setModStatus(result?.error || '获取文件失败', 'error');
+      detailVersions.innerHTML = `<div class="mod-empty">${escapeHtml(result?.error || t('ui.failed_to_load_files'))}</div>`;
+      setModStatus(result?.error || t('ui.failed_to_load_files'), 'error');
       return;
     }
     setModStatus('');
     renderDetail(item, result.versions || []);
   } catch (e: any) {
-    detailVersions.innerHTML = `<div class="mod-empty">${escapeHtml(e.message || '获取文件失败')}</div>`;
-    setModStatus(e.message || '获取文件失败', 'error');
+    detailVersions.innerHTML = `<div class="mod-empty">${escapeHtml(e.message || t('ui.failed_to_load_files'))}</div>`;
+    setModStatus(e.message || t('ui.failed_to_load_files'), 'error');
   }
 }
 
@@ -711,7 +716,7 @@ function renderCustomDir(dir: string): void {
   }
   row.dataset.key = `dir:${dir}`;
   row.innerHTML = `
-    <div class="mod-target-name">自定义目录</div>
+    <div class="mod-target-name">${t('ui.custom_folder')}</div>
     <div class="mod-target-meta">${escapeHtml(dir)}</div>
   `;
   row.onclick = () => selectTarget({ kind: 'dir', dir, label: dir });
@@ -740,19 +745,22 @@ async function openTargetPicker(fileLabel: string, version: any, projectType: Re
 
   if (candidates.length === 0) {
     const message: string = projectType === 'mod'
-      ? '还没有带 Mod 加载器的版本。先去下载页装一个 Fabric / Forge / NeoForge 版本，或者直接选择文件夹。'
-      : `还没有安装任何游戏版本。先装一个版本，或者直接选择文件夹。${RESOURCE_TYPES[projectType].label}会放进它的 ${RESOURCE_TYPES[projectType].folder} 文件夹。`;
-    targetList.innerHTML = `<div class="mod-empty">${message}</div>`;
+      ? t('ui.no_mod_loader_version_installed_yet_install_a_fabric_forge_neoforge_vers_3dcbed')
+      : t('ui.no_game_versions_installed_yet_install_one_first_or_choose_a_folder_dire_aacfc6', {
+          label: t(RESOURCE_TYPES[projectType].label),
+          folder: RESOURCE_TYPES[projectType].folder
+        });
+    targetList.innerHTML = `<div class="mod-empty">${escapeHtml(message)}</div>`;
   }
 
   for (const target of candidates) {
     const compat = versionMatches(version, target, projectType);
-    const loaderLabel: string = (target.loaders || []).length ? target.loaders.join(' / ') : (target.hasOptiFine ? 'OptiFine' : '原版');
+    const loaderLabel: string = (target.loaders || []).length ? target.loaders.join(' / ') : (target.hasOptiFine ? 'OptiFine' : t('ui.vanilla'));
     const notes: string[] = [];
-    if (target.id === selectedVersionId) notes.push('当前启动');
-    if (!compat.game) notes.push('游戏版本不匹配');
-    if (!compat.loader) notes.push('加载器不匹配');
-    if (projectType === 'mod' && !target.isolated) notes.push('首次安装会启用版本隔离');
+    if (target.id === selectedVersionId) notes.push(t('ui.currently_launching'));
+    if (!compat.game) notes.push(t('ui.game_version_mismatch'));
+    if (!compat.loader) notes.push(t('ui.loader_mismatch'));
+    if (projectType === 'mod' && !target.isolated) notes.push(t('ui.first_install_will_enable_version_isolation'));
 
     const row: HTMLDivElement = document.createElement('div');
     row.className = 'mod-target-item';
@@ -807,7 +815,7 @@ function confirmPackPrompt(): void {
 
 async function promptModpackName(item: any, version: any): Promise<string | null> {
   if (!packOverlay || !packNameInput) return null;
-  const base: string = String(item.title || item.slug || '整合包');
+  const base: string = String(item.title || item.slug || t('ui.modpacks'));
   const versionNumber: string = String(version?.versionNumber || '');
   if (packFile) packFile.textContent = version?.fileName || item.title || '';
   packNameInput.value = (versionNumber ? `${base} ${versionNumber}` : base).slice(0, 64);
@@ -831,22 +839,22 @@ function installModpack(item: any, version: any, btn: HTMLButtonElement): void {
       gameVersion: (version.gameVersions || [])[0] || currentFilters().gameVersion,
       instanceName
     });
-    showToast('已加入下载队列', `整合包：${instanceName}`, 'success', 'modpack-queued');
-    setModStatus(`整合包「${instanceName}」已加入下载队列`, 'success');
-    if (btn) btn.textContent = '已加入队列';
+    showToast('ui.added_to_download_queue', t('ui.modpack_name', { name: instanceName }), 'success', 'modpack-queued');
+    setModStatus(t('ui.modpack_name_added_to_the_download_queue', { name: instanceName }), 'success');
+    if (btn) btn.textContent = t('ui.added_to_queue');
   })();
 }
 
 async function installMod(item: any, version: any, btn: HTMLButtonElement): Promise<void> {
   const projectType: ResourceProjectType = item.projectType || currentProjectType;
-  const fileLabel: string = version.fileName || version.name || `${RESOURCE_TYPES[projectType].label}文件`;
+  const fileLabel: string = version.fileName || version.name || t('ui.label_file', { label: t(RESOURCE_TYPES[projectType].label) });
   const choice: TargetChoice | null = await openTargetPicker(fileLabel, version, projectType);
   if (!choice) return;
 
-  const originalText: string = btn.textContent || '安装';
+  const originalText: string = btn.textContent || t('ui.install');
   btn.disabled = true;
-  btn.textContent = '安装中…';
-  setModStatus(`正在下载 ${fileLabel}…`);
+  btn.textContent = t('ui.installing');
+  setModStatus(t('ui.downloading_file', { file: fileLabel }));
 
   try {
     const targetVersionId: string = choice.kind === 'version' ? choice.id : '';
@@ -870,19 +878,21 @@ async function installMod(item: any, version: any, btn: HTMLButtonElement): Prom
     if (result && result.success) {
       const count: number = (result.files || []).length;
       const skipped: number = (result.skipped || []).length;
-      const detail: string = count > 1 ? `已安装 ${count} 个文件（含前置）${skipped ? `，${skipped} 个已存在` : ''}` : count === 1 ? '已安装 1 个文件' : '文件已存在';
-      showToast('安装完成', `${fileLabel} → ${choice.label}`, 'success', 'mod-install-done');
+      const detail: string = count > 1
+        ? t('ui.installed_count_files_including_dependencies', { count }) + (skipped ? t('ui.count_already_existed', { count: skipped }) : '')
+        : count === 1 ? t('ui.installed_1_file') : t('ui.file_already_exists');
+      showToast('ui.installation_complete', `${fileLabel} → ${choice.label}`, 'success', 'mod-install-done');
       setModStatus(`${detail} · ${choice.label}`, 'success');
-      btn.textContent = '已安装';
+      btn.textContent = t('ui.installed');
     } else {
-      showToast('安装失败', result?.error || '未知错误', 'error', 'mod-install-failed');
-      setModStatus(`安装失败：${result?.error || '未知错误'}`, 'error');
+      showToast('ui.installation_failed', result?.error || t('ui.unknown_error'), 'error', 'mod-install-failed');
+      setModStatus(t('ui.installation_failed_error_2', { error: result?.error || t('ui.unknown_error') }), 'error');
       btn.disabled = false;
       btn.textContent = originalText;
     }
   } catch (e: any) {
-    showToast('安装失败', e.message || String(e), 'error', 'mod-install-failed');
-    setModStatus(`安装失败：${e.message || e}`, 'error');
+    showToast('ui.installation_failed', e.message || String(e), 'error', 'mod-install-failed');
+    setModStatus(t('ui.installation_failed_error_2', { error: e.message || e }), 'error');
     btn.disabled = false;
     btn.textContent = originalText;
   }
@@ -963,7 +973,7 @@ if (window.gpcl && window.gpcl.onModDownloadProgress) {
   window.gpcl.onModDownloadProgress((data: any) => {
     if (!data) return;
     const percent: number = Number(data.percent) || 0;
-    setModStatus(`正在下载 ${data.label || '模组'}：${percent}%`);
+    setModStatus(t('ui.downloading_name_percent', { name: data.label || t('ui.mods'), percent }));
   });
 }
 
@@ -992,13 +1002,13 @@ if (window.gpcl && window.gpcl.selectVersionFolder) {
       setStatus('正在导入版本…');
       const result: any = await window.gpcl.installLocalVersion(sourcePath);
       if (result && result.success) {
-        showToast('导入完成', `已导入 ${result.versionId}`, 'success', 'local-install-done');
-        setStatus(`已导入 ${result.versionId}`, 'success');
+        showToast('ui.import_complete', t('ui.imported_name', { name: result.versionId }), 'success', 'local-install-done');
+        setStatus(t('ui.imported_name', { name: result.versionId }), 'success');
         await loadVersions();
         renderVersionSelectList();
       } else {
-        showToast('导入失败', result?.error || '未知错误', 'error', 'local-install-failed');
-        setStatus(`导入失败：${result?.error || '未知错误'}`, 'error');
+        showToast('ui.import_failed', result?.error || t('ui.unknown_error'), 'error', 'local-install-failed');
+        setStatus(t('ui.import_failed_error', { error: result?.error || t('ui.unknown_error') }), 'error');
       }
     });
   }

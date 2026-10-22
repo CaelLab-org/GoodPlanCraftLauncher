@@ -21,7 +21,7 @@ export function animatePageIn(page: HTMLElement | null): void {
 }
 
 
-export function showPage(name: string): void {
+export function showPage(name: string, animate: boolean = true): void {
   currentPage = name;
 
   if (name === 'download') {
@@ -29,27 +29,27 @@ export function showPage(name: string): void {
     if (launchPanel) launchPanel.classList.add('hidden');
     if (settingsPage) settingsPage.classList.add('hidden');
     if (morePage) morePage.classList.add('hidden');
-    animatePageIn(downloadPage);
+    if (animate) animatePageIn(downloadPage);
   } else if (name === 'launch') {
     if (downloadPage) downloadPage.classList.add('hidden');
     if (launchPanel) launchPanel.classList.remove('hidden');
     if (settingsPage) settingsPage.classList.add('hidden');
     if (morePage) morePage.classList.add('hidden');
-    animatePageIn(launchPanel);
+    if (animate) animatePageIn(launchPanel);
   } else if (name === 'settings') {
     if (downloadPage) downloadPage.classList.add('hidden');
     if (launchPanel) launchPanel.classList.add('hidden');
     if (settingsPage) settingsPage.classList.remove('hidden');
     if (morePage) morePage.classList.add('hidden');
     switchSettingsTab('game');
-    animatePageIn(settingsPage);
+    if (animate) animatePageIn(settingsPage);
   } else if (name === 'more') {
     if (downloadPage) downloadPage.classList.add('hidden');
     if (launchPanel) launchPanel.classList.add('hidden');
     if (settingsPage) settingsPage.classList.add('hidden');
     if (morePage) morePage.classList.remove('hidden');
     switchMoreTab('toolbox');
-    animatePageIn(morePage);
+    if (animate) animatePageIn(morePage);
   }
 
   if (menuDownload) menuDownload.classList.toggle('active', name === 'download');

@@ -1,0 +1,26 @@
+{
+  "version.label": {
+    "message": "Next",
+    "description": "The label for version current"
+  },
+  "sidebar.mainSidebar.category.开始使用": {
+    "message": "시작하기",
+    "description": "The label for category '开始使用' in sidebar 'mainSidebar'"
+  },
+  "sidebar.mainSidebar.category.游戏与模组": {
+    "message": "게임 및 모드",
+    "description": "The label for category '游戏与模组' in sidebar 'mainSidebar'"
+  },
+  "sidebar.mainSidebar.category.出问题了": {
+    "message": "문제 해결",
+    "description": "The label for category '出问题了' in sidebar 'mainSidebar'"
+  },
+  "sidebar.mainSidebar.doc.概述": {
+    "message": "개요",
+    "description": "The label for the doc item '概述' in sidebar 'mainSidebar', linking to the doc index"
+  },
+  "sidebar.mainSidebar.doc.下载与镜像源": {
+    "message": "다운로드 및 미러",
+    "description": "The label for the doc item '下载与镜像源' in sidebar 'mainSidebar', linking to the doc download"
+  }
+}

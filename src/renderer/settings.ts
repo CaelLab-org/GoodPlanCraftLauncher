@@ -8,6 +8,7 @@
 
 
 // __IMPORTS_BEGIN__
+import { t } from '../i18n';
 import { enableMoreEl, icon, initCustomSelect, memoryOptimizeBtn, setCustomSelectValue, settingsNumInput, showToast } from './dom';
 import { allNewerVersions, updateAvailable } from './update';
 // __IMPORTS_END__
@@ -29,7 +30,7 @@ if (memoryOptimizeBtn) {
     
     (memoryOptimizeBtn as HTMLButtonElement).disabled = true;
     if (btnIcon) btnIcon.innerHTML = icon('loader', 'spin');
-    if (btnText) btnText.textContent = '优化中...';
+    if (btnText) btnText.textContent = t('ui.optimizing');
     
     const beforeMemory: number = await window.gpcl.getMemoryUsage();
     
@@ -41,7 +42,9 @@ if (memoryOptimizeBtn) {
     if (btnIcon) btnIcon.textContent = originalIcon;
     if (btnText) btnText.textContent = originalText;
     
-    showToast('内存优化完成', `GPCL 当前占用 ${afterMB} MB，${freedMB > 0 ? `回收了 ${freedMB} MB` : '没有可回收的内存'}`, 'success');
+    showToast('ui.memory_optimization_complete', freedMB > 0
+      ? t('ui.gpcl_is_now_using_mb_mb_freed_freed_mb', { mb: afterMB, freed: freedMB })
+      : t('ui.gpcl_is_using_mb_mb_nothing_could_be_freed', { mb: afterMB }), 'success');
   });
 }
 
@@ -163,13 +166,13 @@ export async function updateSettingsBadge(): Promise<void> {
 
     if (checkUpdateBtn) {
       checkUpdateBtn.classList.add('new-version');
-      checkUpdateBtn.textContent = `发现 ${allNewerVersions.length} 个新版本`;
+      checkUpdateBtn.textContent = t('ui.count_new_version_s_available', { count: allNewerVersions.length });
     }
   } else {
     
     if (checkUpdateBtn && !updateAvailable) {
       checkUpdateBtn.classList.remove('new-version');
-      checkUpdateBtn.textContent = '检查更新';
+      checkUpdateBtn.textContent = t('ui.check_for_updates');
     }
   }
 }
@@ -181,6 +184,9 @@ export async function loadSettings(): Promise<any> {
   } catch (e: any) {
     console.error('加载设置失败:', e);
     return {
+      general: {
+        language: 'auto'
+      },
       game: {
         memory: 'auto',
         playerName: 'GPCL_Player',
@@ -201,6 +207,7 @@ export async function loadSettings(): Promise<any> {
       },
       appearance: {
         theme: 'light',
+        style: 'advanced',
         scale: '100',
         playStartupAnimation: true,
         skipSplash: false,
@@ -233,11 +240,24 @@ export async function loadSettings(): Promise<any> {
 
 
 export function applyTheme(theme: string): void {
-  if (theme === 'light') {
-    document.body.classList.add('light-mode');
-  } else {
-    document.body.classList.remove('light-mode');
-  }
+  const light: boolean = theme === 'light';
+  // <html> 上这份是给重载首帧用的（index.html 的同步脚本会先加），两处要同步
+  document.documentElement.classList.toggle('light-mode', light);
+  document.body.classList.toggle('light-mode', light);
+}
+
+
+export function applyStyle(style: string): void {
+  const value: string = ['mc', 'advanced', 'minimal'].includes(style) ? style : 'advanced';
+  document.body.classList.remove('style-mc', 'style-advanced', 'style-minimal');
+  document.body.classList.add(`style-${value}`);
+}
+
+
+export async function saveStyleSetting(style: string): Promise<void> {
+  const settings = await loadSettings();
+  settings.appearance.style = style;
+  await gpcl.saveSettings(settings);
 }
 
 
@@ -251,7 +271,9 @@ export async function saveThemeSetting(theme: string): Promise<void> {
 export async function initTheme(): Promise<void> {
   const settings = await loadSettings();
   const theme: string = settings.appearance?.theme || 'dark';
+  const style: string = settings.appearance?.style || 'advanced';
   applyTheme(theme);
+  applyStyle(style);
 
   const themeGroup: HTMLElement | null = document.getElementById('settings-theme');
   if (themeGroup) {
@@ -262,6 +284,19 @@ export async function initTheme(): Promise<void> {
         if (!radio.checked) return;
         applyTheme(radio.value);
         await saveThemeSetting(radio.value);
+      });
+    });
+  }
+
+  const styleGroup: HTMLElement | null = document.getElementById('settings-style');
+  if (styleGroup) {
+    const radios: NodeListOf<HTMLInputElement> = styleGroup.querySelectorAll<HTMLInputElement>('input[name="style"]');
+    radios.forEach((radio: HTMLInputElement) => {
+      radio.checked = radio.value === style;
+      radio.addEventListener('change', async (): Promise<void> => {
+        if (!radio.checked) return;
+        applyStyle(radio.value);
+        await saveStyleSetting(radio.value);
       });
     });
   }
@@ -327,7 +362,7 @@ export async function initMemorySettings(): Promise<void> {
     const customGB: number = slider ? (parseInt(slider.value, 10) || 1) : 4;
     const allocMB: number = auto ? (systemInfo.autoMemoryMB || 1024) : customGB * 1024;
     if (valueLabel) valueLabel.textContent = `${customGB} GB`;
-    if (allocLabel) allocLabel.textContent = `${(allocMB / 1024).toFixed(1)} GB${auto ? '（自动）' : ''}`;
+    if (allocLabel) allocLabel.textContent = `${(allocMB / 1024).toFixed(1)} GB${auto ? t('ui.automatic') : ''}`;
     if (freeLabel) freeLabel.textContent = systemInfo.freeMB > 0 ? `${(systemInfo.freeMB / 1024).toFixed(1)} GB` : '--';
     if (usageLabel) {
       const totalGB: number = systemInfo.totalMB / 1024;
@@ -339,8 +374,8 @@ export async function initMemorySettings(): Promise<void> {
       const lowFree: boolean = systemInfo.freeMB > 0 && systemInfo.freeMB < 4096;
       warning.classList.toggle('hidden', !lowFree);
       warning.textContent = auto
-        ? '当前可用内存较少，自动分配已按可用内存下调；启动前建议关闭一些程序。'
-        : '当前可用内存较少，自定义值可能超过可用内存；启动前建议关闭一些程序。';
+        ? t('ui.available_memory_is_low_so_the_automatic_value_was_reduced_consider_clos_3a1baa')
+        : t('ui.available_memory_is_low_the_custom_value_may_exceed_it_consider_closing_b560f5');
     }
   };
 
@@ -506,7 +541,7 @@ export async function initDownloadSettings(): Promise<void> {
 
   const refreshInstallDirLabel = (custom: string): void => {
     if (!installDirLabel) return;
-    installDirLabel.textContent = custom ? custom : '默认目录（启动器数据目录下的 .minecraft）';
+    installDirLabel.textContent = custom ? custom : t('ui.default_folder_minecraft_in_the_launcher_data_folder');
   };
 
   const saveDownloadField = async (patch: Record<string, any>): Promise<void> => {
@@ -519,7 +554,7 @@ export async function initDownloadSettings(): Promise<void> {
   const updateSpeedLabel = (): void => {
     if (!speedSlider || !speedLabel) return;
     const value: number = parseInt(speedSlider.value, 10) || 0;
-    speedLabel.textContent = value > 0 ? `${value} MB/s` : '不限速';
+    speedLabel.textContent = value > 0 ? `${value} MB/s` : t('ui.unlimited');
   };
 
   initCustomSelect('settings-file-source', async (value: string): Promise<void> => {
@@ -544,7 +579,7 @@ export async function initDownloadSettings(): Promise<void> {
     mirrorInput.value = settings.download?.customFileMirror || '';
     mirrorInput.addEventListener('change', async (): Promise<void> => {
       await saveDownloadField({ customFileMirror: mirrorInput.value.trim() });
-      showToast('已保存下载镜像', mirrorInput.value.trim() || '已恢复默认镜像', 'success', 'mirror-saved');
+      showToast('ui.download_mirror_saved', mirrorInput.value.trim() || '已恢复默认镜像', 'success', 'mirror-saved');
     });
   }
 
@@ -552,7 +587,7 @@ export async function initDownloadSettings(): Promise<void> {
     curseForgeKey.value = settings.download?.curseForgeApiKey || '';
     curseForgeKey.addEventListener('change', async (): Promise<void> => {
       await saveDownloadField({ curseForgeApiKey: curseForgeKey.value.trim() });
-      showToast('已保存 CurseForge Key', curseForgeKey.value.trim() ? '搜索时会优先使用官方接口' : '已清空', 'success', 'cf-key-saved');
+      showToast('ui.curseforge_key_saved', curseForgeKey.value.trim() ? '搜索时会优先使用官方接口' : '已清空', 'success', 'cf-key-saved');
     });
   }
 
@@ -566,7 +601,7 @@ export async function initDownloadSettings(): Promise<void> {
       const confirmResult: any = await window.gpcl.showMessageDialog({
         type: 'warning',
         title: '切换游戏目录',
-        message: `要把游戏目录切换到 ${dir} 吗？`,
+        message: t('ui.switch_the_game_directory_to_dir', { dir }),
         detail: '新下载的版本、库、资源和模组都会放在这里。已有文件不会自动搬迁，旧目录里的版本切换后不会显示。',
         buttons: ['切换', '取消'],
         defaultId: 0,
@@ -576,7 +611,7 @@ export async function initDownloadSettings(): Promise<void> {
 
       await saveDownloadField({ installDir: dir });
       refreshInstallDirLabel(dir);
-      showToast('游戏目录已切换', dir, 'success', 'install-dir-changed');
+      showToast('ui.game_directory_switched', dir, 'success', 'install-dir-changed');
     });
   }
 
@@ -584,7 +619,7 @@ export async function initDownloadSettings(): Promise<void> {
     installDirReset.addEventListener('click', async (): Promise<void> => {
       await saveDownloadField({ installDir: '' });
       refreshInstallDirLabel('');
-      showToast('已恢复默认目录', '新下载会放回启动器数据目录', 'info', 'install-dir-reset');
+      showToast('ui.default_directory_restored', '新下载会放回启动器数据目录', 'info', 'install-dir-reset');
     });
   }
 
@@ -608,7 +643,7 @@ export async function initAboutPage(): Promise<void> {
   if (versionEl) {
     try {
       const version: string = await window.gpcl.getAppVersion();
-      versionEl.textContent = `版本: ${version}`;
+      versionEl.textContent = t('ui.version_version', { version });
     } catch {}
   }
 
@@ -643,9 +678,9 @@ export async function initAboutPage(): Promise<void> {
       details.dataset.loaded = '1';
       try {
         const text: string = await window.gpcl.getLicenseText();
-        licenseText.textContent = text || '许可证读取失败。';
+        licenseText.textContent = text || t('ui.could_not_read_the_license');
       } catch {
-        licenseText.textContent = '许可证读取失败。';
+        licenseText.textContent = t('ui.could_not_read_the_license');
         details.dataset.loaded = '0';
       }
     });

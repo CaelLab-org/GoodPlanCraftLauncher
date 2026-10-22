@@ -1,0 +1,72 @@
+---
+title: Pobieranie i serwery lustrzane
+description: Źródło plików, źródło listy wersji, liczba wątków, limit prędkości, serwery Javy i własny serwer plików.
+---
+
+Wolne pobieranie zwykle nie jest winą launcha. Najpierw zmień źródło pobierania, a dopiero potem zajmij się wątkami i limitem prędkości.
+
+## Zadania pobierania trafiają do kolejki
+
+Po kliknięciu „Pobierz” zadanie trafia do kolejki i nie blokuje interfejsu: oczekujące zadania usuwa się przez ×, trwające można anulować, a kolejka rusza dalej.
+
+Strona pobierania pokazuje stan każdego zadania: oczekuje, pobiera, ukończone, nie udało się.
+
+## Źródło plików a źródło listy wersji
+
+W **Ustawienia → Pobieranie → Źródło pobierania** są dwie niezależne listy rozwijane:
+
+- **Źródło plików**: jar klienta, zasoby, biblioteki;
+- **Źródło listy wersji**: manifest wersji, JSON wersji, indeks zasobów.
+
+Obie mają te same cztery opcje:
+
+| Opcja | Działanie |
+| --- | --- |
+| Najpierw oficjalne, przy wolnie przełącz na lustro | Domyślnie. Próbuje najpierw oficjalnego i po kilku sekundach bez odpowiedzi przełącza na BMCLAPI |
+| Używaj serwerów lustrzanych, gdy to możliwe | W sieciach w Chinach od razu korzysta z lustra |
+| Najpierw oficjalne źródło | Próbuje oficjalnego, a przy błędzie wraca do lustra |
+| Używaj oficjalnego źródła, gdy to możliwe | Tylko oficjalne; jeśli nie połączy, zadanie kończy się błędem |
+
+## Własny serwer plików
+
+W **Ustawienia → Pobieranie → Własny serwer plików** można wpisać bazowy adres serwera lustrzanego (domyślnie BMCLAPI, np. `https://bmclapi2.bangbang93.com`). Po wypełnieniu manifest wersji, klient, biblioteki i zasoby idą najpierw tam; jeśli się nie pobiorą, obowiązuje normalna kolejność źródeł.
+
+Puste pole oznacza domyślny BMCLAPI.
+
+## Katalog gry
+
+W **Ustawienia → Pobieranie → Katalog gry** można umieścić wersje, biblioteki, zasoby i mody w dowolnym katalogu; puste pole przywraca `%APPDATA%\gpcl\.minecraft`.
+
+Zmiana katalogu **nie przenosi** istniejących plików. Wersje ze starego katalogu nie przechodzą — skopiuj je ręcznie, jeśli są potrzebne. Konfiguracja i logi nadal są w `%APPDATA%\gpcl`.
+
+## Maksymalna liczba wątków
+
+Domyślnie 64, zakres 1–128. Przy wielu małych plikach większa równoległość trochę przyspiesza, ale zbyt wysoka wartość może zostać ograniczona przez urządzenia sieciowe lub serwer lustrzany. Przy niestabilnej sieci zmniejsz.
+
+## Limit prędkości
+
+0 oznacza brak limitu; po ustawieniu wartości **wszystkie zadania pobierania dzielą ten łączny limit**, w MB/s, obowiązujący od następnego pobierania. W sieci współdzielonej przez kilka osób warto go obniżyć.
+
+Limit dotyczy tylko pobierania zasobów gry. Środowisko Javy pobiera się z osobnego lustra i nie jest tym objęte.
+
+## Serwery Javy
+
+W **Ustawienia → Pobieranie → Pobieranie Javy** można wybrać Tsinghua University, Nanjing University, Huawei Cloud lub własny adres. Jeśli wybrane źródło zawiedzie, GPCL automatycznie przechodzi do następnego, a na końcu zostaje oficjalny serwer Adoptium.
+
+Własny adres obsługuje dwie zmienne:
+
+- `{v}`: główna wersja Javy, np. `8`, `17`, `21`;
+- `{version}`: pełna wersja upstream, np. `17.0.20.1_1`, która zmienia się wraz z wydaniami upstream.
+
+Przykład:
+
+```text
+https://cdn.example.com/java/{v}/OpenJDK{v}U-jre_x64_windows_hotspot_{v}.zip
+```
+
+## Co robić, gdy pobieranie się nie uda
+
+1. Zmień źródło pobierania.
+2. Zmniejsz liczbę wątków do 32 lub 16 i spróbuj ponownie.
+3. Sprawdź, czy data i godzina systemowa są poprawne — duże odchylenie powoduje błąd weryfikacji certyfikatu HTTPS.
+4. Jeśli nadal nie działa, napisz e-mail z najnowszym logiem z `%APPDATA%\gpcl\gpcl\log`.

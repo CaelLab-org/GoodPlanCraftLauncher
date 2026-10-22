@@ -1,0 +1,59 @@
+---
+title: Java và bộ nhớ
+description: Cách ánh xạ phiên bản Java, GPCL tự cấp phát bộ nhớ thế nào, và cách điều chỉnh khi thiếu bộ nhớ.
+---
+
+GPCL tự chọn Java theo phiên bản trò chơi, cũng tự cấp phát theo bộ nhớ máy tính. Phần lớn trường hợp không cần chỉnh tay.
+
+## Quan hệ phiên bản Java
+
+| Phiên bản Minecraft | Java cần thiết |
+| --- | --- |
+| 1.16.5 và cũ hơn | Java 8 |
+| 1.17 – 1.20.4 | Java 17 |
+| 1.20.5 trở đi | Java 21 |
+
+Khi khởi chạy phát hiện thiếu Java tương ứng, GPCL sẽ tự tải và cài. Nếu tải thất bại, vào **Cài đặt → Tải xuống → Tải Java** đổi nguồn mirror rồi thử lại.
+
+Java được cài trong thư mục riêng của GPCL, không ảnh hưởng đến Java khác trong hệ thống, cũng không đổi `JAVA_HOME` của hệ thống.
+
+## Bộ nhớ: tự động
+
+Mặc định là "Tự động". Logic cấp phát chia hai bước:
+
+1. Trước tiên ước tính theo **30%** bộ nhớ vật lý, làm tròn xuống đến GB, và giới hạn trong **2 – 8 GB**;
+2. Sau đó xem bộ nhớ khả dụng hiện tại: chừa ít nhất 1 GB cho hệ thống, tính tối thiểu 2 GB, kết quả làm tròn xuống đến 512 MB, lấy giá trị nhỏ hơn trong hai.
+
+Một số kết quả thực tế:
+
+| Bộ nhớ vật lý | Khả dụng hiện tại | Cấp phát tự động |
+| --- | --- | --- |
+| 16 GB | 8 GB | 4 GB |
+| 16 GB | 3.9 GB | 2.5 GB |
+| 8 GB | 4 GB | 2 GB |
+
+Trang cài đặt hiển thị bộ nhớ hệ thống đã dùng / tổng và giá trị khả dụng hiện tại. Khi bộ nhớ khả dụng eo hẹp, cấp phát tự động sẽ hạ theo và nhắc bạn đóng bớt chương trình.
+
+`-Xmx` là giới hạn trên, không phải chiếm đầy ngay khi khởi động. Vì vậy cấp phát theo bộ nhớ khả dụng tại chỗ ổn định hơn là gán cứng một giá trị rất lớn.
+
+## Bộ nhớ: tùy chỉnh
+
+Khi modpack hoặc gói mod lớn không đủ dùng, chuyển sang "Tùy chỉnh" và kéo thanh trượt. Chừa chỗ cho hệ thống và chương trình khác, đừng cấp toàn bộ bộ nhớ vật lý cho trò chơi.
+
+Xuất hiện `OutOfMemoryError` là thiếu bộ nhớ:
+
+1. Tăng cấp phát lên một mức rồi thử lại;
+2. Vẫn không được thì giảm mod;
+3. Đồng thời đóng trình duyệt và các chương trình chiếm bộ nhớ.
+
+## Tinh chỉnh G1GC
+
+**Cài đặt → Nâng cao → Quản lý bộ nhớ** có tinh chỉnh G1GC, mặc định tắt. Chỉ nên bật khi khung hình dao động, GC gây khựng rõ rệt; sau khi bật sẽ thêm một bộ tham số G1GC thông dụng.
+
+Tham số JVM tùy chỉnh cũng ở cùng chỗ. Viết sai tham số sẽ khiến trò chơi không khởi động được, không chắc thì đừng sửa.
+
+## Tối ưu bộ nhớ trước khi khởi chạy
+
+Sau khi bật, GPCL sẽ thu hồi một phần bộ nhớ nó đang chiếm trước khi khởi chạy trò chơi. Nó chỉ dọn dẹp tiến trình của chính trình khởi chạy, không đụng đến Minecraft đang chạy, cũng không xóa trạng thái đăng nhập.
+
+Trên ổ cứng cơ, bước này có thể khựng ngắn, là hiện tượng bình thường.

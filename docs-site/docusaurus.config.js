@@ -2,8 +2,8 @@
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'GoodPlanCraftLauncher 帮助',
-  tagline: '安装、登录、模组与崩溃排查',
+  title: 'GoodPlanCraftLauncher',
+  tagline: 'Minecraft launcher help',
 
   // 用官网自己的图标，不在文档站里再存一份
   favicon: 'https://gamets.caellab.com/gpcl/icon.png',
@@ -28,7 +28,62 @@ const config = {
 
   i18n: {
     defaultLocale: 'zh-Hans',
-    locales: ['zh-Hans'],
+    locales: [
+      'zh-Hans',
+      'en',
+      'zh-Hant',
+      'ja',
+      'ko',
+      'ru',
+      'de',
+      'fr',
+      'es',
+      'pt',
+      'it',
+      'nl',
+      'pl',
+      'uk',
+      'tr',
+      'ar',
+      'fa',
+      'he',
+      'hi',
+      'bn',
+      'id',
+      'ms',
+      'vi',
+      'th',
+      'el',
+    ],
+    localeConfigs: {
+      // 默认语言默认会直接铺在 baseUrl 根上，这里显式给它加上 /zh-Hans/，
+      // 让 25 种语言都带前缀；根路径由 build 脚本写成跳转到 /en/ 的页面。
+      'zh-Hans': { label: '简体中文', baseUrl: '/gpcl/docs/zh-Hans/' },
+      en: { label: 'English' },
+      'zh-Hant': { label: '繁體中文' },
+      ja: { label: '日本語' },
+      ko: { label: '한국어' },
+      ru: { label: 'Русский' },
+      de: { label: 'Deutsch' },
+      fr: { label: 'Français' },
+      es: { label: 'Español' },
+      pt: { label: 'Português' },
+      it: { label: 'Italiano' },
+      nl: { label: 'Nederlands' },
+      pl: { label: 'Polski' },
+      uk: { label: 'Українська' },
+      tr: { label: 'Türkçe' },
+      ar: { label: 'العربية', direction: 'rtl' },
+      fa: { label: 'فارسی', direction: 'rtl' },
+      he: { label: 'עברית', direction: 'rtl' },
+      hi: { label: 'हिन्दी' },
+      bn: { label: 'বাংলা' },
+      id: { label: 'Bahasa Indonesia' },
+      ms: { label: 'Bahasa Melayu' },
+      vi: { label: 'Tiếng Việt' },
+      th: { label: 'ไทย' },
+      el: { label: 'Ελληνικά' },
+    },
   },
 
   presets: [
@@ -83,6 +138,10 @@ const config = {
           {
             href: 'https://github.com/CaelLab-org/GoodPlanCraftLauncher',
             label: 'GitHub',
+            position: 'right',
+          },
+          {
+            type: 'localeDropdown',
             position: 'right',
           },
         ],

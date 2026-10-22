@@ -1,0 +1,206 @@
+{
+  "meta": {
+    "title": "GoodPlanCraftLauncher - A lightweight, efficient Minecraft launcher - CaelLabGameTS",
+    "description": "GoodPlanCraftLauncher is a simple, efficient Minecraft launcher with Microsoft and offline login, version management, and Forge/NeoForge/Fabric/OptiFine mod installation, so you can get into the blocky world in one click. Open source and free.",
+    "keywords": "GoodPlanCraftLauncher,Minecraft launcher,MC launcher,Minecraft Java Edition,CaelLab,open source",
+    "ogTitle": "GoodPlanCraftLauncher - Lightweight, efficient Minecraft launcher",
+    "ogDescription": "Lightweight · efficient · open source. Microsoft and offline login, version management, and one-click Forge/NeoForge/Fabric/OptiFine installation."
+  },
+  "historyMeta": {
+    "title": "Changelog - GoodPlanCraftLauncher - CaelLabGameTS",
+    "description": "Changelogs and installer downloads for every GoodPlanCraftLauncher version: from 1.0.0 to the latest, every change is on this page.",
+    "ogTitle": "Changelog - GoodPlanCraftLauncher",
+    "ogDescription": "Release notes and installer downloads for every version."
+  },
+  "nav": {
+    "source": "Source",
+    "language": "Language",
+    "download": "Download v{version}",
+    "mobileGitHub": "GitHub source",
+    "openMenu": "Open menu"
+  },
+  "hero": {
+    "tags": [
+      "Open source",
+      "Free",
+      "Minecraft launcher"
+    ],
+    "subtitle": "Lightweight · Efficient · Open source",
+    "desc": "A Minecraft launcher written for Windows: Microsoft and offline login, version management, and one-click Forge / Fabric / OptiFine installation. When the game crashes, it tells you why instead of just showing an empty box.",
+    "download": "Download now",
+    "versionLabel": "Version",
+    "updatedLabel": "Updated",
+    "platformLabel": "Platform",
+    "platform": "Windows 10+",
+    "iframeTitle": "GoodPlanCraftLauncher interface",
+    "windowNote": "The window above is <b>clickable</b> — it is the launcher interface itself, running inside the web page.",
+    "iconAlt": "GoodPlanCraftLauncher icon"
+  },
+  "features": {
+    "tag": "Features",
+    "title": "Core features",
+    "desc": "Practical tools for players, each one aimed at getting you into the game faster",
+    "items": [
+      {
+        "title": "Two login modes",
+        "desc": "Microsoft and offline login, switchable at any time; offline mode needs no online verification."
+      },
+      {
+        "title": "Mod downloads built in",
+        "desc": "Search Modrinth and CurseForge, then install mods, shaders or resource packs into the folder the selected version actually uses."
+      },
+      {
+        "title": "Four mod loaders",
+        "desc": "Forge, NeoForge, Fabric and OptiFine install from the official sources, with the Java version checked first."
+      },
+      {
+        "title": "25 interface languages",
+        "desc": "Follows your system language on first launch; switch it any time in the settings."
+      },
+      {
+        "title": "Automatic version management",
+        "desc": "Download, install, and switch Minecraft versions in one click, with libraries and assets handled automatically."
+      },
+      {
+        "title": "Fast startup",
+        "desc": "A streamlined launch path and caching, so you click and play instead of waiting."
+      },
+      {
+        "title": "Java runtime management",
+        "desc": "Detects and installs a Java runtime automatically; the download source can be set to Tsinghua, Nanjing University, Huawei Cloud, or the official source, falling back to the next one on failure."
+      },
+      {
+        "title": "Theme support",
+        "desc": "Full light and dark mode support, with adjustable interface scaling for a consistent look."
+      },
+      {
+        "title": "Automatic updates and maintenance",
+        "desc": "Built-in update checks and a configurable automatic log cleanup keep the launcher lean over time."
+      },
+      {
+        "title": "Crash notices and error reports",
+        "desc": "When the game exits abnormally it explains why, and can export an error report in one click (crash report + logs + system info)."
+      },
+      {
+        "title": "Running panel",
+        "desc": "After launch, a panel on the right shows the version, PID, uptime, and memory use, and can end the game at any time."
+      },
+      {
+        "title": "Custom window title",
+        "desc": "Write your own game window title, with magic words such as {mc_version} and {time}."
+      }
+    ]
+  },
+  "shots": {
+    "tag": "Screenshots",
+    "title": "Real screenshots",
+    "desc": "The window at the top is a web recreation of the launcher interface, clickable without installing anything. The four below are the launcher actually running on Windows, unedited.",
+    "items": [
+      {
+        "alt": "GoodPlanCraftLauncher launch screen",
+        "caption": "Launch screen · pick a version, enter a player name, start the game"
+      },
+      {
+        "alt": "GoodPlanCraftLauncher download screen",
+        "caption": "Download screen · game versions, mods, shaders, resource packs and modpacks"
+      },
+      {
+        "alt": "GoodPlanCraftLauncher game settings",
+        "caption": "Settings · game memory, window mode, window title, and magic words"
+      },
+      {
+        "alt": "GoodPlanCraftLauncher appearance settings",
+        "caption": "Settings · language, interface style, theme and scaling"
+      }
+    ]
+  },
+  "download": {
+    "tag": "Download",
+    "title": "Download now",
+    "desc": "Pick your platform and start the blocky adventure",
+    "button": "Launch the block world!",
+    "updatedLabel": "Updated",
+    "platformLabel": "Platform",
+    "licenseLabel": "License",
+    "platform": "Windows 10 64-bit",
+    "license": "Open source, free",
+    "github": "View on GitHub"
+  },
+  "requirements": {
+    "tag": "System",
+    "title": "System requirements",
+    "desc": "Modest, but worth knowing",
+    "items": [
+      {
+        "label": "Operating system",
+        "text": "Windows 10 64-bit (1709+); Windows 11 works too"
+      },
+      {
+        "label": "Java runtime",
+        "text": "Installed automatically by the launcher; cleaning up redundant or conflicting Java installs on the system is recommended"
+      },
+      {
+        "label": "Storage",
+        "text": "At least 90 MB free for the launcher itself (game files not included)"
+      },
+      {
+        "label": "Memory",
+        "text": "2 GB or more available memory recommended"
+      }
+    ]
+  },
+  "openSource": {
+    "tag": "Open Source",
+    "title": "Open source and contributions",
+    "desc": "GPCL is a 100% open source project, with its source hosted on GitHub. PRs are welcome, and so are suggestions on the <a href=\"https://forum.xmuer.online/\" target=\"_blank\">forum</a>, to build a better Minecraft launcher together.",
+    "items": [
+      {
+        "title": "License",
+        "desc": "Released under the CaelLab BY-SA Code License, Version 3 (or any later version). You may use, modify, and redistribute it freely; modified versions must keep the same open source license. Project home: <a href=\"https://gamets.caellab.com/gpcl/\">gamets.caellab.com/gpcl</a>.",
+        "action": "Read the full license →"
+      },
+      {
+        "title": "Contributing",
+        "desc": "The main source repository is on GitHub, where issues and PRs are managed. Bug reports, feature suggestions, and code contributions are welcome.",
+        "action": "Visit GitHub →"
+      }
+    ],
+    "licenseSummary": "LICENSE SUMMARY — CaelLab BY-SA Code License v3"
+  },
+  "history": {
+    "tag": "History",
+    "title": "Version history",
+    "desc": "Past versions and their changelogs",
+    "older": "Show {n} older versions",
+    "more": "View the full changelog (all {total} versions and installers) →",
+    "page": {
+      "back": "← Back to home",
+      "tag": "Changelog",
+      "heading": "Changelog",
+      "intro": "From 1.0.0 to the latest release, every version — what changed, and whether it can be downloaded — is on this page.",
+      "note": "Installers were not kept for 1.3.2 and earlier; the built-in updater in old versions may no longer work, so installing the latest release is recommended for daily use.",
+      "indexLabel": "Version index",
+      "latest": "Latest",
+      "download": "Download v{version}",
+      "unavailable": "No installer kept for this version",
+      "fileNote": "{file} · {size} · Windows 64-bit"
+    }
+  },
+  "footer": {
+    "brand": "An independent game development and tools team at CaelLab. Exploring the future's edge, carrying boundless renewal.",
+    "projects": "Projects",
+    "community": "Community",
+    "openSource": "Open source",
+    "help": "Help center",
+    "changelog": "Changelog",
+    "forum": "Forum",
+    "license": "License",
+    "copyright": "&copy; 2026 GameTS by <a href=\"https://www.caellab.com/\" target=\"_blank\" class=\"footer-inline-link\">CaelLab</a>. All rights reserved. Project home: <a href=\"https://gamets.caellab.com/gpcl/\" class=\"footer-inline-link\">gamets.caellab.com/gpcl</a>",
+    "disclaimer": "GoodPlanCraftLauncher is a third-party open source tool and has no official affiliation with <a href=\"https://www.minecraft.net/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Mojang Studios</a>, <a href=\"https://www.microsoft.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Microsoft</a>, <a href=\"https://www.xbox.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Xbox</a>. Minecraft is a trademark of Mojang Studios; using this launcher requires a valid Minecraft license.",
+    "licenseLine": "Open source license: <a href=\"https://www.caellab.com/license/cbs-v3\" target=\"_blank\" class=\"footer-inline-link\">CaelLab BY-SA Code License v3</a> | Open Source on <a href=\"https://github.com/CaelLab-org/GoodPlanCraftLauncher\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">GitHub</a>"
+  },
+  "labels": {
+    "platform": "Windows 64-bit",
+    "github": "GitHub"
+  }
+}

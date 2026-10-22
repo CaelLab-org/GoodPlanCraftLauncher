@@ -13,6 +13,7 @@ import fs from 'fs';
 import path from 'path';
 
 import { APP_VERSION, CACHE_DIR, GAME_DIR, formatTimestamp, loadSettings, markVersionIsolated, writeLog } from './config';
+import { t } from './i18n';
 import { installVersionWithModLoader } from './modloader';
 import { mainWindow } from './shell';
 import { MAX_CONCURRENT, activeDownloads, completedDownloadFiles, currentDownloadPath, currentDownloadType, currentDownloadVersion, downloadQueue, isDownloading, isJavaDownloading, setActiveDownloads, setCompletedDownloadFiles, setCurrentDownloadPath, setCurrentDownloadType, setCurrentDownloadVersion, setDownloadQueue, setIsDownloading, setIsJavaDownloading, setMaxConcurrent, setShouldCancelDownload, setTotalDownloadFiles, shouldCancelDownload, totalDownloadFiles } from './state';
@@ -24,7 +25,7 @@ setShouldCancelDownload(true);
     try {
       const versionDir = currentDownloadPath || path.join(GAME_DIR, 'versions', currentDownloadVersion);
       const cancelFilePath = path.join(versionDir, 'CancelDownload.txt');
-      const cancelContent = `GoodPlanCraftLauncher ${APP_VERSION}\n取消时间：${formatTimestamp()}\n\n正确的关闭\n您在下载完成前正确地关闭了GPCL。`;
+      const cancelContent = t('GoodPlanCraftLauncher {version}\n取消时间：{time}\n\n正确的关闭\n您在下载完成前正确地关闭了 GPCL。', { version: APP_VERSION, time: formatTimestamp() });
       if (fs.existsSync(versionDir)) {
         fs.writeFileSync(cancelFilePath, cancelContent, 'utf8');
         const files = fs.readdirSync(versionDir);
@@ -286,7 +287,7 @@ export async function fetchText(url: string, sources?: string[]): Promise<string
     }
   }
 
-  throw lastError || new Error('请求失败');
+  throw lastError || new Error('Request failed');
 }
 
 
@@ -331,7 +332,7 @@ export async function processDownloadQueue(): Promise<void> {
   if (shouldCancelDownload) {
     while (downloadQueue.length > 0) {
       const task: any = downloadQueue.shift();
-      task.reject(new Error('下载已取消'));
+      task.reject(new Error('Download cancelled'));
     }
     
     for (const w of BrowserWindow.getAllWindows()) {
@@ -423,7 +424,7 @@ async function downloadFileOnce(url: string, dest: string, label: string, timeou
             if (shouldCancelDownload) {
               req2.destroy();
               file.destroy();
-              reject(new Error('下载已取消'));
+              reject(new Error('Download cancelled'));
               return;
             }
             loaded += d.length;
@@ -448,7 +449,7 @@ async function downloadFileOnce(url: string, dest: string, label: string, timeou
           res2.on('end', () => {
             if (loaded === 0) {
               try { file.destroy(); } catch {}
-              reject(new Error('下载内容为空'));
+              reject(new Error('The download was empty'));
               return;
             }
             if (total > 0 && loaded < total) {
@@ -466,7 +467,7 @@ async function downloadFileOnce(url: string, dest: string, label: string, timeou
             reject(err2);
           });
         });
-        req2.on('timeout', () => { req2.destroy(); reject('超时'); });
+        req2.on('timeout', () => { req2.destroy(); reject('ui.timed_out'); });
         req2.on('error', (err2: any) => {
           file.destroy();
           reject(err2);
@@ -515,7 +516,7 @@ async function downloadFileOnce(url: string, dest: string, label: string, timeou
           if (shouldCancelDownload) {
             try { req.abort(); } catch {}
             file.destroy();
-            reject(new Error('下载已取消'));
+            reject(new Error('Download cancelled'));
             return;
           }
           loaded += d.length;
@@ -540,7 +541,7 @@ async function downloadFileOnce(url: string, dest: string, label: string, timeou
         res.on('end', () => {
           if (loaded === 0) {
             try { file.destroy(); } catch {}
-            fallbackToHttps(new Error('下载内容为空'));
+            fallbackToHttps(new Error('The download was empty'));
             return;
           }
           if (total > 0 && loaded < total) {
@@ -589,7 +590,7 @@ export async function downloadFileInternal(sources: string[], dest: string, labe
     }
   }
 
-  throw lastError || new Error('下载失败');
+  throw lastError || new Error('Download failed');
 }
 
 
@@ -640,23 +641,23 @@ setCompletedDownloadFiles(0);
 
     if (!fs.existsSync(versionJarPath)) {
       const clientSources: string[] = buildSourceUrls(versionData.downloads.client.url, fileSourcePolicy, `https://bmclapi2.bangbang93.com/version/${versionId}/client`);
-      await downloadFile(versionData.downloads.client.url, versionJarPath, '客户端', clientSources);
+      await downloadFile(versionData.downloads.client.url, versionJarPath, t('ui.client'), clientSources);
     }
 
     if (shouldCancelDownload) {
       writeLog(`下载取消：${versionId}`);
-      throw new Error('下载已取消');
+      throw new Error('Download cancelled');
     }
 
     const assetIndexPath: string = path.join(GAME_DIR, 'assets', 'indexes', versionData.assetIndex.id + '.json');
     if (!fs.existsSync(assetIndexPath)) {
       const assetIndexSources: string[] = buildSourceUrls(versionData.assetIndex.url, versionSourcePolicy);
-      await downloadFile(versionData.assetIndex.url, assetIndexPath, '资源索引', assetIndexSources);
+      await downloadFile(versionData.assetIndex.url, assetIndexPath, t('ui.asset_index'), assetIndexSources);
     }
 
     if (shouldCancelDownload) {
       writeLog(`下载取消：${versionId}`);
-      throw new Error('下载已取消');
+      throw new Error('Download cancelled');
     }
 
     let assetIndexData: any;
@@ -668,7 +669,7 @@ setCompletedDownloadFiles(0);
         await new Promise<void>(r => setTimeout(r, 500));
       }
     }
-    if (!assetIndexData) throw new Error('无法读取资源索引');
+    if (!assetIndexData) throw new Error(t('ui.could_not_read_the_asset_index'));
 
     const toDownload: any[] = [];
 
@@ -682,7 +683,7 @@ setCompletedDownloadFiles(0);
           url: assetUrl,
           sources: buildSourceUrls(assetUrl, fileSourcePolicy),
           dest: assetPath,
-          label: `资源: ${name}`
+          label: t('ui.asset_name', { name })
         });
       }
     }
@@ -695,7 +696,7 @@ setCompletedDownloadFiles(0);
             url: lib.downloads.artifact.url,
             sources: buildSourceUrls(lib.downloads.artifact.url, fileSourcePolicy),
             dest: libPath,
-            label: `库: ${lib.name}`
+            label: t('ui.library_name', { name: lib.name })
           });
         }
       }
@@ -708,7 +709,7 @@ setCompletedDownloadFiles(0);
                 url: info.url,
                 sources: buildSourceUrls(info.url, fileSourcePolicy),
                 dest: libPath,
-                label: `原生库: ${lib.name}`
+                label: t('ui.native_library_name', { name: lib.name })
               });
             }
           }
@@ -742,7 +743,7 @@ setCompletedDownloadFiles(0);
 
     if (shouldCancelDownload) {
       writeLog(`下载取消：${versionId}`);
-      throw new Error('下载已取消');
+      throw new Error('Download cancelled');
     }
 
     writeLog(`下载完成：${versionId}`);
@@ -917,7 +918,7 @@ ipcMain.handle('download-version', (event: any, versionId: string, maxConcurrent
 
 ipcMain.handle('select-version-folder', async () => {
   if (!mainWindow) return null;
-  const result = await dialog.showOpenDialog(mainWindow, { title: '选择版本文件夹', properties: ['openDirectory'] });
+  const result = await dialog.showOpenDialog(mainWindow, { title: t('ui.choose_version_folder'), properties: ['openDirectory'] });
   return result.canceled || result.filePaths.length === 0 ? null : result.filePaths[0];
 });
 
@@ -925,9 +926,9 @@ ipcMain.handle('select-version-folder', async () => {
 ipcMain.handle('select-version-archive', async () => {
   if (!mainWindow) return null;
   const result = await dialog.showOpenDialog(mainWindow, {
-    title: '选择版本压缩包',
+    title: t('ui.choose_version_archive'),
     properties: ['openFile'],
-    filters: [{ name: '压缩包', extensions: ['zip', 'jar', 'mrpack'] }]
+    filters: [{ name: t('ui.archive'), extensions: ['zip', 'jar', 'mrpack'] }]
   });
   return result.canceled || result.filePaths.length === 0 ? null : result.filePaths[0];
 });
@@ -977,17 +978,17 @@ function copyDirectory(src: string, dest: string): void {
 function importVersionFolder(srcDir: string): any {
   const found = findVersionJson(srcDir);
   if (!found) {
-    return { success: false, error: '这个文件夹里没有找到版本 JSON，请选择包含 <版本名>.json 的版本文件夹' };
+    return { success: false, error: 'No version JSON was found in this folder; choose a folder containing <version>.json' };
   }
 
   const rawId: string = String(found.data.id || path.basename(srcDir));
   const versionId: string = rawId.replace(/[<>:"/\\|?*\x00-\x1f]/g, '_');
-  if (!versionId) return { success: false, error: '无法确定版本名' };
+  if (!versionId) return { success: false, error: 'Could not determine the version name' };
 
   const versionsDir: string = path.join(GAME_DIR, 'versions');
   const dest: string = path.join(versionsDir, versionId);
   if (fs.existsSync(dest)) {
-    return { success: false, error: `版本 ${versionId} 已存在，请先删除后再导入` };
+    return { success: false, error: t('ui.version_version_already_exists_delete_it_before_importing', { version: versionId }) };
   }
 
   fs.mkdirSync(versionsDir, { recursive: true });
@@ -1015,7 +1016,7 @@ function importVersionFolder(srcDir: string): any {
 ipcMain.handle('install-local-version', async (_, sourcePath: string) => {
   try {
     if (!sourcePath || !fs.existsSync(sourcePath)) {
-      return { success: false, error: '路径不存在' };
+      return { success: false, error: 'Path does not exist' };
     }
     const stat = fs.statSync(sourcePath);
     if (stat.isDirectory()) {
@@ -1024,7 +1025,7 @@ ipcMain.handle('install-local-version', async (_, sourcePath: string) => {
 
     const ext: string = path.extname(sourcePath).toLowerCase();
     if (ext !== '.zip' && ext !== '.jar' && ext !== '.mrpack') {
-      return { success: false, error: '只支持版本文件夹或 .zip / .jar / .mrpack 压缩包' };
+      return { success: false, error: 'Only version folders or .zip / .jar / .mrpack archives are supported' };
     }
 
     const packPeek: any = require('adm-zip');
@@ -1063,7 +1064,7 @@ ipcMain.handle('install-local-version', async (_, sourcePath: string) => {
 
       let versionDir: string | null = findVersionFolder(tempDir, 3);
       if (!versionDir && findVersionJson(tempDir)) versionDir = tempDir;
-      if (!versionDir) return { success: false, error: '压缩包里没有找到版本文件夹（需要包含 <版本名>.json）' };
+      if (!versionDir) return { success: false, error: 'No version folder was found in the archive (it must contain <version>.json)' };
       return importVersionFolder(versionDir);
     } finally {
       try { fs.rmSync(tempDir, { recursive: true, force: true }); } catch {}
@@ -1091,7 +1092,7 @@ ipcMain.handle('delete-version', async (_, versionId: string) => {
     const versionDir: string = path.join(GAME_DIR, 'versions', versionId);
     
     if (!fs.existsSync(versionDir)) {
-      return { success: false, error: '版本不存在' };
+      return { success: false, error: 'Version does not exist' };
     }
     
     writeLog(`[删除版本] 开始删除版本: ${versionId}`);

@@ -1,0 +1,22 @@
+{
+  "title": {
+    "message": "GoodPlanCraftLauncher",
+    "description": "The title in the navbar"
+  },
+  "logo.alt": {
+    "message": "GoodPlanCraftLauncher",
+    "description": "The alt text of navbar logo"
+  },
+  "item.label.帮助文档": {
+    "message": "문서",
+    "description": "Navbar item with label 帮助文档"
+  },
+  "item.label.返回官网": {
+    "message": "공식 사이트로",
+    "description": "Navbar item with label 返回官网"
+  },
+  "item.label.GitHub": {
+    "message": "GitHub",
+    "description": "Navbar item with label GitHub"
+  }
+}

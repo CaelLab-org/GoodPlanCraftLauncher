@@ -1,0 +1,73 @@
+---
+title: Installeren en bijwerken
+description: GPCL downloaden, installeren, bijwerken en verwijderen; spel en instellingen staan in %APPDATA%\gpcl.
+---
+
+GPCL werkt alleen op **Windows 10 / 11 64-bit**. Het installatieprogramma bevat geen Java; de launcher haalt zelf de versie die bij de gameversie hoort.
+
+## Downloaden
+
+Haal het installatieprogramma van de [downloadpagina op de website](https://gamets.caellab.com/gpcl/#download) of uit de [GitHub Releases](https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases). De bestandsnaam is `GPCL-<version>-Setup.exe`.
+
+Download het installatieprogramma niet via cloudopslag, chatgroepen of externe downloadsites: zulke bestanden kunnen zijn vervangen en de launcher kan de herkomst niet controleren.
+
+## Installeren
+
+1. Dubbelklik op het installatieprogramma en kies de installatiemap.
+2. Start GPCL daarna via de snelkoppeling op het bureaublad of in het startmenu.
+3. Bij de eerste start worden configuratie, logboeken en de standaard gamemap aangemaakt.
+
+Bijwerken vanaf een oudere versie kan zonder eerst te verwijderen. Het installatieprogramma neemt de bestaande installatie over (ook oudere NSIS-installaties), inclusief de snelkoppeling op het bureaublad en je gegevens.
+
+## Waar spel en instellingen staan
+
+Alles staat in `%APPDATA%\gpcl`, niet in de installatiemap:
+
+| Pad | Inhoud |
+| --- | --- |
+| `%APPDATA%\gpcl\.minecraft` | Gameversies, libraries, assets, mods en werelden |
+| `%APPDATA%\gpcl\gpcl\config\setting.ini` | Launcherinstellingen |
+| `%APPDATA%\gpcl\gpcl\log` | Logboeken van de launcher |
+| `%APPDATA%\gpcl\gpcl\updata` | Installatieprogramma's van automatische updates en voortgangsadministratie |
+
+Heb je de gamemap gewijzigd, dan gaan versies en assets naar de nieuwe locatie, maar configuratie en logboeken blijven in `%APPDATA%\gpcl`.
+
+### Speltaal automatisch instellen
+
+**Instellingen → Spel → Speltaal automatisch instellen** staat standaard aan, met Vereenvoudigd Chinees als gekozen taal. Voor elke start past GPCL de waarde van `lang:` aan in de `options.txt` die de huidige versie daadwerkelijk gebruikt; de overige regels blijven ongewijzigd.
+
+Bij geïsoleerde versies gaat de wijziging naar `versions/<version-name>/options.txt`, bij niet-geïsoleerde naar de `options.txt` in de hoofdmap van het spel. Zet je de optie uit, dan raakt GPCL geen enkele instelling van het spel aan.
+
+## Bijwerken
+
+Twee opties staan standaard aan:
+
+- **Automatisch op updates controleren**: controleert bij het starten en toont rechtsboven een melding als er een nieuwe versie is.
+- **Updates automatisch installeren**: downloadt op de achtergrond, zonder de downloadpagina te gebruiken en zonder de statusbalk te wijzigen. Na de controle wordt de update stil geïnstalleerd wanneer je **de launcher afsluit**.
+
+De ronde badge rechtsboven toont de downloadvoortgang; klik erop voor het versienummer en de wijzigingen van die versie. Je kunt daar ook op ‘Nu downloaden’ klikken; na de installatie opent de launcher automatisch weer.
+
+In **Instellingen → Over** kun je het automatisch controleren of installeren uitzetten, of zelf op ‘Op updates controleren’ klikken.
+
+Het updatepakket wordt vóór installatie met SHA1 gecontroleerd; mislukt de controle, dan wordt er niets geïnstalleerd. Wordt de installatie onderbroken, dan meldt de volgende start dat ‘de vorige update niet is voltooid’ en kun je het opnieuw proberen; na drie mislukte pogingen verwijst de launcher naar een nieuwe download van het installatieprogramma op de website.
+
+:::warning Bijwerken vanaf 1.5.2 of ouder
+Oudere versies kennen de parameters voor stil installeren nog niet, dus deze update opent nog één keer de oude installatiewizard. Vanaf 1.6.0 verloopt alles stil.
+:::
+
+Opent de launcher na de update niet, kijk dan eerst in het nieuwste logboek in `%APPDATA%\gpcl\gpcl\log` en mail dat mee.
+
+## Een lokale versie importeren
+
+Open op de startpagina het paneel ‘Versie kiezen’ en klik op ‘Lokale versie importeren’. Je kunt importeren:
+
+- een versiemap (met daarin `<version-name>.json`);
+- een zip- of jar-bestand; de launcher pakt het uit en zoekt recursief de map met `<version-name>.json`.
+
+Modpacks (met een sectie `minecraft` in `manifest.json`) kunnen nog niet worden geïmporteerd: de launcher weigert ze direct en laat geen halve installatie achter.
+
+## Verwijderen
+
+Verwijder GPCL via ‘Apps en onderdelen’ in Windows. Het verwijderprogramma **verwijdert `%APPDATA%\gpcl` niet**; na opnieuw installeren zijn spel en instellingen er nog.
+
+Als je de launcher niet meer gaat gebruiken, kun je de hele map `%APPDATA%\gpcl` handmatig verwijderen. Maak eerst een back-up van je werelden.

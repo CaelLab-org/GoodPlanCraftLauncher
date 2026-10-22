@@ -1,0 +1,52 @@
+---
+title: Kata ajaib tajuk tetingkap
+slug: /magic-words
+description: Gunakan pemegang tempat seperti {mc_version}, {time} untuk menyesuaikan tajuk tetingkap permainan Minecraft.
+---
+
+Tajuk tetingkap permainan boleh mengandungi pemegang tempat; semasa pelancaran GPCL akan menggantikannya dengan nilai sebenar.
+
+Lokasinya di **Tetapan → Permainan → Tajuk tetingkap permainan**. Tajuk kosong bermaksud tajuk tetingkap permainan tidak diubah.
+
+## Contoh
+
+Tulis tajuk sebagai:
+
+```text
+{time} · {mc_version} · {gpcl_version}
+```
+
+Selepas dilancarkan, ia mungkin dipaparkan sebagai:
+
+```text
+20:09:58 · Minecraft 1.21.3 · 1.6.0
+```
+
+## Pemegang tempat yang tersedia
+
+| Pemegang tempat | Akan menjadi |
+| --- | --- |
+| `{mc_version}` | Nama paparan versi, contohnya Minecraft 1.21.3, atau nama dengan pemuat |
+| `{mc_id}` | Nama folder versi, contohnya 1.21.3-Fabric |
+| `{username}` | Nama pemain yang digunakan untuk pelancaran ini |
+| `{gpcl_version}` | Nombor versi GPCL, contohnya 1.6.0 |
+| `{date}` | Tarikh pelancaran, format 2026/10/20 |
+| `{time}` | Masa semasa, format 20:09:58 |
+| `{datetime}` | Tarikh dan masa, dipisahkan dengan ruang |
+| `{java}` | Nama direktori runtime Java semasa |
+| `{memory}` | Memori maksimum yang diperuntukkan kali ini, contohnya 4096MB |
+
+Huruf besar dan kecil mesti sama. Pemegang tempat yang salah akan dipaparkan seperti asal, memudahkan anda melihat yang mana salah.
+
+## Adakah tajuk akan kekal?
+
+Di bawah terdapat suis "Cuba kekalkan nama ini", dimatikan secara lalai.
+
+- **Dimatikan**: Selepas tetingkap permainan muncul, GPCL akan terus membetulkannya selama 20 saat. Selepas itu, jika permainan atau mod menukar tajuk, ia tidak akan dihiraukan lagi. Tajuk yang mengandungi `{time}` juga akan berhenti pada masa itu.
+- **Didayakan**: Tajuk yang anda tetapkan dikekalkan sepanjang permainan, dan memasuki dunia tidak akan ditimpa oleh " - Singleplayer".
+
+Sebahagian pek mod atau mod juga menukar tajuk tetingkap; saling menimpa antara kedua-dua pihak adalah normal.
+
+:::note
+Buat masa ini hanya tajuk tetingkap permainan menyokong kata ajaib; tetapan lain tidak terjejas.
+:::

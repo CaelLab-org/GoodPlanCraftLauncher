@@ -1,0 +1,67 @@
+---
+title: Forge / Fabric / OptiFine
+description: Memasang mod loader di GPCL, memilih versi, dan menemukan folder mod.
+---
+
+Saat memilih versi di halaman unduhan, loader juga bisa dipilih langsung. GPCL memasang versi vanilla dulu, lalu memasang loader ke folder versi terpisah — versi vanilla tidak ditimpa.
+
+## Cara memasang
+
+1. Buka halaman unduhan dan pilih satu versi Minecraft.
+2. Di opsi loader pilih Forge, Fabric, atau OptiFine, lalu pilih versi loader yang sesuai.
+3. Klik unduh dan tunggu sampai vanilla serta loader selesai terpasang.
+4. Kembali ke halaman peluncuran dan jalankan versi yang namanya memuat nama loader.
+
+Tugas unduhan masuk ke antrean, beberapa versi bisa diklik berurutan; tugas yang sedang berjalan bisa dibatalkan, dan antrean lanjut setelahnya.
+
+## Memilih di antara tiga loader
+
+| Loader | Cocok untuk | Perhatikan |
+| --- | --- | --- |
+| Forge | Modpack besar, mod lama | Mulai lebih lambat daripada Fabric, pilihan versi banyak |
+| Fabric | Mod ringan, versi baru | Perlu memilih Fabric Loader yang tepat untuk versi game |
+| OptiFine | Shader, peningkatan performa | Dicampur dengan loader lain mungkin butuh mod kompatibilitas |
+
+### Forge
+
+Saat memasang, GPCL hanya menjalankan `--installClient`, tidak mencoba parameter GUI atau server. Output installer diubah menjadi progres, misalnya "Memasang Forge: Downloading library…".
+
+Sebelum memasang, versi mayor Java diperiksa; kalau di bawah kebutuhan Forge langsung muncul error, tidak lagi dipaksa dengan Java versi rendah. Prosesnya menunggu paling lama 15 menit; membatalkan unduhan akan menghentikan proses installer.
+
+### Fabric
+
+GPCL mengambil profil versi dan file library Fabric secara langsung, tidak bergantung pada installer.
+
+"Pasang Fabric API sekaligus" tercentang secara bawaan; setelah Fabric terpasang, Fabric API dengan versi yang cocok dimasukkan ke `mods` versi tersebut. Kalau centangnya dilepas, tidak dipasang; kalau Fabric API gagal, hanya muncul pemberitahuan dan Fabric sendiri tidak terpengaruh.
+
+### OptiFine
+
+OptiFine dipasang senyap, tanpa memunculkan installer GUI miliknya. Hasil pemasangan masuk ke folder game yang sedang dipakai, dan folder game kustom juga ditangani dengan benar.
+
+## Lokasi mod
+
+Versi yang baru diunduh mengaktifkan **isolasi versi** secara bawaan: folder game mengarah ke `versions/<version-name>`, dan mod, save, serta pengaturan game mengikuti versi itu.
+
+| Kondisi versi | Folder mod |
+| --- | --- |
+| Baru diunduh, terisolasi | `versions/<version-name>/mods` |
+| Sudah ada sebelumnya, dan folder versinya tidak punya `mods` / `saves` | `mods` di akar folder game |
+
+Di halaman peluncuran, buka "Pengaturan versi" pada versi tersebut; pintu masuk foldernya dihitung dari hasil isolasi yang sebenarnya:
+
+- "Folder versi" selalu ada;
+- "Folder Mod" muncul kalau terdeteksi Forge / Fabric / NeoForge / Quilt;
+- "Folder shader" muncul kalau terdeteksi OptiFine.
+
+Mau memasang mod langsung ke folder mana pun? Di target pemasangan unduhan mod pilih "Pilih folder" — launcher akan menemukan `mods` di folder itu.
+
+## Crash setelah pemasangan
+
+1. Pindahkan semua mod dari `mods` dan jalankan sekali tanpa mod.
+2. Kalau bisa masuk, kembalikan separuh mod tiap kali untuk menemukan mod bermasalah.
+3. Pastikan mod cocok dengan versi Minecraft maupun versi loader — mod Forge tidak bisa langsung dimasukkan ke Fabric, dan sebaliknya juga sama.
+4. Dependensi wajib yang hilang juga membuat crash saat peluncuran; lihat di [Unduhan mod](./mods.mdx) dependensi apa yang dicantumkan.
+
+Mencampur OptiFine dengan Forge / Fabric biasanya butuh mod kompatibilitas tambahan. Kalau tidak ada mod kompatibilitas yang sesuai, jangan dipaksakan.
+
+Langkah pemeriksaan lainnya ada di [Crash game](./mc-game.mdx).

@@ -1,0 +1,206 @@
+{
+  "meta": {
+    "title": "GoodPlanCraftLauncher - مشغّل Minecraft خفيف وفعّال - CaelLabGameTS",
+    "description": "GoodPlanCraftLauncher مشغّل Minecraft بسيط وفعّال، يدعم تسجيل الدخول عبر Microsoft وبدون اتصال، وإدارة الإصدارات، وتثبيت Forge/NeoForge/Fabric/OptiFine، لتدخل عالم المكعبات بنقرة واحدة. مفتوح المصدر ومجاني.",
+    "keywords": "GoodPlanCraftLauncher,مشغّل Minecraft,مشغّل MC,Minecraft Java Edition,CaelLab,مفتوح المصدر",
+    "ogTitle": "GoodPlanCraftLauncher - مشغّل Minecraft خفيف وفعّال",
+    "ogDescription": "خفيف · فعّال · مفتوح المصدر. تسجيل الدخول عبر Microsoft وبدون اتصال، وإدارة الإصدارات، وتثبيت Forge/NeoForge/Fabric/OptiFine بنقرة واحدة."
+  },
+  "historyMeta": {
+    "title": "سجل التغييرات - GoodPlanCraftLauncher - CaelLabGameTS",
+    "description": "سجلات التغييرات وروابط تنزيل المثبّت لكل إصدار من GoodPlanCraftLauncher: من 1.0.0 إلى الأحدث، كل تغيير في هذه الصفحة.",
+    "ogTitle": "سجل التغييرات - GoodPlanCraftLauncher",
+    "ogDescription": "ملاحظات الإصدار وروابط تنزيل المثبّت لكل إصدار."
+  },
+  "nav": {
+    "source": "المصدر",
+    "language": "اللغة",
+    "download": "تنزيل الإصدار {version}",
+    "mobileGitHub": "مصدر GitHub",
+    "openMenu": "فتح القائمة"
+  },
+  "hero": {
+    "tags": [
+      "مفتوح المصدر",
+      "مجاني",
+      "مشغّل Minecraft"
+    ],
+    "subtitle": "خفيف · فعّال · مفتوح المصدر",
+    "desc": "مشغّل Minecraft مكتوب لـ Windows: تسجيل الدخول عبر Microsoft وبدون اتصال، وإدارة الإصدارات، وتثبيت Forge / Fabric / OptiFine بنقرة واحدة. وعند تعطّل اللعبة يخبرك بالسبب بدل أن يعرض صندوقًا فارغًا فقط.",
+    "download": "نزّل الآن",
+    "versionLabel": "الإصدار",
+    "updatedLabel": "آخر تحديث",
+    "platformLabel": "المنصّة",
+    "platform": "Windows 10 أو أحدث",
+    "iframeTitle": "واجهة GoodPlanCraftLauncher",
+    "windowNote": "النافذة أعلاه <b>قابلة للنقر</b> — إنها واجهة المشغّل نفسها، تعمل داخل صفحة الويب.",
+    "iconAlt": "أيقونة GoodPlanCraftLauncher"
+  },
+  "features": {
+    "tag": "المزايا",
+    "title": "المزايا الأساسية",
+    "desc": "أدوات عملية للاعبين، كل واحدة منها تهدف إلى إدخالك اللعبة أسرع",
+    "items": [
+      {
+        "title": "طريقتان لتسجيل الدخول",
+        "desc": "تسجيل الدخول عبر Microsoft وبدون اتصال، قابل للتبديل في أي وقت؛ الوضع دون اتصال لا يحتاج إلى تحقّق عبر الإنترنت."
+      },
+      {
+        "title": "تنزيل المودات مدمج",
+        "desc": "ابحث في Modrinth وCurseForge وثبّت المودات أو التظليل أو حزم الموارد في المجلد الذي يستخدمه الإصدار المحدد فعليًا."
+      },
+      {
+        "title": "أربعة محمّلات مودات",
+        "desc": "يتم تثبيت Forge وNeoForge وFabric وOptiFine من المصادر الرسمية، مع التحقق من إصدار Java أولًا."
+      },
+      {
+        "title": "25 لغة للواجهة",
+        "desc": "يتبع لغة النظام عند أول تشغيل، ويمكن تغييره من الإعدادات في أي وقت."
+      },
+      {
+        "title": "إدارة تلقائية للإصدارات",
+        "desc": "تنزيل إصدارات Minecraft وتثبيتها والتبديل بينها بنقرة واحدة، مع إدارة المكتبات والموارد تلقائيًا."
+      },
+      {
+        "title": "بدء سريع",
+        "desc": "مسار تشغيل مبسّط مع تخزين مؤقت، فتنقر وتلعب بدل الانتظار."
+      },
+      {
+        "title": "إدارة بيئة تشغيل Java",
+        "desc": "يكتشف بيئة تشغيل Java ويثبّتها تلقائيًا؛ ويمكن ضبط مصدر التنزيل على Tsinghua أو جامعة Nanjing أو Huawei Cloud أو المصدر الرسمي، مع الانتقال إلى التالي عند الفشل."
+      },
+      {
+        "title": "دعم السمات",
+        "desc": "دعم كامل للوضعين الفاتح والداكن، مع إمكانية ضبط مقياس الواجهة للحفاظ على مظهر متناسق."
+      },
+      {
+        "title": "تحديثات وصيانة تلقائية",
+        "desc": "فحص التحديثات مدمج، وتنظيف تلقائي قابل للضبط للسجلات يحافظ على خفة المشغّل مع الوقت."
+      },
+      {
+        "title": "إشعارات التعطّل وتقارير الأخطاء",
+        "desc": "عند خروج اللعبة بشكل غير طبيعي يوضّح السبب، ويمكنه تصدير تقرير خطأ بنقرة واحدة (تقرير التعطّل + السجلات + معلومات النظام)."
+      },
+      {
+        "title": "لوحة التشغيل",
+        "desc": "بعد التشغيل تعرض لوحة على اليمين الإصدار وPID ومدة التشغيل واستخدام الذاكرة، ويمكنها إنهاء اللعبة في أي وقت."
+      },
+      {
+        "title": "عنوان نافذة مخصّص",
+        "desc": "اكتب عنوان نافذة اللعبة كما تريد، مع كلمات سحرية مثل {mc_version} و{time}."
+      }
+    ]
+  },
+  "shots": {
+    "tag": "لقطات الشاشة",
+    "title": "لقطات حقيقية",
+    "desc": "النافذة في الأعلى إعادة بناء للواجهة على الويب، قابلة للنقر دون تثبيت أي شيء. الأربع أدناه من المشغّل وهو يعمل فعليًا على Windows، دون تعديل.",
+    "items": [
+      {
+        "alt": "شاشة تشغيل GoodPlanCraftLauncher",
+        "caption": "شاشة التشغيل · اختر إصدارًا، أدخل اسم اللاعب، وابدأ اللعبة"
+      },
+      {
+        "alt": "شاشة التنزيل في GoodPlanCraftLauncher",
+        "caption": "شاشة التنزيل · إصدارات اللعبة والمودات والتظليل وحزم الموارد وحزم المودات"
+      },
+      {
+        "alt": "إعدادات اللعبة في GoodPlanCraftLauncher",
+        "caption": "الإعدادات · ذاكرة اللعبة ووضع النافذة وعنوان النافذة والكلمات السحرية"
+      },
+      {
+        "alt": "إعدادات المظهر في GoodPlanCraftLauncher",
+        "caption": "الإعدادات · اللغة ونمط الواجهة والسمة والمقياس"
+      }
+    ]
+  },
+  "download": {
+    "tag": "التنزيل",
+    "title": "نزّل الآن",
+    "desc": "اختر منصّتك وابدأ مغامرة المكعبات",
+    "button": "أطلق عالم المكعبات!",
+    "updatedLabel": "آخر تحديث",
+    "platformLabel": "المنصّة",
+    "licenseLabel": "الترخيص",
+    "platform": "Windows 10 (64 بت)",
+    "license": "مفتوح المصدر، مجاني",
+    "github": "عرض على GitHub"
+  },
+  "requirements": {
+    "tag": "النظام",
+    "title": "متطلبات النظام",
+    "desc": "متواضعة، لكن من الجيد معرفتها",
+    "items": [
+      {
+        "label": "نظام التشغيل",
+        "text": "Windows 10 (64 بت) إصدار 1709 أو أحدث؛ ويعمل أيضًا على Windows 11"
+      },
+      {
+        "label": "بيئة تشغيل Java",
+        "text": "يثبّتها المشغّل تلقائيًا؛ ويُنصح بتنظيف تثبيتات Java الزائدة أو المتعارضة على النظام"
+      },
+      {
+        "label": "مساحة التخزين",
+        "text": "90 ميغابايت على الأقل متاحة للمشغّل نفسه (بدون ملفات اللعبة)"
+      },
+      {
+        "label": "الذاكرة",
+        "text": "يُنصح بذاكرة متاحة 2 غيغابايت أو أكثر"
+      }
+    ]
+  },
+  "openSource": {
+    "tag": "المصدر المفتوح",
+    "title": "المصدر المفتوح والمساهمات",
+    "desc": "GPCL مشروع مفتوح المصدر بنسبة 100%، وكوده مستضاف على GitHub. نرحّب بـ PRs، وكذلك بالاقتراحات على <a href=\"https://forum.xmuer.online/\" target=\"_blank\">المنتدى</a>، لبناء مشغّل Minecraft أفضل معًا.",
+    "items": [
+      {
+        "title": "الترخيص",
+        "desc": "يُصدر بموجب CaelLab BY-SA Code License، الإصدار 3 (أو أي إصدار لاحق). يمكنك استخدامه وتعديله وإعادة توزيعه بحرية؛ ويجب أن تحتفظ النسخ المعدّلة بالترخيص المفتوح نفسه. الصفحة الرئيسية للمشروع: <a href=\"https://gamets.caellab.com/gpcl/\">gamets.caellab.com/gpcl</a>.",
+        "action": "اقرأ الترخيص كاملًا →"
+      },
+      {
+        "title": "المساهمة",
+        "desc": "المستودع الرئيسي للكود على GitHub، وفيه تُدار الـ issues والـ PRs. نرحّب بتقارير الأخطاء والاقتراحات ومساهمات الكود.",
+        "action": "زر GitHub →"
+      }
+    ],
+    "licenseSummary": "ملخّص الترخيص — CaelLab BY-SA Code License v3"
+  },
+  "history": {
+    "tag": "السجل",
+    "title": "سجل الإصدارات",
+    "desc": "الإصدارات السابقة وسجلات تغييراتها",
+    "older": "عرض {n} من الإصدارات الأقدم",
+    "more": "عرض سجل التغييرات الكامل ({total} إصدارًا وروابط التنزيل) →",
+    "page": {
+      "back": "← العودة إلى الرئيسية",
+      "tag": "سجل التغييرات",
+      "heading": "سجل التغييرات",
+      "intro": "من 1.0.0 إلى أحدث إصدار، كل إصدار — ما تغيّر، وهل يمكن تنزيله — موجود في هذه الصفحة.",
+      "note": "لم تُحفظ المثبّتات لـ 1.3.2 وما قبله؛ وقد لا يعمل المحدِّث المدمج في الإصدارات القديمة، لذا يُنصح بتثبيت أحدث إصدار للاستخدام اليومي.",
+      "indexLabel": "فهرس الإصدارات",
+      "latest": "الأحدث",
+      "download": "تنزيل الإصدار {version}",
+      "unavailable": "لم يُحفظ مثبّت لهذا الإصدار",
+      "fileNote": "{file} · {size} · Windows (64 بت)"
+    }
+  },
+  "footer": {
+    "brand": "فريق مستقل لتطوير الألعاب والأدوات في CaelLab. نستكشف حدود المستقبل، ونحمل التجديد اللامحدود.",
+    "projects": "المشاريع",
+    "community": "المجتمع",
+    "openSource": "المصدر المفتوح",
+    "help": "مركز المساعدة",
+    "changelog": "سجل التغييرات",
+    "forum": "المنتدى",
+    "license": "الترخيص",
+    "copyright": "&copy; 2026 GameTS بواسطة <a href=\"https://www.caellab.com/\" target=\"_blank\" class=\"footer-inline-link\">CaelLab</a>. جميع الحقوق محفوظة. الصفحة الرئيسية للمشروع: <a href=\"https://gamets.caellab.com/gpcl/\" class=\"footer-inline-link\">gamets.caellab.com/gpcl</a>",
+    "disclaimer": "GoodPlanCraftLauncher أداة مفتوحة المصدر من طرف ثالث، وليس له أي انتماء رسمي إلى <a href=\"https://www.minecraft.net/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Mojang Studios</a> أو <a href=\"https://www.microsoft.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Microsoft</a> أو <a href=\"https://www.xbox.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Xbox</a>. Minecraft علامة تجارية لـ Mojang Studios؛ ويتطلب استخدام هذا المشغّل ترخيص Minecraft صالحًا.",
+    "licenseLine": "ترخيص المصدر المفتوح: <a href=\"https://www.caellab.com/license/cbs-v3\" target=\"_blank\" class=\"footer-inline-link\">CaelLab BY-SA Code License v3</a> | مفتوح المصدر على <a href=\"https://github.com/CaelLab-org/GoodPlanCraftLauncher\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">GitHub</a>"
+  },
+  "labels": {
+    "platform": "Windows (64 بت)",
+    "github": "GitHub"
+  }
+}

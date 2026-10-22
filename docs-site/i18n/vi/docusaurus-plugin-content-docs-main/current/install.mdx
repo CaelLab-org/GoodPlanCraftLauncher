@@ -1,0 +1,73 @@
+---
+title: Cài đặt và cập nhật
+description: Tải xuống, cài đặt, nâng cấp và gỡ cài đặt GPCL; trò chơi và cài đặt được lưu trong %APPDATA%\gpcl.
+---
+
+GPCL chỉ hỗ trợ **Windows 10 / 11 64-bit**. Gói cài đặt không kèm Java; trình khởi chạy sẽ tự bổ sung theo phiên bản trò chơi.
+
+## Tải xuống
+
+Lấy gói cài đặt từ [khu vực tải xuống trên trang chủ](https://gamets.caellab.com/gpcl/#download) hoặc [GitHub Releases](https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases). Tên tệp là `GPCL-<version>-Setup.exe`.
+
+Đừng lấy gói cài đặt từ ổ đĩa đám mây, tệp nhóm hoặc trang tải xuống bên thứ ba: loại tệp đó có thể đã bị thay thế, và trình khởi chạy cũng không thể xác minh nguồn gốc.
+
+## Cài đặt
+
+1. Nhấp đúp vào gói cài đặt, chọn thư mục cài đặt.
+2. Sau khi cài xong, khởi chạy GPCL từ màn hình chính hoặc menu Start.
+3. Lần khởi chạy đầu tiên sẽ tạo cấu hình, nhật ký và thư mục trò chơi mặc định.
+
+Nâng cấp từ phiên bản cũ không cần gỡ cài đặt trước. Trình cài đặt sẽ tiếp quản bản cài cũ tại chỗ (kể cả gói cài NSIS cũ hơn), lối tắt trên màn hình chính và dữ liệu đều được giữ lại.
+
+## Trò chơi và cài đặt được lưu ở đâu
+
+Tất cả trong `%APPDATA%\gpcl`, không nằm trong thư mục cài đặt:
+
+| Đường dẫn | Nội dung |
+| --- | --- |
+| `%APPDATA%\gpcl\.minecraft` | Phiên bản trò chơi, thư viện, tài nguyên, mod và bản lưu |
+| `%APPDATA%\gpcl\gpcl\config\setting.ini` | Cài đặt trình khởi chạy |
+| `%APPDATA%\gpcl\gpcl\log` | Nhật ký trình khởi chạy |
+| `%APPDATA%\gpcl\gpcl\updata` | Gói cài đặt tải về để cập nhật tự động và bản ghi tiến trình |
+
+Nếu đã đổi thư mục trò chơi, phiên bản và tài nguyên sẽ được đặt ở vị trí mới, nhưng cấu hình và nhật ký vẫn ở trong `%APPDATA%\gpcl`.
+
+### Tự động đặt ngôn ngữ trò chơi
+
+**Cài đặt → Trò chơi → Tự động đặt ngôn ngữ trò chơi** bật mặc định, ngôn ngữ được chọn mặc định là tiếng Trung giản thể. Trước mỗi lần khởi chạy, GPCL sẽ đổi `lang:` trong `options.txt` mà phiên bản hiện tại thực sự dùng sang giá trị đã chọn, giữ nguyên các dòng còn lại.
+
+Phiên bản cách ly ghi vào `versions/<version-name>/options.txt`, phiên bản không cách ly ghi vào `options.txt` ở thư mục gốc trò chơi. Tắt công tắc này thì hoàn toàn không đụng đến cài đặt trong trò chơi.
+
+## Cập nhật
+
+Mặc định bật hai mục:
+
+- **Tự động kiểm tra cập nhật**: kiểm tra khi khởi chạy, nếu có phiên bản mới sẽ hiện gợi ý ở góc trên bên phải.
+- **Tự động cài cập nhật**: tải im lặng ở chế độ nền, không chiếm trang tải xuống, cũng không đổi thanh trạng thái. Sau khi xác minh thành công, đợi bạn **thoát trình khởi chạy** rồi mới cài im lặng.
+
+Huy hiệu tròn ở góc trên bên phải hiển thị tiến trình tải; nhấp vào để xem số phiên bản và nội dung cập nhật của bản này. Cũng có thể nhấn "Tải ngay" trong đó, cài xong sẽ tự động mở lại trình khởi chạy.
+
+Trong **Cài đặt → Giới thiệu** có thể tắt kiểm tra tự động hoặc cài tự động, cũng có thể nhấn "Kiểm tra cập nhật" thủ công.
+
+Gói cập nhật sẽ được xác minh SHA1 trước khi cài, xác minh thất bại thì không cài. Nếu cài dở dang bị gián đoạn, lần khởi chạy sau sẽ nhắc "Lần cập nhật trước chưa hoàn tất", có thể thử lại; thất bại ba lần liên tiếp sẽ hướng dẫn bạn đến trang chủ tải lại gói cài đặt.
+
+:::warning Nâng cấp từ 1.5.2 hoặc cũ hơn
+Phiên bản cũ chưa nhận biết tham số cài im lặng, nên lần nâng cấp này vẫn sẽ hiện một lần trình hướng dẫn cài đặt cũ. Từ 1.6.0 trở đi mới hoàn toàn im lặng.
+:::
+
+Sau khi cập nhật mà trình khởi chạy không mở được, trước tiên xem nhật ký mới nhất trong `%APPDATA%\gpcl\gpcl\log`, rồi gửi email kèm nhật ký.
+
+## Nhập phiên bản cục bộ
+
+Trong bảng "Chọn phiên bản" ở trang khởi chạy, nhấn "Nhập phiên bản cục bộ", có thể nhập:
+
+- một thư mục phiên bản (bên trong phải có `<version-name>.json`);
+- một tệp nén zip hoặc jar, trình khởi chạy sẽ giải nén và tìm đệ quy thư mục chứa `<version-name>.json`;
+
+Modpack (loại có phần `minecraft` trong `manifest.json`) hiện chưa nhập được, trình khởi chạy sẽ từ chối thẳng, không cài dở dang.
+
+## Gỡ cài đặt
+
+Gỡ cài đặt GPCL trong "Ứng dụng và tính năng" của Windows. Trình gỡ cài đặt **không** xóa `%APPDATA%\gpcl`; sau khi cài lại, trò chơi và cài đặt vẫn còn.
+
+Nếu chắc chắn không dùng nữa, có thể tự xóa toàn bộ `%APPDATA%\gpcl`. Hãy sao lưu bản lưu trước khi xóa.

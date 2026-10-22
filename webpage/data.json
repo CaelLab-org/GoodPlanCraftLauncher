@@ -1,40 +1,264 @@
 {
     "Launcher": [
-    { "name":"version" , "key":"1.7.2" }, 
-    { "name" : "versiontitle" , "key":"头像能换了，版本列表也好找了"},
-    { "name":"versionlog" , "key":"启动页头像可以换了：点一下头像，或在设置 → 外观 → 头像里选图片，支持 PNG / JPG / GIF / WebP，超过 1 MB 会询问是否压缩，最大 4 MB，也能恢复默认<br>外观设置新增「头像大小」，32–160 像素拖动调整<br>版本列表新增搜索框，版本多也能按名字找；每个版本标出游戏版本和加载器，当前选中的会高亮<br>版本列表刷新时不再重建整个列表，滚动位置不会被顶回顶部；「导入本地版本」挪到列表右上角<br>1.20 及以后选择「加入服务器」能直接进服，没填地址时会提示，不再悄悄启动单人游戏<br>版本设置自动保存不再每次弹「保存成功」<br>安装包从约 103 MB 降到 93 MB：只保留中英语言包，其他语言回退英文<br>1.7.1 是未发布的内部测试版本，已作废；1.7.2 包含它的全部改动" }, 
-    { "name":"version" , "key":"1.7.0" }, 
-    { "name" : "versiontitle" , "key":"光影、资源包、整合包，一键装好"},
-    { "name":"versionlog" , "key":"下载页新增「光影」「资源包」分类：Modrinth / CurseForge 搜索，选好目标版本后直接装进对应文件夹<br>新增「整合包」分类：支持 Modrinth（.mrpack）和 CurseForge 整合包，自动安装对应的游戏版本、加载器和全部模组<br>每个整合包会建成独立版本，模组、配置和存档都在自己的文件夹里，不同整合包不会互相串<br>本地整合包也能导入：在版本管理里选 zip / .mrpack，填个名字就开始装<br>整合包文件按清单校验大小与 SHA1，下了一半的 jar 会被重下，不会装出一个进不去的游戏<br>NeoForge 现在能像 Forge / Fabric 一样选版本安装（1.20.1 及以后）<br>「更多」菜单默认收起，需要时在设置 → 外观里打开；修了关掉后重启又冒出来的问题" }, 
-    { "name":"version" , "key":"1.6.1" }, 
-    { "name" : "versiontitle" , "key":"崩溃原因，直接告诉你"},
-    { "name":"versionlog" , "key":"崩溃后自动分析原因：内存不足、Java 版本不对、缺前置、显卡驱动、OptiFine / Forge 不兼容等，弹窗直接给 1–2 条结论<br>可查看全部线索和证据行；导出错误报告包含系统、Java、加载器、Mod / 资源包 / 光影、启动参数与游戏输出，token 已打码<br>同时开多个游戏时，每个会话单独保留输出，崩溃现场不会串台<br>模组详情页重做：中英文名、下载量、分类、按 MC 版本分组的文件列表、前置资源卡片<br>修复 1.20.1 的前置按 1.20 解析，导致 Fabric API / GeckoLib 重复、Fabric 报 Incompatible mods found<br>装完模组会清掉同一项目的旧 jar，不再多版本并存" }, 
-    { "name":"version" , "key":"1.6.0" }, 
-    { "name" : "versiontitle" , "key":"装 Mod，不用手动找文件了"},
-    { "name":"versionlog" , "key":"下载页新增「模组」分区：Modrinth / CurseForge 搜索，按当前游戏版本挑文件，安装时选择装到哪个版本<br>Modrinth 自动带必需前置；支持中文搜索（先查 MCMOD 转成英文名）<br>没有 CurseForge API Key 也能用：粘贴项目链接或 cf:短名，走镜像装单个文件<br>下载改成任务队列：连续点多个版本会排队，可以移除排队任务、取消当前任务后继续<br>自动更新改为静默安装：后台自动下载，退出启动器时装好；右上角圆形徽标显示进度<br>新增自动设置游戏语言（默认简体中文）、自定义游戏目录、自定义文件镜像<br>新增导入本地版本（版本文件夹或 zip / jar）<br>Fabric 真能装了，默认同时安装 Fabric API；版本隔离后 Mod / 存档跟着版本走<br>Forge 安装只跑 --installClient，会显示安装进度，Java 版本不够会直接说明<br>OptiFine 改为静默安装，不再弹图形安装器<br>修复下载 0 字节算成功、相对地址重定向、第二次下载没进度" }, 
-    { "name":"version" , "key":"1.5.2" }, 
-    { "name" : "versiontitle" , "key":"设置，重做了一遍"},
-    { "name":"versionlog" , "key":"设置页重做：内存、窗口、启动行为、下载源、Java 参数重新分组，滑块和开关直接调<br>内存默认改为自动：按物理内存 30% 分配（至少 1 GB、最多 8 GB，给系统留 2 GB）<br>内存管理只清理启动器自己的进程，不碰正在运行的游戏；可设启动前自动优化<br>下载源分四档，文件和版本列表分开选；新增全局限速（0–20 MB/s）<br>新增 G1GC 调优、自定义 JVM 参数、进程优先级、窗口尺寸预设<br>关于页补齐项目信息与许可证全文；官网与帮助页一并重写<br>修复线程数设置不生效、下载 404 页面被存成文件、失败残留半截文件" }, 
-    { "name":"version" , "key":"1.5.1" }, 
-    { "name" : "versiontitle" , "key":"崩了？我看看"},
-    { "name":"versionlog" , "key":"新增崩溃提示：游戏异常退出时说明原因，可一键导出错误报告（崩溃报告 + 日志 + 系统信息，token 已打码）<br>新增运行中面板：启动后右侧显示版本、PID、时长、内存与实时日志，可随时结束游戏<br>用户名支持最近 5 个记录下拉，可逐条删除<br>游戏改为独立进程，关闭启动器不再连带结束游戏；关掉游戏窗口也能正确识别为退出<br>新增自定义窗口标题与魔术字（{mc_version}、{time} 等）<br>启动小知识改为概率出现（可在设置里调整），并补充了大量条目" },
-    { "name":"version" , "key":"1.5.0" }, 
-    { "name" : "versiontitle" , "key":"修好了 Java，换上了新装"},
-    { "name":"versionlog" , "key":"修复 Java 运行时下载：镜像站文件名变了导致安装失败，现改为动态获取<br>安装包改用 Inno Setup，可直接从旧版就地升级<br>全局配色统一（天蓝为主、深蓝暗色），启动动画与官网一并换新<br>修复浅色模式下启动界面不跟随主题、若干按钮样式失效" },
-    { "name":"version" , "key":"1.4.4" }, 
-    { "name" : "versiontitle" , "key":"光影支持！"},
-    { "name":"versionlog" , "key":"新增 OptiFine（光影）支持<br>一键安装，自动处理继承、库文件、tweakClass<br>支持 inheritsFrom 版本继承机制" },
-    { "name":"version" , "key":"1.4.3" }, 
-    { "name" : "versiontitle" , "key":"修复了？我看未必"},
-    { "name":"versionlog" , "key":"Splash上个版本有点问题<br>将设置规范<br>取消启动可以真正杀死进程！" },
-    { "name":"version" , "key":"1.4.2" }, 
-    { "name" : "versiontitle" , "key":"我可以关掉Splash了吗？"},
-    { "name":"versionlog" , "key":"允许关闭Splash（实验）<br>在新人欢迎画面的右上角增加“跳过”<br>优化检查更新<br>修复乱码问题" },
-    { "name":"version" , "key":"1.4.1" }, 
-    { "name" : "versiontitle" , "key":"欢迎！"},
-    { "name":"versionlog" , "key":"新增新人首次启动欢迎动画<br>取消过度反调试，且允许开发者模式" },
-    { "name":"version" , "key":"1.4.0" }, 
-    { "name" : "versiontitle" , "key":"芜湖起飞！"},
-    { "name":"versionlog" , "key":"试图真正支持forge<br>秒开！这是安装版，使用了机器码编译！<br>修复了Bug，感谢论坛<br>大幅优化了流程<br>让更新详情查看详细日志！" } 
+        {
+            "name": "version",
+            "key": "1.8.0"
+        },
+        {
+            "name": "versiontitle",
+            "key": "25 种语言，从启动器到官网"
+        },
+        {
+            "name": "versiontitle_en",
+            "key": "Twenty-five languages, from the launcher to the website"
+        },
+        {
+            "name": "versionlog",
+            "key": "启动器现在支持 25 种语言：在设置 → 外观 → 界面语言里切换，列表可以直接搜索<br>首次启动跟随系统语言，欢迎引导里也能先选好再开始<br>新增首次使用的欢迎引导：语言、界面风格、简短介绍共 4 步，可以跳过<br>新增三种界面风格：Minecraft、高级（原来的样子）、简约<br>安装包也翻成了同样的 25 种语言，按系统语言自动选择<br>帮助中心支持 25 种语言，启动器里的帮助链接会打开与界面语言对应的页面<br>官网和官网里的交互演示也支持 25 种语言<br>阿拉伯语、波斯语、希伯来语会把整个界面切换成从右到左的排版<br>启动不再闪一下：启动页和主界面合成一个页面，窗口底色跟随主题；切换语言重载时也不会黑一下"
+        },
+        {
+            "name": "versionlog_en",
+            "key": "GoodPlanCraftLauncher now speaks 25 languages: pick one under Settings → Appearance → Interface language, and search the list to find it quickly<br>On first launch it follows your system language, and the welcome guide lets you choose one before doing anything else<br>A new welcome guide walks through language, interface style, and a short introduction in four steps, and can be skipped<br>Three interface styles: Minecraft, Advanced (the familiar look), and Minimal<br>The installer is translated into the same 25 languages and picks your system language automatically<br>The help center is available in 25 languages, and help links in the launcher open the page matching your interface language<br>The website and the interactive demo inside it are available in 25 languages as well<br>Arabic, Persian, and Hebrew switch the whole interface to right-to-left layout<br>Startup no longer flashes: the splash screen and the main window are one page, and the window background follows your theme; switching languages reloads without a black frame"
+        },
+        {
+            "name": "version",
+            "key": "1.7.2"
+        },
+        {
+            "name": "versiontitle",
+            "key": "头像能换了，版本列表也好找了"
+        },
+        {
+            "name": "versiontitle_en",
+            "key": "Custom avatars, and a version list you can search"
+        },
+        {
+            "name": "versionlog",
+            "key": "启动页头像可以换了：点一下头像，或在设置 → 外观 → 头像里选图片，支持 PNG / JPG / GIF / WebP，超过 1 MB 会询问是否压缩，最大 4 MB，也能恢复默认<br>外观设置新增「头像大小」，32–160 像素拖动调整<br>版本列表新增搜索框，版本多也能按名字找；每个版本标出游戏版本和加载器，当前选中的会高亮<br>版本列表刷新时不再重建整个列表，滚动位置不会被顶回顶部；「导入本地版本」挪到列表右上角<br>1.20 及以后选择「加入服务器」能直接进服，没填地址时会提示，不再悄悄启动单人游戏<br>版本设置自动保存不再每次弹「保存成功」<br>安装包从约 103 MB 降到 93 MB：只保留中英语言包，其他语言回退英文<br>1.7.1 是未发布的内部测试版本，已作废；1.7.2 包含它的全部改动"
+        },
+        {
+            "name": "versionlog_en",
+            "key": "You can now change the launch screen avatar: click it, or pick an image under Settings → Appearance → Avatar; PNG / JPG / GIF / WebP are supported<br>Images over 1 MB ask whether to compress; the limit is 4 MB, and the default avatar can be restored in one click<br>Appearance settings add an 'Avatar size' slider, 32–160 pixels<br>The version list gains a search box; each version shows its game version and mod loader, and the selected one is highlighted<br>Refreshing the version list no longer rebuilds it, so the scroll position stays put; 'Import local version' moved to the top right of the list<br>On 1.20 and later, choosing 'Join server' connects directly; a missing address now shows a prompt instead of quietly starting singleplayer<br>Version settings autosave no longer pops up 'Saved' every time<br>The installer shrank from about 103 MB to 93 MB: only Chinese and English language packs are kept, with other languages falling back to English<br>1.7.1 was an unreleased internal test build and has been withdrawn; 1.7.2 includes all of its changes"
+        },
+        {
+            "name": "version",
+            "key": "1.7.0"
+        },
+        {
+            "name": "versiontitle",
+            "key": "光影、资源包、整合包，一键装好"
+        },
+        {
+            "name": "versiontitle_en",
+            "key": "Shaders, resource packs, and modpacks, installed in one click"
+        },
+        {
+            "name": "versionlog",
+            "key": "下载页新增「光影」「资源包」分类：Modrinth / CurseForge 搜索，选好目标版本后直接装进对应文件夹<br>新增「整合包」分类：支持 Modrinth（.mrpack）和 CurseForge 整合包，自动安装对应的游戏版本、加载器和全部模组<br>每个整合包会建成独立版本，模组、配置和存档都在自己的文件夹里，不同整合包不会互相串<br>本地整合包也能导入：在版本管理里选 zip / .mrpack，填个名字就开始装<br>整合包文件按清单校验大小与 SHA1，下了一半的 jar 会被重下，不会装出一个进不去的游戏<br>NeoForge 现在能像 Forge / Fabric 一样选版本安装（1.20.1 及以后）<br>「更多」菜单默认收起，需要时在设置 → 外观里打开；修了关掉后重启又冒出来的问题"
+        },
+        {
+            "name": "versionlog_en",
+            "key": "The download page adds Shaders and Resource packs tabs: search Modrinth / CurseForge and install straight into the matching folder for the chosen version<br>A new Modpacks tab supports Modrinth (.mrpack) and CurseForge modpacks, installing the matching game version, mod loader, and all mods automatically<br>Each modpack becomes its own version, with mods, configs, and saves in its own folder, so modpacks do not mix into each other<br>Local modpacks can be imported too: pick a zip / .mrpack in version management, enter a name, and installation starts<br>Modpack files are checked against the manifest for size and SHA1, so half-downloaded jars are fetched again instead of producing a game that will not start<br>NeoForge can now be installed by version like Forge / Fabric (1.20.1 and later)<br>The 'More' menu is collapsed by default; enable it under Settings → Appearance when needed, and the bug where it reappeared after a restart has been fixed"
+        },
+        {
+            "name": "version",
+            "key": "1.6.1"
+        },
+        {
+            "name": "versiontitle",
+            "key": "崩溃原因，直接告诉你"
+        },
+        {
+            "name": "versiontitle_en",
+            "key": "Crash reasons, told straight"
+        },
+        {
+            "name": "versionlog",
+            "key": "崩溃后自动分析原因：内存不足、Java 版本不对、缺前置、显卡驱动、OptiFine / Forge 不兼容等，弹窗直接给 1–2 条结论<br>可查看全部线索和证据行；导出错误报告包含系统、Java、加载器、Mod / 资源包 / 光影、启动参数与游戏输出，token 已打码<br>同时开多个游戏时，每个会话单独保留输出，崩溃现场不会串台<br>模组详情页重做：中英文名、下载量、分类、按 MC 版本分组的文件列表、前置资源卡片<br>修复 1.20.1 的前置按 1.20 解析，导致 Fabric API / GeckoLib 重复、Fabric 报 Incompatible mods found<br>装完模组会清掉同一项目的旧 jar，不再多版本并存"
+        },
+        {
+            "name": "versionlog_en",
+            "key": "Crashes are diagnosed automatically (out of memory, wrong Java version, missing dependencies, GPU drivers, OptiFine / Forge incompatibility, and more), and the dialog gives 1–2 conclusions<br>'View details' shows every clue and evidence line; 'View logs' opens the game directory of the version that crashed<br>Error reports export a complete zip: analysis results, error summary, system and GPU, Java version, version and mod loader, mods / resource packs / shaders lists, launch arguments, game output, and crash reports<br>The report redacts --accessToken and the system username, so it can be sent to others for troubleshooting<br>With several games running at once, each session keeps its own output, so a crash context never bleeds into another version<br>The mod details page was rebuilt: Chinese and English names, download counts, category tags, file lists grouped by MC version, dependency cards, links to Modrinth / CurseForge / MCMod, and one-click name copying<br>Fixed dependencies for a 1.20.1 install being resolved as 1.20, which duplicated Fabric API / GeckoLib versions and made Fabric report Incompatible mods found and refuse to start<br>Installing a mod removes old jars of the same project, so multiple versions no longer pile up"
+        },
+        {
+            "name": "version",
+            "key": "1.6.0"
+        },
+        {
+            "name": "versiontitle",
+            "key": "装 Mod，不用手动找文件了"
+        },
+        {
+            "name": "versiontitle_en",
+            "key": "Install mods without hunting for files"
+        },
+        {
+            "name": "versionlog",
+            "key": "下载页新增「模组」分区：Modrinth / CurseForge 搜索，按当前游戏版本挑文件，安装时选择装到哪个版本<br>Modrinth 自动带必需前置；支持中文搜索（先查 MCMOD 转成英文名）<br>没有 CurseForge API Key 也能用：粘贴项目链接或 cf:短名，走镜像装单个文件<br>下载改成任务队列：连续点多个版本会排队，可以移除排队任务、取消当前任务后继续<br>自动更新改为静默安装：后台自动下载，退出启动器时装好；右上角圆形徽标显示进度<br>新增自动设置游戏语言（默认简体中文）、自定义游戏目录、自定义文件镜像<br>新增导入本地版本（版本文件夹或 zip / jar）<br>Fabric 真能装了，默认同时安装 Fabric API；版本隔离后 Mod / 存档跟着版本走<br>Forge 安装只跑 --installClient，会显示安装进度，Java 版本不够会直接说明<br>OptiFine 改为静默安装，不再弹图形安装器<br>修复下载 0 字节算成功、相对地址重定向、第二次下载没进度"
+        },
+        {
+            "name": "versionlog_en",
+            "key": "The download page adds a Mods tab: search Modrinth / CurseForge, pick files for the current game version, and choose which version to install into<br>Modrinth pulls in required dependencies automatically; Chinese search is supported (the query goes through MCMod to get the English name first)<br>It also works without a CurseForge API key: paste a project link or cf:slug and install a single file through the mirror<br>Downloads are now a task queue: clicking several versions queues them, queued tasks can be removed, and cancelling the current one lets the queue continue<br>Auto-update now installs silently: it downloads in the background and installs when you exit the launcher, with a round badge in the top right showing progress<br>New: automatic game language (Simplified Chinese by default), a custom game directory, and a custom file mirror<br>New: import a local version from a version folder or zip / jar<br>Fabric actually installs now, with Fabric API by default; with version isolation, mods and saves follow the version<br>Forge installation only runs --installClient, shows progress, and says plainly when the Java version is too old<br>OptiFine installs silently instead of opening the graphical installer<br>Fixed zero-byte downloads counting as success, relative-address redirects, and the second download showing no progress"
+        },
+        {
+            "name": "version",
+            "key": "1.5.2"
+        },
+        {
+            "name": "versiontitle",
+            "key": "设置，重做了一遍"
+        },
+        {
+            "name": "versiontitle_en",
+            "key": "Settings, rebuilt"
+        },
+        {
+            "name": "versionlog",
+            "key": "设置页重做：内存、窗口、启动行为、下载源、Java 参数重新分组，滑块和开关直接调<br>内存默认改为自动：按物理内存 30% 分配（至少 1 GB、最多 8 GB，给系统留 2 GB）<br>内存管理只清理启动器自己的进程，不碰正在运行的游戏；可设启动前自动优化<br>下载源分四档，文件和版本列表分开选；新增全局限速（0–20 MB/s）<br>新增 G1GC 调优、自定义 JVM 参数、进程优先级、窗口尺寸预设<br>关于页补齐项目信息与许可证全文；官网与帮助页一并重写<br>修复线程数设置不生效、下载 404 页面被存成文件、失败残留半截文件"
+        },
+        {
+            "name": "versionlog_en",
+            "key": "The settings page was rebuilt: memory, window, launch behavior, download sources, and Java arguments are regrouped, adjustable with sliders, switches, and segmented buttons<br>Memory now defaults to 'Auto': 30% of physical memory, at least 1 GB and at most 8 GB, leaving 2 GB for the system; it can also be set manually<br>Memory management actually reclaims now: it only cleans the launcher's own processes, never a running game, and can be set to optimize automatically before launch<br>Download sources have four modes (auto / mirror first / official first / official only), chosen separately for files and version lists; a 0–20 MB/s global speed limit was added<br>New: G1GC tuning, custom JVM arguments, process priority, window size presets, and launcher visibility<br>The About page now covers project information, the runtime environment, and the full license; the website and help pages were rewritten too<br>Fixed: the thread count setting being ignored, 404 pages being saved as files, and partial files left behind after failed downloads"
+        },
+        {
+            "name": "version",
+            "key": "1.5.1"
+        },
+        {
+            "name": "versiontitle",
+            "key": "崩了？我看看"
+        },
+        {
+            "name": "versiontitle_en",
+            "key": "It crashed? Let me look"
+        },
+        {
+            "name": "versionlog",
+            "key": "新增崩溃提示：游戏异常退出时说明原因，可一键导出错误报告（崩溃报告 + 日志 + 系统信息，token 已打码）<br>新增运行中面板：启动后右侧显示版本、PID、时长、内存与实时日志，可随时结束游戏<br>用户名支持最近 5 个记录下拉，可逐条删除<br>游戏改为独立进程，关闭启动器不再连带结束游戏；关掉游戏窗口也能正确识别为退出<br>新增自定义窗口标题与魔术字（{mc_version}、{time} 等）<br>启动小知识改为概率出现（可在设置里调整），并补充了大量条目"
+        },
+        {
+            "name": "versionlog_en",
+            "key": "New crash notice: when the game exits abnormally it explains why, with one-click error reports (crash report + logs + system info, tokens redacted)<br>New running panel: after launch it shows the version, PID, uptime, and memory on the right, and can end the game at any time<br>The username field keeps the last 5 names in a dropdown, each removable<br>The game now runs in its own process, so closing the launcher no longer ends it; closing the game window is also recognized as an exit<br>New custom game window titles with magic words ({mc_version}, {time}, and more)<br>Launch tips now appear at random (configurable in settings), with many more entries added<br>Smoother startup animation and page transitions"
+        },
+        {
+            "name": "version",
+            "key": "1.5.0"
+        },
+        {
+            "name": "versiontitle",
+            "key": "修好了 Java，换上了新装"
+        },
+        {
+            "name": "versiontitle_en",
+            "key": "Java fixed, and a fresh new look"
+        },
+        {
+            "name": "versionlog",
+            "key": "修复 Java 运行时下载：镜像站文件名变了导致安装失败，现改为动态获取<br>安装包改用 Inno Setup，可直接从旧版就地升级<br>全局配色统一（天蓝为主、深蓝暗色），启动动画与官网一并换新<br>修复浅色模式下启动界面不跟随主题、若干按钮样式失效"
+        },
+        {
+            "name": "versionlog_en",
+            "key": "Fixed Java runtime downloads: a changed mirror file name broke installation, so it is now fetched dynamically<br>The installer moved to Inno Setup and upgrades in place from older versions<br>Unified global colors (sky blue as the main color, deep blue for dark mode), with a new startup animation and website<br>Fixed the startup screen ignoring the light theme and several button styles not applying"
+        },
+        {
+            "name": "version",
+            "key": "1.4.4"
+        },
+        {
+            "name": "versiontitle",
+            "key": "光影支持！"
+        },
+        {
+            "name": "versiontitle_en",
+            "key": "Shader support!"
+        },
+        {
+            "name": "versionlog",
+            "key": "新增 OptiFine（光影）支持<br>一键安装，自动处理继承、库文件、tweakClass<br>支持 inheritsFrom 版本继承机制"
+        },
+        {
+            "name": "versionlog_en",
+            "key": "Added OptiFine (shader) support<br>One-click installation that handles inheritance, libraries, and tweakClass automatically<br>Supports the inheritsFrom version inheritance mechanism"
+        },
+        {
+            "name": "version",
+            "key": "1.4.3"
+        },
+        {
+            "name": "versiontitle",
+            "key": "修复了？我看未必"
+        },
+        {
+            "name": "versiontitle_en",
+            "key": "Fixed"
+        },
+        {
+            "name": "versionlog",
+            "key": "Splash上个版本有点问题<br>将设置规范<br>取消启动可以真正杀死进程！"
+        },
+        {
+            "name": "versionlog_en",
+            "key": "Fixed the double scrollbar issue<br>Expanded the About page with more content, including a toolbox"
+        },
+        {
+            "name": "version",
+            "key": "1.4.2"
+        },
+        {
+            "name": "versiontitle",
+            "key": "我可以关掉Splash了吗？"
+        },
+        {
+            "name": "versiontitle_en",
+            "key": "Fixed? I doubt it"
+        },
+        {
+            "name": "versionlog",
+            "key": "允许关闭Splash（实验）<br>在新人欢迎画面的右上角增加“跳过”<br>优化检查更新<br>修复乱码问题"
+        },
+        {
+            "name": "versionlog_en",
+            "key": "The splash screen had some issues in the last version<br>Brought settings into order<br>Cancelling a launch now actually kills the process!"
+        },
+        {
+            "name": "version",
+            "key": "1.4.1"
+        },
+        {
+            "name": "versiontitle",
+            "key": "欢迎！"
+        },
+        {
+            "name": "versiontitle_en",
+            "key": "Welcome!"
+        },
+        {
+            "name": "versionlog",
+            "key": "新增新人首次启动欢迎动画<br>取消过度反调试，且允许开发者模式"
+        },
+        {
+            "name": "versionlog_en",
+            "key": "Added a welcome animation on first launch<br>Removed excessive anti-debugging and allowed developer mode"
+        },
+        {
+            "name": "version",
+            "key": "1.4.0"
+        },
+        {
+            "name": "versiontitle",
+            "key": "芜湖起飞！"
+        },
+        {
+            "name": "versiontitle_en",
+            "key": "Taking off!"
+        },
+        {
+            "name": "versionlog",
+            "key": "试图真正支持forge<br>秒开！这是安装版，使用了机器码编译！<br>修复了Bug，感谢论坛<br>大幅优化了流程<br>让更新详情查看详细日志！"
+        },
+        {
+            "name": "versionlog_en",
+            "key": "Attempted to actually support Forge<br>Instant start! This is an installer build, compiled to machine code!<br>Fixed bugs, thanks to the forum<br>Greatly streamlined the flow; update details can now show a full log"
+        }
     ]
 }

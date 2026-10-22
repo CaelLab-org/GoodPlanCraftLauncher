@@ -63,11 +63,11 @@ ipcMain.handle('start-microsoft-auth', async () => {
               resp.on('data', (chunk: string) => data += chunk);
               resp.on('end', () => {
                 try { res(JSON.parse(data)); }
-                catch { rej(new Error('解析失败')); }
+                catch { rej(new Error('Parsing failed')); }
               });
             });
             req.on('error', rej);
-            req.on('timeout', () => { req.destroy(); rej(new Error('请求超时')); });
+            req.on('timeout', () => { req.destroy(); rej(new Error('Request timed out')); });
           });
 
           if (result.status === 'success' || result.status === 'error') {

@@ -1,0 +1,355 @@
+{
+  "schema": 1,
+  "latest": "1.8.0",
+  "updated": "2026-10-22",
+  "versions": [
+    {
+      "version": "1.8.0",
+      "anchor": "v1-8-0",
+      "date": "2026-10-22",
+      "title": "25 ngôn ngữ, từ trình khởi chạy đến trang web",
+      "log": [
+        "Trình khởi chạy nay hỗ trợ 25 ngôn ngữ: chọn trong Cài đặt → Giao diện → Ngôn ngữ giao diện, danh sách có thể tìm kiếm",
+        "Lần đầu mở, nó theo ngôn ngữ hệ thống; trình hướng dẫn chào mừng cũng cho phép chọn trước",
+        "Trình hướng dẫn chào mừng mới: ngôn ngữ, kiểu giao diện và giới thiệu ngắn trong 4 bước, có thể bỏ qua",
+        "Ba kiểu giao diện: Minecraft, Nâng cao (diện mạo quen thuộc) và Tối giản",
+        "Bộ cài cũng được dịch sang 25 ngôn ngữ đó và tự động chọn ngôn ngữ hệ thống",
+        "Trung tâm trợ giúp có 25 ngôn ngữ, và liên kết trợ giúp trong trình khởi chạy mở trang theo ngôn ngữ giao diện",
+        "Trang web và bản demo tương tác trên đó cũng có 25 ngôn ngữ",
+        "Tiếng Ả Rập, Ba Tư và Do Thái chuyển toàn bộ giao diện sang viết từ phải sang trái",
+        "Khởi động không còn nhấp nháy: màn hình khởi động và cửa sổ chính là một trang, nền cửa sổ theo chủ đề; đổi ngôn ngữ cũng không còn khung hình đen"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.8.0-Setup.exe",
+        "file": "GPCL-1.8.0-Setup.exe",
+        "size": "94 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.7.2",
+      "anchor": "v1-7-2",
+      "date": "2026-10-22",
+      "title": "Ảnh đại diện tùy chỉnh và danh sách phiên bản có thể tìm kiếm",
+      "log": [
+        "Giờ có thể đổi ảnh đại diện ở màn hình khởi chạy: bấm vào ảnh, hoặc chọn ảnh trong Cài đặt → Giao diện → Ảnh đại diện; hỗ trợ PNG / JPG / GIF / WebP",
+        "Ảnh lớn hơn 1 MB sẽ hỏi có nén không; giới hạn là 4 MB, có thể khôi phục ảnh mặc định chỉ một cú nhấp",
+        "Cài đặt giao diện thêm thanh trượt 'Kích thước ảnh đại diện', 32–160 pixel",
+        "Danh sách phiên bản có thêm ô tìm kiếm; mỗi phiên bản hiển thị phiên bản game và mod loader, bản đang chọn được làm nổi bật",
+        "Làm mới danh sách phiên bản không còn dựng lại danh sách, nên vị trí cuộn được giữ nguyên; 'Nhập phiên bản cục bộ' chuyển lên góc trên bên phải danh sách",
+        "Trên 1.20 trở lên, chọn 'Vào máy chủ' sẽ kết nối trực tiếp; thiếu địa chỉ giờ hiện lời nhắc thay vì lặng lẽ mở chế độ một người chơi",
+        "Tự lưu trong cài đặt phiên bản không còn hiện 'Đã lưu' mỗi lần",
+        "Bộ cài giảm từ khoảng 103 MB xuống 93 MB: chỉ giữ gói ngôn ngữ Trung và Anh, các ngôn ngữ khác dùng tiếng Anh",
+        "1.7.1 là bản thử nội bộ chưa phát hành và đã bị thu hồi; 1.7.2 bao gồm mọi thay đổi của bản đó"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.7.2-Setup.exe",
+        "file": "GPCL-1.7.2-Setup.exe",
+        "size": "93 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.7.0",
+      "anchor": "v1-7-0",
+      "date": "2026-10-22",
+      "title": "Shader, gói tài nguyên và modpack, cài chỉ một cú nhấp",
+      "log": [
+        "Trang tải xuống thêm tab Shader và Gói tài nguyên: tìm trên Modrinth / CurseForge và cài thẳng vào thư mục tương ứng của phiên bản đã chọn",
+        "Tab Modpack mới hỗ trợ modpack Modrinth (.mrpack) và CurseForge, tự cài phiên bản game, mod loader và toàn bộ mod tương ứng",
+        "Mỗi modpack trở thành một phiên bản riêng, mod, cấu hình và bản lưu nằm trong thư mục riêng, nên các modpack không lẫn vào nhau",
+        "Cũng có thể nhập modpack cục bộ: chọn tệp zip / .mrpack trong quản lý phiên bản, nhập tên rồi bắt đầu cài",
+        "Tệp modpack được đối chiếu kích thước và SHA1 với bản kê, nên jar tải dở sẽ được tải lại thay vì tạo ra game không khởi động được",
+        "NeoForge giờ có thể cài theo phiên bản như Forge / Fabric (1.20.1 trở lên)",
+        "Menu 'Thêm' mặc định thu gọn; bật trong Cài đặt → Giao diện khi cần, và lỗi nó hiện lại sau khi khởi động lại đã được sửa"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.7.0-Setup.exe",
+        "file": "GPCL-1.7.0-Setup.exe",
+        "size": "103 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.6.1",
+      "anchor": "v1-6-1",
+      "date": "2026-10-21",
+      "title": "Nguyên nhân sự cố, nói thẳng",
+      "log": [
+        "Sự cố được chẩn đoán tự động (hết bộ nhớ, sai phiên bản Java, thiếu phụ thuộc, driver GPU, OptiFine / Forge không tương thích, v.v.), hộp thoại đưa ra 1–2 kết luận",
+        "'Xem chi tiết' hiển thị mọi manh mối và dòng bằng chứng; 'Xem nhật ký' mở thư mục game của phiên bản đã gặp sự cố",
+        "Báo cáo lỗi xuất tệp zip đầy đủ: kết quả phân tích, tóm tắt lỗi, hệ thống và GPU, phiên bản Java, phiên bản và mod loader, danh sách mod / gói tài nguyên / shader, tham số khởi chạy, đầu ra game và báo cáo sự cố",
+        "Báo cáo che --accessToken và tên người dùng hệ thống, nên có thể gửi cho người khác để khắc phục sự cố",
+        "Khi chạy nhiều game cùng lúc, mỗi phiên giữ đầu ra riêng, nên ngữ cảnh sự cố không lẫn sang phiên bản khác",
+        "Trang chi tiết mod được làm lại: tên tiếng Trung và tiếng Anh, số lượt tải, thẻ phân loại, danh sách tệp theo phiên bản MC, thẻ phụ thuộc, liên kết tới Modrinth / CurseForge / MCMod và sao chép tên một cú nhấp",
+        "Sửa lỗi phụ thuộc của bản cài 1.20.1 bị phân giải thành 1.20, khiến Fabric API / GeckoLib bị trùng phiên bản và Fabric báo Incompatible mods found rồi không khởi động",
+        "Cài mod sẽ xóa các jar cũ của cùng dự án, nên không còn chồng nhiều phiên bản"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.6.1-Setup.exe",
+        "file": "GPCL-1.6.1-Setup.exe",
+        "size": "103 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.6.0",
+      "anchor": "v1-6-0",
+      "date": "2026-10-20",
+      "title": "Cài mod không cần lùng tệp",
+      "log": [
+        "Trang tải xuống thêm tab Mod: tìm trên Modrinth / CurseForge, chọn tệp cho phiên bản game hiện tại và chọn cài vào phiên bản nào",
+        "Modrinth tự kéo các phụ thuộc bắt buộc; hỗ trợ tìm kiếm tiếng Trung (truy vấn đi qua MCMod để lấy tên tiếng Anh trước)",
+        "Vẫn dùng được khi không có API key CurseForge: dán liên kết dự án hoặc cf:slug và cài một tệp qua máy chủ gương",
+        "Tải xuống giờ là hàng đợi tác vụ: bấm nhiều phiên bản sẽ xếp hàng, có thể xóa tác vụ đang chờ, hủy tác vụ hiện tại thì hàng đợi tiếp tục",
+        "Tự động cập nhật giờ cài im lặng: tải ngầm và cài khi bạn thoát trình khởi chạy, huy hiệu tròn ở góc trên bên phải hiện tiến độ",
+        "Mới: tự động đặt ngôn ngữ game (mặc định tiếng Trung giản thể), thư mục game tùy chỉnh và máy chủ gương tệp tùy chỉnh",
+        "Mới: nhập phiên bản cục bộ từ thư mục phiên bản hoặc zip / jar",
+        "Fabric giờ cài được thật, mặc định kèm Fabric API; với cách ly phiên bản, mod và bản lưu đi theo phiên bản",
+        "Cài Forge chỉ chạy --installClient, hiện tiến độ và nói rõ khi phiên bản Java quá cũ",
+        "OptiFine cài im lặng thay vì mở trình cài đồ họa",
+        "Sửa lỗi tải 0 byte được tính là thành công, chuyển hướng địa chỉ tương đối và lần tải thứ hai không có tiến độ"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.6.0-Setup.exe",
+        "file": "GPCL-1.6.0-Setup.exe",
+        "size": "103 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.5.2",
+      "anchor": "v1-5-2",
+      "date": "2026-10-18",
+      "title": "Cài đặt, làm lại",
+      "log": [
+        "Trang cài đặt được làm lại: bộ nhớ, cửa sổ, hành vi khởi chạy, nguồn tải và tham số Java được nhóm lại, điều chỉnh bằng thanh trượt, công tắc và nút phân đoạn",
+        "Bộ nhớ mặc định là 'Tự động': 30% bộ nhớ vật lý, ít nhất 1 GB và tối đa 8 GB, để lại 2 GB cho hệ thống; cũng có thể đặt thủ công",
+        "Quản lý bộ nhớ giờ thực sự thu hồi: chỉ dọn tiến trình của chính trình khởi chạy, không bao giờ đụng vào game đang chạy, và có thể đặt tối ưu tự động trước khi khởi chạy",
+        "Nguồn tải có bốn chế độ (tự động / gương trước / chính thức trước / chỉ chính thức), chọn riêng cho tệp và danh sách phiên bản; thêm giới hạn tốc độ toàn cục 0–20 MB/s",
+        "Mới: tinh chỉnh G1GC, tham số JVM tùy chỉnh, độ ưu tiên tiến trình, kích thước cửa sổ đặt trước và hiển thị trình khởi chạy",
+        "Trang Giới thiệu giờ có thông tin dự án, môi trường chạy và toàn bộ giấy phép; trang web và trang trợ giúp cũng được viết lại",
+        "Sửa: cài đặt số luồng bị bỏ qua, trang 404 bị lưu thành tệp và tệp dở còn lại sau khi tải thất bại"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.5.2-Setup.exe",
+        "file": "GPCL-1.5.2-Setup.exe",
+        "size": "103 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.5.1",
+      "anchor": "v1-5-1",
+      "date": "2026-10-16",
+      "title": "Nó sập à? Để tôi xem",
+      "log": [
+        "Thông báo sự cố mới: khi game thoát bất thường, nó giải thích nguyên nhân, kèm báo cáo lỗi một cú nhấp (báo cáo sự cố + nhật ký + thông tin hệ thống, token đã che)",
+        "Bảng trạng thái mới: sau khi khởi chạy, hiển thị phiên bản, PID, thời gian chạy và bộ nhớ ở bên phải, có thể kết thúc game bất cứ lúc nào",
+        "Ô tên người dùng giữ 5 tên gần nhất trong danh sách thả xuống, mỗi tên có thể xóa",
+        "Game giờ chạy trong tiến trình riêng, nên đóng trình khởi chạy không còn kết thúc game; đóng cửa sổ game cũng được nhận là thoát",
+        "Tiêu đề cửa sổ game tùy chỉnh mới với từ khóa ({mc_version}, {time}, v.v.)",
+        "Gợi ý khi khởi chạy giờ xuất hiện ngẫu nhiên (cấu hình được trong cài đặt), với nhiều mục hơn",
+        "Hoạt ảnh khởi động và chuyển trang mượt hơn"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.5.1-Setup.exe",
+        "file": "GPCL-1.5.1-Setup.exe",
+        "size": "103 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.5.0",
+      "anchor": "v1-5-0",
+      "date": "2026-10-16",
+      "title": "Sửa Java và diện mạo mới",
+      "log": [
+        "Sửa tải môi trường Java: tên tệp trên máy chủ gương thay đổi làm hỏng cài đặt, giờ được lấy động",
+        "Bộ cài chuyển sang Inno Setup và nâng cấp tại chỗ từ bản cũ",
+        "Màu sắc toàn cục thống nhất (xanh da trời là màu chính, xanh đậm cho chế độ tối), kèm hoạt ảnh khởi động và trang web mới",
+        "Sửa màn hình khởi chạy không theo giao diện sáng và một số kiểu nút không áp dụng"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.5.0-Setup.exe",
+        "file": "GPCL-1.5.0-Setup.exe",
+        "size": "103 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.4.4",
+      "anchor": "v1-4-4",
+      "date": "2026-07-11",
+      "title": "Hỗ trợ shader!",
+      "log": [
+        "Thêm hỗ trợ OptiFine (shader)",
+        "Cài đặt một cú nhấp tự xử lý kế thừa, thư viện và tweakClass",
+        "Hỗ trợ cơ chế kế thừa phiên bản inheritsFrom"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.4.4-Setup.exe",
+        "file": "GPCL-1.4.4-Setup.exe",
+        "size": "104 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.4.3",
+      "anchor": "v1-4-3",
+      "date": "2026-06-02",
+      "title": "Đã sửa",
+      "log": [
+        "Sửa lỗi thanh cuộn đôi",
+        "Mở rộng trang Giới thiệu với nhiều nội dung hơn, gồm một hộp công cụ"
+      ],
+      "download": {
+        "url": "https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases/download/1.4.3/GPCL-1.4.3-Setup.exe",
+        "file": "GPCL-1.4.3-Setup.exe",
+        "size": "101 MB",
+        "github": true
+      }
+    },
+    {
+      "version": "1.4.2",
+      "anchor": "v1-4-2",
+      "date": "2026-06-02",
+      "title": "Đã sửa? Tôi nghi lắm",
+      "log": [
+        "Màn hình chờ có vài vấn đề ở bản trước",
+        "Sắp xếp lại phần cài đặt",
+        "Hủy khởi chạy giờ thực sự kết thúc tiến trình!"
+      ],
+      "download": {
+        "url": "https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases/download/1.4.2/GPCL-1.4.2-Setup.exe",
+        "file": "GPCL-1.4.2-Setup.exe",
+        "size": "101 MB",
+        "github": true
+      }
+    },
+    {
+      "version": "1.4.1",
+      "anchor": "v1-4-1",
+      "date": "2026-06-02",
+      "title": "Chào mừng!",
+      "log": [
+        "Thêm hoạt ảnh chào mừng khi khởi chạy lần đầu",
+        "Bỏ bớt chống gỡ lỗi quá mức và cho phép chế độ nhà phát triển"
+      ],
+      "download": {
+        "url": "https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases/download/1.4.1/GPCL-1.4.1-Setup.exe",
+        "file": "GPCL-1.4.1-Setup.exe",
+        "size": "101 MB",
+        "github": true
+      }
+    },
+    {
+      "version": "1.4.0",
+      "anchor": "v1-4-0",
+      "date": "2026-06-01",
+      "title": "Cất cánh!",
+      "log": [
+        "Cố gắng hỗ trợ Forge thực sự",
+        "Khởi động tức thì! Đây là bản cài, biên dịch thành mã máy!",
+        "Sửa lỗi, nhờ diễn đàn",
+        "Tinh gọn luồng đáng kể; chi tiết cập nhật giờ có thể hiện toàn bộ nhật ký"
+      ],
+      "download": {
+        "url": "https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases/download/1.4.0/GPCL-1.4.0-Setup.exe",
+        "file": "GPCL-1.4.0-Setup.exe",
+        "size": "99 MB",
+        "github": true
+      }
+    },
+    {
+      "version": "1.3.3",
+      "anchor": "v1-3-3",
+      "date": "2026-05-28",
+      "title": "",
+      "log": [
+        "Forge / Fabric / OptiFine giờ chạy được thật!",
+        "Đây là bản phát hành mã nguồn mở đầu tiên!"
+      ],
+      "download": {
+        "url": "https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases/download/1.3.3/GoodPlanCraftLauncher.1.3.3.exe",
+        "file": "GoodPlanCraftLauncher.1.3.3.exe",
+        "size": "90 MB",
+        "github": true
+      }
+    },
+    {
+      "version": "1.3.2",
+      "anchor": "v1-3-2",
+      "date": "2026-05-23",
+      "title": "",
+      "log": [
+        "Thêm cài đặt chi tiết cho từng phiên bản, mặc định được quản lý; có thể xóa phiên bản game",
+        "Hỗ trợ giao diện sáng nhiều hơn; 'Khôi phục mặc định' chuyển vào mục cài đặt tương thích mới; cập nhật API",
+        "Trau chuốt danh sách thả xuống và nhiều chi tiết khác"
+      ],
+      "download": null
+    },
+    {
+      "version": "1.3.0–1.3.1",
+      "anchor": "v1-3-1",
+      "date": "2026-05-22",
+      "title": "",
+      "log": [
+        "Sửa biểu đồ tải bị thiếu (không được gọi trong bản cài)",
+        "Chuyển cài đặt kiểm tra cập nhật tự động sang Giới thiệu",
+        "Trang tải xuống giờ liệt kê đầy đủ Alpha, Beta, snapshot và bản phát hành, sửa lỗi bản phát hành không hiện đủ",
+        "Làm lại màn hình khởi chạy, thêm quản lý phiên bản sắp theo lần khởi chạy gần nhất",
+        "Thêm gợi ý 'Bạn có biết?' khi khởi động và tự động dọn nhật ký (khoảng thời gian đổi được trong cài đặt)",
+        "Tỉ lệ giao diện trong Giao diện giờ hoạt động thật; 1.3.1 sửa lỗi không hiển thị"
+      ],
+      "download": null
+    },
+    {
+      "version": "1.2.1",
+      "anchor": "v1-2-1",
+      "date": "2026-05-22",
+      "title": "",
+      "log": [
+        "Đóng gói thư viện động cục bộ",
+        "Thêm bảo vệ chống khởi chạy / chạy trùng",
+        "Bỏ cài đặt vô dụng, nội dung trang tải xuống giờ có thể thu gọn"
+      ],
+      "download": null
+    },
+    {
+      "version": "1.2.0",
+      "anchor": "v1-2-0",
+      "date": "2026-05-21",
+      "title": "",
+      "log": [
+        "Thêm thanh cuộn và giao diện sáng",
+        "Thêm hoạt ảnh khởi động đầy đủ, giảm màn hình trắng khi khởi chạy",
+        "Chuyển thanh bên trái lên trên và phóng to giao diện; trau chuốt trang tải xuống và thêm môi trường Java",
+        "Thêm nhiều cài đặt, chia thành Game, Tải xuống, Giao diện, Nâng cao và Giới thiệu"
+      ],
+      "download": null
+    },
+    {
+      "version": "1.1.0",
+      "anchor": "v1-1-0",
+      "date": "2026-05-21",
+      "title": "",
+      "log": [
+        "Thêm thiết lập Java tự động, nguồn tải cấu hình được (cảm ơn Thanh Hoa!)",
+        "Cải thiện hiệu năng, thêm hoạt ảnh khởi động và cải thiện khắc phục sự cố qua nhật ký",
+        "Sửa nhiều lỗi danh sách tải, như không hủy được và còn tệp sau khi hủy"
+      ],
+      "download": null
+    },
+    {
+      "version": "1.0.0",
+      "anchor": "v1-0-0",
+      "date": "2026-05-20",
+      "title": "",
+      "log": [
+        "Bản phát hành ổn định đầu tiên"
+      ],
+      "download": null
+    }
+  ]
+}

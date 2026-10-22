@@ -1,0 +1,52 @@
+---
+title: Window title magic words
+slug: /magic-words
+description: Customize the Minecraft game window title with placeholders such as {mc_version} and {time}.
+---
+
+The game window title can contain placeholders; GPCL replaces them with real values at launch.
+
+The setting is under **Settings → Game → Game window title**. Leaving the title empty means the game window title is not modified.
+
+## Example
+
+Write the title as:
+
+```text
+{time} · {mc_version} · {gpcl_version}
+```
+
+After launch it may display as:
+
+```text
+20:09:58 · Minecraft 1.21.3 · 1.6.0
+```
+
+## Available placeholders
+
+| Placeholder | Replaced with |
+| --- | --- |
+| `{mc_version}` | Version display name, for example Minecraft 1.21.3, or the name including the loader |
+| `{mc_id}` | Version folder name, for example 1.21.3-Fabric |
+| `{username}` | Player name used for this launch |
+| `{gpcl_version}` | GPCL version number, for example 1.6.0 |
+| `{date}` | Launch date, format 2026/10/20 |
+| `{time}` | Current time, format 20:09:58 |
+| `{datetime}` | Date and time, separated by a space |
+| `{java}` | Directory name of the current Java runtime |
+| `{memory}` | Maximum memory allocated for this launch, for example 4096MB |
+
+Case matters. A misspelled placeholder is displayed as-is, so you can see which one is wrong.
+
+## Does the title stay?
+
+Below there is a "Keep this name when possible" switch, off by default.
+
+- **Off**: after the game window appears, GPCL keeps correcting the title for 20 seconds. If the game or a mod then changes the title, it is left alone. A title containing `{time}` also freezes at that moment.
+- **On**: your title is kept for the whole session, and entering a world does not overwrite it with " - Singleplayer".
+
+Some modpacks or mods change the window title too; the two overwriting each other is normal.
+
+:::note
+Only the game window title supports magic words right now; they have no effect in other settings.
+:::

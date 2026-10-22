@@ -8,6 +8,7 @@
 
 
 // __IMPORTS_BEGIN__
+import { t } from '../i18n';
 import { initChart, loadChartJs, peakSpeed, resetChart, setPeakSpeed, updateChart } from './chart';
 import { detailDownloadBtn, downloadPanel, gameMonitor, gameMonitorMemory, gameMonitorPid, launchBtn, menuDownload, setStatus, showDialog, showToast, usernameInput } from './dom';
 import { crashReported, gameRunning, handleGameLog, hideGameMonitor, lastGameStatusAt, monitorStartedAt, refreshGameMonitor, setCrashReported, setLastGameStatusAt, setMonitorStartedAt, setMonitorState, setMonitorVersion, showCrashDialog, showGameMonitor } from './monitor';
@@ -100,8 +101,8 @@ export async function launchGame(): Promise<void> {
         void refreshGameMonitor();
       }, 800);
       
-      setStatus(`游戏已启动！PID: ${result.pid}`, 'success');
-      showToast('游戏已启动', `Minecraft ${versionId} (${username})`, 'success', 'game-started');
+      setStatus(t('ui.game_launched_pid_pid', { pid: result.pid }), 'success');
+      showToast('ui.game_launched', `Minecraft ${versionId} (${username})`, 'success', 'game-started');
     } else if (result.cancelled) {
       
       if (welcomeAnimPlaying && window.gpcl && window.gpcl.dismissStartupAnimation) {
@@ -109,14 +110,14 @@ export async function launchGame(): Promise<void> {
       }
       hideLaunchAnimation();
       setStatus('启动已取消', 'info');
-      showToast('启动已取消', '用户取消了游戏启动', 'info', 'launch-cancelled');
+      showToast('ui.launch_cancelled', '用户取消了游戏启动', 'info', 'launch-cancelled');
     } else {
       if (welcomeAnimPlaying && window.gpcl && window.gpcl.dismissStartupAnimation) {
         window.gpcl.dismissStartupAnimation();
       }
       hideLaunchAnimation();
       setStatus(result.error, 'error');
-      showToast('启动失败', result.error, 'error', 'game-launch-failed');
+      showToast('ui.launch_failed', result.error, 'error', 'game-launch-failed');
     }
   } catch (err: any) {
     if (welcomeAnimPlaying && window.gpcl && window.gpcl.dismissStartupAnimation) {
@@ -124,7 +125,7 @@ export async function launchGame(): Promise<void> {
     }
     hideLaunchAnimation();
     setStatus('启动出错', 'error');
-    showToast('启动出错', err.message, 'error', 'launch-error');
+    showToast('ui.launch_error', err.message, 'error', 'launch-error');
   } finally {
     if (launchBtnEl) (launchBtnEl as HTMLButtonElement).disabled = false;
   }
@@ -163,7 +164,7 @@ export async function showLaunchAnimation(versionId: string): Promise<void> {
     }
     
     if (versionInfo) {
-      versionInfo.textContent = `将启动: ${displayName}`;
+      versionInfo.textContent = t('ui.launching_name', { name: displayName });
     }
     
     if (progressFill) {
@@ -179,68 +180,68 @@ export async function showLaunchAnimation(versionId: string): Promise<void> {
 
 
 export const launchTips: string[] = [
-  'Minecraft 最初由 Markus "Notch" Persson 于 2009 年独立开发，最初版本仅用 6 天完成。',
-  'Minecraft 的苦力怕（Creeper）是 Notch 在尝试制作猪模型时，因搞错长宽比而意外诞生的。',
-  '末影人（Enderman）会随机搬运一些方块，这是参考了现实中的都市传说 Slender Man。',
-  'Minecraft 中最大的自然结构是下界要塞（Nether Fortress），可绵延数百个区块。',
-  'Minecraft 中钻石矿石只在 Y 坐标 16 以下生成，最集中的区域是 Y=5 到 Y=12 之间。',
-  'Minecraft 的附魔台周围的图书馆架数量会影响附魔等级，最高可达到 30 级。',
-  '红石（Redstone）是 Minecraft 中的"电力"系统，可以构建从简单门到计算机的各种电路。',
-  'Minecraft 中潮涌核心（Conduit）可以为水下玩家提供无限呼吸和夜视效果。',
-  'Minecraft 的下界合金（Netherite）装备需要先制作品铁装备再锻造升级。',
-  'Minecraft 中的嗅探兽（Sniffer）是 2022 年 Minecraft Live 由玩家投票选出的生物。',
-  'Minecraft 中沼泽小屋（Swamp Hut）必定会生成女巫，是获取红石粉的稳定来源。',
-  'Minecraft 中你可以用线制作羊毛，但不能用羊毛反合成线。',
-  'Minecraft 的创造模式最初是为开发调试而加入的，后来才成为正式游戏模式。',
-  'Minecraft 中装备了冰霜行者（Frost Walker）附魔的靴子可以在水上行走。',
-  'Minecraft 中每个区块（Chunk）是 16×16 方块大小，游戏世界是通过区块流式加载的。',
-  'Minecraft 中鞘翅（Elytra）可以在末地船中找到，配合烟花火箭可以实现飞行。',
-  'Minecraft 中下界对应主世界的比例为 1:8，在下界走 1 格相当于主世界 8 格。',
-  'Minecraft 中掠夺者前哨站（Pillager Outpost）会生成灾厄旗帜，周围的灾厄村民不会攻击。',
-  'Minecraft 中蜜蜂（Bee）在采蜜后会帮助作物加速生长。',
-  'Minecraft 中史莱姆（Slime）只在特定区块生成，可以使用种子计算器定位史莱姆区块。',
-  'Minecraft 的唱片机播放的是 C418 创作的音乐，13 和 cat 两张唱片可在要塞的箱子中找到。',
-  'Minecraft 中深海监守者（Warden）是盲人，依靠声音和振动感知玩家。',
-  'Minecraft 的紫颂果（Chorus Fruit）食用后会随机传送，但会失去一些饥饿值。',
-  'Minecraft 中袭击（Raid）是不祥之兆效果进入村庄时触发的多波战斗事件。',
-  'Minecraft 中下界传送门（Nether Portal）的大小最小为 4×5，最大为 23×23。',
-  'Minecraft 中海龟壳帽（Turtle Shell）可以让玩家在水下呼吸更长时间。',
-  'Minecraft 中甜浆果（Sweet Berries）可以在针叶林生物群系中找到，也可种植。',
-  'Minecraft 中你已经可以用铜（Copper）制作避雷针、望远镜和装饰方块。',
-  'Minecraft 中营火（Campfire）可以烹饪食物，而且不会像熔炉那样消耗燃料。',
-  'Minecraft 中幽匿块（Sculk）会在深暗之域生成，挖掉之前最好先准备好。',
-  'GPCL 是云云一个人开发的启动器，并没有什么所谓的开发团队。',
-  'Minecraft 最早的公开版本发布于 2009 年 5 月，当时还叫 Cave Game。',
-  '末影人的设计灵感来自网络怪谈里的“瘦长鬼影”。',
-  '苦力怕的来源是建模时把猪的模型做歪了，于是干脆留下了它。',
-  '钻石镐挖一块黑曜石需要 9.4 秒，去下界之前记得带上。',
-  '在下界走 1 格等于主世界 8 格，长途赶路走传送门比坐船快得多。',
-  '落地之前对着脚下倒一桶水，可以抵消所有坠落伤害。',
-  '恶魂的火球能被打回去，用反弹的火球击杀恶魂还有个成就。',
-  '给生物用命名牌改过名之后，它就不会被刷掉了。',
-  '附魔台周围摆书架能提高附魔等级，最多需要 15 个书架。',
-  '床在下界和末地会爆炸，别想着在那边睡觉。',
-  '铁砧有使用次数上限，用久了会碎，记得多备几个。',
-  '潮涌核心需要用完整的水体包住才能激活，能给你水下呼吸和夜视。',
-  '潜影盒能装 27 组物品，被破坏后里面的东西也还在。',
-  '蜂蜜块能减缓下落速度，是做无伤电梯的常见材料。',
-  '羊毛可以用剪刀剪，羊会重新长出来，没必要杀掉它们。',
-  '村庄里的铁傀儡是由村民数量触发的，建个村民农场就能自动刷铁。',
-  '击败凋灵掉落的下界之星，是制作信标的唯一材料。',
-  '信标放在基座方块上方，基座越大等级越高，最高 4 级。',
-  '末影箱的内容和玩家绑定，在任何维度打开都是同一份物品。',
-  'Minecraft 的方块贴图只有 16×16 像素，所以画风才能这么统一。',
-  '红石中继器既能延长信号，也能让线路只朝一个方向走。',
-  '观察者方块会在它面对的方向发生变化时输出红石信号。',
-  '下雨天钓鱼更快，也更容易钓到宝藏。',
-  '雪球能熄灭火焰，在雪地上用锹就能铲出一堆。',
-  '带一只猫下矿是划算的，它会赶走苦力怕和幻翼。',
-  '海豚会给你加速效果，还会带你去附近找沉船。',
-  'Java 版按 F3 打开调试信息，F3+G 显示区块边界。',
-  '丛林神庙和沙漠神殿里都有陷阱，下去之前先拆掉压力板。',
-  '唱片“11”是游戏里气氛最诡异的一张，结尾有一段类似杂音的声响。',
-  'GPCL 的“更多”菜单里有社区论坛入口，遇到问题可以去问问。',
-  '游戏崩溃时 GPCL 会弹窗并让你导出错误报告，那比截图有用得多。',
+  'Minecraft was created by Markus "Notch" Persson in 2009; the first version took only six days.',
+  'The Creeper was born by accident when Notch built a pig model with the wrong proportions.',
+  'Endermen pick up blocks at random, a nod to the Slender Man urban legend.',
+  'Nether fortresses are among the largest natural structures and can span hundreds of chunks.',
+  'Diamond ore generates below Y=16, most often between Y=5 and Y=12.',
+  'Bookshelves around an enchanting table raise its level, up to level 30.',
+  'Redstone is Minecraft\'s "electricity" system, powering everything from simple doors to computers.',
+  'A conduit grants water breathing and night vision to players underwater.',
+  'Netherite gear starts as diamond gear and is upgraded at a smithing table.',
+  'The Sniffer was chosen by players in the 2022 Minecraft Live mob vote.',
+  'Swamp huts always spawn a witch, making them a steady source of redstone dust.',
+  'You can craft wool from string, but you cannot turn wool back into string.',
+  'Creative mode began as a development tool before becoming an official game mode.',
+  'Boots with Frost Walker let you walk across water.',
+  'Each chunk is 16×16 blocks, and the world loads them as you move.',
+  'Elytra are found on end ships; combine them with firework rockets to fly.',
+  'One block in the Nether equals eight in the Overworld.',
+  'Pillager outposts contain ominous banners; the pillagers nearby do not attack on sight.',
+  'Bees help crops grow faster after collecting pollen.',
+  'Slimes spawn only in certain chunks; a seed calculator can find slime chunks.',
+  'Jukebox music is by C418; the "13" and "cat" discs can be found in stronghold chests.',
+  'The Warden is blind and relies on sound and vibrations to find players.',
+  'Chorus fruit teleports you at random but costs some hunger.',
+  'A raid is a multi-wave battle triggered by entering a village with Bad Omen.',
+  'Nether portals can be as small as 4×5 and as large as 23×23.',
+  'A turtle shell lets you stay underwater longer.',
+  'Sweet berries grow in taiga biomes and can be farmed.',
+  'Copper can be used for lightning rods, spyglasses and decorative blocks.',
+  'Campfires cook food without consuming fuel like a furnace.',
+  'Sculk generates in the Deep Dark — prepare before you dig.',
+  'GPCL is built by Yunyun alone — there is no development team behind it.',
+  'The first public version appeared in May 2009, when it was still called Cave Game.',
+  'The Enderman was inspired by the Slender Man internet myth.',
+  'The Creeper exists because a pig model was built wrong and kept that way.',
+  'A diamond pickaxe needs 9.4 seconds to mine obsidian — bring one before heading to the Nether.',
+  'One block in the Nether equals eight in the Overworld; portals beat boats for long trips.',
+  'Place water under yourself before landing to cancel all fall damage.',
+  'You can hit Ghast fireballs back — killing one with its own fireball earns an achievement.',
+  'A mob renamed with a name tag will no longer despawn.',
+  'Bookshelves around an enchanting table raise its level, up to 15 bookshelves.',
+  'Beds explode in the Nether and the End — don\'t try to sleep there.',
+  'Anvils wear out after a limited number of uses; keep spares.',
+  'A conduit needs a full water block around it to activate, granting water breathing and night vision.',
+  'A shulker box holds 27 stacks and keeps its contents when broken.',
+  'Honey blocks slow your fall and are a common material for safe elevators.',
+  'Shear sheep for wool instead of killing them — the wool grows back.',
+  'Iron golems spawn based on the number of villagers; a villager farm automates iron.',
+  'The Nether star dropped by the Wither is the only material for a beacon.',
+  'Place a beacon on a mineral base; larger bases raise its level, up to four.',
+  'An ender chest stores items per player and shows the same contents in every dimension.',
+  'Block textures are only 16×16 pixels, which keeps the art style consistent.',
+  'Redstone repeaters extend signals and keep them flowing one way.',
+  'An observer emits a redstone signal when the block it faces changes.',
+  'Fishing is faster in the rain and more likely to yield treasure.',
+  'Snowballs put out fire, and a shovel gives you plenty on snow.',
+  'Bringing a cat mining pays off — it scares away creepers and phantoms.',
+  'Dolphins grant a speed boost and can lead you to nearby shipwrecks.',
+  'In Java Edition, F3 opens the debug screen and F3+G shows chunk borders.',
+  'Jungle temples and desert pyramids have traps; disarm the pressure plates before going in.',
+  'The music disc \'11\' is the creepiest in the game, ending with a noise-like sound.',
+  'The More menu in GPCL links to the community forum if you need help.',
+  'When the game crashes, GPCL shows a dialog and lets you export an error report — far more useful than a screenshot.',
 ];
 
 
@@ -267,7 +268,7 @@ export function showRandomTip(): void {
 
   if (tipCard) tipCard.classList.remove('hidden');
   const randomIndex: number = Math.floor(Math.random() * launchTips.length);
-  tipText.textContent = launchTips[randomIndex];
+  tipText.textContent = t(launchTips[randomIndex]);
 }
 
 
@@ -471,10 +472,10 @@ function taskListEl(): HTMLElement | null {
 }
 
 function taskStateText(task: DownloadTask): string {
-  if (task.status === 'queued') return '等待中';
-  if (task.status === 'done') return '完成';
-  if (task.status === 'error') return task.error ? `失败：${task.error}` : '失败';
-  return task.message || '下载中…';
+  if (task.status === 'queued') return t('ui.queued');
+  if (task.status === 'done') return t('ui.done');
+  if (task.status === 'error') return task.error ? t('ui.failed_error', { error: task.error }) : t('ui.failed');
+  return task.message || t('ui.downloading');
 }
 
 function updateTaskRow(task: DownloadTask): void {
@@ -580,8 +581,8 @@ async function runDownloadTask(task: DownloadTask): Promise<void> {
     cancelBtn.classList.remove('complete');
     (cancelBtn as HTMLButtonElement).disabled = false;
   }
-  if (downloadStatusEl) downloadStatusEl.textContent = `开始下载 ${task.displayName}…`;
-  setStatus(`开始下载 ${task.displayName}…`);
+  if (downloadStatusEl) downloadStatusEl.textContent = t('ui.downloading_name', { name: task.displayName });
+  setStatus(t('ui.downloading_name', { name: task.displayName }));
 
   try {
     const maxConcurrent: number = getMaxConcurrentFromSettings();
@@ -599,19 +600,19 @@ async function runDownloadTask(task: DownloadTask): Promise<void> {
       updateTaskRow(task);
 
       await recordVersionDownload(task.finalVersionId);
-      showToast('下载完成', `${task.displayName} 已准备就绪`, 'success', 'download-complete');
+      showToast('ui.download_complete', t('ui.name_is_ready', { name: task.displayName }), 'success', 'download-complete');
       if (result.fabricApiError) {
-        showToast('Fabric API 未装上', result.fabricApiError, 'warning', 'fabric-api-failed');
+        showToast('ui.fabric_api_was_not_installed', result.fabricApiError, 'warning', 'fabric-api-failed');
       } else if (Array.isArray(result.fabricApiFiles) && result.fabricApiFiles.length > 0) {
         task.message = '完成 · 已带 Fabric API';
       }
       if (task.modpack && Number(result.skipped) > 0) {
-        showToast('部分文件已跳过', `${result.skipped} 个可选文件或服务器端文件没有下载`, 'info', 'modpack-skipped');
+        showToast('ui.some_files_were_skipped', t('ui.count_optional_or_server_side_files_were_not_downloaded', { count: result.skipped }), 'info', 'modpack-skipped');
       }
       await loadVersions();
       renderVersionSelectList();
-      if (downloadStatusEl) downloadStatusEl.textContent = `下载完成：${task.displayName}`;
-      setStatus(`下载完成：${task.displayName}`, 'success');
+      if (downloadStatusEl) downloadStatusEl.textContent = t('ui.download_complete_name', { name: task.displayName });
+      setStatus(t('ui.download_complete_name', { name: task.displayName }), 'success');
       setTimeout(() => {
         const index: number = downloadTasks.findIndex((t: DownloadTask) => t.id === task.id);
         if (index >= 0 && downloadTasks[index].status === 'done') {
@@ -621,26 +622,26 @@ async function runDownloadTask(task: DownloadTask): Promise<void> {
       }, 8000);
     } else {
       task.status = 'error';
-      task.error = result?.error || '未知错误';
+      task.error = result?.error || t('ui.unknown_error');
       updateTaskRow(task);
-      showToast('下载失败', `${task.displayName}：${task.error}`, 'error', 'download-error');
-      if (downloadStatusEl) downloadStatusEl.textContent = `下载失败：${task.error}`;
-      setStatus(`下载失败：${task.error}`, 'error');
+      showToast('ui.download_failed', t('ui.name_error', { name: task.displayName, error: task.error }), 'error', 'download-error');
+      if (downloadStatusEl) downloadStatusEl.textContent = t('ui.download_failed_error_2', { error: task.error });
+      setStatus(t('ui.download_failed_error_2', { error: task.error }), 'error');
     }
   } catch (e: any) {
     task.status = 'error';
     task.error = e.message || String(e);
     updateTaskRow(task);
-    showToast('下载出错', task.error, 'error', 'download-error');
-    if (downloadStatusEl) downloadStatusEl.textContent = `下载出错：${task.error}`;
-    setStatus('下载出错', 'error');
+    showToast('ui.download_error', task.error, 'error', 'download-error');
+    if (downloadStatusEl) downloadStatusEl.textContent = t('ui.download_error_error', { error: task.error });
+    setStatus(t('ui.download_error_error', { error: task.error }), 'error');
   } finally {
     activeDownloadTask = null;
     updateTaskRow(task);
     if (cancelBtn) {
       const hasMore: boolean = downloadTasks.some((t: DownloadTask) => t.status === 'queued');
       if (!hasMore) {
-        const cancelled: boolean = task.status === 'error' && /取消/.test(task.error || '');
+        const cancelled: boolean = task.status === 'error' && /取消|cancel/i.test(task.error || '');
         cancelBtn.textContent = cancelled ? '已取消' : '下载完成';
         cancelBtn.classList.add('complete');
         (cancelBtn as HTMLButtonElement).disabled = true;
@@ -675,7 +676,7 @@ export function startModpackInstall(options: { source: 'modrinth' | 'curseforge'
     loaderVersion: '',
     loaderName: '整合包',
     installFabricApi: false,
-    displayName: `整合包：${options.instanceName}`,
+    displayName: t('ui.modpack_name', { name: options.instanceName }),
     status: 'queued',
     percent: 0,
     message: '等待中',
@@ -712,7 +713,7 @@ export async function startDownload(versionId: string): Promise<void> {
   const duplicate: boolean = downloadTasks.some((t: DownloadTask) =>
     (t.status === 'queued' || t.status === 'running') && t.versionId === versionId && t.loaderType === loaderType);
   if (duplicate) {
-    showToast('已经在队列里了', `${loaderName || 'Minecraft'} ${versionId}`, 'info', 'download-duplicate');
+    showToast('ui.already_in_the_queue', `${loaderName || 'Minecraft'} ${versionId}`, 'info', 'download-duplicate');
     return;
   }
 
@@ -777,7 +778,7 @@ function registerDownloadListeners(): void {
     }
 
     task.percent = Number(data.percent) || 0;
-    task.message = data.label ? `下载 ${data.label}` : '下载中…';
+    task.message = data.label ? t('ui.downloading_label', { label: data.label }) : t('ui.downloading');
     updateTaskRow(task);
   });
 
@@ -803,7 +804,7 @@ export function handleGameClosed(code: number): void {
     setCrashReported(false);
     return;
   }
-  showToast('游戏已退出', `退出码: ${code}`, 'info', 'game-closed');
+  showToast('ui.game_exited', t('ui.exit_code_code', { code }), 'info', 'game-closed');
 }
 
 
@@ -836,8 +837,8 @@ export function handleGameStatus(status: any): void {
 
 
 export function handleGameError(message: string): void {
-  setStatus(`启动出错: ${message}`, 'error');
-  showToast('游戏错误', message, 'error', 'game-error');
+  setStatus(t('ui.launch_error_message', { message }), 'error');
+  showToast('ui.game_error', message, 'error', 'game-error');
   if (launchBtn) (launchBtn as HTMLButtonElement).disabled = false;
 }
 

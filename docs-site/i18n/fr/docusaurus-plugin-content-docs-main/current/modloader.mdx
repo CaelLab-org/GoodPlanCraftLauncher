@@ -1,0 +1,67 @@
+---
+title: Forge / Fabric / OptiFine
+description: Installer un chargeur de mods dans GPCL, choisir la version, trouver le dossier des mods.
+---
+
+Lors du choix d'une version sur la page de téléchargement, vous pouvez choisir directement un chargeur. GPCL installe d'abord la version vanilla, puis le chargeur dans un dossier de version séparé, sans écraser la vanilla.
+
+## Installation
+
+1. Ouvrez la page de téléchargement et choisissez une version de Minecraft.
+2. Dans les options de chargeur, choisissez Forge, Fabric ou OptiFine, puis la version de chargeur correspondante.
+3. Cliquez sur télécharger et attendez la fin de la vanilla et du chargeur.
+4. Revenez à la page de démarrage et lancez la version portant le nom du chargeur.
+
+Les téléchargements passent par une file d'attente, vous pouvez enchaîner plusieurs versions. Une tâche en cours peut être annulée, la file reprend ensuite.
+
+## Quel chargeur choisir
+
+| Chargeur | Pour | À savoir |
+| --- | --- | --- |
+| Forge | Gros modpacks, mods anciens | Démarre plus lentement que Fabric, choix de versions très large |
+| Fabric | Mods légers, versions récentes | Choisir le Fabric Loader correspondant à la version du jeu |
+| OptiFine | Shaders, optimisation des performances | En combinaison avec d'autres chargeurs, des mods de compatibilité sont souvent nécessaires |
+
+### Forge
+
+À l'installation, GPCL ne lance que `--installClient`, sans essayer les paramètres GUI ou serveur. La sortie de l'installateur devient une progression, par exemple « Installation de Forge : Downloading library… ».
+
+La version majeure de Java est vérifiée avant ; si elle est inférieure à ce que Forge exige, GPCL signale l'erreur au lieu d'essayer avec un Java trop ancien. L'opération dure au maximum 15 minutes ; annuler le téléchargement termine le processus de l'installateur.
+
+### Fabric
+
+GPCL récupère directement le profil de version et les bibliothèques de Fabric, sans installateur.
+
+« Installer aussi Fabric API » est coché par défaut ; après Fabric, la Fabric API correspondante est placée dans le `mods` de cette version. Décochez pour ne pas l'installer ; si l'installation de Fabric API échoue, seul un message apparaît, Fabric lui-même n'est pas affecté.
+
+### OptiFine
+
+OptiFine s'installe en silence, sans afficher son installateur graphique. Le résultat est écrit dans le dossier de jeu courant, y compris avec un dossier de jeu personnalisé.
+
+## Où vont les mods
+
+Les versions téléchargées récemment activent par défaut l'**isolation des versions** : le dossier de jeu pointe vers `versions/<version-name>`, et mods, sauvegardes et réglages du jeu suivent cette version.
+
+| Cas | Dossier des mods |
+| --- | --- |
+| Téléchargée récemment, isolée | `versions/<version-name>/mods` |
+| Antérieure, sans `mods` / `saves` dans le dossier de version | `mods` à la racine du jeu |
+
+Sur la page de démarrage, ouvrez les « Réglages de la version » ; les entrées de dossier dépendent de l'isolation réelle :
+
+- « Dossier de version » toujours présent ;
+- « Dossier des mods » dès que Forge / Fabric / NeoForge / Quilt est détecté ;
+- « Dossier des shaders » dès qu'OptiFine est détecté.
+
+Pour installer des mods dans un dossier quelconque, choisissez « Choisir un dossier » dans la cible d'installation des téléchargements de mods ; GPCL prendra le `mods` de ce dossier.
+
+## Ça plante après l'installation
+
+1. Retirez tous les mods de `mods` et lancez une fois sans mod.
+2. Si ça démarre, remettez-en la moitié à chaque fois pour trouver le mod fautif.
+3. Vérifiez que le mod correspond à la fois à la version de Minecraft et à celle du chargeur — un mod Forge ne se met pas tel quel dans Fabric, et inversement.
+4. Une dépendance manquante fait aussi planter au démarrage ; regardez les dépendances listées dans [Téléchargement de mods](./mods.mdx).
+
+OptiFine avec Forge / Fabric demande généralement des mods de compatibilité supplémentaires. Sans mod compatible, ne forcez pas.
+
+D'autres étapes de diagnostic sont dans [Plantage du jeu](./mc-game.mdx).

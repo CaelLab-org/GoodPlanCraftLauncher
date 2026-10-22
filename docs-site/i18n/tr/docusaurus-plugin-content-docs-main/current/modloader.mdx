@@ -1,0 +1,67 @@
+---
+title: Forge / Fabric / OptiFine
+description: GPCL'de mod yükleyici kurma, sürüm seçme ve mod klasörünü bulma.
+---
+
+İndirme sayfasında sürüm seçerken yükleyiciyi de seçebilirsiniz. GPCL önce vanilya sürümü kurar, sonra yükleyiciyi ayrı bir sürüm klasörüne kurar; vanilya sürümün üzerine yazmaz.
+
+## Nasıl kurulur
+
+1. İndirme sayfasını açın ve bir Minecraft sürümü seçin.
+2. Yükleyici seçeneklerinde Forge, Fabric veya OptiFine'ı, ardından ilgili yükleyici sürümünü seçin.
+3. İndir'e tıklayın ve hem vanilya hem yükleyici kurulana kadar bekleyin.
+4. Başlatma sayfasına dönüp adında yükleyici olan sürümü başlatın.
+
+İndirme görevleri kuyruğa girer; birkaç sürümü art arda kuyruğa ekleyebilirsiniz. İndirilmekte olan görev iptal edilebilir, iptalden sonra kuyruk devam eder.
+
+## Hangi yükleyici
+
+| Yükleyici | Uygun olduğu | Dikkat |
+| --- | --- | --- |
+| Forge | Büyük mod paketleri, köklü modlar | Fabric'ten yavaş açılır, sürüm seçeneği fazladır |
+| Fabric | Hafif modlar, yeni sürümler | Fabric Loader'ı oyun sürümüne göre doğru seçmek gerekir |
+| OptiFine | Shader, performans iyileştirme | Diğer yükleyicilerle birlikte kullanıldığında uyumluluk modu gerekebilir |
+
+### Forge
+
+Kurulumda GPCL yalnızca `--installClient` çalıştırır; GUI veya sunucu parametrelerini denemez. Kurulum programının çıktısı ilerlemeye dönüşür, örneğin «Forge kuruluyor: Downloading library…».
+
+Kurulumdan önce Java ana sürümü denetlenir; Forge'un istediğinden düşükse doğrudan hata verir ve düşük Java ile zorlamaz. Süreç en fazla 15 dakika beklenir; indirmeyi iptal etmek kurulum sürecini sonlandırır.
+
+### Fabric
+
+GPCL Fabric sürüm profilini ve kütüphane dosyalarını doğrudan alır, kurulum programına bağlı değildir.
+
+«Fabric API'yi de kur» varsayılan olarak işaretlidir; Fabric kurulduktan sonra eşleşen sürümdeki Fabric API o sürümün `mods` klasörüne konur. İşareti kaldırırsanız kurulmaz; Fabric API kurulamazsa yalnızca uyarı gösterilir, Fabric'in kendisi etkilenmez.
+
+### OptiFine
+
+OptiFine sessizce kurulur, kendi grafik kurulum penceresini açmaz. Kurulum sonucu geçerli oyun klasörüne yazılır; özel oyun klasörleri de doğru işlenir.
+
+## Modlar nereye konur
+
+Yeni indirilen sürümlerde varsayılan olarak **sürüm yalıtımı** açıktır: oyun klasörü `versions/<version-name>` dizinini gösterir; modlar, kayıtlar ve oyun ayarları bu sürümle birlikte taşınır.
+
+| Sürüm durumu | Mod klasörü |
+| --- | --- |
+| Yeni indirildi, yalıtılmış | `versions/<version-name>/mods` |
+| Önceden vardı ve sürüm klasöründe `mods` / `saves` yok | Oyun kök klasöründeki `mods` |
+
+Başlatma sayfasında sürümün «Sürüm ayarları»nı açın; klasör girişleri gerçek yalıtım sonucuna göre hesaplanır:
+
+- «Sürüm klasörü» her zaman vardır;
+- Forge / Fabric / NeoForge / Quilt algılanırsa «Mod klasörü» görünür;
+- OptiFine algılanırsa «Shader klasörü» görünür.
+
+Modları istediğiniz klasöre kurmak için mod indirme hedef seçiminde «Klasör seç»i kullanın; o klasörün altındaki `mods` bulunur.
+
+## Kurulumdan sonra çöküyor
+
+1. Önce `mods` içindeki tüm modları kaldırın ve bir kez sade başlatın.
+2. Açılıyorsa modları yarı yarıya geri koyarak sorunlu olanı bulun.
+3. Modun hem Minecraft sürümüyle hem yükleyici sürümüyle eşleştiğini doğrulayın — Forge modu Fabric'e atılamaz, tersi de geçerlidir.
+4. Eksik bağımlılık da başlatmada çökertir; önce [Mod indirme](./mods.mdx) sayfasındaki bağımlılık listesine bakın.
+
+OptiFine ile Forge / Fabric birlikte kullanıldığında genellikle ek uyumluluk modu gerekir. Uygun mod yoksa zorla kurmayın.
+
+Daha fazla adım için [Oyun çökmeleri](./mc-game.mdx).

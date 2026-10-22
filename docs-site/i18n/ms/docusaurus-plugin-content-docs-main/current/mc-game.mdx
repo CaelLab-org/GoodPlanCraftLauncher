@@ -1,0 +1,70 @@
+---
+title: Apa perlu dilakukan apabila permainan ranap
+slug: /mc-game
+description: Eksport laporan ralat, lihat log dan siasat ranap Minecraft mengikut simptom.
+---
+
+Tetingkap ranap sendiri biasanya tidak menunjukkan punca. GPCL akan membaca log sekali untuk memberikan petunjuk, kemudian siasat mengikut urutan di bawah.
+
+:::tip Lakukan satu perkara dahulu
+Klik "Eksport laporan ralat" pada tetingkap ranap dan simpan zip yang dihasilkan. Permulaan laporan ialah hasil analisis GPCL, diikuti senarai Mod, Java, parameter pelancaran dan semua log; penyiasatan hampir semuanya bergantung padanya.
+:::
+
+## 1. Lihat analisis GPCL dahulu
+
+Tetingkap akan memaparkan 1–2 petunjuk yang ditemui GPCL daripada log, contohnya "memori tidak mencukupi" atau "semakan kebergantungan atau keserasian Mod tidak lulus". Klik "Lihat butiran" untuk melihat semua petunjuk, teks log asal yang sepadan dan maklumat ranap.
+
+Kesimpulan ini dipadankan berdasarkan kata kunci dan hanya boleh dijadikan arah siasatan. Jika log mengandungi maklumat yang lebih khusus (contohnya prasyarat mana yang hilang), ia akan disenaraikan bersama sebagai bukti.
+
+## 2. Eksport laporan ralat
+
+Butang ini ada pada tetingkap ranap. Pilih lokasi untuk menyimpan; GPCL akan membungkusnya menjadi:
+
+- `error-report.txt`: hasil analisis, ringkasan ralat, sistem / kad grafik / Java, senarai Mod, pek sumber dan shader, parameter pelancaran, output permainan, baris ralat dalam log;
+- `crash-reports/`: laporan ranap yang dihasilkan oleh ranap kali ini;
+- `logs/`: `latest.log` dan `debug.log` (jika terlalu besar, hanya bahagian akhir dikekalkan);
+- `jvm-crash/`: `hs_err_pid*.log` yang ditulis oleh JVM sendiri (jika masalah seperti pemacu kad grafik menyebabkan JVM ranap);
+- `launcher-log.txt`: log pelancar;
+- `game-output.txt`: output standard dan output ralat proses permainan bagi larian ini.
+
+`--accessToken` dan nama pengguna sistem dalam laporan telah disamarkan, jadi ia boleh dihantar terus. Jangan hanya menghantar tangkapan skrin tetingkap ranap.
+
+## 3. Lihat log sendiri dahulu
+
+"Lihat log" pada tetingkap akan membuka output proses permainan. Beri perhatian pada bahagian paling bawah, dan cari perkataan ini:
+
+| Kata kunci | Biasanya bermaksud |
+| --- | --- |
+| `Exception`, `Caused by` | Pengecualian sebenar biasanya selepas `Caused by` yang pertama |
+| `OutOfMemoryError` | Memori yang diperuntukkan tidak mencukupi |
+| `UnsupportedClassVersionError` | Versi Java dan versi permainan tidak sepadan |
+| `NoSuchMethodError`, `ClassNotFoundException` | Mod tidak sepadan dengan versi permainan atau versi pemuat, atau prasyarat hilang |
+| `GLFW error` | Masalah dengan pemacu kad grafik atau sokongan OpenGL |
+
+## 4. Punca biasa
+
+| Gejala | Punca biasa | Cara menangani |
+| --- | --- | --- |
+| Keluar sebaik sahaja dilancarkan, log mengandungi `UnsupportedClassVersionError` | Versi Java salah | Biarkan GPCL memasang Java secara automatik; atau tukar sumber cermin dalam tetapan dan pasang semula |
+| Tersekat separuh jalan semasa memuatkan atau tertutup tiba-tiba, log mengandungi `OutOfMemoryError` | Memori tidak mencukupi, atau terlalu banyak mod | Besarkan dalam Tetapan → Permainan → Peruntukan memori; jangan melebihi memori fizikal |
+| Ranap semasa memuatkan mod, nama mod muncul dalam log | Versi mod salah, prasyarat hilang, dua mod bercanggah | Cuba pasang mod ini sahaja dahulu; pastikan versi MC dan versi pemuat yang disokongnya |
+| Keluar sebelum tetingkap muncul, ada `GLFW error` | Pemacu kad grafik terlalu lama, atau OpenGL tidak disokong | Kemas kini pemacu kad grafik; pada komputer riba, pastikan permainan menggunakan GPU khusus |
+| Ditendang semasa menyertai pelayan, memaparkan `Invalid session` | Log masuk rasmi tamat tempoh, atau akaun tiada kebenaran untuk versi ini | Log masuk rasmi semula; pastikan akaun memang memiliki versi tersebut |
+| Ranap semasa memasuki dunia atau memuatkan pek sumber | Simpanan, pek sumber atau pek shader rosak | Cipta dunia baharu dahulu untuk mencuba; sandarkan simpanan sebelum mengendalikannya |
+| Ranap sebaik sahaja dilancarkan dengan Fabric, memaklumkan `fabric-api` hilang | Fabric API tidak dipasang | Tanda "Pasang Fabric API sekali" semasa memasang semula Fabric, atau pasang secara manual |
+
+## 5. Kecualikan tiga perkara ini dahulu
+
+1. **Matikan semua mod, pek sumber dan shader**, lancarkan sekali tanpa apa-apa. Jika boleh masuk, masalahnya pada mod.
+2. **Tukar ke versi vanilla lain untuk dilancarkan**. Jika boleh masuk, versi semasa atau gabungan modnya bermasalah.
+3. **Cipta dunia baharu**. Jika boleh masuk, simpanan asal telah rosak.
+
+## 6. Masih tidak berjaya
+
+Hantar e-mel ke [gamets@caellab.com](mailto:gamets@caellab.com) dengan laporan ralat yang dieksport, dan nyatakan dengan jelas:
+
+- versi pelancar, versi Minecraft, versi pemuat;
+- mod yang dipasang (lebih baik dengan nombor versi);
+- apa yang dilakukan sebelum ranap.
+
+Hanya menerangkan "ranap sebaik sahaja dilancarkan" sangat sukar untuk dikenal pasti; log dalam laporan adalah kunci.

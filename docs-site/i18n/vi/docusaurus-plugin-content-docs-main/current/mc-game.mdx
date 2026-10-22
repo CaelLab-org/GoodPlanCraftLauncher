@@ -1,0 +1,70 @@
+---
+title: Trò chơi bị crash thì làm gì
+slug: /mc-game
+description: Xuất báo cáo lỗi, xem nhật ký, kiểm tra crash Minecraft theo hiện tượng.
+---
+
+Cửa sổ crash thường không tự cho thấy nguyên nhân. GPCL sẽ đọc nhật ký một lượt để đưa gợi ý, rồi kiểm tra theo thứ tự dưới đây.
+
+:::tip Làm một việc trước
+Nhấn "Xuất báo cáo lỗi" trên hộp thoại crash, lưu tệp zip được tạo. Đầu báo cáo là kết quả phân tích của GPCL, phía sau còn có danh sách Mod, Java, tham số khởi chạy và toàn bộ nhật ký; việc kiểm tra cơ bản đều dựa vào nó.
+:::
+
+## 1. Xem phân tích của GPCL trước
+
+Hộp thoại hiển thị 1–2 gợi ý GPCL tìm thấy trong nhật ký, ví dụ "thiếu bộ nhớ" hay "kiểm tra phụ thuộc hoặc tương thích Mod không qua". Nhấn "Xem chi tiết" để xem toàn bộ gợi ý, nguyên văn nhật ký tương ứng và thông tin crash.
+
+Những kết luận này được khớp theo từ khóa, chỉ có thể coi là hướng kiểm tra. Khi nhật ký có thông tin cụ thể hơn (ví dụ thiếu phụ thuộc nào), sẽ được liệt kê cùng trong bằng chứng.
+
+## 2. Xuất báo cáo lỗi
+
+Nút này có ngay trên hộp thoại crash. Chọn một vị trí để lưu, GPCL sẽ đóng gói thành:
+
+- `error-report.txt`: kết quả phân tích, tóm tắt lỗi, hệ thống / card đồ họa / Java, danh sách Mod, gói tài nguyên và shader, tham số khởi chạy, đầu ra trò chơi, các dòng lỗi trong nhật ký;
+- `crash-reports/`: báo cáo crash do lần crash này tạo ra;
+- `logs/`: `latest.log` và `debug.log` (quá lớn thì chỉ giữ phần cuối);
+- `jvm-crash/`: `hs_err_pid*.log` do chính JVM ghi ra (nếu vấn đề như trình điều khiển card đồ họa khiến JVM crash);
+- `launcher-log.txt`: nhật ký trình khởi chạy;
+- `game-output.txt`: đầu ra chuẩn và đầu ra lỗi của tiến trình trò chơi trong lần chạy này.
+
+`--accessToken` và tên người dùng hệ thống trong báo cáo đã được che, có thể gửi thẳng. Đừng chỉ gửi ảnh chụp cửa sổ crash.
+
+## 3. Tự xem nhật ký trước
+
+"Xem nhật ký" trên hộp thoại sẽ mở đầu ra của tiến trình trò chơi. Chú ý phần dưới cùng, và tìm mấy từ này:
+
+| Từ khóa | Thường có nghĩa |
+| --- | --- |
+| `Exception`, `Caused by` | Ngoại lệ thật thường ở sau `Caused by` đầu tiên |
+| `OutOfMemoryError` | Bộ nhớ cấp phát không đủ |
+| `UnsupportedClassVersionError` | Phiên bản Java và phiên bản trò chơi không khớp |
+| `NoSuchMethodError`, `ClassNotFoundException` | Mod không khớp phiên bản trò chơi, phiên bản loader, hoặc thiếu phụ thuộc |
+| `GLFW error` | Trình điều khiển card đồ họa hoặc hỗ trợ OpenGL có vấn đề |
+
+## 4. Nguyên nhân thường gặp
+
+| Hiện tượng | Nguyên nhân thường gặp | Cách xử lý |
+| --- | --- | --- |
+| Vừa khởi chạy đã thoát, nhật ký có `UnsupportedClassVersionError` | Sai phiên bản Java | Để GPCL tự bổ sung Java; hoặc đổi nguồn mirror trong cài đặt rồi cài lại |
+| Tải dở dang bị treo hoặc văng, nhật ký có `OutOfMemoryError` | Thiếu bộ nhớ, hoặc quá nhiều mod | Tăng trong Cài đặt → Trò chơi → Cấp phát bộ nhớ; đừng vượt bộ nhớ vật lý |
+| Crash khi tải mod, nhật ký xuất hiện tên mod | Sai phiên bản mod, thiếu phụ thuộc, hai mod xung đột | Trước tiên chỉ cài mod này thử; xác nhận phiên bản MC và phiên bản loader nó hỗ trợ |
+| Thoát trước khi cửa sổ hiện ra, có `GLFW error` | Trình điều khiển card đồ họa quá cũ, hoặc OpenGL không được hỗ trợ | Cập nhật trình điều khiển card đồ họa; máy tính xách tay xác nhận trò chơi dùng GPU rời |
+| Vào máy chủ bị đá, báo `Invalid session` | Đăng nhập chính thức hết hạn, hoặc tài khoản không có quyền với phiên bản này | Đăng nhập chính thức lại; xác nhận tài khoản thực sự sở hữu phiên bản đó |
+| Crash khi vào thế giới hoặc tải gói tài nguyên | Bản lưu, gói tài nguyên hoặc gói shader bị hỏng | Trước tiên tạo thế giới mới thử; sao lưu bản lưu rồi xử lý |
+| Dùng Fabric khởi chạy là crash, báo thiếu `fabric-api` | Chưa cài Fabric API | Khi cài lại Fabric, tích chọn "Cài kèm Fabric API", hoặc cài bổ sung thủ công |
+
+## 5. Loại trừ ba việc này trước
+
+1. **Tắt toàn bộ mod, gói tài nguyên và shader**, khởi chạy trần một lần. Vào được là vấn đề ở mod.
+2. **Đổi sang một phiên bản gốc để khởi chạy**. Vào được là phiên bản hiện tại hoặc tổ hợp mod của nó có vấn đề.
+3. **Tạo thế giới mới**. Vào được là bản lưu cũ hỏng.
+
+## 6. Vẫn không được
+
+Gửi email đến [gamets@caellab.com](mailto:gamets@caellab.com), kèm báo cáo lỗi đã xuất, và ghi rõ:
+
+- phiên bản trình khởi chạy, phiên bản Minecraft, phiên bản loader;
+- đã cài những mod nào (có số phiên bản càng tốt);
+- đã làm gì trước khi crash.
+
+Chỉ mô tả "vừa khởi chạy là crash" rất khó xác định, nhật ký trong báo cáo mới là then chốt.

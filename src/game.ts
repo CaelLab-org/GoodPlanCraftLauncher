@@ -17,6 +17,7 @@ import { spawn, spawnSync } from 'child_process';
 import { APP_VERSION, DEFAULT_SETTINGS, GAME_DIR, computeAutoMemoryMB, getVersionGameDir, loadSettings, writeLog } from './config';
 import { CrashRecord, buildErrorReport, analyzeCrash, listCrashArtifacts } from './crash-report';
 import { generateLaunchDisplayName } from './download';
+import { t } from './i18n';
 import { downloadAndInstallJava, ensureJavaRuntime, getJavaVersionFromVersionData } from './java';
 import { mainWindow, trimWorkingSets } from './shell';
 // __IMPORTS_END__
@@ -861,13 +862,13 @@ ipcMain.handle('launch-minecraft', async (_, opt: any) => {
 
     if (launchCancelFlag) {
       writeLog('[启动] 用户已取消启动');
-      return { success: false, error: '启动已取消', cancelled: true };
+      return { success: false, error: 'Launch cancelled', cancelled: true };
     }
     
     const jsonPath: string = path.join(rootDir, 'versions', versionId, `${versionId}.json`);
     if (!fs.existsSync(jsonPath)) {
       writeLog(`启动游戏失败：版本 ${versionId} 未下载`);
-      return { success: false, error: '请先下载游戏' };
+      return { success: false, error: 'Download the game first' };
     }
 
     const vd_raw: any = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
@@ -876,7 +877,7 @@ ipcMain.handle('launch-minecraft', async (_, opt: any) => {
 
     if (launchCancelFlag) {
       writeLog('[启动] 用户已取消启动');
-      return { success: false, error: '启动已取消', cancelled: true };
+      return { success: false, error: 'Launch cancelled', cancelled: true };
     }
 
     const settings: any = loadSettings();
@@ -910,7 +911,7 @@ ipcMain.handle('launch-minecraft', async (_, opt: any) => {
           const savedServer: string = String(versionSettings.serverIp || '').trim();
           if (!savedServer) {
             writeLog('[启动] 选择了加入服务器，但没有填写服务器地址');
-            return { success: false, error: '请先在版本设置里填写要加入的服务器地址' };
+            return { success: false, error: 'Fill in the server address under version settings first' };
           }
           serverIp = savedServer;
           writeLog(`[启动] 使用版本启动模式: 加入服务器 ${serverIp}`);
@@ -935,14 +936,14 @@ ipcMain.handle('launch-minecraft', async (_, opt: any) => {
 
     if (launchCancelFlag) {
       writeLog('[启动] 用户已取消启动');
-      return { success: false, error: '启动已取消', cancelled: true };
+      return { success: false, error: 'Launch cancelled', cancelled: true };
     }
 
     let java: string | null = await ensureJavaRuntime(javaVersion);
 
     if (launchCancelFlag) {
       writeLog('[启动] 用户已取消启动');
-      return { success: false, error: '启动已取消', cancelled: true };
+      return { success: false, error: 'Launch cancelled', cancelled: true };
     }
 
     if (!java) {
@@ -959,7 +960,7 @@ ipcMain.handle('launch-minecraft', async (_, opt: any) => {
 
       if (launchCancelFlag) {
         writeLog('[启动] 用户已取消启动（Java下载完成后）');
-        return { success: false, error: '启动已取消', cancelled: true };
+        return { success: false, error: 'Launch cancelled', cancelled: true };
       }
       
       if (installResult.success) {
@@ -976,14 +977,14 @@ ipcMain.handle('launch-minecraft', async (_, opt: any) => {
         writeLog(`[Java] Java ${javaVersion} 安装失败: ${installResult.error}`);
         return {
           success: false,
-          error: `Java ${javaVersion} 安装失败: ${installResult.error}`
+          error: t('ui.java_version_installation_failed_error', { version: javaVersion, error: installResult.error })
         };
       }
     }
 
     if (launchCancelFlag) {
       writeLog('[启动] 用户已取消启动（即将启动游戏前）');
-      return { success: false, error: '启动已取消', cancelled: true };
+      return { success: false, error: 'Launch cancelled', cancelled: true };
     }
 
     const authInfo: any = opt.authUuid && opt.authAccessToken
@@ -1191,14 +1192,14 @@ ipcMain.handle('launch-minecraft', async (_, opt: any) => {
       writeLog('[启动] 进程已启动但取消标志已设置，立即终止');
       killGameProcessTree(proc.pid);
       try { proc.kill(); } catch {}
-      return { success: false, error: '启动已取消', cancelled: true };
+      return { success: false, error: 'Launch cancelled', cancelled: true };
     }
 
     await detectGameWindow(proc.pid);
 
     if (launchCancelFlag) {
       writeLog('[启动] 窗口检测结束后检测到取消标志');
-      return { success: false, error: '启动已取消', cancelled: true };
+      return { success: false, error: 'Launch cancelled', cancelled: true };
     }
 
     if (settings.game?.launcherVisibility === 'minimize' && mainWindow && !mainWindow.isDestroyed()) {
@@ -1337,7 +1338,7 @@ ipcMain.handle('stop-game', async () => {
   const pids: number[] = Array.from(gameSessions.keys());
   if (!pids.length) {
     writeLog('[启动] 结束游戏：当前没有运行中的进程');
-    return { success: false, error: '当前没有运行中的游戏' };
+    return { success: false, error: 'No game is running' };
   }
   intentionalStop = true;
   writeLog(`[启动] 用户结束游戏，终止 ${pids.length} 个进程: ${pids.join(', ')}`);
@@ -1384,7 +1385,7 @@ ipcMain.handle('analyze-crash', (_: any, info: any) => {
 
 ipcMain.handle('export-error-report', async (_: any, info: any) => {
   try {
-    if (!mainWindow) return { success: false, error: '窗口不可用' };
+    if (!mainWindow) return { success: false, error: 'Window is not available' };
 
     const record: CrashRecord = crashRecordFromInfo(info);
     const stamp: string = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);

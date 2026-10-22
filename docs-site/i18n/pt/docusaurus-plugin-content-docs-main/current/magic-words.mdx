@@ -1,0 +1,52 @@
+---
+title: Palavras mágicas no título da janela
+slug: /magic-words
+description: Personalizar o título da janela do Minecraft com marcadores como {mc_version} e {time}.
+---
+
+O título da janela do jogo aceita marcadores que o GPCL substitui por valores reais na inicialização.
+
+A opção fica em **Configurações → Jogo → Título da janela do jogo**. Deixar o título em branco mantém o título original da janela.
+
+## Exemplo
+
+Com o título definido como:
+
+```text
+{time} · {mc_version} · {gpcl_version}
+```
+
+Na inicialização, pode aparecer como:
+
+```text
+20:09:58 · Minecraft 1.21.3 · 1.6.0
+```
+
+## Marcadores disponíveis
+
+| Marcador | Vira |
+| --- | --- |
+| `{mc_version}` | Nome de exibição da versão, por exemplo Minecraft 1.21.3, ou o nome com loader |
+| `{mc_id}` | Nome da pasta da versão, por exemplo 1.21.3-Fabric |
+| `{username}` | Nome do jogador usado nesta inicialização |
+| `{gpcl_version}` | Versão do GPCL, por exemplo 1.6.0 |
+| `{date}` | Data da inicialização, no formato 2026/10/20 |
+| `{time}` | Hora atual, no formato 20:09:58 |
+| `{datetime}` | Data e hora separadas por espaço |
+| `{java}` | Nome da pasta do runtime Java em uso |
+| `{memory}` | Memória máxima alocada nesta execução, por exemplo 4096MB |
+
+Maiúsculas e minúsculas precisam coincidir. Marcadores escritos errado aparecem como estão, o que facilita identificar qual deles está incorreto.
+
+## O título se mantém?
+
+Abaixo existe a opção “Manter este título sempre que possível”, desativada por padrão.
+
+- **Desativada**: depois que a janela do jogo aparece, o GPCL corrige o título por 20 segundos. Passado esse tempo, se o jogo ou um mod alterar o título, ele não interfere mais. Títulos com `{time}` também congelam naquele horário.
+- **Ativada**: o título definido é mantido durante toda a sessão e, ao entrar num mundo, não é substituído por “ - Singleplayer”.
+
+Alguns modpacks ou mods também alteram o título da janela; uma sobrescrever a outra é esperado.
+
+:::note
+Por enquanto apenas o título da janela do jogo aceita palavras mágicas; em outras opções elas não têm efeito.
+:::

@@ -8,10 +8,12 @@
 
 
 // __IMPORTS_BEGIN__
-import { app, ipcMain } from 'electron';
+import { BrowserWindow, app, ipcMain } from 'electron';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
+
+import { getLocale, getLocaleMeta, getSystemLocale, initI18n, isSupportedLocale, translateText } from './i18n';
 // __IMPORTS_END__
 
 export function computeAutoMemoryMB(totalBytes: number = os.totalmem(), freeBytes: number = os.freemem()): number {
@@ -21,6 +23,11 @@ export function computeAutoMemoryMB(totalBytes: number = os.totalmem(), freeByte
   const headroom: number = Math.max(2048, freeMB - 1024);
   const capped: number = Math.floor(headroom / 512) * 512;
   return Math.min(target, capped);
+}
+
+// 窗口底色要和当前主题一致：页面切换 / 重载时会露出这一层，深色底色在浅色主题下就是一道黑闪
+export function themeBackgroundColor(theme?: string): string {
+  return theme === 'light' ? '#f4f8fd' : '#0d1425';
 }
 
 export function getSystemMemoryInfo(): { totalMB: number; freeMB: number; autoMemoryMB: number } {
@@ -71,8 +78,16 @@ export let CONFIG_DIR: string;
 
 export let UPDATA_DIR: string;
 
+// 首次启动判断必须在任何 saveSettings 之前完成：用户一进欢迎页就可能改语言，
+// 那一步会写出 setting.ini，之后再查文件就永远不是“首次”了。
+let firstRun: boolean = false;
+
 
 export const DEFAULT_SETTINGS = {
+  general: {
+    language: 'auto',
+    welcomeSeen: false
+  },
   game: {
     memory: 'auto',
     playerName: 'GPCL_Player',
@@ -93,6 +108,7 @@ export const DEFAULT_SETTINGS = {
   },
   appearance: {
     theme: 'light',
+    style: 'advanced',
     scale: '110',
     playStartupAnimation: true,
     skipSplash: false,
@@ -232,6 +248,7 @@ export function initPaths(): void {
   LOG_DIR = path.join(BASE_DIR, 'gpcl', 'log');
   CONFIG_DIR = path.join(BASE_DIR, 'gpcl', 'config');
   UPDATA_DIR = path.join(BASE_DIR, 'gpcl', 'updata');
+  firstRun = !fs.existsSync(path.join(CONFIG_DIR, 'setting.ini'));
   const startupTime = new Date().toISOString().replace(/:/g, '-').replace('.', '_');
   LOG_FILE = path.join(LOG_DIR, `${startupTime}.log`);
 
@@ -250,6 +267,44 @@ export function initPaths(): void {
   }
 
   fs.writeFileSync(LOG_FILE, '\uFEFF', 'utf8');
+}
+
+
+export function getSystemLanguageTags(): string[] {
+  try {
+    if (typeof app.getPreferredSystemLanguages === 'function') {
+      const tags: string[] = app.getPreferredSystemLanguages();
+      if (tags && tags.length) return tags;
+    }
+  } catch (e) {}
+  try {
+    return [app.getLocale()];
+  } catch (e) {
+    return [];
+  }
+}
+
+
+export function readLanguagePreference(): string {
+  try {
+    const configPath = path.join(BASE_DIR, 'gpcl', 'config', 'setting.ini');
+    if (fs.existsSync(configPath)) {
+      const parsed = parseIni(fs.readFileSync(configPath, 'utf8'));
+      return String(parsed.general?.language || 'auto');
+    }
+  } catch (e) {}
+  return 'auto';
+}
+
+
+export function applyLanguageFromSettings(settings: any): void {
+  const preference: string = String(settings?.general?.language || 'auto');
+  initI18n(preference, getSystemLanguageTags());
+}
+
+
+export function initLanguage(): void {
+  initI18n(readLanguagePreference(), getSystemLanguageTags());
 }
 
 
@@ -376,12 +431,13 @@ APP_VERSION = require('./package.json').version;
 
 export function writeLog(message: string): void {
   const timestamp = formatTimestamp();
-  const logLine = `[${timestamp}] ${message}\n`;
+  const localized: string = translateText(message);
+  const logLine = `[${timestamp}] ${localized}\n`;
   try {
     if (LOG_FILE) {
       fs.appendFileSync(LOG_FILE, logLine, 'utf8');
     }
-    console.log(`[${timestamp}] LOG:`, message);
+    console.log(`[${timestamp}] LOG:`, localized);
   } catch (e) {
     console.error(`[${formatTimestamp()}] 写入日志失败:`, e);
   }
@@ -399,19 +455,79 @@ ipcMain.handle('get-settings', () => {
 });
 
 
-ipcMain.handle('save-settings', (_: any, settings: any) => {
+function syncWindowBackground(event: any): void {
+  try {
+    const win: any = BrowserWindow.fromWebContents(event.sender);
+    if (win) win.setBackgroundColor(themeBackgroundColor(currentSettings?.appearance?.theme));
+  } catch (e) {}
+}
+
+
+ipcMain.handle('save-settings', (event: any, settings: any) => {
   currentSettings = mergeWithDefaults(settings);
   const success: boolean = saveSettings(currentSettings);
   applyInstallDir();
+  applyLanguageFromSettings(currentSettings);
+  syncWindowBackground(event);
   return { success, settings: currentSettings };
 });
 
 
-ipcMain.handle('reset-settings', () => {
+ipcMain.handle('reset-settings', (event: any) => {
   currentSettings = JSON.parse(JSON.stringify(DEFAULT_SETTINGS));
   const success: boolean = saveSettings(currentSettings);
   applyInstallDir();
+  applyLanguageFromSettings(currentSettings);
+  syncWindowBackground(event);
   return { success, settings: currentSettings };
+});
+
+
+ipcMain.handle('set-language', (_: any, code: string) => {
+  if (code !== 'auto' && !isSupportedLocale(code)) {
+    return { success: false, locale: getLocale() };
+  }
+  if (!currentSettings) {
+    currentSettings = loadSettings();
+  }
+  currentSettings.general = currentSettings.general || {};
+  currentSettings.general.language = code;
+  const success: boolean = saveSettings(currentSettings);
+  applyLanguageFromSettings(currentSettings);
+  return { success, locale: getLocale() };
+});
+
+
+ipcMain.handle('get-i18n-info', () => ({
+  locale: getLocale(),
+  systemLocale: getSystemLocale(),
+  firstRun
+}));
+
+// 预加载脚本在页面脚本之前同步取一次，界面首帧就能用对语言和主题，不会先画一遍默认的英文深色界面
+ipcMain.on('get-i18n-info-sync', (event: any) => {
+  if (!currentSettings) {
+    currentSettings = loadSettings();
+  }
+  event.returnValue = {
+    locale: getLocale(),
+    dir: getLocaleMeta(getLocale()).dir,
+    systemLocale: getSystemLocale(),
+    firstRun,
+    theme: currentSettings.appearance?.theme || 'dark',
+    style: currentSettings.appearance?.style || 'advanced',
+    scale: currentSettings.appearance?.scale || '100',
+    skipSplash: currentSettings.appearance?.skipSplash === true
+  };
+});
+
+ipcMain.handle('complete-welcome', () => {
+  if (!currentSettings) {
+    currentSettings = loadSettings();
+  }
+  currentSettings.general = currentSettings.general || {};
+  currentSettings.general.welcomeSeen = true;
+  return { success: saveSettings(currentSettings) };
 });
 
 /** 跨模块写入用：BASE_DIR 归本模块所有，其它模块只能经此写入 */

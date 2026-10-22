@@ -1,0 +1,59 @@
+---
+title: Téléchargement de mods
+description: Chercher et installer des mods Modrinth et CurseForge dans GPCL, dépendances et recherche en chinois.
+---
+
+La section « Mods » de la page de téléchargement permet de chercher des mods, choisir un fichier et l'installer dans une version précise, sans passer par le navigateur ni copier des fichiers à la main.
+
+## Recherche
+
+Deux sources : **Modrinth** et **CurseForge**. Les deux sont interrogées par défaut et la liste indique la source.
+
+Vous pouvez commencer par une requête en chinois. Si elle contient des caractères chinois, GPCL interroge d'abord la recherche publique de MCMOD, extrait le nom anglais entre parenthèses dans le titre (« 雾中人 (The Man From The Fog) » donne `The Man From The Fog`), puis cherche ce nom sur Modrinth. Sans nom anglais, la requête d'origine est utilisée.
+
+## Filtres
+
+Par défaut, **aucun** filtre de version ni de chargeur, comme PCL : on cherche tout d'abord, pour ne pas masquer les mods récents. Affinez à la main si besoin :
+
+- version de Minecraft ;
+- chargeur (Forge / Fabric / NeoForge / Quilt) ;
+- tri.
+
+La liste de fichiers place en tête la version de MC de la version actuellement lancée, pour réduire les erreurs de version.
+
+## Installation
+
+Le choix de la cible n'apparaît qu'après un clic sur « Installer » dans la ligne de fichier :
+
+- une liste des versions de mod installées, choisissez-en une ;
+- « Choisir un dossier », pour installer dans le `mods` de n'importe quel dossier.
+
+Le fichier va dans le `mods` réellement utilisé par la version cible : `versions/<version-name>/mods` pour une version isolée, sinon le `mods` à la racine du jeu.
+
+Pour une version non isolée, le premier mod installé active l'isolation des versions ; le panneau de cible l'indique, sans confirmation supplémentaire.
+
+### Dépendances
+
+Les lignes de fichiers Modrinth indiquent « N dépendances ». L'installation installe récursivement les dépendances requises au téléchargement, et le message de réussite précise leur nombre.
+
+Le mode lien de CurseForge n'installe que le fichier sélectionné et **n'installe pas les dépendances** ; l'interface le précise.
+
+## CurseForge sans clé API
+
+La recherche CurseForge normale exige une clé API (**Paramètres → Téléchargements → Clé API CurseForge**, facultative) ou un miroir public disponible. Sans clé et sans miroir, il reste une solution :
+
+collez l'adresse du projet dans la recherche, ou écrivez `cf:<short-name>` :
+
+```text
+https://www.curseforge.com/minecraft/mc-mods/sodium
+cf:sodium
+```
+
+GPCL interroge le projet et les fichiers via `api.cfwidget.com`, puis télécharge par lien direct ForgeCDN. Ce chemin **n'installe que le fichier sélectionné et ne résout pas les dépendances**.
+
+## Le mod est installé mais sans effet
+
+- vérifiez que la version de MC et le chargeur supportés par le mod correspondent à la version actuelle ;
+- vérifiez que l'installation est allée dans le bon `mods` (pas celui de la racine si la version est isolée) ;
+- s'il manque une dépendance, installez-la d'abord ;
+- sinon, suivez l'ordre de diagnostic des journaux dans [Plantage du jeu](./mc-game.mdx).

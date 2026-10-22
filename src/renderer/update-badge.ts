@@ -8,6 +8,7 @@
 
 
 // __IMPORTS_BEGIN__
+import { t } from '../i18n';
 // __IMPORTS_END__
 
 type BadgeMode = 'available' | 'downloading' | 'ready' | 'failed';
@@ -49,22 +50,22 @@ function applyMode(next: BadgeMode): void {
     widgetIcon.className = `icon icon-${iconName}`;
   }
   if (popoverHeading) {
-    popoverHeading.textContent = next === 'ready' ? '更新已就绪' : next === 'downloading' ? '正在下载更新' : '发现新版本';
+    popoverHeading.textContent = next === 'ready' ? t('ui.update_ready') : next === 'downloading' ? t('ui.downloading_update') : t('ui.new_version_available');
   }
   if (progress) progress.classList.toggle('hidden', next !== 'downloading');
   if (next === 'available') {
     setProgress(0);
-    if (statusText) statusText.textContent = '发现新版本，可以立即下载。';
+    if (statusText) statusText.textContent = t('ui.a_new_version_is_available_to_download');
   }
   if (installBtn) {
     installBtn.disabled = next === 'downloading';
     installBtn.textContent = next === 'downloading'
-      ? '正在下载…'
+      ? t('ui.downloading_2')
       : next === 'ready'
-        ? '重启以更新'
+        ? t('ui.restart_to_update')
         : next === 'failed'
-          ? '重试下载'
-          : '立即下载';
+          ? t('ui.retry_download')
+          : t('ui.download_now');
   }
 }
 
@@ -129,27 +130,27 @@ export function showUpdateBadge(version: string, title: string, logHtml: string)
 export function setUpdateBadgeDownloading(percent: number = 0): void {
   applyMode('downloading');
   setProgress(percent);
-  if (statusText) statusText.textContent = `正在后台下载 ${Math.round(percent)}%`;
+  if (statusText) statusText.textContent = t('ui.downloading_in_the_background_percent', { percent: Math.round(percent) });
 }
 
 
 export function setUpdateBadgeProgress(percent: number): void {
   if (mode !== 'downloading') return;
   setProgress(percent);
-  if (statusText) statusText.textContent = `正在后台下载 ${Math.round(percent || 0)}%`;
+  if (statusText) statusText.textContent = t('ui.downloading_in_the_background_percent', { percent: Math.round(percent || 0) });
 }
 
 
 export function setUpdateBadgeReady(): void {
   applyMode('ready');
   setProgress(100);
-  if (statusText) statusText.textContent = '更新已就绪，退出启动器时自动安装；也可以现在重启更新。';
+  if (statusText) statusText.textContent = t('ui.the_update_is_ready_and_will_install_when_the_launcher_exits_you_can_als_14bfac');
 }
 
 
 export function setUpdateBadgeFailed(message: string): void {
   applyMode('failed');
-  if (statusText) statusText.textContent = message ? `下载失败：${message}` : '下载失败';
+  if (statusText) statusText.textContent = message ? t('ui.download_failed_message_2', { message }) : t('ui.download_failed');
 }
 
 

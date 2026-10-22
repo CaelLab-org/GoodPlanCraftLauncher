@@ -1,0 +1,72 @@
+---
+title: Unduhan dan mirror
+description: Sumber unduhan file, sumber daftar versi, jumlah thread, batas kecepatan, mirror Java, dan mirror file kustom.
+---
+
+Unduhan lambat biasanya bukan masalah launcher. Ganti dulu sumber unduhan, baru pikirkan jumlah thread dan batas kecepatan.
+
+## Tugas unduhan masuk antrean
+
+Setelah mengklik "Unduh", tugas masuk antrean dan tidak membekukan seluruh antarmuka: tugas yang menunggu bisa dihapus dengan ×, tugas yang berjalan bisa dibatalkan, dan antrean lanjut setelahnya.
+
+Halaman unduhan menampilkan status setiap tugas: menunggu, mengunduh, selesai, gagal.
+
+## Sumber unduhan file vs sumber daftar versi
+
+Di **Pengaturan → Unduhan → Sumber unduhan** ada dua dropdown yang terpisah:
+
+- **Sumber unduhan file**: jar klien, file aset, library dependensi;
+- **Sumber daftar versi**: manifes versi, JSON versi, indeks aset.
+
+Keduanya punya empat pilihan yang sama:
+
+| Pilihan | Perilaku |
+| --- | --- |
+| Utamakan resmi, ganti ke mirror saat lambat | Bawaan. Menyambung ke resmi dulu; kalau beberapa detik tidak ada respons, pindah ke BMCLAPI |
+| Gunakan mirror sebisa mungkin | Di jaringan Tiongkok langsung memakai mirror |
+| Utamakan sumber resmi | Resmi dulu, kalau gagal kembali ke mirror |
+| Gunakan sumber resmi sebisa mungkin | Hanya resmi; kalau tidak bisa tersambung, gagal |
+
+## Mirror file kustom
+
+Di **Pengaturan → Unduhan → Mirror file kustom** bisa diisi alamat akar mirror (bawaan BMCLAPI, misalnya `https://bmclapi2.bangbang93.com`). Setelah diisi, manifes versi, klien, library, dan aset lewat sana dulu; kalau tidak didapat, kembali ke urutan sumber semula.
+
+Dibiarkan kosong berarti memakai BMCLAPI bawaan.
+
+## Folder game
+
+Di **Pengaturan → Unduhan → Folder game**, versi, library, aset, dan mod bisa ditaruh di folder mana pun; dibiarkan kosong berarti kembali ke `%APPDATA%\gpcl\.minecraft`.
+
+Mengganti folder **tidak memindahkan** file yang sudah ada secara otomatis. Versi di folder lama tidak ikut pindah; salin sendiri kalau perlu. Konfigurasi dan log tetap di `%APPDATA%\gpcl`.
+
+## Jumlah thread maksimum
+
+Bawaan 64, rentang 1–128. Kalau banyak file kecil, menaikkan paralelisme membuatnya lebih cepat, tetapi terlalu tinggi bisa dibatasi perangkat jaringan atau mirror. Kalau jaringan tidak stabil, turunkan.
+
+## Batas kecepatan
+
+0 berarti tanpa batas; setelah diisi angka, **semua tugas unduhan berbagi batas total ini**, satuannya MB/s, dan berlaku mulai unduhan berikutnya. Di jaringan bersama bisa diturunkan.
+
+Batas ini hanya berlaku untuk unduhan aset game. Runtime Java diunduh dari mirror terpisah dan tidak terpengaruh dari sini.
+
+## Mirror Java
+
+Di **Pengaturan → Unduhan → Unduhan Java** bisa dipilih Tsinghua University, Nanjing University, Huawei Cloud, atau kustom. Kalau sumber terpilih gagal, otomatis pindah ke berikutnya, dan terakhir ada sumber resmi Adoptium sebagai cadangan.
+
+Alamat kustom mendukung dua variabel:
+
+- `{v}`: versi mayor Java, misalnya `8`, `17`, `21`;
+- `{version}`: nomor versi lengkap dari hulu, misalnya `17.0.20.1_1`, berubah mengikuti rilis hulu.
+
+Contoh:
+
+```text
+https://cdn.example.com/java/{v}/OpenJDK{v}U-jre_x64_windows_hotspot_{v}.zip
+```
+
+## Yang dilakukan dulu saat unduhan gagal
+
+1. Ganti sumber unduhan.
+2. Turunkan jumlah thread ke 32 atau 16 lalu coba lagi.
+3. Pastikan waktu sistem benar — selisih waktu terlalu besar membuat verifikasi sertifikat HTTPS gagal.
+4. Kalau masih tidak bisa, kirim email dengan log terbaru dari `%APPDATA%\gpcl\gpcl\log`.

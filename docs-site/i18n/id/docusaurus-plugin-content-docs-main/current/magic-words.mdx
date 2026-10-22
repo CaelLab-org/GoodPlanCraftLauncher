@@ -1,0 +1,52 @@
+---
+title: Kata ajaib judul jendela
+slug: /magic-words
+description: Menyesuaikan judul jendela game Minecraft dengan placeholder seperti {mc_version} dan {time}.
+---
+
+Judul jendela game bisa memuat placeholder, dan saat peluncuran GPCL menggantinya dengan nilai sebenarnya.
+
+Lokasinya di **Pengaturan → Game → Judul jendela game**. Judul kosong berarti judul jendela game tidak diubah.
+
+## Contoh
+
+Tulis judulnya seperti ini:
+
+```text
+{time} · {mc_version} · {gpcl_version}
+```
+
+Setelah dijalankan bisa tampil seperti ini:
+
+```text
+20:09:58 · Minecraft 1.21.3 · 1.6.0
+```
+
+## Placeholder yang tersedia
+
+| Placeholder | Menjadi apa |
+| --- | --- |
+| `{mc_version}` | Nama tampilan versi, misalnya Minecraft 1.21.3, atau nama dengan loader |
+| `{mc_id}` | Nama folder versi, misalnya 1.21.3-Fabric |
+| `{username}` | Nama pemain yang dipakai pada peluncuran ini |
+| `{gpcl_version}` | Nomor versi GPCL, misalnya 1.6.0 |
+| `{date}` | Tanggal peluncuran, format 2026/10/20 |
+| `{time}` | Waktu saat ini, format 20:09:58 |
+| `{datetime}` | Tanggal dan waktu, dipisahkan spasi |
+| `{java}` | Nama folder runtime Java saat ini |
+| `{memory}` | Memori maksimum yang dialokasikan kali ini, misalnya 4096MB |
+
+Huruf besar-kecil harus sama. Placeholder yang salah akan ditampilkan apa adanya, supaya mudah terlihat mana yang keliru.
+
+## Apakah judulnya bertahan?
+
+Di bawahnya ada tombol "Pertahankan nama ini sebisa mungkin", bawaannya mati.
+
+- **Mati**: setelah jendela game muncul, GPCL terus membetulkan judul selama 20 detik. Setelah itu, kalau game atau mod mengubah judul, GPCL tidak mengurusnya lagi. Judul yang memuat `{time}` juga berhenti pada waktu itu.
+- **Aktif**: judul yang Anda setel bertahan sepanjang permainan, dan saat masuk dunia pun tidak tertimpa " - Singleplayer".
+
+Sebagian modpack dan mod juga mengubah judul jendela; saling menimpa di antara keduanya adalah hal normal.
+
+:::note
+Saat ini hanya judul jendela game yang mendukung kata ajaib; di pengaturan lain tidak berlaku.
+:::

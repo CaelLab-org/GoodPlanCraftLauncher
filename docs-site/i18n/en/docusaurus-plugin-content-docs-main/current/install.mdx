@@ -1,0 +1,73 @@
+---
+title: Install & update
+description: Downloading, installing, upgrading, and uninstalling GPCL; the game and settings live in %APPDATA%\gpcl.
+---
+
+GPCL supports **Windows 10 / 11 64-bit** only. The installer does not bundle Java; the launcher installs it per game version as needed.
+
+## Download
+
+Get the installer from the [official download section](https://gamets.caellab.com/gpcl/#download) or [GitHub Releases](https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases). The file name is `GPCL-<version>-Setup.exe`.
+
+Do not get the installer from cloud drives, group chat files, or third-party download sites: such files may have been replaced, and the launcher cannot verify where they came from.
+
+## Installation
+
+1. Double-click the installer and choose an installation folder.
+2. When it finishes, start GPCL from the desktop or the Start menu.
+3. The first launch creates the configuration, logs, and the default game directory.
+
+You do not need to uninstall an older version before upgrading. The installer takes over the existing installation in place (including older NSIS packages); desktop shortcuts and data are kept.
+
+## Where the game and settings live
+
+Both are under `%APPDATA%\gpcl`, not in the installation folder:
+
+| Path | Contents |
+| --- | --- |
+| `%APPDATA%\gpcl\.minecraft` | Game versions, libraries, assets, mods, and worlds |
+| `%APPDATA%\gpcl\gpcl\config\setting.ini` | Launcher settings |
+| `%APPDATA%\gpcl\gpcl\log` | Launcher logs |
+| `%APPDATA%\gpcl\gpcl\updata` | Installers downloaded by auto-update and its progress records |
+
+If you have changed the game directory, versions and assets go to the new location, but the configuration and logs still stay in `%APPDATA%\gpcl`.
+
+### Setting the game language automatically
+
+**Settings → Game → Set game language automatically** is on by default, and the selected language defaults to Simplified Chinese. Before every launch, GPCL rewrites the `lang:` value in the `options.txt` that the current version actually uses, and keeps every other line unchanged.
+
+Isolated versions write to `versions/<version-name>/options.txt`; non-isolated ones write to `options.txt` in the game root. Turn this switch off and GPCL does not touch the in-game settings at all.
+
+## Updates
+
+Two options are on by default:
+
+- **Check for updates automatically**: checks at startup and shows a notice in the top-right corner when a new version is available.
+- **Install updates automatically**: downloads silently in the background, without using the download page or changing the status bar. Once verification passes, it waits until you **quit the launcher** and then installs silently.
+
+The round badge in the top-right corner shows download progress; click it to see the version number and what changed in that release. You can also click "Download now" there, and the launcher reopens automatically when the install finishes.
+
+Under **Settings → About** you can turn off automatic checking or automatic installing, or click "Check for updates" manually.
+
+The update package is verified by SHA1 before installing; a failed check means it is not installed. If an install is interrupted halfway, the next launch reports "the previous update did not finish" and you can retry; after three consecutive failures it points you to the website to download the installer again.
+
+:::warning Upgrading from 1.5.2 or older
+Older versions do not understand the silent-install flags, so this one upgrade still shows the old installer wizard once. From 1.6.0 onward the whole process is silent.
+:::
+
+If the launcher will not start after an update, check the newest log in `%APPDATA%\gpcl\gpcl\log` first, then email it along with your message.
+
+## Importing a local version
+
+In the "Version selection" panel on the launch page, click "Import local version". You can import:
+
+- a version folder (it must contain `<version-name>.json`);
+- a zip or jar archive: the launcher unpacks it and recursively looks for the folder that contains `<version-name>.json`;
+
+Modpacks (the kind with a `minecraft` section in `manifest.json`) cannot be imported yet; the launcher rejects them outright instead of installing half of one.
+
+## Uninstall
+
+Uninstall GPCL from Windows "Apps & features". The uninstaller does **not** delete `%APPDATA%\gpcl`, so the game and settings are still there after reinstalling.
+
+If you are sure you will not use it again, you can delete the whole `%APPDATA%\gpcl` folder manually. Back up your worlds first.

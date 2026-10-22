@@ -1,0 +1,73 @@
+---
+title: Kurulum ve güncelleme
+description: "GPCL'yi indirme, kurma, güncelleme ve kaldırma; oyun ve ayarlar %APPDATA%\\gpcl altında tutulur."
+---
+
+GPCL yalnızca **Windows 10 / 11 64 bit** destekler. Kurulum paketi Java içermez; başlatıcı, oyun sürümüne göre gerekeni kendisi ekler.
+
+## İndirme
+
+Kurulum paketini [sitedeki indirme bölümünden](https://gamets.caellab.com/gpcl/#download) veya [GitHub Releases](https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases) sayfasından alın; dosya adı `GPCL-<version>-Setup.exe`.
+
+Kurulum paketini bulut sürücülerden, grup dosyalarından veya üçüncü taraf indirme sitelerinden almayın: bu tür dosyalar değiştirilmiş olabilir ve başlatıcı kaynağını doğrulayamaz.
+
+## Kurulum
+
+1. Kurulum paketine çift tıklayın ve kurulum klasörünü seçin.
+2. Kurulum bitince GPCL'yi masaüstünden veya Başlat menüsünden açın.
+3. İlk açılışta yapılandırma, günlükler ve varsayılan oyun klasörü oluşturulur.
+
+Eski bir sürümden güncellemek için önce kaldırmanız gerekmez. Kurulum programı mevcut kurulumun üzerine yerinde devralır (daha eski NSIS paketleri dahil); masaüstü kısayolu ve veriler korunur.
+
+## Oyun ve ayarlar nerede tutulur
+
+Hepsi `%APPDATA%\gpcl` altında, kurulum klasöründe değil:
+
+| Yol | İçerik |
+| --- | --- |
+| `%APPDATA%\gpcl\.minecraft` | Oyun sürümleri, kütüphaneler, varlıklar, modlar ve kayıtlar |
+| `%APPDATA%\gpcl\gpcl\config\setting.ini` | Başlatıcı ayarları |
+| `%APPDATA%\gpcl\gpcl\log` | Başlatıcı günlükleri |
+| `%APPDATA%\gpcl\gpcl\updata` | Otomatik güncellemeyle indirilen kurulum paketleri ve ilerleme kayıtları |
+
+Oyun klasörünü değiştirdiyseniz sürümler ve varlıklar yeni konuma gider, ancak yapılandırma ve günlükler `%APPDATA%\gpcl` altında kalır.
+
+### Oyun dilini otomatik ayarlama
+
+**Ayarlar → Oyun → Oyun dilini otomatik ayarla** varsayılan olarak açıktır ve seçili dil Basitleştirilmiş Çince'dir. GPCL her başlatmadan önce geçerli sürümün gerçekte kullandığı `options.txt` dosyasındaki `lang:` değerini seçilen değerle değiştirir; diğer satırlar olduğu gibi kalır.
+
+Yalıtılmış sürümlerde `versions/<version-name>/options.txt` dosyasına, yalıtılmamışlarda oyun kök klasöründeki `options.txt` dosyasına yazılır. Bu anahtarı kapatırsanız oyun içi ayarlara hiç dokunulmaz.
+
+## Güncelleme
+
+Varsayılan olarak iki seçenek açıktır:
+
+- **Güncellemeleri otomatik denetle**: açılışta denetler, yeni sürüm varsa sağ üstte bildirim gösterir.
+- **Güncellemeleri otomatik kur**: arka planda sessizce indirir; indirme sayfasını kullanmaz, durum çubuğunu değiştirmez. Doğrulama geçtikten sonra siz **başlatıcıdan çıktığınızda** sessizce kurulur.
+
+Sağ üstteki yuvarlak rozet indirme ilerlemesini gösterir; tıkladığınızda sürüm numarasını ve bu sürümdeki yenilikleri görürsünüz. Buradaki «Şimdi indir» ile indirip kurulum sonrası başlatıcıyı otomatik yeniden açabilirsiniz.
+
+**Ayarlar → Hakkında** bölümünde otomatik denetimi veya otomatik kurulumu kapatabilir, «Güncellemeleri denetle» ile elle denetim yapabilirsiniz.
+
+Güncelleme paketi kurulmadan önce SHA1 ile doğrulanır; doğrulama başarısız olursa kurulmaz. Kurulum yarıda kesilirse bir sonraki açılışta «Önceki güncelleme tamamlanmadı» uyarısı çıkar ve yeniden deneyebilirsiniz; üst üste üç başarısızlıktan sonra başlatıcı, kurulum paketini siteden yeniden indirmenizi önerir.
+
+:::warning 1.5.2 veya daha eski sürümden güncelleme
+Eski sürümler sessiz kurulum parametrelerini henüz tanımıyor, bu yüzden bu güncellemede bir kez eski kurulum sihirbazı açılır. 1.6.0 ve sonrasında süreç tamamen sessizdir.
+:::
+
+Güncellemeden sonra başlatıcı açılmıyorsa önce `%APPDATA%\gpcl\gpcl\log` içindeki en yeni günlüğe bakın, sonra günlükle birlikte e-posta gönderin.
+
+## Yerel sürüm içe aktarma
+
+Başlatma sayfasındaki «Sürüm seçimi» panelinde «Yerel sürümü içe aktar» seçeneğine tıklayın. Şunlar içe aktarılabilir:
+
+- bir sürüm klasörü (içinde `<version-name>.json` olmalı);
+- bir zip veya jar arşivi; başlatıcı arşivi açar ve `<version-name>.json` dosyasını içeren klasörü özyinelemeli olarak bulur;
+
+Mod paketleri (`manifest.json` içinde `minecraft` bölümü olanlar) şu an içe aktarılamaz; başlatıcı doğrudan reddeder ve yarım kurulum yapmaz.
+
+## Kaldırma
+
+GPCL'yi Windows'un «Uygulamalar ve özellikler» bölümünden kaldırın. Kaldırma programı `%APPDATA%\gpcl` klasörünü **silmez**; yeniden kurduğunuzda oyun ve ayarlar yerinde durur.
+
+Artık kullanmayacaksanız `%APPDATA%\gpcl` klasörünün tamamını elle silebilirsiniz. Silmeden önce kayıtlarınızın yedeğini alın.

@@ -1,0 +1,72 @@
+---
+title: Muat turun dan sumber cermin
+description: Sumber muat turun fail, sumber senarai versi, bilangan benang, had kelajuan, cermin Java dan cermin fail tersuai.
+---
+
+Muat turun perlahan biasanya bukan masalah pelancar. Tukar sumber muat turun dahulu, kemudian pertimbangkan bilangan benang dan had kelajuan.
+
+## Tugas muat turun akan berbaris
+
+Selepas mengklik "Muat turun", tugas akan masuk ke baris gilir dan tidak akan menyekat keseluruhan antara muka: tugas yang menunggu boleh dibuang dengan mengklik ×, tugas yang sedang dimuat turun boleh dibatalkan, dan baris gilir akan terus berjalan selepas pembatalan.
+
+Halaman muat turun akan menyenaraikan status setiap tugas: menunggu, memuat turun, selesai, gagal.
+
+## Sumber muat turun fail vs sumber senarai versi
+
+**Tetapan → Muat turun → Sumber muat turun** mengandungi dua senarai juntai bawah yang berasingan:
+
+- **Sumber muat turun fail**: jar klien, fail aset, pustaka kebergantungan;
+- **Sumber senarai versi**: manifes versi, JSON versi, indeks aset.
+
+Kedua-duanya mempunyai empat pilihan yang sama:
+
+| Pilihan | Tingkah laku |
+| --- | --- |
+| Utamakan rasmi, tukar cermin apabila perlahan | Lalai. Sambung rasmi dahulu; jika tiada respons dalam beberapa saat, tukar ke BMCLAPI |
+| Gunakan sumber cermin sebanyak mungkin | Rangkaian domestik China menggunakan cermin terus |
+| Utamakan sumber rasmi | Rasmi dahulu; jika gagal, kembali ke cermin |
+| Gunakan sumber rasmi sebanyak mungkin | Hanya rasmi; gagal jika rasmi tidak dapat disambung |
+
+## Cermin fail tersuai
+
+**Tetapan → Muat turun → Cermin fail tersuai** boleh diisi dengan alamat akar cermin (lalai BMCLAPI, contohnya `https://bmclapi2.bangbang93.com`). Selepas diisi, manifes versi, klien, pustaka dan aset akan mengutamakannya; jika tidak dapat diambil, sumber asal akan digunakan mengikut urutan asal sebagai sandaran.
+
+Biarkan kosong untuk menggunakan BMCLAPI lalai.
+
+## Direktori permainan
+
+**Tetapan → Muat turun → Direktori permainan** boleh meletakkan versi, pustaka, aset dan mod ke mana-mana folder; biarkan kosong untuk kembali ke `%APPDATA%\gpcl\.minecraft`.
+
+Menukar direktori **tidak akan memindahkan** fail sedia ada secara automatik. Versi dalam direktori lama tidak akan ikut berpindah; salin sendiri jika perlu. Konfigurasi dan log masih dalam `%APPDATA%\gpcl`.
+
+## Bilangan benang maksimum
+
+Lalai 64, julat 1–128. Apabila terdapat banyak fail kecil, meningkatkan konkurensi akan lebih pantas, tetapi terlalu tinggi mungkin dihadkan oleh peranti rangkaian atau cermin. Turunkan jika rangkaian tidak stabil.
+
+## Had kelajuan
+
+0 bermaksud tiada had kelajuan; selepas nilai diisi, **semua tugas muat turun berkongsi had keseluruhan ini**, unit MB/s, berkuat kuasa pada permulaan muat turun seterusnya. Boleh diturunkan apabila ramai orang berkongsi rangkaian.
+
+Had ini hanya terpakai pada muat turun aset permainan. Runtime Java menggunakan muat turun cermin berasingan dan tidak terjejas oleh tetapan ini.
+
+## Sumber cermin Java
+
+Dalam **Tetapan → Muat turun → Muat turun Java**, anda boleh memilih Universiti Tsinghua, Universiti Nanjing, Huawei Cloud atau tersuai. Jika sumber yang dipilih gagal, ia akan bertukar secara automatik ke sumber seterusnya, dan akhir sekali masih ada sandaran rasmi Adoptium.
+
+Alamat tersuai menyokong dua pemboleh ubah:
+
+- `{v}`: versi utama Java, contohnya `8`, `17`, `21`;
+- `{version}`: nombor versi penuh huluan, contohnya `17.0.20.1_1`, akan berubah mengikut keluaran huluan.
+
+Contoh:
+
+```text
+https://cdn.example.com/java/{v}/OpenJDK{v}U-jre_x64_windows_hotspot_{v}.zip
+```
+
+## Apa yang perlu dilakukan dahulu apabila muat turun gagal
+
+1. Tukar sumber muat turun.
+2. Turunkan bilangan benang kepada 32 atau 16 dan cuba lagi.
+3. Pastikan masa sistem betul — sisihan masa yang terlalu besar akan menyebabkan pengesahan sijil HTTPS gagal.
+4. Jika masih tidak berjaya, hantar e-mel dengan log terbaharu dalam `%APPDATA%\gpcl\gpcl\log`.

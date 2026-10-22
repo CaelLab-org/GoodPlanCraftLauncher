@@ -1,0 +1,72 @@
+---
+title: Tải xuống và nguồn mirror
+description: Nguồn tải tệp, nguồn danh sách phiên bản, số luồng, giới hạn tốc độ, mirror Java và mirror tệp tùy chỉnh.
+---
+
+Tải chậm thường không phải lỗi trình khởi chạy. Đổi nguồn tải trước, rồi mới xét số luồng và giới hạn tốc độ.
+
+## Tác vụ tải xuống xếp hàng
+
+Sau khi nhấn "Tải xuống", tác vụ vào hàng đợi, không chặn toàn bộ giao diện: tác vụ đang chờ có thể nhấn × để xóa, tác vụ đang tải có thể hủy, sau khi hủy hàng đợi tiếp tục chạy.
+
+Trang tải xuống liệt kê trạng thái từng tác vụ: đang chờ, đang tải, hoàn tất, thất bại.
+
+## Nguồn tải tệp vs nguồn danh sách phiên bản
+
+**Cài đặt → Tải xuống → Nguồn tải xuống** có hai danh sách thả xuống độc lập:
+
+- **Nguồn tải tệp**: jar máy khách, tệp tài nguyên, thư viện phụ thuộc;
+- **Nguồn danh sách phiên bản**: manifest phiên bản, JSON phiên bản, chỉ mục tài nguyên.
+
+Cả hai đều có bốn tùy chọn giống nhau:
+
+| Tùy chọn | Hành vi |
+| --- | --- |
+| Ưu tiên chính thức, chậm thì đổi mirror | Mặc định. Kết nối chính thức trước, vài giây không phản hồi thì đổi sang BMCLAPI |
+| Cố gắng dùng nguồn mirror | Mạng nội địa Trung Quốc dùng mirror trực tiếp |
+| Ưu tiên nguồn chính thức | Chính thức trước, thất bại thì quay lại mirror |
+| Cố gắng dùng nguồn chính thức | Chỉ dùng chính thức, không kết nối được thì thất bại |
+
+## Mirror tệp tùy chỉnh
+
+**Cài đặt → Tải xuống → Mirror tệp tùy chỉnh** có thể điền địa chỉ gốc mirror (mặc định BMCLAPI, ví dụ `https://bmclapi2.bangbang93.com`). Sau khi điền, manifest phiên bản, máy khách, thư viện và tài nguyên đều ưu tiên đi qua nó, không lấy được thì dự phòng theo thứ tự nguồn gốc.
+
+Để trống là BMCLAPI mặc định.
+
+## Thư mục trò chơi
+
+**Cài đặt → Tải xuống → Thư mục trò chơi** có thể đặt phiên bản, thư viện, tài nguyên và mod vào thư mục bất kỳ; để trống quay về `%APPDATA%\gpcl\.minecraft`.
+
+Đổi thư mục **không tự động chuyển** tệp đã có. Phiên bản trong thư mục cũ sẽ không đi theo, cần thì tự sao chép; cấu hình và nhật ký vẫn ở `%APPDATA%\gpcl`.
+
+## Số luồng tối đa
+
+Mặc định 64, phạm vi 1–128. Khi nhiều tệp nhỏ, tăng đồng thời sẽ nhanh hơn, nhưng quá cao có thể bị thiết bị mạng hoặc mirror giới hạn. Mạng không ổn định thì hạ xuống.
+
+## Giới hạn tốc độ
+
+0 nghĩa là không giới hạn; sau khi điền số, **tất cả tác vụ tải xuống chia sẻ tổng giới hạn này**, đơn vị MB/s, có hiệu lực từ lần tải tiếp theo. Nhiều người dùng chung mạng thì có thể hạ thấp.
+
+Giới hạn này chỉ áp dụng cho tải tài nguyên trò chơi. Java runtime dùng mirror tải riêng, không bị ảnh hưởng.
+
+## Nguồn mirror Java
+
+Trong **Cài đặt → Tải xuống → Tải Java** có thể chọn Đại học Thanh Hoa, Đại học Nam Kinh, Huawei Cloud hoặc tùy chỉnh. Nguồn đã chọn thất bại sẽ tự đổi sang nguồn tiếp theo, cuối cùng vẫn có dự phòng chính thức Adoptium.
+
+Địa chỉ tùy chỉnh hỗ trợ hai biến:
+
+- `{v}`: phiên bản Java chính, ví dụ `8`, `17`, `21`;
+- `{version}`: số phiên bản đầy đủ thượng nguồn, ví dụ `17.0.20.1_1`, thay đổi theo bản phát hành thượng nguồn.
+
+Ví dụ:
+
+```text
+https://cdn.example.com/java/{v}/OpenJDK{v}U-jre_x64_windows_hotspot_{v}.zip
+```
+
+## Tải thất bại thì làm gì trước
+
+1. Đổi nguồn tải.
+2. Hạ số luồng xuống 32 hoặc 16 rồi thử lại.
+3. Xác nhận thời gian hệ thống đúng — lệch thời gian quá lớn sẽ khiến xác minh chứng chỉ HTTPS thất bại.
+4. Vẫn không được thì gửi email kèm nhật ký mới nhất trong `%APPDATA%\gpcl\gpcl\log`.

@@ -1,0 +1,70 @@
+---
+title: Het spel is gecrasht, wat nu
+slug: /mc-game
+description: Het foutrapport exporteren, logboeken lezen en Minecraft-crashes op symptoom diagnosticeren.
+---
+
+Uit het crashvenster alleen is de oorzaak meestal niet af te lezen. GPCL leest eerst de logboeken en geeft aanwijzingen; daarna kun je de volgorde hieronder aanhouden.
+
+:::tip Begin hiermee
+Klik in het crashvenster op ‘Foutrapport exporteren’ en bewaar de zip. Het rapport begint met de analyse van GPCL en bevat daarna de modlijst, Java, startparameters en alle logboeken: bijna elke diagnose leunt erop.
+:::
+
+## 1. Kijk eerst naar de analyse van GPCL
+
+Het venster toont 1–2 aanwijzingen die GPCL in de logboeken vond, bijvoorbeeld ‘te weinig geheugen’ of ‘controle van modafhankelijkheden of -compatibiliteit mislukt’. Via ‘Details bekijken’ zie je alle aanwijzingen, de bijbehorende logregels en de crashinformatie.
+
+Die conclusies komen uit trefwoordvergelijking en zijn alleen een zoekrichting. Staat er concretere informatie in het logboek (bijvoorbeeld welke afhankelijkheid ontbreekt), dan wordt die bij het bewijs vermeld.
+
+## 2. Het foutrapport exporteren
+
+De knop staat in het crashvenster. Kies een locatie; GPCL maakt:
+
+- `error-report.txt`: analyseresultaat, foutsamenvatting, systeem / grafische kaart / Java, modlijst, resourcepacks en shaders, startparameters, speluitvoer en foutregels uit de logboeken;
+- `crash-reports/`: de crashrapporten van deze sessie;
+- `logs/`: `latest.log` en `debug.log` (bij zeer grote bestanden alleen het einde);
+- `jvm-crash/`: de `hs_err_pid*.log`-bestanden die de JVM zelf schrijft (wanneer bijvoorbeeld een grafische driver de JVM laat crashen);
+- `launcher-log.txt`: logboek van de launcher;
+- `game-output.txt`: stdout en stderr van het spelproces in deze sessie.
+
+`--accessToken` en de systeemgebruikersnaam in het rapport zijn al gemaskeerd, dus je kunt het zo versturen. Stuur niet alleen een schermafbeelding van het crashvenster.
+
+## 3. Kijk zelf in de logboeken
+
+‘Logboek bekijken’ in het venster opent de uitvoer van het spelproces. Let vooral op het einde en zoek op deze woorden:
+
+| Trefwoord | Betekent meestal |
+| --- | --- |
+| `Exception`, `Caused by` | De echte uitzondering staat meestal na de eerste `Caused by` |
+| `OutOfMemoryError` | Het toegewezen geheugen is te klein |
+| `UnsupportedClassVersionError` | De Java-versie past niet bij de gameversie |
+| `NoSuchMethodError`, `ClassNotFoundException` | Mod past niet bij de game- of loaderversie, of een afhankelijkheid ontbreekt |
+| `GLFW error` | Probleem met de grafische driver of met OpenGL-ondersteuning |
+
+## 4. Veelvoorkomende oorzaken
+
+| Symptoom | Vaakste oorzaak | Wat je doet |
+| --- | --- | --- |
+| Sluit direct bij het starten, met `UnsupportedClassVersionError` in het logboek | Verkeerde Java-versie | Laat GPCL Java installeren; of wissel de mirror in de instellingen en installeer opnieuw |
+| Loopt vast of sluit halverwege het laden, met `OutOfMemoryError` | Te weinig geheugen of te veel mods | Hoger zetten in Instellingen → Spel → Geheugentoewijzing; niet boven het fysieke geheugen |
+| Crash bij het laden van mods, met een modnaam in het logboek | Verkeerde modversie, ontbrekende afhankelijkheid, conflict tussen twee mods | Probeer alleen met die mod; controleer de ondersteunde MC- en loaderversies |
+| Sluit voordat het venster verschijnt, met `GLFW error` | Verouderde grafische driver of geen OpenGL-ondersteuning | Werk de grafische driver bij; controleer op een laptop of het spel de losse GPU gebruikt |
+| Eruit gezet op de server met `Invalid session` | Login verlopen of account zonder recht op die versie | Log opnieuw in met het officiële account; controleer of het account de versie bezit |
+| Crash bij het betreden van een wereld of bij het laden van resourcepacks | Wereld, resourcepack of shader beschadigd | Maak een nieuwe wereld om te testen; maak eerst een back-up van de wereld |
+| Crash bij het starten met Fabric, melding over ontbrekende `fabric-api` | Fabric API niet geïnstalleerd | Installeer Fabric opnieuw met ‘Fabric API ook installeren’, of installeer het handmatig |
+
+## 5. Sluit eerst deze drie dingen uit
+
+1. **Zet alle mods, resourcepacks en shaders uit** en start één keer zonder. Start het spel wel, dan zit het probleem bij de mods.
+2. **Start een andere vanilla-versie**. Start die wel, dan zit het probleem bij de huidige versie of de combinatie van mods.
+3. **Maak een nieuwe wereld**. Werkt dat, dan is de oude wereld beschadigd.
+
+## 6. Lukt het nog niet
+
+Mail naar [gamets@caellab.com](mailto:gamets@caellab.com) met het geëxporteerde foutrapport en vermeld:
+
+- launcherversie, Minecraft-versie, loaderversie;
+- welke mods geïnstalleerd zijn (het liefst met versienummer);
+- wat je deed vóór de crash.
+
+Alleen ‘hij crasht meteen bij het starten’ is zelden genoeg om iets te vinden; de logboeken in het rapport zijn het belangrijkste.

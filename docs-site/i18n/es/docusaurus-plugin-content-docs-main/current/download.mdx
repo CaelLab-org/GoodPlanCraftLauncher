@@ -1,0 +1,72 @@
+---
+title: Descargas y espejos
+description: Fuentes de descarga de archivos y de listas de versiones, hilos, límite de velocidad, espejos de Java y espejo de archivos personalizado.
+---
+
+Las descargas lentas normalmente no son culpa del lanzador. Cambia primero la fuente y luego mira los hilos y el límite de velocidad.
+
+## Las descargas pasan por una cola
+
+Al pulsar «Descargar», la tarea entra en una cola sin bloquear la interfaz: las tareas en espera se quitan con ×, las que están en curso se cancelan y la cola sigue después.
+
+La página de descargas muestra el estado de cada tarea: en espera, descargando, completada, fallida.
+
+## Fuente de archivos y fuente de listas de versiones
+
+En **Ajustes → Descargas → Fuente de descarga** hay dos listas independientes:
+
+- **Fuente de archivos**: jar del cliente, recursos, bibliotecas;
+- **Fuente de listas de versiones**: manifiesto de versiones, JSON de versión, índice de recursos.
+
+Ambas tienen las mismas cuatro opciones:
+
+| Opción | Comportamiento |
+| --- | --- |
+| Oficial primero, espejo si va lento | Predeterminada. Primero oficial; sin respuesta en unos segundos, BMCLAPI |
+| Priorizar el espejo | Espejo directo en redes chinas |
+| Priorizar el oficial | Primero oficial, vuelta al espejo si falla |
+| Solo oficial | Solo oficial; si no conecta, falla |
+
+## Espejo de archivos personalizado
+
+**Ajustes → Descargas → Espejo de archivos personalizado** acepta una dirección raíz de espejo (por defecto BMCLAPI, por ejemplo `https://bmclapi2.bangbang93.com`). Una vez rellenada, el manifiesto, el cliente, las bibliotecas y los recursos pasan primero por ella y, si no responde, se usa el orden de fuentes original.
+
+Dejarlo vacío equivale a BMCLAPI.
+
+## Directorio del juego
+
+**Ajustes → Descargas → Directorio del juego** permite poner versiones, bibliotecas, recursos y mods en cualquier carpeta; vacío vuelve a `%APPDATA%\gpcl\.minecraft`.
+
+Cambiar de directorio **no mueve** los archivos existentes. Las versiones del directorio anterior no se trasladan; cópialas tú si las necesitas. La configuración y los registros siguen en `%APPDATA%\gpcl`.
+
+## Número máximo de hilos
+
+64 de forma predeterminada, rango 1–128. Con muchos archivos pequeños, subir la concurrencia ayuda, pero un valor demasiado alto puede verse limitado por el equipo de red o los espejos. Si la red es inestable, bájalo.
+
+## Límite de velocidad
+
+0 significa sin límite; con un valor, **todas las descargas comparten ese límite total**, en MB/s, y se aplica al empezar la siguiente descarga. En redes compartidas puede convenir bajarlo.
+
+Este límite solo afecta a la descarga de recursos del juego. El runtime de Java usa un espejo aparte y no se ve afectado.
+
+## Espejos de Java
+
+En **Ajustes → Descargas → Descarga de Java** puedes elegir Universidad de Tsinghua, Universidad de Nankín, Huawei Cloud o personalizado. Si la fuente elegida falla, se pasa automáticamente a la siguiente y al final queda Adoptium oficial como respaldo.
+
+Las direcciones personalizadas admiten dos variables:
+
+- `{v}`: versión mayor de Java, por ejemplo `8`, `17`, `21`;
+- `{version}`: versión completa de origen, por ejemplo `17.0.20.1_1`, que cambia con las publicaciones.
+
+Ejemplo:
+
+```text
+https://cdn.example.com/java/{v}/OpenJDK{v}U-jre_x64_windows_hotspot_{v}.zip
+```
+
+## Qué hacer si falla una descarga
+
+1. Cambia de fuente de descarga.
+2. Baja los hilos a 32 o 16 y reintenta.
+3. Comprueba la hora del sistema: una desviación grande hace fallar la validación de certificados HTTPS.
+4. Si sigue igual, escribe un correo con el registro más reciente de `%APPDATA%\gpcl\gpcl\log`.

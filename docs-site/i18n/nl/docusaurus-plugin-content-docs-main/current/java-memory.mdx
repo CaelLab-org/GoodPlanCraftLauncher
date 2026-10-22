@@ -1,0 +1,59 @@
+---
+title: Java en geheugen
+description: Welke Java-versie bij welke Minecraft-versie hoort, hoe GPCL geheugen toewijst en wat je aanpast als het geheugen niet toereikt.
+---
+
+GPCL kiest Java op basis van de gameversie en wijst geheugen toe op basis van het geheugen van de computer. Meestal hoef je niets handmatig aan te passen.
+
+## Welke Java-versie hoort waarbij
+
+| Minecraft-versie | Benodigde Java |
+| --- | --- |
+| 1.16.5 en ouder | Java 8 |
+| 1.17 – 1.20.4 | Java 17 |
+| 1.20.5 en nieuwer | Java 21 |
+
+Mist GPCL bij het starten de juiste Java, dan downloadt en installeert hij die zelf. Mislukt de download, ga dan naar **Instellingen → Downloaden → Java downloaden** en probeer een andere mirror.
+
+Java staat in een eigen map van GPCL, heeft geen invloed op andere Java-installaties op het systeem en wijzigt `JAVA_HOME` niet.
+
+## Geheugen: automatisch
+
+De standaardinstelling is ‘automatisch’. De toewijzing verloopt in twee stappen:
+
+1. eerst **30%** van het fysieke geheugen schatten, naar beneden afronden op hele GB en begrenzen tot **2 – 8 GB**;
+2. daarna kijken naar het geheugen dat op dat moment beschikbaar is: minimaal 1 GB voor het systeem vrijhouden, met een ondergrens van 2 GB, naar beneden afronden op 512 MB, en vervolgens de laagste van de twee waarden gebruiken.
+
+Een paar praktijkresultaten:
+
+| Fysiek geheugen | Op dat moment beschikbaar | Automatische toewijzing |
+| --- | --- | --- |
+| 16 GB | 8 GB | 4 GB |
+| 16 GB | 3.9 GB | 2.5 GB |
+| 8 GB | 4 GB | 2 GB |
+
+De instellingenpagina toont gebruikt / totaal geheugen en het beschikbare geheugen. Wordt het vrije geheugen krap, dan gaat de automatische toewijzing omlaag en raadt de launcher aan wat programma's te sluiten.
+
+`-Xmx` is een bovengrens, geen directe reservering. Toewijzen op basis van het geheugen dat op dat moment vrij is, is daarom stabieler dan een heel hoge vaste waarde.
+
+## Geheugen: handmatig
+
+Als een modpack of een zwaar modpakket niet toereikend is, kies je ‘handmatig’ en sleep je de schuifregelaar. Laat ruimte voor het systeem en andere programma's; geef niet al het fysieke geheugen aan het spel.
+
+Een `OutOfMemoryError` betekent te weinig geheugen:
+
+1. zet de toewijzing één stap hoger en probeer opnieuw;
+2. helpt dat niet, gebruik dan minder mods;
+3. sluit ook de browser en andere geheugenintensieve programma's.
+
+## G1GC afstellen
+
+In **Instellingen → Geavanceerd → Geheugenbeheer** staat het afstellen van G1GC, standaard uit. Alleen bij schommelende fps of duidelijke GC-haperingen is het aan te raden; als je het aanzet, wordt een set gangbare G1GC-parameters toegevoegd.
+
+Eigen JVM-parameters staan in dezelfde sectie. Een verkeerde parameter zorgt dat het spel helemaal niet start; weet je het niet zeker, laat ze dan staan.
+
+## Geheugen optimaliseren voor het starten
+
+Met deze optie aan maakt GPCL vóór het starten van het spel een deel van zijn eigen geheugen vrij. Het raakt alleen het proces van de launcher, niet de draaiende Minecraft, en wist de inlogstatus niet.
+
+Op een harde schijf kan deze stap kort haperen; dat is normaal.

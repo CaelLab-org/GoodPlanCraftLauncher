@@ -15,7 +15,8 @@ import os from 'os';
 import path from 'path';
 import { pathToFileURL } from 'url';
 
-import { APP_VERSION, BASE_DIR, CONFIG_DIR, getSystemMemoryInfo, writeLog } from './config';
+import { APP_VERSION, BASE_DIR, CONFIG_DIR, getSystemMemoryInfo, loadSettings, themeBackgroundColor, writeLog } from './config';
+import { t, translateText } from './i18n';
 import { isDeveloperMode, isDownloading, isJavaDownloading } from './state';
 // __IMPORTS_END__
 
@@ -32,7 +33,7 @@ export function createWindow(): void {
     frame: false,
     title: 'GoodPlanCraftLauncher',
     icon: path.join(__dirname, 'icon.ico'),
-    backgroundColor: '#0d0d15',
+    backgroundColor: themeBackgroundColor(loadSettings().appearance?.theme),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -65,7 +66,7 @@ export function createWindow(): void {
   mainWindow.setMenuBarVisibility(false);
   mainWindow.setAutoHideMenuBar(true);
 
-  mainWindow.loadFile(path.join(__dirname, 'renderer', 'splash.html'));
+  mainWindow.loadFile(path.join(__dirname, 'renderer', 'index.html'));
 
   mainWindow.on('close', (event: any) => {
     if (isDownloading || isJavaDownloading) {
@@ -115,12 +116,15 @@ export function createGPCLShortcut(): void {
 
 ipcMain.handle('show-message-dialog', async (_: any, options: any) => {
   if (!mainWindow) return { success: false };
+  const buttons: string[] = Array.isArray(options.buttons)
+    ? options.buttons.map((button: string) => translateText(button))
+    : [t('ui.ok')];
   const result = await dialog.showMessageBox(mainWindow, {
     type: options.type || 'info',
-    title: options.title || '提示',
-    message: options.message || '',
-    detail: options.detail || '',
-    buttons: options.buttons || ['确定'],
+    title: translateText(options.title || t('ui.notice')),
+    message: translateText(options.message || ''),
+    detail: translateText(options.detail || ''),
+    buttons,
     defaultId: options.defaultId || 0,
     cancelId: options.cancelId || 0,
     noLink: true
@@ -240,12 +244,12 @@ ipcMain.handle('reset-avatar', () => {
 });
 
 ipcMain.handle('choose-avatar', async () => {
-  if (!mainWindow) return { success: false, error: '窗口未就绪' };
+  if (!mainWindow) return { success: false, error: t('ui.window_is_not_ready') };
 
   const picked = await dialog.showOpenDialog(mainWindow, {
-    title: '选择头像',
+    title: t('ui.choose_avatar'),
     properties: ['openFile'],
-    filters: [{ name: '图片', extensions: ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp'] }]
+    filters: [{ name: t('ui.images'), extensions: ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp'] }]
   });
   if (picked.canceled || !picked.filePaths[0]) return { success: false, cancelled: true };
 
@@ -254,7 +258,7 @@ ipcMain.handle('choose-avatar', async () => {
     const stat = fs.statSync(source);
     const MB: number = 1024 * 1024;
     if (stat.size > 32 * MB) {
-      return { success: false, error: '图片超过 32 MB，请先压缩后再选' };
+      return { success: false, error: t('ui.the_image_is_over_32_mb_compress_it_first') };
     }
 
     let data: Buffer = fs.readFileSync(source);
@@ -266,10 +270,10 @@ ipcMain.handle('choose-avatar', async () => {
       if (!shouldCompress) {
         const answer = await dialog.showMessageBox(mainWindow, {
           type: 'question',
-          title: '头像文件较大',
-          message: `所选图片有 ${(data.length / MB).toFixed(1)} MB，是否压缩后使用？`,
-          detail: '压缩后会保存为 JPEG，画质会略有下降；保持原图也可以，最大支持 4 MB。',
-          buttons: ['压缩后使用', '保持原图'],
+          title: t('ui.large_avatar_file'),
+          message: t('ui.the_image_is_size_mb_compress_it_before_use', { size: (data.length / MB).toFixed(1) }),
+          detail: t('ui.the_image_will_be_saved_as_jpeg_with_a_slight_quality_loss_you_can_keep_02fdbb'),
+          buttons: [t('ui.compress_and_use'), t('ui.keep_original')],
           defaultId: 0,
           cancelId: 1,
           noLink: true
@@ -284,13 +288,13 @@ ipcMain.handle('choose-avatar', async () => {
           ext = 'jpg';
           compressed = true;
         } else if (stat.size > 4 * MB) {
-          return { success: false, error: '图片超过 4 MB，且这个格式无法压缩，请换一张图片' };
+          return { success: false, error: t('ui.the_image_is_over_4_mb_and_this_format_cannot_be_compressed_choose_another_image') };
         }
       }
     }
 
     if (data.length > 4 * MB) {
-      return { success: false, error: '头像最大支持 4 MB' };
+      return { success: false, error: t('ui.avatars_can_be_at_most_4_mb') };
     }
 
     const dir: string = path.join(BASE_DIR, AVATAR_DIR_NAME);

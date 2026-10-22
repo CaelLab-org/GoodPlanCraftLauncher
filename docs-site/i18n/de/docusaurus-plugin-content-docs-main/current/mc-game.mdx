@@ -1,0 +1,70 @@
+---
+title: Wenn das Spiel abstürzt
+slug: /mc-game
+description: Fehlerbericht exportieren, Logs lesen, Minecraft-Abstürze nach Symptom eingrenzen.
+---
+
+Das Absturzfenster allein verrät meist keine Ursache. GPCL liest zuerst die Logs und gibt Hinweise; danach gehst du in dieser Reihenfolge vor.
+
+:::tip Erst eine Sache erledigen
+Klicke im Absturzfenster auf „Fehlerbericht exportieren“ und speichere die ZIP-Datei. Am Anfang stehen die Analyseergebnisse von GPCL, danach Mod-Liste, Java, Startparameter und alle Logs — die Diagnose stützt sich fast immer darauf.
+:::
+
+## 1. Zuerst die Analyse von GPCL
+
+Das Fenster zeigt 1–2 Hinweise, die GPCL in den Logs gefunden hat, etwa „Zu wenig Arbeitsspeicher“ oder „Mod-Abhängigkeit oder Kompatibilitätsprüfung fehlgeschlagen“. Über „Details anzeigen“ siehst du alle Hinweise, die zugehörigen Logzeilen und Absturzinformationen.
+
+Diese Schlussfolgerungen entstehen aus Stichwortabgleich und sind nur eine Richtung, kein Beweis. Gibt es genauere Angaben in den Logs (etwa welche Abhängigkeit fehlt), stehen sie als Belege daneben.
+
+## 2. Fehlerbericht exportieren
+
+Die Schaltfläche sitzt im Absturzfenster. Nach der Wahl eines Speicherorts packt GPCL:
+
+- `error-report.txt`: Analyse, Fehlerzusammenfassung, System / Grafik / Java, Mod-Liste, Ressourcenpakete und Shader, Startparameter, Spielausgabe, Fehlerzeilen aus den Logs;
+- `crash-reports/`: die zu diesem Absturz erzeugten Crash-Reports;
+- `logs/`: `latest.log` und `debug.log` (bei sehr großen Dateien nur der Schluss);
+- `jvm-crash/`: die vom JVM erzeugten `hs_err_pid*.log` (etwa bei JVM-Absturz durch Grafiktreiber);
+- `launcher-log.txt`: Launcher-Logs;
+- `game-output.txt`: Standardausgabe und Fehlerausgabe des Spieleprozesses in diesem Lauf.
+
+`--accessToken` und der Systembenutzername im Bericht sind maskiert, du kannst ihn direkt weitergeben. Schicke nicht nur einen Screenshot des Absturzfensters.
+
+## 3. Selbst in die Logs sehen
+
+„Logs anzeigen“ im Fenster öffnet die Ausgabe des Spieleprozesses. Wichtig ist das Ende und die Suche nach diesen Begriffen:
+
+| Stichwort | Bedeutung |
+| --- | --- |
+| `Exception`, `Caused by` | Die eigentliche Ausnahme steht meist nach dem ersten `Caused by` |
+| `OutOfMemoryError` | Zugewiesener Arbeitsspeicher reicht nicht |
+| `UnsupportedClassVersionError` | Java-Version passt nicht zur Spielversion |
+| `NoSuchMethodError`, `ClassNotFoundException` | Mod, Spielversion oder Loader-Version passen nicht zusammen, oder eine Abhängigkeit fehlt |
+| `GLFW error` | Problem mit Grafiktreiber oder OpenGL-Unterstützung |
+
+## 4. Häufige Ursachen
+
+| Symptom | Häufige Ursache | Vorgehen |
+| --- | --- | --- |
+| Startet und beendet sich sofort, Log enthält `UnsupportedClassVersionError` | Falsche Java-Version | Java von GPCL automatisch ergänzen lassen; oder Mirror in den Einstellungen wechseln und neu installieren |
+| Hängt beim Laden oder stürzt ab, Log enthält `OutOfMemoryError` | Zu wenig Speicher oder zu viele Mods | Unter Einstellungen → Spiel → Speicherzuweisung erhöhen; nicht über den physischen Speicher gehen |
+| Absturz beim Laden der Mods, Mod-Name im Log | Falsche Mod-Version, fehlende Abhängigkeit, Konflikt zweier Mods | Zuerst nur diesen Mod testen; unterstützte MC- und Loader-Version prüfen |
+| Beendet sich, bevor das Fenster erscheint, `GLFW error` | Veralteter Grafiktreiber oder fehlendes OpenGL | Grafiktreiber aktualisieren; auf Notebooks prüfen, ob die dedizierte GPU verwendet wird |
+| Wird vom Server geworfen, `Invalid session` | Premium-Anmeldung abgelaufen oder Konto ohne Lizenz für diese Version | Erneut als Premium anmelden; prüfen, ob das Konto die Version besitzt |
+| Absturz beim Betreten der Welt oder beim Laden von Ressourcenpaketen | Beschädigter Spielstand, Ressourcen- oder Shaderpaket | Neue Welt testen; Spielstand vor der Reparatur sichern |
+| Absturz beim Start mit Fabric, Hinweis auf fehlendes `fabric-api` | Fabric API fehlt | Bei der Fabric-Installation „Fabric API mitinstallieren“ anhaken oder manuell nachinstallieren |
+
+## 5. Zuerst diese drei Dinge ausschließen
+
+1. **Alle Mods, Ressourcenpakete und Shader deaktivieren** und einmal ohne starten. Läuft es, liegt es an den Mods.
+2. **Eine Vanilla-Version starten**. Läuft es, liegt es an der aktuellen Version oder ihrer Mod-Kombination.
+3. **Eine neue Welt anlegen**. Läuft es, ist der alte Spielstand beschädigt.
+
+## 6. Immer noch nicht
+
+Schreibe eine E-Mail an [gamets@caellab.com](mailto:gamets@caellab.com) mit dem exportierten Fehlerbericht und:
+
+- Launcher-Version, Minecraft-Version, Loader-Version;
+- welche Mods installiert sind (mit Versionsnummer besser);
+- was vor dem Absturz passiert ist.
+
+„Startet und stürzt sofort ab“ allein lässt sich kaum eingrenzen; die Logs im Bericht sind entscheidend.

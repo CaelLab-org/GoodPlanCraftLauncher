@@ -1,0 +1,59 @@
+---
+title: Java ve bellek
+description: Java sürümlerinin eşleşmesi, GPCL'nin belleği nasıl ayırdığı ve bellek yetmediğinde ne yapılacağı.
+---
+
+GPCL oyun sürümüne göre Java'yı kendisi seçer ve bilgisayarın belleğine göre otomatik ayırır. Çoğu durumda elle müdahale gerekmez.
+
+## Java sürümü eşleşmesi
+
+| Minecraft sürümü | Gereken Java |
+| --- | --- |
+| 1.16.5 ve öncesi | Java 8 |
+| 1.17 – 1.20.4 | Java 17 |
+| 1.20.5 ve sonrası | Java 21 |
+
+Başlatmada gereken Java yoksa GPCL indirip kurar. İndirme başarısız olursa **Ayarlar → İndirme → Java indirme** bölümünden başka bir ayna kaynağı seçip yeniden deneyin.
+
+Java, GPCL'nin kendi klasörüne kurulur; sistemdeki diğer Java sürümlerini etkilemez ve sistemin `JAVA_HOME` değişkenini değiştirmez.
+
+## Bellek: otomatik
+
+Varsayılan «Otomatik». Ayırma mantığı iki adımdan oluşur:
+
+1. Önce fiziksel belleğin **%30**'u tahmin edilir, tam GB'a aşağı yuvarlanır ve **2–8 GB** aralığına sıkıştırılır;
+2. Sonra o anki boş belleğe bakılır: sisteme en az 1 GB bırakılır, en az 2 GB hesaba katılır, sonuç 512 MB'a aşağı yuvarlanır ve ikisinden küçüğü alınır.
+
+Birkaç gerçek sonuç:
+
+| Fiziksel bellek | O anki boş | Otomatik ayırma |
+| --- | --- | --- |
+| 16 GB | 8 GB | 4 GB |
+| 16 GB | 3.9 GB | 2.5 GB |
+| 8 GB | 4 GB | 2 GB |
+
+Ayarlar sayfası sistem belleğinin kullanılan / toplam değerini ve o anki boş miktarı gösterir. Boş bellek azaldığında otomatik ayırma düşer ve önce bazı programları kapatmanızı önerir.
+
+`-Xmx` bir üst sınırdır, başlangıçta tamamını kaplamaz. Bu yüzden o anki boş belleğe göre ayırmak, sabit ve çok yüksek bir değer vermekten daha güvenlidir.
+
+## Bellek: özel
+
+Mod paketi veya büyük mod grupları yetmiyorsa «Özel»e geçip kaydırıcıyı sürükleyin. Sisteme ve diğer programlara yer bırakın; fiziksel belleğin tamamını oyuna vermeyin.
+
+`OutOfMemoryError` görüyorsanız bellek yetmiyor demektir:
+
+1. Ayırmayı bir kademe artırıp yeniden deneyin;
+2. Yetmezse mod sayısını azaltın;
+3. Tarayıcı gibi bellek tüketen programları aynı anda kapatın.
+
+## G1GC ayarı
+
+**Ayarlar → Gelişmiş → Bellek yönetimi** bölümünde G1GC ayarı vardır, varsayılan olarak kapalıdır. Yalnızca FPS dalgalanması ve GC kaynaklı takılmalar belirginse açmanız önerilir; açıldığında bir dizi yaygın G1GC parametresi eklenir.
+
+Özel JVM parametreleri de aynı bölümdedir. Hatalı parametre oyunu hiç açtırmaz; emin değilseniz değiştirmeyin.
+
+## Başlatmadan önce belleği optimize etme
+
+Açıksa GPCL oyunu başlatmadan önce kendi kullandığı belleğin bir kısmını boşaltır. Yalnızca başlatıcının kendi sürecini temizler; çalışan Minecraft'a dokunmaz ve oturum durumunu silmez.
+
+Mekanik disklerde bu adımda kısa bir takılma görülebilir, bu normaldir.

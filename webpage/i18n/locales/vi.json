@@ -1,0 +1,206 @@
+{
+  "meta": {
+    "title": "GoodPlanCraftLauncher - Trình khởi chạy Minecraft nhẹ và nhanh - CaelLabGameTS",
+    "description": "GoodPlanCraftLauncher là trình khởi chạy Minecraft đơn giản, hiệu quả với đăng nhập Microsoft và ngoại tuyến, quản lý phiên bản và cài đặt mod Forge/NeoForge/Fabric/OptiFine, giúp bạn vào thế giới khối vuông chỉ với một cú nhấp. Mã nguồn mở và miễn phí.",
+    "keywords": "GoodPlanCraftLauncher,trình khởi chạy Minecraft,trình khởi chạy MC,Minecraft Java Edition,CaelLab,mã nguồn mở",
+    "ogTitle": "GoodPlanCraftLauncher - Trình khởi chạy Minecraft nhẹ và nhanh",
+    "ogDescription": "Nhẹ · nhanh · mã nguồn mở. Đăng nhập Microsoft và ngoại tuyến, quản lý phiên bản, cài Forge/NeoForge/Fabric/OptiFine chỉ một cú nhấp."
+  },
+  "historyMeta": {
+    "title": "Lịch sử thay đổi - GoodPlanCraftLauncher - CaelLabGameTS",
+    "description": "Lịch sử thay đổi và bộ cài cho mọi phiên bản GoodPlanCraftLauncher: từ 1.0.0 đến bản mới nhất, mọi thay đổi đều có trên trang này.",
+    "ogTitle": "Lịch sử thay đổi - GoodPlanCraftLauncher",
+    "ogDescription": "Ghi chú phát hành và bộ cài cho mọi phiên bản."
+  },
+  "nav": {
+    "source": "Mã nguồn",
+    "language": "Ngôn ngữ",
+    "download": "Tải v{version}",
+    "mobileGitHub": "Mã nguồn GitHub",
+    "openMenu": "Mở menu"
+  },
+  "hero": {
+    "tags": [
+      "Mã nguồn mở",
+      "Miễn phí",
+      "Trình khởi chạy Minecraft"
+    ],
+    "subtitle": "Nhẹ · Nhanh · Mã nguồn mở",
+    "desc": "Trình khởi chạy Minecraft dành cho Windows: đăng nhập Microsoft và ngoại tuyến, quản lý phiên bản, cài Forge / Fabric / OptiFine chỉ một cú nhấp. Khi game gặp sự cố, nó nói rõ nguyên nhân thay vì chỉ hiện một khung trống.",
+    "download": "Tải ngay",
+    "versionLabel": "Phiên bản",
+    "updatedLabel": "Cập nhật",
+    "platformLabel": "Nền tảng",
+    "platform": "Windows 10+",
+    "iframeTitle": "Giao diện GoodPlanCraftLauncher",
+    "windowNote": "Cửa sổ phía trên <b>có thể bấm</b> — đó chính là giao diện trình khởi chạy, chạy ngay trong trang web.",
+    "iconAlt": "Biểu tượng GoodPlanCraftLauncher"
+  },
+  "features": {
+    "tag": "Tính năng",
+    "title": "Tính năng chính",
+    "desc": "Công cụ thiết thực cho người chơi, mỗi thứ đều nhằm giúp bạn vào game nhanh hơn",
+    "items": [
+      {
+        "title": "Hai cách đăng nhập",
+        "desc": "Đăng nhập Microsoft và ngoại tuyến, chuyển đổi bất cứ lúc nào; chế độ ngoại tuyến không cần xác minh trực tuyến."
+      },
+      {
+        "title": "Tải mod tích hợp",
+        "desc": "Tìm trên Modrinth và CurseForge, rồi cài mod, shader hoặc gói tài nguyên vào thư mục mà phiên bản đã chọn thực sự dùng."
+      },
+      {
+        "title": "Bốn trình tải mod",
+        "desc": "Forge, NeoForge, Fabric và OptiFine được cài từ nguồn chính thức, kiểm tra phiên bản Java trước."
+      },
+      {
+        "title": "25 ngôn ngữ giao diện",
+        "desc": "Theo ngôn ngữ hệ thống lần đầu khởi chạy; đổi bất cứ lúc nào trong cài đặt."
+      },
+      {
+        "title": "Quản lý phiên bản tự động",
+        "desc": "Tải, cài và chuyển phiên bản Minecraft chỉ một cú nhấp, thư viện và tài nguyên được xử lý tự động."
+      },
+      {
+        "title": "Khởi động nhanh",
+        "desc": "Luồng khởi chạy tinh gọn cùng bộ nhớ đệm giúp bạn bấm là chơi, không phải chờ."
+      },
+      {
+        "title": "Quản lý môi trường Java",
+        "desc": "Tự phát hiện và cài môi trường Java; nguồn tải có thể chọn Thanh Hoa, Đại học Nam Kinh, Huawei Cloud hoặc nguồn chính thức, lỗi thì chuyển sang nguồn kế tiếp."
+      },
+      {
+        "title": "Hỗ trợ giao diện sáng tối",
+        "desc": "Hỗ trợ đầy đủ chế độ sáng và tối, có thể điều chỉnh tỉ lệ giao diện để hiển thị đồng nhất."
+      },
+      {
+        "title": "Tự động cập nhật và bảo trì",
+        "desc": "Kiểm tra cập nhật tích hợp và tự động dọn nhật ký có thể cấu hình giúp trình khởi chạy luôn gọn nhẹ theo thời gian."
+      },
+      {
+        "title": "Thông báo sự cố và báo cáo lỗi",
+        "desc": "Khi game thoát bất thường, nó giải thích nguyên nhân và có thể xuất báo cáo lỗi chỉ một cú nhấp (báo cáo sự cố + nhật ký + thông tin hệ thống)."
+      },
+      {
+        "title": "Bảng trạng thái khi chạy",
+        "desc": "Sau khi khởi chạy, bảng bên phải hiển thị phiên bản, PID, thời gian chạy và bộ nhớ, có thể kết thúc game bất cứ lúc nào."
+      },
+      {
+        "title": "Tiêu đề cửa sổ tùy chỉnh",
+        "desc": "Tự viết tiêu đề cửa sổ game, hỗ trợ từ khóa như {mc_version} và {time}."
+      }
+    ]
+  },
+  "shots": {
+    "tag": "Ảnh chụp",
+    "title": "Ảnh chụp thực tế",
+    "desc": "Cửa sổ phía trên là bản mô phỏng giao diện trình khởi chạy trên web, bấm được mà không cần cài gì. Bốn ảnh dưới là trình khởi chạy chạy thật trên Windows, không chỉnh sửa.",
+    "items": [
+      {
+        "alt": "Màn hình khởi chạy GoodPlanCraftLauncher",
+        "caption": "Màn hình khởi chạy · chọn phiên bản, nhập tên người chơi, bắt đầu game"
+      },
+      {
+        "alt": "Màn hình tải xuống GoodPlanCraftLauncher",
+        "caption": "Màn hình tải xuống · phiên bản game, mod, shader, gói tài nguyên và modpack"
+      },
+      {
+        "alt": "Cài đặt game GoodPlanCraftLauncher",
+        "caption": "Cài đặt · bộ nhớ game, chế độ cửa sổ, tiêu đề cửa sổ và từ khóa"
+      },
+      {
+        "alt": "Cài đặt giao diện GoodPlanCraftLauncher",
+        "caption": "Cài đặt · ngôn ngữ, kiểu giao diện, chủ đề và tỉ lệ"
+      }
+    ]
+  },
+  "download": {
+    "tag": "Tải xuống",
+    "title": "Tải ngay",
+    "desc": "Chọn nền tảng của bạn và bắt đầu cuộc phiêu lưu khối vuông",
+    "button": "Bước vào thế giới khối vuông!",
+    "updatedLabel": "Cập nhật",
+    "platformLabel": "Nền tảng",
+    "licenseLabel": "Giấy phép",
+    "platform": "Windows 10 64-bit",
+    "license": "Mã nguồn mở, miễn phí",
+    "github": "Xem trên GitHub"
+  },
+  "requirements": {
+    "tag": "Hệ thống",
+    "title": "Yêu cầu hệ thống",
+    "desc": "Khiêm tốn, nhưng nên biết",
+    "items": [
+      {
+        "label": "Hệ điều hành",
+        "text": "Windows 10 64-bit (1709 trở lên); Windows 11 cũng chạy được"
+      },
+      {
+        "label": "Môi trường Java",
+        "text": "Trình khởi chạy tự cài; nên dọn các bản Java thừa hoặc xung đột trên hệ thống"
+      },
+      {
+        "label": "Dung lượng",
+        "text": "Cần ít nhất 90 MB trống cho bản thân trình khởi chạy (không tính tệp game)"
+      },
+      {
+        "label": "Bộ nhớ",
+        "text": "Khuyến nghị có từ 2 GB bộ nhớ trống trở lên"
+      }
+    ]
+  },
+  "openSource": {
+    "tag": "Mã nguồn mở",
+    "title": "Mã nguồn mở và đóng góp",
+    "desc": "GPCL là dự án mã nguồn mở 100%, mã nguồn đặt trên GitHub. Hoan nghênh PR, và cả góp ý trên <a href=\"https://forum.xmuer.online/\" target=\"_blank\">diễn đàn</a>, để cùng xây một trình khởi chạy Minecraft tốt hơn.",
+    "items": [
+      {
+        "title": "Giấy phép",
+        "desc": "Phát hành theo CaelLab BY-SA Code License, Phiên bản 3 (hoặc bất kỳ phiên bản mới hơn). Bạn có thể dùng, sửa và phân phối lại tự do; bản sửa đổi phải giữ cùng giấy phép mã nguồn mở. Trang dự án: <a href=\"https://gamets.caellab.com/gpcl/\">gamets.caellab.com/gpcl</a>.",
+        "action": "Đọc toàn bộ giấy phép →"
+      },
+      {
+        "title": "Đóng góp",
+        "desc": "Kho mã nguồn chính nằm trên GitHub, nơi quản lý issue và PR. Hoan nghênh báo lỗi, đề xuất tính năng và đóng góp mã.",
+        "action": "Ghé GitHub →"
+      }
+    ],
+    "licenseSummary": "TÓM TẮT GIẤY PHÉP — CaelLab BY-SA Code License v3"
+  },
+  "history": {
+    "tag": "Lịch sử",
+    "title": "Lịch sử phiên bản",
+    "desc": "Các phiên bản trước và lịch sử thay đổi của chúng",
+    "older": "Hiện {n} phiên bản cũ hơn",
+    "more": "Xem toàn bộ lịch sử thay đổi (cả {total} phiên bản và bộ cài) →",
+    "page": {
+      "back": "← Về trang chủ",
+      "tag": "Lịch sử thay đổi",
+      "heading": "Lịch sử thay đổi",
+      "intro": "Từ 1.0.0 đến bản mới nhất, mọi phiên bản — thay đổi gì và có tải được không — đều có trên trang này.",
+      "note": "Các bản 1.3.2 trở về trước không giữ bộ cài; trình cập nhật tích hợp trong bản cũ có thể không còn hoạt động, nên dùng bản mới nhất cho việc hằng ngày.",
+      "indexLabel": "Mục lục phiên bản",
+      "latest": "Mới nhất",
+      "download": "Tải v{version}",
+      "unavailable": "Không giữ bộ cài cho phiên bản này",
+      "fileNote": "{file} · {size} · Windows 64-bit"
+    }
+  },
+  "footer": {
+    "brand": "Một nhóm phát triển game và công cụ độc lập tại CaelLab. Khám phá chân trời tương lai, mang theo sự tái sinh vô hạn.",
+    "projects": "Dự án",
+    "community": "Cộng đồng",
+    "openSource": "Mã nguồn mở",
+    "help": "Trung tâm trợ giúp",
+    "changelog": "Lịch sử thay đổi",
+    "forum": "Diễn đàn",
+    "license": "Giấy phép",
+    "copyright": "&copy; 2026 GameTS bởi <a href=\"https://www.caellab.com/\" target=\"_blank\" class=\"footer-inline-link\">CaelLab</a>. Bảo lưu mọi quyền. Trang dự án: <a href=\"https://gamets.caellab.com/gpcl/\" class=\"footer-inline-link\">gamets.caellab.com/gpcl</a>",
+    "disclaimer": "GoodPlanCraftLauncher là công cụ mã nguồn mở của bên thứ ba và không có liên kết chính thức với <a href=\"https://www.minecraft.net/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Mojang Studios</a>, <a href=\"https://www.microsoft.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Microsoft</a>, <a href=\"https://www.xbox.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Xbox</a>. Minecraft là thương hiệu của Mojang Studios; dùng trình khởi chạy này cần giấy phép Minecraft hợp lệ.",
+    "licenseLine": "Giấy phép mã nguồn mở: <a href=\"https://www.caellab.com/license/cbs-v3\" target=\"_blank\" class=\"footer-inline-link\">CaelLab BY-SA Code License v3</a> | Mã nguồn mở trên <a href=\"https://github.com/CaelLab-org/GoodPlanCraftLauncher\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">GitHub</a>"
+  },
+  "labels": {
+    "platform": "Windows 64-bit",
+    "github": "GitHub"
+  }
+}

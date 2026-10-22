@@ -145,6 +145,26 @@ nav.scrolled {
     box-shadow: 0 10px 22px -6px rgba(11, 127, 184, 0.62);
 }
 
+.lang-switch select {
+    margin-left: 6px;
+    padding: 7px 10px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    color: var(--text-2);
+    font-family: var(--font-sans);
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.lang-switch select:hover,
+.lang-switch select:focus-visible {
+    border-color: var(--line-strong);
+    color: var(--text-1);
+    outline: none;
+}
+
 /* 源码下拉 */
 .dropdown { position: relative; }
 .dropdown-toggle {

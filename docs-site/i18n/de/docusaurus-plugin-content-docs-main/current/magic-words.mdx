@@ -1,0 +1,52 @@
+---
+title: Magische Wörter im Fenstertitel
+slug: /magic-words
+description: Fenstertitel von Minecraft mit Platzhaltern wie {mc_version} und {time} anpassen.
+---
+
+Im Fenstertitel des Spiels können Platzhalter stehen, die GPCL beim Start durch echte Werte ersetzt.
+
+Die Einstellung liegt unter **Einstellungen → Spiel → Fenstertitel des Spiels**. Ein leerer Titel bedeutet, dass der Fenstertitel nicht geändert wird.
+
+## Ein Beispiel
+
+Titel:
+
+```text
+{time} · {mc_version} · {gpcl_version}
+```
+
+Nach dem Start kann er so aussehen:
+
+```text
+20:09:58 · Minecraft 1.21.3 · 1.6.0
+```
+
+## Verfügbare Platzhalter
+
+| Platzhalter | Wird zu |
+| --- | --- |
+| `{mc_version}` | Anzeigename der Version, z. B. Minecraft 1.21.3 oder ein Name mit Loader |
+| `{mc_id}` | Name des Versionsordners, z. B. 1.21.3-Fabric |
+| `{username}` | Spielername dieses Starts |
+| `{gpcl_version}` | GPCL-Version, z. B. 1.6.0 |
+| `{date}` | Startdatum, Format 2026/10/20 |
+| `{time}` | Aktuelle Uhrzeit, Format 20:09:58 |
+| `{datetime}` | Datum und Uhrzeit, durch ein Leerzeichen getrennt |
+| `{java}` | Verzeichnisname der aktuellen Java-Laufzeit |
+| `{memory}` | Zugewiesener maximaler Speicher dieses Starts, z. B. 4096MB |
+
+Groß- und Kleinschreibung müssen stimmen. Falsch geschriebene Platzhalter bleiben unverändert stehen, damit du den Fehler siehst.
+
+## Bleibt der Titel erhalten
+
+Darunter gibt es die Option „Namen möglichst beibehalten“, standardmäßig aus.
+
+- **Aus**: Nach dem Erscheinen des Spielfensters korrigiert GPCL den Titel 20 Sekunden lang. Ändert das Spiel oder ein Mod ihn danach, wird nicht mehr eingegriffen. Ein Titel mit `{time}` bleibt auf diesem Zeitpunkt stehen.
+- **An**: Der eingestellte Titel bleibt während der gesamten Spielsitzung erhalten, auch beim Betreten einer Welt, wo „ - Singleplayer“ ihn sonst überschreibt.
+
+Manche Modpacks oder Mods ändern den Fenstertitel ebenfalls; dass sich beide gegenseitig überschreiben, ist normal.
+
+:::note
+Magische Wörter funktionieren derzeit nur im Fenstertitel des Spiels, in anderen Einstellungen nicht.
+:::

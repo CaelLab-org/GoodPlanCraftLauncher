@@ -1,0 +1,67 @@
+---
+title: Forge / Fabric / OptiFine
+description: Installare mod loader in GPCL, scegliere le versioni e trovare la cartella delle mod.
+---
+
+Nella pagina di download puoi scegliere il loader insieme alla versione. GPCL installa prima la versione vanilla e poi il loader in una cartella di versione separata, senza sovrascrivere la vanilla.
+
+## Come installare
+
+1. Apri la pagina di download e scegli una versione di Minecraft.
+2. Nelle opzioni del loader scegli Forge, Fabric o OptiFine, poi la versione corrispondente del loader.
+3. Fai clic su scarica e attendi che vanilla e loader siano installati.
+4. Torna alla schermata iniziale e avvia la versione il cui nome contiene il loader.
+
+I download finiscono in coda, quindi puoi mettere in fila più versioni di seguito; il download in corso si può annullare e la coda prosegue.
+
+## Quale loader scegliere
+
+| Loader | Adatto a | Attenzione |
+| --- | --- | --- |
+| Forge | Modpack grandi, mod di vecchia data | Si avvia più lentamente di Fabric, ma ha più versioni disponibili |
+| Fabric | Mod leggere, versioni recenti | Scegli il Fabric Loader giusto per la versione del gioco |
+| OptiFine | Shader, ottimizzazione delle prestazioni | Insieme ad altri loader può richiedere mod di compatibilità |
+
+### Forge
+
+Durante l'installazione GPCL esegue solo `--installClient`, senza provare la GUI né parametri da server. L'output dell'installer viene convertito in avanzamento, per esempio «Installazione di Forge: Downloading library…».
+
+Prima di installare viene controllata la versione principale di Java: se è inferiore a quella richiesta da Forge, GPCL restituisce subito un errore e non tenta di usare un Java vecchio. L'operazione attende al massimo 15 minuti; annullare il download termina il processo dell'installer.
+
+### Fabric
+
+GPCL recupera direttamente il profilo di versione e le librerie di Fabric, senza dipendere dall'installer.
+
+«Installa anche Fabric API» è selezionato per impostazione predefinita: dopo Fabric, GPCL mette la versione corrispondente di Fabric API nella cartella `mods` di quella versione. Se lo deselezioni non viene installato nulla; se Fabric API fallisce appare solo un avviso e Fabric in sé non viene compromesso.
+
+### OptiFine
+
+OptiFine viene installato in modo silenzioso, senza aprire il suo installer grafico. Il risultato finisce nella cartella di gioco corrente, e anche le cartelle di gioco personalizzate vengono gestite correttamente.
+
+## Dove vanno le mod
+
+Le versioni scaricate dal launcher attivano per impostazione predefinita l'**isolamento della versione**: la cartella di gioco punta a `versions/<version-name>` e mod, mondi e impostazioni del gioco seguono quella versione.
+
+| Stato della versione | Cartella delle mod |
+| --- | --- |
+| Scaricata ora, isolata | `versions/<version-name>/mods` |
+| Già esistente, senza `mods` / `saves` nella cartella della versione | `mods` nella radice della cartella di gioco |
+
+Nella schermata iniziale apri «Impostazioni versione»: i collegamenti alle cartelle vengono calcolati in base all'isolamento effettivo:
+
+- «Cartella della versione» è sempre presente;
+- «Cartella delle mod» compare quando viene rilevato Forge / Fabric / NeoForge / Quilt;
+- «Cartella degli shader» compare quando viene rilevato OptiFine.
+
+Per installare mod direttamente in una cartella qualsiasi, scegli «Seleziona cartella» come destinazione nel download delle mod: GPCL usa la sottocartella `mods` di quella cartella.
+
+## Crash dopo l'installazione
+
+1. Sposta tutte le mod fuori dalla cartella `mods` e avvia una volta senza mod.
+2. Se il gioco parte, rimettine metà alla volta fino a trovare quella problematica.
+3. Verifica che la mod corrisponda sia alla versione di Minecraft sia a quella del loader: le mod di Forge non funzionano su Fabric, e viceversa.
+4. Anche una dipendenza mancante provoca un crash all'avvio: controlla quelle elencate in [Download dei mod](./mods.mdx).
+
+Combinare OptiFine con Forge / Fabric di solito richiede mod di compatibilità aggiuntive. Se non esistono per la tua combinazione, non forzarla.
+
+Altri passaggi di diagnosi in [Crash del gioco](./mc-game.mdx).

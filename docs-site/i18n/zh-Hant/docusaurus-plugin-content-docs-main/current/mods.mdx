@@ -1,0 +1,59 @@
+---
+title: 模組下載
+description: 在 GPCL 裡搜尋、安裝 Modrinth 和 CurseForge 模組，前置依賴與中文搜尋。
+---
+
+下載頁的「模組」分區可以直接搜模組、選檔案、裝到指定版本，不用自己去網頁下載再拖進資料夾。
+
+## 搜尋
+
+來源有兩個：**Modrinth** 和 **CurseForge**。預設會同時搜，結果列表裡會標出來源。
+
+搜尋框可以先打中文。查詢裡含中文時，GPCL 會先查 MCMOD 的公開搜尋結果，從標題括號裡取英文名（比如「霧中人 (The Man From The Fog)」取出 `The Man From The Fog`），再用英文名去搜 Modrinth。取不到英文名就按原查詢搜。
+
+## 篩選
+
+預設**不帶**版本和載入器篩選，和 PCL 一樣先搜全部，免得新模組因為篩選條件被藏起來。需要收窄時再手動選：
+
+- Minecraft 版本；
+- 載入器（Forge / Fabric / NeoForge / Quilt）；
+- 排序方式。
+
+檔案列表會優先把目前啟動版本的 MC 版本排在前面，減少裝錯版本的機率。
+
+## 安裝
+
+點檔案列的「安裝」才會彈出目標選擇：
+
+- 已安裝的 Mod 版本列表，選一個直接裝；
+- 「選擇資料夾」，裝到任意目錄的 `mods`。
+
+檔案會落在目標版本實際使用的 `mods`：隔離版本是 `versions/<version-name>/mods`，否則就是遊戲根目錄的 `mods`。
+
+未隔離的版本第一次裝模組時會啟用版本隔離，目標框裡會寫明這一點，不再額外彈確認。
+
+### 前置依賴
+
+Modrinth 的檔案列會顯示「N 個前置」。安裝時會遞迴裝上下載必需的依賴，成功提示裡也會說明帶了幾個前置。
+
+CurseForge 的連結模式只裝選中的單一檔案，**不自動裝前置**，介面上也會寫明。
+
+## CurseForge 沒有 API Key
+
+正常搜尋 CurseForge 需要 API Key（**設定 → 下載 → CurseForge API Key**，選填），或者等公共鏡像可用。沒有 Key、鏡像又不可用時，還有一條備援：
+
+在搜尋框裡貼上專案網址，或者寫 `cf:<short-name>`：
+
+```text
+https://www.curseforge.com/minecraft/mc-mods/sodium
+cf:sodium
+```
+
+GPCL 會透過 `api.cfwidget.com` 查專案和檔案，再用 ForgeCDN 直連下載。這條路徑**只裝選中的單一檔案，不解析依賴**。
+
+## 裝完沒生效
+
+- 確認模組支援的 MC 版本和載入器與目前版本一致；
+- 確認裝到了正確的 `mods`（版本隔離後不是根目錄那個）；
+- 缺前置的話，先補前置；
+- 還不行就看[遊戲崩潰](./mc-game.mdx)裡的日誌排查順序。

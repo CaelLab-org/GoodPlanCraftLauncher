@@ -8,6 +8,7 @@
 
 
 // __IMPORTS_BEGIN__
+import { t, translateText } from '../i18n';
 // __IMPORTS_END__
 
 export const usernameInput: HTMLInputElement | null = document.getElementById('username') as HTMLInputElement | null;
@@ -140,16 +141,16 @@ export function showDialog(options: { type?: string; title?: string; message?: s
     };
 
     if (dialogIcon) dialogIcon.innerHTML = icon(icons[options.type || ''] || icons.info);
-    if (dialogTitle) dialogTitle.textContent = options.title || '提示';
-    if (dialogMessage) dialogMessage.textContent = options.message || '';
+    if (dialogTitle) dialogTitle.textContent = translateText(options.title || t('ui.notice'));
+    if (dialogMessage) dialogMessage.textContent = translateText(options.message || '');
 
     if (options.type === 'confirm' || options.type) {
       if (dialogFooterSingle) dialogFooterSingle.classList.add('hidden');
       if (dialogFooterConfirm) dialogFooterConfirm.classList.remove('hidden');
-      if (dialogBtnYes && options.confirmText) dialogBtnYes.textContent = options.confirmText;
-      else if (dialogBtnYes) dialogBtnYes.textContent = '是';
-      if (dialogBtnCancel && options.cancelText) dialogBtnCancel.textContent = options.cancelText;
-      else if (dialogBtnCancel) dialogBtnCancel.textContent = '否';
+      if (dialogBtnYes && options.confirmText) dialogBtnYes.textContent = translateText(options.confirmText);
+      else if (dialogBtnYes) dialogBtnYes.textContent = t('ui.yes');
+      if (dialogBtnCancel && options.cancelText) dialogBtnCancel.textContent = translateText(options.cancelText);
+      else if (dialogBtnCancel) dialogBtnCancel.textContent = t('ui.no');
     } else {
       if (dialogFooterSingle) dialogFooterSingle.classList.remove('hidden');
       if (dialogFooterConfirm) dialogFooterConfirm.classList.add('hidden');
@@ -252,16 +253,18 @@ export function showToast(title: string, message?: string, type: string = 'info'
     if (last && Date.now() - last < TOAST_DEDUP_MS) return;
     toastHistory.set(key, Date.now());
   }
+  const localizedTitle: string = translateText(title);
+  const localizedMessage: string = message ? translateText(message) : '';
   const icons: Record<string, string> = { success: 'check-circle', error: 'x-circle', warning: 'alert', info: 'info' };
   const toast: HTMLDivElement = document.createElement('div');
   toast.className = `toast toast-${type}`;
   toast.innerHTML = `
     <span class="toast-icon">${icon(icons[type] || icons.info)}</span>
     <div style="flex:1">
-      <div class="toast-title">${title}</div>
-      ${message ? `<div class="toast-message">${message}</div>` : ''}
+      <div class="toast-title">${localizedTitle}</div>
+      ${localizedMessage ? `<div class="toast-message">${localizedMessage}</div>` : ''}
     </div>
-    <button class="toast-close" onclick="this.parentElement.remove()" aria-label="关闭">${icon('close')}</button>
+    <button class="toast-close" onclick="this.parentElement.remove()" aria-label="${t('ui.close')}">${icon('close')}</button>
   `;
   toastContainer.appendChild(toast);
   setTimeout(() => {
@@ -352,7 +355,12 @@ export function closeAllCustomSelects(): void {
 }
 
 
-document.addEventListener('click', closeAllCustomSelects);
+document.addEventListener('click', (event: Event) => {
+  const target: Element | null = event.target as Element | null;
+  // 下拉内部的点击（例如语言搜索框）不算“点外面”
+  if (target && target.closest('.custom-select')) return;
+  closeAllCustomSelects();
+});
 
 
 export function setCustomSelectValue(selectId: string, value: string, label?: string): void {
@@ -408,7 +416,7 @@ export const settingsNumInput: HTMLInputElement | null = document.getElementById
 export const enableMoreEl: HTMLInputElement | null = document.getElementById('enable-more') as HTMLInputElement | null;
 
 export function setStatus(text: string, type: string = 'info'): void {
-  if (statusDiv) statusDiv.textContent = text;
+  if (statusDiv) statusDiv.textContent = translateText(text);
   if (statusDiv) statusDiv.style.color =
     type === 'error' ? '#ef5350' :
     type === 'success' ? '#66bb6a' :

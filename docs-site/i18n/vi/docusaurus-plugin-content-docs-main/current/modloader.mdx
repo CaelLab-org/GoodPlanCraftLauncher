@@ -1,0 +1,67 @@
+---
+title: Forge / Fabric / OptiFine
+description: Cài mod loader trong GPCL, chọn phiên bản, tìm thư mục mod.
+---
+
+Khi chọn phiên bản ở trang tải xuống có thể chọn thẳng loader. GPCL sẽ cài bản gốc trước, rồi cài loader vào thư mục phiên bản riêng, không ghi đè bản gốc.
+
+## Cách cài
+
+1. Mở trang tải xuống, chọn một phiên bản Minecraft.
+2. Trong tùy chọn loader chọn Forge, Fabric hoặc OptiFine, rồi chọn phiên bản loader tương ứng.
+3. Nhấn tải xuống, đợi cả bản gốc và loader cài xong.
+4. Về trang khởi chạy, chọn phiên bản có tên loader để khởi chạy.
+
+Tác vụ tải xuống sẽ vào hàng đợi, có thể nhấn liên tiếp vài phiên bản để xếp hàng; tác vụ đang tải có thể hủy, sau khi hủy hàng đợi sẽ tiếp tục.
+
+## Chọn loại loader nào
+
+| Loader | Phù hợp | Lưu ý |
+| --- | --- | --- |
+| Forge | Modpack lớn, mod lâu đời | Khởi động chậm hơn Fabric, nhiều lựa chọn phiên bản |
+| Fabric | Mod nhẹ, phiên bản mới | Cần chọn đúng Fabric Loader theo phiên bản trò chơi |
+| OptiFine | Shader, tối ưu hiệu năng | Cài chung với loader khác có thể cần mod tương thích |
+
+### Forge
+
+Khi cài, GPCL chỉ chạy `--installClient`, không thử GUI hay tham số máy chủ. Đầu ra của trình cài đặt sẽ chuyển thành hiển thị tiến trình, ví dụ "Đang cài Forge: Downloading library…".
+
+Trước khi cài sẽ kiểm tra phiên bản Java chính, thấp hơn yêu cầu của Forge sẽ báo lỗi thẳng, không dùng Java phiên bản thấp chạy gắng. Toàn bộ quá trình chờ tối đa 15 phút; hủy tải xuống sẽ kết thúc tiến trình trình cài đặt.
+
+### Fabric
+
+GPCL lấy trực tiếp profile phiên bản và tệp thư viện của Fabric, không phụ thuộc trình cài đặt.
+
+"Cài kèm Fabric API" bật mặc định, sau khi cài Fabric xong sẽ đặt Fabric API đúng phiên bản vào `mods` của phiên bản đó. Bỏ chọn thì không cài; cài Fabric API thất bại chỉ báo, không ảnh hưởng bản thân Fabric.
+
+### OptiFine
+
+OptiFine cài im lặng, không bật trình cài đặt đồ họa của nó. Kết quả cài sẽ được đặt lại vào thư mục trò chơi hiện tại, thư mục trò chơi tùy chỉnh cũng được xử lý đúng.
+
+## Mod đặt ở đâu
+
+Phiên bản mới tải xuống mặc định bật **cách ly phiên bản**: thư mục trò chơi trỏ đến `versions/<version-name>`, mod, bản lưu và cài đặt trò chơi đều đi theo phiên bản này.
+
+| Tình trạng phiên bản | Thư mục mod |
+| --- | --- |
+| Mới tải xuống, đã cách ly | `versions/<version-name>/mods` |
+| Đã có từ trước, trong thư mục phiên bản không có `mods` / `saves` | `mods` ở thư mục gốc trò chơi |
+
+Ở trang khởi chạy mở "Cài đặt phiên bản" của phiên bản đó, mục thư mục được tính theo kết quả cách ly thực tế:
+
+- "Thư mục phiên bản" luôn có;
+- "Thư mục Mod" xuất hiện khi phát hiện Forge / Fabric / NeoForge / Quilt;
+- "Thư mục shader" xuất hiện khi phát hiện OptiFine.
+
+Muốn cài mod thẳng vào thư mục bất kỳ, trong đích cài của tải xuống mod chọn "Chọn thư mục", nó sẽ tìm `mods` trong thư mục đó.
+
+## Cài xong bị crash
+
+1. Trước tiên chuyển toàn bộ mod ra khỏi `mods`, khởi chạy trần một lần.
+2. Vào được thì mỗi lần đặt lại một nửa, để tìm ra mod có vấn đề.
+3. Xác nhận mod khớp cả phiên bản Minecraft và phiên bản loader — mod Forge không thể ném thẳng vào Fabric, ngược lại cũng vậy.
+4. Thiếu phụ thuộc cũng crash khi khởi chạy, vào [Tải xuống mod](./mods.mdx) xem các mục phụ thuộc được liệt kê.
+
+Cài chung OptiFine với Forge / Fabric thường cần mod tương thích bổ sung. Không có mod tương thích tương ứng thì đừng cố cài.
+
+Thêm các bước kiểm tra ở [Trò chơi bị crash](./mc-game.mdx).

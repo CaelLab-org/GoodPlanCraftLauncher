@@ -1,0 +1,59 @@
+---
+title: Java & memory
+description: Which Java version matches which game version, how GPCL allocates memory, and what to do when memory runs short.
+---
+
+GPCL picks Java automatically based on the game version and allocates memory based on the machine's RAM. In most cases you do not need to change anything.
+
+## Java version mapping
+
+| Minecraft version | Java required |
+| --- | --- |
+| 1.16.5 and older | Java 8 |
+| 1.17 - 1.20.4 | Java 17 |
+| 1.20.5 and newer | Java 21 |
+
+If the matching Java is missing at launch, GPCL downloads and installs it automatically. If the download fails, go to **Settings → Downloads → Java download** and try another mirror.
+
+Java is installed inside GPCL's own directory. It does not affect other Java installations on the system and does not change the system's `JAVA_HOME`.
+
+## Memory: automatic
+
+The default is "Automatic". Allocation works in two steps:
+
+1. Start from **30%** of physical memory, round down to whole GB, and clamp to **2 - 8 GB**;
+2. Then look at currently available memory: leave the system at least 1 GB, use 2 GB as the floor, round the result down to 512 MB, and take the smaller of the two.
+
+A few real results:
+
+| Physical memory | Currently available | Automatic allocation |
+| --- | --- | --- |
+| 16 GB | 8 GB | 4 GB |
+| 16 GB | 3.9 GB | 2.5 GB |
+| 8 GB | 4 GB | 2 GB |
+
+The settings page shows system memory used / total and the current available value. When available memory is tight, automatic allocation steps down and suggests closing some programs first.
+
+`-Xmx` is an upper bound, not something consumed the moment the game starts. Allocating against the memory actually available at the time is therefore more stable than forcing a large value.
+
+## Memory: custom
+
+When a modpack or a large mod set is not enough, switch to "Custom" and drag the slider. Leave room for the system and other programs; do not give all your physical memory to the game.
+
+`OutOfMemoryError` means memory ran out:
+
+1. Raise the allocation one step and try again;
+2. If that is not enough, remove some mods;
+3. Also close memory-hungry programs such as browsers.
+
+## G1GC tuning
+
+**Settings → Advanced → Memory management** has G1GC tuning, off by default. Enable it only when the frame rate fluctuates or GC stutters are noticeable; enabling it appends a set of common G1GC flags.
+
+Custom JVM arguments are in the same section. A wrong argument can stop the game from starting at all; if you are unsure, do not change it.
+
+## Optimize memory before launch
+
+When enabled, GPCL reclaims some of the memory it uses before launching the game. It only cleans up the launcher's own process; it does not touch a running Minecraft, and it does not clear the sign-in state.
+
+On a hard disk drive this step may cause a brief stutter, which is normal.

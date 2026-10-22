@@ -1,0 +1,355 @@
+{
+  "schema": 1,
+  "latest": "1.8.0",
+  "updated": "2026-10-22",
+  "versions": [
+    {
+      "version": "1.8.0",
+      "anchor": "v1-8-0",
+      "date": "2026-10-22",
+      "title": "25 języków — od launchera po stronę",
+      "log": [
+        "Launcher mówi teraz 25 językami: zmienisz go w Ustawienia → Wygląd → Język interfejsu, a listę można przeszukiwać",
+        "Przy pierwszym uruchomieniu wybiera język systemu; kreator powitalny pozwala też wybrać go wcześniej",
+        "Nowy kreator powitalny: język, styl interfejsu i krótkie wprowadzenie w 4 krokach, z możliwością pominięcia",
+        "Trzy style interfejsu: Minecraft, Zaawansowany (dotychczasowy wygląd) i Minimalny",
+        "Instalator przetłumaczono na te same 25 języków i automatycznie wybiera język systemu",
+        "Centrum pomocy jest dostępne w 25 językach, a linki pomocy w launcherze otwierają stronę w języku interfejsu",
+        "Strona i interaktywne demo na niej są również dostępne w 25 językach",
+        "Arabski, perski i hebrajski przełączają cały interfejs na zapis od prawej do lewej",
+        "Uruchamianie już nie migocze: ekran startowy i okno główne to jedna strona, a tło okna podąża za motywem; zmiana języka nie daje już czarnej klatki"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.8.0-Setup.exe",
+        "file": "GPCL-1.8.0-Setup.exe",
+        "size": "94 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.7.2",
+      "anchor": "v1-7-2",
+      "date": "2026-10-22",
+      "title": "Własne awatary i przeszukiwalna lista wersji",
+      "log": [
+        "Na ekranie startowym możesz teraz zmienić awatar: kliknij go lub wybierz obraz w Ustawienia → Wygląd → Awatar; obsługiwane są PNG / JPG / GIF / WebP",
+        "Obrazy powyżej 1 MB pytają o kompresję; limit to 4 MB, a domyślny awatar przywrócisz jednym kliknięciem",
+        "Ustawienia wyglądu zyskują suwak „Rozmiar awatara”, 32–160 pikseli",
+        "Lista wersji zyskuje pole wyszukiwania; każda wersja pokazuje swoją wersję gry i mod loader, a wybrana jest wyróżniona",
+        "Odświeżanie listy wersji nie odbudowuje jej od nowa, więc pozycja przewijania zostaje; „Importuj wersję lokalną” przeniesiono w prawy górny róg listy",
+        "Od 1.20 opcja „Dołącz do serwera” łączy bezpośrednio; brak adresu pokazuje teraz podpowiedź, zamiast po cichu uruchamiać tryb jednoosobowy",
+        "Ustawienia wersji zapisują się automatycznie, bez każdorazowego komunikatu „Zapisano”",
+        "Instalator zmalał z około 103 MB do 93 MB: zostawiono tylko chińskie i angielskie pakiety językowe, inne języki korzystają z angielskiego",
+        "1.7.1 był nieopublikowaną wewnętrzną kompilacją testową i został wycofany; 1.7.2 zawiera wszystkie jego zmiany"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.7.2-Setup.exe",
+        "file": "GPCL-1.7.2-Setup.exe",
+        "size": "93 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.7.0",
+      "anchor": "v1-7-0",
+      "date": "2026-10-22",
+      "title": "Shadery, paczki zasobów i modpacki instalowane jednym kliknięciem",
+      "log": [
+        "Strona pobierania zyskuje zakładki Shadery i Paczki zasobów: szukaj w Modrinth / CurseForge i instaluj prosto do odpowiedniego folderu wybranej wersji",
+        "Nowa zakładka Modpacki obsługuje modpacki Modrinth (.mrpack) i CurseForge, automatycznie instalując pasującą wersję gry, mod loader i wszystkie mody",
+        "Każdy modpack staje się osobną wersją, z modami, konfiguracjami i zapisami we własnym folderze, więc modpacki się nie mieszają",
+        "Lokalne modpacki też można importować: wybierz zip / .mrpack w zarządzaniu wersjami, podaj nazwę i instalacja rusza",
+        "Pliki modpacków są sprawdzane z manifestem pod kątem rozmiaru i SHA1, więc na wpół pobrane jary są pobierane ponownie, zamiast tworzyć grę, która nie wystartuje",
+        "NeoForge można teraz instalować wersjami jak Forge / Fabric (1.20.1 i nowsze)",
+        "Menu „Więcej” jest domyślnie zwinięte; włącz je w Ustawienia → Wygląd, gdy potrzeba, a błąd z ponownym pojawianiem się po restarcie został naprawiony"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.7.0-Setup.exe",
+        "file": "GPCL-1.7.0-Setup.exe",
+        "size": "103 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.6.1",
+      "anchor": "v1-6-1",
+      "date": "2026-10-21",
+      "title": "Powody awarii, powiedziane wprost",
+      "log": [
+        "Awarie są diagnozowane automatycznie (brak pamięci, niewłaściwa wersja Java, brakujące zależności, sterowniki GPU, niezgodność OptiFine / Forge i inne), a okno podaje 1–2 wnioski",
+        "„Pokaż szczegóły” pokazuje każdą wskazówkę i linię dowodu; „Pokaż logi” otwiera katalog gry wersji, która się wysypała",
+        "Raporty błędów eksportują kompletny zip: wyniki analizy, podsumowanie błędu, system i GPU, wersję Java, wersję i mod loader, listy modów / paczek zasobów / shaderów, argumenty startowe, wyjście gry i raporty awarii",
+        "Raport maskuje --accessToken i nazwę użytkownika systemu, więc można go przekazać innym do diagnozy",
+        "Przy kilku grach naraz każda sesja trzyma własne wyjście, więc kontekst awarii nie przecieka do innej wersji",
+        "Strona szczegółów moda została przebudowana: nazwy chińska i angielska, liczba pobrań, tagi kategorii, listy plików pogrupowane po wersji MC, karty zależności, linki do Modrinth / CurseForge / MCMod i kopiowanie nazwy jednym kliknięciem",
+        "Naprawiono rozwiązywanie zależności instalacji 1.20.1 jako 1.20, co dublowało wersje Fabric API / GeckoLib i powodowało, że Fabric zgłaszał Incompatible mods found i odmawiał startu",
+        "Instalacja moda usuwa stare jary tego samego projektu, więc nie gromadzi się kilka wersji"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.6.1-Setup.exe",
+        "file": "GPCL-1.6.1-Setup.exe",
+        "size": "103 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.6.0",
+      "anchor": "v1-6-0",
+      "date": "2026-10-20",
+      "title": "Instaluj mody bez szukania plików",
+      "log": [
+        "Strona pobierania zyskuje zakładkę Mody: szukaj w Modrinth / CurseForge, wybieraj pliki dla bieżącej wersji gry i wskaż, do której wersji instalować",
+        "Modrinth automatycznie dociąga wymagane zależności; obsługiwane jest wyszukiwanie po chińsku (zapytanie najpierw idzie przez MCMod po angielską nazwę)",
+        "Działa też bez klucza API CurseForge: wklej link do projektu lub cf:slug, a pojedynczy plik zainstaluje się przez mirror",
+        "Pobieranie to teraz kolejka zadań: kliknięcie kilku wersji ustawia je w kolejce, oczekujące zadania można usunąć, a anulowanie bieżącego pozwala kolejce iść dalej",
+        "Automatyczna aktualizacja instaluje się teraz po cichu: pobiera w tle i instaluje przy zamykaniu launchera, a okrągła plakietka w prawym górnym rogu pokazuje postęp",
+        "Nowość: automatyczny język gry (domyślnie chiński uproszczony), własny katalog gry i własny mirror plików",
+        "Nowość: import wersji lokalnej z folderu wersji lub zip / jar",
+        "Fabric naprawdę się instaluje, domyślnie z Fabric API; przy izolacji wersji mody i zapisy idą za wersją",
+        "Instalacja Forge uruchamia tylko --installClient, pokazuje postęp i wprost mówi, gdy wersja Java jest za stara",
+        "OptiFine instaluje się po cichu, zamiast otwierać graficzny instalator",
+        "Naprawiono liczenie pobrania 0 bajtów jako sukcesu, przekierowania ze ścieżką względną i brak postępu przy drugim pobieraniu"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.6.0-Setup.exe",
+        "file": "GPCL-1.6.0-Setup.exe",
+        "size": "103 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.5.2",
+      "anchor": "v1-5-2",
+      "date": "2026-10-18",
+      "title": "Ustawienia przebudowane",
+      "log": [
+        "Strona ustawień została przebudowana: pamięć, okno, zachowanie przy starcie, źródła pobierania i argumenty Java są pogrupowane i regulowane suwakami, przełącznikami i przyciskami segmentowymi",
+        "Pamięć domyślnie na „Auto”: 30% pamięci fizycznej, od 1 GB do 8 GB, z 2 GB dla systemu; można też ustawić ręcznie",
+        "Zarządzanie pamięcią naprawdę odzyskuje pamięć: czyści tylko procesy samego launchera, nigdy działającej gry, i można ustawić automatyczną optymalizację przed startem",
+        "Źródła pobierania mają cztery tryby (auto / najpierw mirror / najpierw oficjalne / tylko oficjalne), wybierane osobno dla plików i list wersji; dodano globalny limit prędkości 0–20 MB/s",
+        "Nowość: strojenie G1GC, własne argumenty JVM, priorytet procesu, gotowe rozmiary okna i widoczność launchera",
+        "Strona O programie obejmuje teraz informacje o projekcie, środowisko uruchomieniowe i pełną licencję; przepisano też stronę internetową i strony pomocy",
+        "Naprawiono: ignorowane ustawienie liczby wątków, zapisywanie stron 404 jako plików i pozostawianie częściowych plików po nieudanym pobieraniu"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.5.2-Setup.exe",
+        "file": "GPCL-1.5.2-Setup.exe",
+        "size": "103 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.5.1",
+      "anchor": "v1-5-1",
+      "date": "2026-10-16",
+      "title": "Wysypało się? Zaraz zobaczę",
+      "log": [
+        "Nowe powiadomienie o awarii: gdy gra zakończy się nieprawidłowo, wyjaśnia dlaczego, z raportem błędu jednym kliknięciem (raport awarii + logi + informacje o systemie, tokeny zamaskowane)",
+        "Nowy panel uruchomionej gry: po starcie pokazuje po prawej wersję, PID, czas działania i pamięć oraz pozwala w każdej chwili zakończyć grę",
+        "Pole nazwy użytkownika trzyma w rozwijanej liście ostatnie 5 nazw, każdą można usunąć",
+        "Gra działa teraz we własnym procesie, więc zamknięcie launchera jej nie kończy; zamknięcie okna gry też jest rozpoznawane jako wyjście",
+        "Nowe własne tytuły okna gry z magicznymi słowami ({mc_version}, {time} i inne)",
+        "Wskazówki przy starcie pojawiają się teraz losowo (konfigurowalne w ustawieniach), dodano znacznie więcej haseł",
+        "Płynniejsza animacja startowa i przejścia stron"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.5.1-Setup.exe",
+        "file": "GPCL-1.5.1-Setup.exe",
+        "size": "103 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.5.0",
+      "anchor": "v1-5-0",
+      "date": "2026-10-16",
+      "title": "Java naprawiona i świeży wygląd",
+      "log": [
+        "Naprawiono pobieranie środowiska Java: zmieniona nazwa pliku w mirrorze psuła instalację, więc jest teraz pobierane dynamicznie",
+        "Instalator przeszedł na Inno Setup i aktualizuje się w miejscu ze starszych wersji",
+        "Ujednolicono globalne kolory (błękit jako główny, ciemny błękit w trybie ciemnym), z nową animacją startową i stroną internetową",
+        "Naprawiono ignorowanie jasnego motywu przez ekran startowy i niewłaściwe stosowanie kilku stylów przycisków"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.5.0-Setup.exe",
+        "file": "GPCL-1.5.0-Setup.exe",
+        "size": "103 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.4.4",
+      "anchor": "v1-4-4",
+      "date": "2026-07-11",
+      "title": "Wsparcie shaderów!",
+      "log": [
+        "Dodano wsparcie OptiFine (shadery)",
+        "Instalacja jednym kliknięciem, która sama obsługuje dziedziczenie, biblioteki i tweakClass",
+        "Obsługa mechanizmu dziedziczenia wersji inheritsFrom"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.4.4-Setup.exe",
+        "file": "GPCL-1.4.4-Setup.exe",
+        "size": "104 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.4.3",
+      "anchor": "v1-4-3",
+      "date": "2026-06-02",
+      "title": "Naprawione",
+      "log": [
+        "Naprawiono podwójny pasek przewijania",
+        "Rozszerzono stronę O programie o więcej treści, w tym skrzynkę narzędzi"
+      ],
+      "download": {
+        "url": "https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases/download/1.4.3/GPCL-1.4.3-Setup.exe",
+        "file": "GPCL-1.4.3-Setup.exe",
+        "size": "101 MB",
+        "github": true
+      }
+    },
+    {
+      "version": "1.4.2",
+      "anchor": "v1-4-2",
+      "date": "2026-06-02",
+      "title": "Naprawione? Wątpię",
+      "log": [
+        "Ekran powitalny miał w poprzedniej wersji kilka problemów",
+        "Uporządkowano ustawienia",
+        "Anulowanie startu naprawdę kończy teraz proces!"
+      ],
+      "download": {
+        "url": "https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases/download/1.4.2/GPCL-1.4.2-Setup.exe",
+        "file": "GPCL-1.4.2-Setup.exe",
+        "size": "101 MB",
+        "github": true
+      }
+    },
+    {
+      "version": "1.4.1",
+      "anchor": "v1-4-1",
+      "date": "2026-06-02",
+      "title": "Witaj!",
+      "log": [
+        "Dodano animację powitalną przy pierwszym uruchomieniu",
+        "Usunięto nadmiarową ochronę antydebugową i dopuszczono tryb deweloperski"
+      ],
+      "download": {
+        "url": "https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases/download/1.4.1/GPCL-1.4.1-Setup.exe",
+        "file": "GPCL-1.4.1-Setup.exe",
+        "size": "101 MB",
+        "github": true
+      }
+    },
+    {
+      "version": "1.4.0",
+      "anchor": "v1-4-0",
+      "date": "2026-06-01",
+      "title": "Startujemy!",
+      "log": [
+        "Próba faktycznego wsparcia Forge",
+        "Natychmiastowy start! To kompilacja instalatora, skompilowana do kodu maszynowego!",
+        "Naprawiono błędy — dzięki forum",
+        "Znacznie uproszczono przepływ; szczegóły aktualizacji mogą teraz pokazać pełny log"
+      ],
+      "download": {
+        "url": "https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases/download/1.4.0/GPCL-1.4.0-Setup.exe",
+        "file": "GPCL-1.4.0-Setup.exe",
+        "size": "99 MB",
+        "github": true
+      }
+    },
+    {
+      "version": "1.3.3",
+      "anchor": "v1-3-3",
+      "date": "2026-05-28",
+      "title": "",
+      "log": [
+        "Forge / Fabric / OptiFine naprawdę teraz działają!",
+        "To pierwsze wydanie open source!"
+      ],
+      "download": {
+        "url": "https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases/download/1.3.3/GoodPlanCraftLauncher.1.3.3.exe",
+        "file": "GoodPlanCraftLauncher.1.3.3.exe",
+        "size": "90 MB",
+        "github": true
+      }
+    },
+    {
+      "version": "1.3.2",
+      "anchor": "v1-3-2",
+      "date": "2026-05-23",
+      "title": "",
+      "log": [
+        "Dodano szczegółowe ustawienia dla każdej wersji, domyślnie zarządzane; wersje gry można usuwać",
+        "Więcej wsparcia jasnego motywu; „Przywróć domyślne” przeniesiono do nowej sekcji ustawień zgodności; zaktualizowano API",
+        "Dopracowano rozwijane listy i różne inne szczegóły"
+      ],
+      "download": null
+    },
+    {
+      "version": "1.3.0–1.3.1",
+      "anchor": "v1-3-1",
+      "date": "2026-05-22",
+      "title": "",
+      "log": [
+        "Naprawiono brakujący wykres pobierania (nie był wywoływany w zainstalowanej kompilacji)",
+        "Przeniesiono ustawienie automatycznego sprawdzania aktualizacji do O programie",
+        "Strona pobierania pokazuje teraz pełne listy Alpha, Beta, snapshotów i wydań, naprawiając niepełne wyświetlanie wersji wydań",
+        "Przebudowano ekran startowy, dodając zarządzanie wersjami sortowane po czasie ostatniego uruchomienia",
+        "Dodano wskazówki „Czy wiesz, że?” przy starcie i automatyczne czyszczenie logów (interwał zmienisz w ustawieniach)",
+        "Skala interfejsu w Wyglądzie naprawdę działa; 1.3.1 naprawiła jej niewyświetlanie"
+      ],
+      "download": null
+    },
+    {
+      "version": "1.2.1",
+      "anchor": "v1-2-1",
+      "date": "2026-05-22",
+      "title": "",
+      "log": [
+        "Dołączono biblioteki dynamiczne lokalnie",
+        "Dodano ochronę przed podwójnym uruchomieniem / instancjami",
+        "Usunięto bezużyteczne ustawienia, a treść strony pobierania można teraz zwijać"
+      ],
+      "download": null
+    },
+    {
+      "version": "1.2.0",
+      "anchor": "v1-2-0",
+      "date": "2026-05-21",
+      "title": "",
+      "log": [
+        "Dodano paski przewijania i jasny motyw",
+        "Dodano pełną animację startową launchera, zmniejszając biały ekran przy uruchomieniu",
+        "Przeniesiono lewy pasek boczny na górę i powiększono interfejs; dopracowano stronę pobierania i dodano środowisko Java",
+        "Dodano duży zestaw ustawień, podzielonych na Gra, Pobieranie, Wygląd, Zaawansowane i O programie"
+      ],
+      "download": null
+    },
+    {
+      "version": "1.1.0",
+      "anchor": "v1-1-0",
+      "date": "2026-05-21",
+      "title": "",
+      "log": [
+        "Dodano automatyczną konfigurację Java z konfigurowalnym źródłem pobierania (dzięki, Tsinghua!)",
+        "Poprawiono wydajność, dodano animację startową i usprawniono diagnozę na podstawie logów",
+        "Naprawiono wiele błędów listy pobierania, np. brak możliwości anulowania i pozostałości po anulowaniu"
+      ],
+      "download": null
+    },
+    {
+      "version": "1.0.0",
+      "anchor": "v1-0-0",
+      "date": "2026-05-20",
+      "title": "",
+      "log": [
+        "Pierwsze stabilne wydanie"
+      ],
+      "download": null
+    }
+  ]
+}

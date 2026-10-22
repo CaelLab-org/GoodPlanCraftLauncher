@@ -9,7 +9,10 @@
 import { contextBridge, ipcRenderer } from 'electron';
 import type { GPCLApi } from './types';
 
+const initialI18n: GPCLApi['initialI18n'] = ipcRenderer.sendSync('get-i18n-info-sync');
+
 const gpclApi: GPCLApi = {
+  initialI18n,
   getGameDir: () => ipcRenderer.invoke('get-game-dir'),
   scanVersions: (gameDir: string, silent?: boolean) => ipcRenderer.invoke('scan-versions', gameDir, silent),
   launch: (options) => ipcRenderer.invoke('launch-minecraft', options),
@@ -85,7 +88,7 @@ const gpclApi: GPCLApi = {
   saveVersionSettings: (versionId: string, settings: any) => ipcRenderer.invoke('save-version-settings', versionId, settings),
   selectDirectory: () => ipcRenderer.invoke('select-directory'),
   cancelLaunch: () => ipcRenderer.invoke('cancel-launch'),
-  checkForUpdates: () => ipcRenderer.invoke('check-for-updates'),
+  checkForUpdates: (locale?: string) => ipcRenderer.invoke('check-for-updates', locale),
   getAppVersion: () => ipcRenderer.invoke('get-app-version'),
   openExternal: (url: string) => ipcRenderer.invoke('open-external', url),
   openFolder: (folderPath: string) => ipcRenderer.invoke('open-folder', folderPath),
@@ -93,6 +96,9 @@ const gpclApi: GPCLApi = {
   getSettings: () => ipcRenderer.invoke('get-settings'),
   saveSettings: (settings) => ipcRenderer.invoke('save-settings', settings),
   resetSettings: () => ipcRenderer.invoke('reset-settings'),
+  setLanguage: (code: string) => ipcRenderer.invoke('set-language', code),
+  getI18nInfo: () => ipcRenderer.invoke('get-i18n-info'),
+  completeWelcome: () => ipcRenderer.invoke('complete-welcome'),
   getAvatar: () => ipcRenderer.invoke('get-avatar'),
   chooseAvatar: () => ipcRenderer.invoke('choose-avatar'),
   resetAvatar: () => ipcRenderer.invoke('reset-avatar'),

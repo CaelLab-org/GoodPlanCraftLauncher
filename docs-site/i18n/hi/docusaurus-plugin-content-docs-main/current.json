@@ -1,0 +1,26 @@
+{
+  "version.label": {
+    "message": "Next",
+    "description": "The label for version current"
+  },
+  "sidebar.mainSidebar.category.开始使用": {
+    "message": "शुरुआत करना",
+    "description": "The label for category '开始使用' in sidebar 'mainSidebar'"
+  },
+  "sidebar.mainSidebar.category.游戏与模组": {
+    "message": "गेम और मॉड",
+    "description": "The label for category '游戏与模组' in sidebar 'mainSidebar'"
+  },
+  "sidebar.mainSidebar.category.出问题了": {
+    "message": "कुछ गड़बड़ है",
+    "description": "The label for category '出问题了' in sidebar 'mainSidebar'"
+  },
+  "sidebar.mainSidebar.doc.概述": {
+    "message": "अवलोकन",
+    "description": "The label for the doc item '概述' in sidebar 'mainSidebar', linking to the doc index"
+  },
+  "sidebar.mainSidebar.doc.下载与镜像源": {
+    "message": "डाउनलोड और मिरर",
+    "description": "The label for the doc item '下载与镜像源' in sidebar 'mainSidebar', linking to the doc download"
+  }
+}

@@ -1,0 +1,59 @@
+---
+title: Unduhan mod
+description: Mencari dan memasang mod Modrinth dan CurseForge di GPCL, dependensi wajib, dan pencarian dalam bahasa Mandarin.
+---
+
+Bagian "Mod" di halaman unduhan bisa langsung mencari mod, memilih file, dan memasangnya ke versi tertentu, tanpa perlu mengunduh dari situs lalu menyeretnya ke folder.
+
+## Pencarian
+
+Sumbernya dua: **Modrinth** dan **CurseForge**. Bawaannya keduanya dicari sekaligus, dan daftar hasil menandai sumbernya.
+
+Kotak pencarian bisa diketik dalam bahasa Mandarin lebih dulu. Kalau kueri mengandung Mandarin, GPCL mencari dulu di hasil pencarian publik MCMOD, mengambil nama Inggris dari dalam kurung pada judul (misalnya "雾中人 (The Man From The Fog)" menjadi `The Man From The Fog`), lalu mencari nama Inggris itu di Modrinth. Kalau nama Inggris tidak didapat, pencarian memakai kueri aslinya.
+
+## Filter
+
+Bawaannya **tanpa** filter versi dan loader — sama seperti PCL, semua dicari dulu supaya mod baru tidak tersembunyi karena filter. Persempit secara manual kalau perlu:
+
+- versi Minecraft;
+- loader (Forge / Fabric / NeoForge / Quilt);
+- urutan.
+
+Daftar file mengutamakan versi MC dari versi yang sedang dipakai, sehingga kemungkinan salah versi lebih kecil.
+
+## Pemasangan
+
+Dialog target hanya muncul setelah mengklik "Pasang" di baris file:
+
+- daftar versi Mod yang terpasang — pilih satu dan langsung pasang;
+- "Pilih folder" — pasang ke `mods` di folder mana pun.
+
+File masuk ke `mods` yang benar-benar dipakai versi target: untuk versi terisolasi `versions/<version-name>/mods`, selain itu `mods` di akar folder game.
+
+Untuk versi yang belum terisolasi, pemasangan mod pertama akan mengaktifkan isolasi versi; dialog target mencantumkan hal ini dan tidak meminta konfirmasi tambahan.
+
+### Dependensi wajib
+
+Baris file Modrinth menampilkan "N dependensi". Saat memasang, dependensi yang wajib untuk unduhan juga dipasang secara rekursif, dan pesan berhasil menyebutkan berapa dependensi yang ikut.
+
+Mode tautan CurseForge hanya memasang satu file yang dipilih, **tidak memasang dependensi secara otomatis**, dan antarmuka juga mencantumkannya.
+
+## CurseForge tanpa API Key
+
+Pencarian CurseForge normal memerlukan API Key (**Pengaturan → Unduhan → CurseForge API Key**, opsional), atau menunggu mirror publik tersedia. Kalau tidak ada Key dan mirror juga tidak tersedia, masih ada satu jalan terakhir:
+
+Tempel alamat proyek di kotak pencarian, atau tulis `cf:<short-name>`:
+
+```text
+https://www.curseforge.com/minecraft/mc-mods/sodium
+cf:sodium
+```
+
+GPCL mencari proyek dan file lewat `api.cfwidget.com`, lalu mengunduh lewat tautan langsung ForgeCDN. Jalur ini **hanya memasang satu file yang dipilih dan tidak menyelesaikan dependensi**.
+
+## Sudah terpasang tapi tidak berfungsi
+
+- Pastikan versi MC dan loader yang didukung mod sama dengan versi saat ini;
+- Pastikan terpasang ke `mods` yang benar (setelah isolasi versi, bukan yang di akar);
+- Kalau dependensi wajib hilang, pasang dulu dependensinya;
+- Kalau masih tidak bisa, lihat urutan pemeriksaan log di [Crash game](./mc-game.mdx).

@@ -1,0 +1,72 @@
+---
+title: Download e fontes de espelho
+description: Fonte de download de arquivos, fonte da lista de versões, número de threads, limite de velocidade, espelhos de Java e espelho de arquivos personalizado.
+---
+
+Download lento normalmente não é problema do launcher. Troque primeiro a fonte de download e só depois considere threads e limite de velocidade.
+
+## As tarefas de download entram numa fila
+
+Ao clicar em “Baixar”, a tarefa entra na fila e não bloqueia a interface: tarefas em espera podem ser removidas pelo ×, e a tarefa em andamento pode ser cancelada; depois disso a fila continua.
+
+A página de download mostra o estado de cada tarefa: em espera, baixando, concluída e falhou.
+
+## Fonte de arquivos vs. fonte da lista de versões
+
+Em **Configurações → Download → Fonte de download** há dois menus suspensos independentes:
+
+- **Fonte de arquivos**: jar do cliente, assets, bibliotecas;
+- **Fonte da lista de versões**: manifesto de versões, JSON de versão, índice de assets.
+
+Ambos têm as mesmas quatro opções:
+
+| Opção | Comportamento |
+| --- | --- |
+| Priorizar o oficial, trocar para espelho se lento | Padrão. Tenta o oficial primeiro e muda para o BMCLAPI se não houver resposta em alguns segundos |
+| Usar espelhos sempre que possível | Em redes na China, usa o espelho direto |
+| Priorizar a fonte oficial | Tenta o oficial e volta ao espelho em caso de falha |
+| Usar a fonte oficial sempre que possível | Só o oficial; se não conectar, falha |
+
+## Espelho de arquivos personalizado
+
+Em **Configurações → Download → Espelho de arquivos personalizado** é possível informar um endereço raiz de espelho (BMCLAPI por padrão, por exemplo `https://bmclapi2.bangbang93.com`). Com ele preenchido, manifesto de versões, cliente, bibliotecas e assets passam primeiro por ali; se não vierem, a ordem normal de fontes serve de reserva.
+
+Deixar em branco mantém o BMCLAPI padrão.
+
+## Diretório do jogo
+
+Em **Configurações → Download → Diretório do jogo** é possível colocar versões, bibliotecas, assets e mods em qualquer pasta; em branco, volta para `%APPDATA%\gpcl\.minecraft`.
+
+Trocar de diretório **não move** os arquivos existentes. As versões do diretório antigo não acompanham; copie manualmente se necessário. As configurações e os logs continuam em `%APPDATA%\gpcl`.
+
+## Número máximo de threads
+
+Padrão 64, intervalo de 1 a 128. Com muitos arquivos pequenos, aumentar a concorrência acelera um pouco, mas valores altos podem ser limitados por equipamentos de rede ou pelo espelho. Com rede instável, reduza.
+
+## Limite de velocidade
+
+0 significa sem limite; com um valor definido, **todas as tarefas de download compartilham esse teto total**, em MB/s, válido a partir do próximo download. Em redes compartilhadas por várias pessoas, reduza.
+
+O limite vale apenas para o download de recursos do jogo. O runtime Java é baixado por um espelho separado e não é afetado.
+
+## Espelhos do Java
+
+Em **Configurações → Download → Download do Java** é possível escolher Universidade Tsinghua, Universidade de Nanjing, Huawei Cloud ou personalizado. Se a fonte escolhida falhar, a próxima é tentada automaticamente, com o oficial da Adoptium como última alternativa.
+
+O endereço personalizado aceita duas variáveis:
+
+- `{v}`: versão principal do Java, por exemplo `8`, `17`, `21`;
+- `{version}`: versão completa do upstream, por exemplo `17.0.20.1_1`, que muda conforme o upstream publica.
+
+Exemplo:
+
+```text
+https://cdn.example.com/java/{v}/OpenJDK{v}U-jre_x64_windows_hotspot_{v}.zip
+```
+
+## O que fazer quando o download falha
+
+1. Troque a fonte de download.
+2. Reduza o número de threads para 32 ou 16 e tente de novo.
+3. Confirme se a data e a hora do sistema estão corretas — um desvio grande faz a validação do certificado HTTPS falhar.
+4. Se ainda falhar, envie um e-mail com o log mais recente de `%APPDATA%\gpcl\gpcl\log`.

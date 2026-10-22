@@ -1,0 +1,70 @@
+---
+title: Plantage du jeu
+slug: /mc-game
+description: Exporter un rapport d'erreur, lire les journaux, diagnostiquer un plantage Minecraft par symptôme.
+---
+
+La fenêtre de plantage seule ne dit généralement rien. GPCL lit d'abord les journaux pour donner des pistes, puis suivez cet ordre.
+
+:::tip Une chose à faire d'abord
+Cliquez sur « Exporter le rapport d'erreur » dans la fenêtre de plantage et enregistrez le zip. Le rapport commence par l'analyse de GPCL, suivi de la liste des mods, de Java, des paramètres de lancement et de tous les journaux : le diagnostic repose presque entièrement dessus.
+:::
+
+## 1. Lire d'abord l'analyse de GPCL
+
+La fenêtre affiche 1–2 pistes trouvées dans les journaux, par exemple « Mémoire insuffisante » ou « Vérification des dépendances ou de la compatibilité des mods échouée ». « Voir les détails » montre toutes les pistes, les lignes de journal correspondantes et les informations de plantage.
+
+Ces conclusions viennent d'une correspondance de mots-clés et ne sont qu'une direction. Quand les journaux donnent plus de précisions (quelle dépendance manque, par exemple), elles figurent dans les preuves.
+
+## 2. Exporter le rapport d'erreur
+
+Le bouton est dans la fenêtre de plantage. Choisissez un emplacement, GPCL crée :
+
+- `error-report.txt` : analyse, résumé de l'erreur, système / carte graphique / Java, liste des mods, packs de ressources et shaders, paramètres de lancement, sortie du jeu, lignes d'erreur des journaux ;
+- `crash-reports/` : les rapports de plantage générés par ce plantage ;
+- `logs/` : `latest.log` et `debug.log` (seule la fin si trop volumineux) ;
+- `jvm-crash/` : les `hs_err_pid*.log` écrits par la JVM elle-même (plantage de la JVM dû par exemple au pilote graphique) ;
+- `launcher-log.txt` : journaux du lanceur ;
+- `game-output.txt` : sortie standard et sortie d'erreur du processus de jeu pour cette exécution.
+
+Le `--accessToken` et le nom d'utilisateur du système sont masqués dans le rapport, vous pouvez l'envoyer tel quel. N'envoyez pas seulement une capture de la fenêtre de plantage.
+
+## 3. Regarder les journaux soi-même
+
+« Voir les journaux » ouvre la sortie du processus de jeu. Regardez surtout la fin, et cherchez ces termes :
+
+| Terme | Signification habituelle |
+| --- | --- |
+| `Exception`, `Caused by` | La vraie exception se trouve généralement après le premier `Caused by` |
+| `OutOfMemoryError` | Mémoire attribuée insuffisante |
+| `UnsupportedClassVersionError` | Version de Java incompatible avec la version du jeu |
+| `NoSuchMethodError`, `ClassNotFoundException` | Mod incompatible avec la version du jeu ou du chargeur, ou dépendance manquante |
+| `GLFW error` | Problème de pilote graphique ou de support OpenGL |
+
+## 4. Causes fréquentes
+
+| Symptôme | Cause fréquente | Que faire |
+| --- | --- | --- |
+| Quitte au lancement, `UnsupportedClassVersionError` dans le journal | Mauvaise version de Java | Laisser GPCL ajouter Java ; ou changer de miroir dans les paramètres et réinstaller |
+| Blocage ou fermeture en cours de chargement, `OutOfMemoryError` | Mémoire insuffisante ou trop de mods | Paramètres → Jeu → Attribution de mémoire, augmenter ; ne pas dépasser la mémoire physique |
+| Plantage au chargement des mods, un nom de mod dans le journal | Mauvaise version du mod, dépendance manquante, conflit entre deux mods | Tester d'abord avec ce seul mod ; vérifier la version de MC et de chargeur supportées |
+| Quitte avant l'apparition de la fenêtre, `GLFW error` | Pilote graphique trop ancien ou OpenGL non pris en charge | Mettre à jour le pilote ; sur portable, vérifier que le jeu utilise la carte dédiée |
+| Expulsé du serveur, `Invalid session` | Connexion premium expirée ou compte sans licence pour cette version | Se reconnecter en premium ; vérifier que le compte possède bien cette version |
+| Plantage en entrant dans un monde ou en chargeant des packs | Sauvegarde, pack de ressources ou pack de shaders corrompu | Tester une nouvelle partie ; sauvegarder le monde avant toute manipulation |
+| Plantage au lancement avec Fabric, `fabric-api` manquant | Fabric API absent | Recocher « Installer aussi Fabric API » à l'installation de Fabric, ou l'installer à la main |
+
+## 5. Écarter d'abord ces trois choses
+
+1. **Désactivez tous les mods, packs de ressources et shaders** et lancez une fois sans rien. Si ça démarre, le problème vient des mods.
+2. **Lancez une version vanilla**. Si ça démarre, la version actuelle ou sa combinaison de mods est en cause.
+3. **Créez un nouveau monde**. Si ça démarre, l'ancienne sauvegarde est corrompue.
+
+## 6. Toujours rien
+
+Écrivez à [gamets@caellab.com](mailto:gamets@caellab.com) avec le rapport d'erreur exporté et :
+
+- version du lanceur, version de Minecraft, version du chargeur ;
+- les mods installés (avec les numéros de version si possible) ;
+- ce que vous avez fait avant le plantage.
+
+« Ça plante au démarrage » ne suffit pas à cerner le problème ; les journaux du rapport sont décisifs.

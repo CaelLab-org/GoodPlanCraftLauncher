@@ -14,15 +14,17 @@ import path from 'path';
 
 import { GAME_DIR, getVersionGameDir, markVersionIsolated, writeLog } from './config';
 import { downloadFile, fetchText, installVersion, mirrorUrlFor, updateVersionLastPlayed } from './download';
+import { t, translateText } from './i18n';
 import { ensureJavaRuntime, findJavaExecutable, getJavaRuntimeDir, getJavaVersionForMCVersion } from './java';
 import { installModrinthProjectTo } from './mods';
 import { shouldCancelDownload } from './state';
 // __IMPORTS_END__
 
 function writeStage(message: string): void {
-  writeLog(`[安装] ${message}`);
+  const localized: string = translateText(message);
+  writeLog(`[安装] ${localized}`);
   for (const win of BrowserWindow.getAllWindows()) {
-    win.webContents.send('install-stage', { message });
+    win.webContents.send('install-stage', { message: localized });
   }
 }
 
@@ -127,13 +129,13 @@ export async function fetchForgeVersions(mcVersion: string): Promise<any[]> {
           resolve(topVersions);
         } catch (e: any) {
           writeLog(`[Forge] 解析错误: ${e.message}`);
-          reject(new Error('解析 Forge 元数据失败'));
+          reject(new Error('Could not parse Forge metadata'));
         }
       });
     }).on('error', (e: any) => {
       reject(new Error(`请求 Forge 元数据失败: ${e.message}`));
     }).on('timeout', () => {
-      reject(new Error('请求 Forge 元数据超时'));
+      reject(new Error('Forge metadata request timed out'));
     });
   });
 }
@@ -158,7 +160,7 @@ export async function fetchFabricVersions(mcVersion: string): Promise<any[]> {
   const mirror: string = `https://bmclapi2.bangbang93.com/fabric-meta/v2/versions/loader/${encodeURIComponent(mcVersion)}`;
   const raw: string = await fetchText(url, [mirror, url]);
   const list: any[] = JSON.parse(raw);
-  if (!Array.isArray(list)) throw new Error('Fabric 版本列表格式异常');
+  if (!Array.isArray(list)) throw new Error('Unexpected Fabric version list format');
 
   const versions: any[] = list
     .filter((item: any) => item && item.loader && item.loader.version)
@@ -318,14 +320,14 @@ export async function fetchOptiFineVersions(mcVersion: string): Promise<any[]> {
           resolve(filtered);
         } catch (e: any) {
           writeLog(`[OptiFine] 解析错误: ${e.message}`);
-          reject(new Error('解析 OptiFine 版本列表失败'));
+          reject(new Error('Could not parse the OptiFine version list'));
         }
       });
     }).on('error', (e: any) => {
       writeLog(`[OptiFine] 请求失败: ${e.message}`);
       reject(new Error(`请求 OptiFine 版本列表失败: ${e.message}`));
     }).on('timeout', () => {
-      reject(new Error('请求 OptiFine 版本列表超时'));
+      reject(new Error('OptiFine version list request timed out'));
     });
   });
 }
@@ -339,7 +341,7 @@ export async function installVersionWithModLoader(versionId: string, loaderType:
     await installVersion(versionId, maxConcurrent);
     
     if (shouldCancelDownload) {
-      return { success: false, error: '下载已取消' };
+      return { success: false, error: 'Download cancelled' };
     }
 
     let finalVersionId: string;
@@ -352,7 +354,7 @@ export async function installVersionWithModLoader(versionId: string, loaderType:
     } else if (loaderType === 'optifine') {
       finalVersionId = await installOptiFine(versionId, loaderVersion);
     } else {
-      return { success: false, error: `不支持的模组加载器: ${loaderType}` };
+      return { success: false, error: t('ui.unsupported_mod_loader_loader', { loader: loaderType }) };
     }
     
     writeLog(`[模组加载器] 安装完成: ${finalVersionId}`);
@@ -412,7 +414,7 @@ export function downloadFileHttps(url: string, dest: string): Promise<void> {
         res.pipe(file);
         file.on('finish', () => { file.close(); resolve(); });
         file.on('error', (e: any) => { try { fs.unlinkSync(dest); } catch(_){} reject(e); });
-      }).on('error', reject).on('timeout', () => { reject(new Error('下载超时')); });
+      }).on('error', reject).on('timeout', () => { reject(new Error('Download timed out')); });
     };
     doRequest(url);
   });
@@ -474,7 +476,7 @@ async function installForgeLike(options: {
   }
 
   writeLog(`[${label}] 下载安装器: ${installerUrl}`);
-  writeStage(`正在下载 ${label} 安装器…`);
+  writeStage(t('ui.downloading_the_label_installer', { label }));
   if (fs.existsSync(installerPath)) fs.unlinkSync(installerPath);
   const installerSources: string[] = [];
   if (label === 'NeoForge') {
@@ -488,7 +490,7 @@ async function installForgeLike(options: {
 
   if (shouldCancelDownload) {
     if (fs.existsSync(installerPath)) fs.unlinkSync(installerPath);
-    throw new Error('下载已取消');
+    throw new Error('Download cancelled');
   }
 
   writeLog(`[${label}] 运行安装器`);
@@ -516,7 +518,7 @@ async function installForgeLike(options: {
 
   if (!javaPath) {
     fs.unlinkSync(installerPath);
-    throw new Error('未找到 Java 运行时，请安装 Java 8 或更高版本');
+    throw new Error('No Java runtime found; install Java 8 or newer');
   }
 
   writeLog(`[${label}] 使用 Java: ${javaPath}`);
@@ -563,7 +565,7 @@ async function installForgeLike(options: {
     } catch {}
   };
 
-  writeStage(`正在安装 ${label}，下载依赖库可能需要几分钟…`);
+  writeStage(t('ui.installing_label_downloading_libraries_may_take_a_few_minutes', { label }));
   let output: string = '';
   let success: boolean = false;
 
@@ -611,7 +613,7 @@ async function installForgeLike(options: {
         clearTimeout(timer);
         clearInterval(watch);
         if (shouldCancelDownload) {
-          reject(new Error('下载已取消'));
+          reject(new Error('Download cancelled'));
         } else if (code === 0) {
           success = true;
           resolve();
@@ -663,10 +665,10 @@ export function resolveOptiFineDownloadUrl(adloadxUrl: string): Promise<string> 
         if (m) {
           resolve(`https://optifine.net/${m[1]}`);
         } else {
-          reject(new Error('无法解析 OptiFine 下载链接'));
+          reject(new Error('Could not parse the OptiFine download link'));
         }
       });
-    }).on('error', reject).on('timeout', () => reject(new Error('解析下载链接超时')));
+    }).on('error', reject).on('timeout', () => reject(new Error('Parsing the download link timed out')));
   });
 }
 
@@ -727,14 +729,14 @@ export async function installOptiFine(mcVersion: string, optifineFilename: strin
 
   if (shouldCancelDownload) {
     if (fs.existsSync(installerPath)) fs.unlinkSync(installerPath);
-    throw new Error('下载已取消');
+    throw new Error('Download cancelled');
   }
 
   const fileMagic: Buffer = fs.readFileSync(installerPath).slice(0, 4);
   writeLog(`[OptiFine] 文件头: ${fileMagic.toString('hex')}`);
   if (fileMagic[0] !== 0x50 || fileMagic[1] !== 0x4B) {
     if (fs.existsSync(installerPath)) fs.unlinkSync(installerPath);
-    throw new Error('下载的文件不是有效的 JAR 文件，可能镜像源异常');
+    throw new Error('The downloaded file is not a valid JAR; the mirror may be misbehaving');
   }
 
   const javaVersion: string = getJavaVersionForMCVersion(mcVersion);
@@ -748,7 +750,7 @@ export async function installOptiFine(mcVersion: string, optifineFilename: strin
   if (!javaPath) javaPath = findJava();
   if (!javaPath) {
     if (fs.existsSync(installerPath)) fs.unlinkSync(installerPath);
-    throw new Error('未找到 Java 运行时，请先安装 Java');
+    throw new Error('No Java runtime found; install Java first');
   }
   writeLog(`[OptiFine] 使用 Java: ${javaPath}`);
 

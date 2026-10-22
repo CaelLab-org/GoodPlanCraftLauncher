@@ -1,0 +1,206 @@
+{
+  "meta": {
+    "title": "GoodPlanCraftLauncher - Peluncur Minecraft yang ringan dan efisien - CaelLabGameTS",
+    "description": "GoodPlanCraftLauncher adalah peluncur Minecraft yang sederhana dan efisien dengan login Microsoft dan offline, manajemen versi, serta pemasangan mod Forge/NeoForge/Fabric/OptiFine, sehingga Anda bisa masuk ke dunia kotak-kotak dengan satu klik. Sumber terbuka dan gratis.",
+    "keywords": "GoodPlanCraftLauncher,peluncur Minecraft,peluncur MC,Minecraft Java Edition,CaelLab,sumber terbuka",
+    "ogTitle": "GoodPlanCraftLauncher - Peluncur Minecraft yang ringan dan efisien",
+    "ogDescription": "Ringan · efisien · sumber terbuka. Login Microsoft dan offline, manajemen versi, serta pemasangan Forge/NeoForge/Fabric/OptiFine dengan satu klik."
+  },
+  "historyMeta": {
+    "title": "Catatan perubahan - GoodPlanCraftLauncher - CaelLabGameTS",
+    "description": "Catatan perubahan dan unduhan pemasang untuk setiap versi GoodPlanCraftLauncher: dari 1.0.0 hingga versi terbaru, semua perubahan ada di halaman ini.",
+    "ogTitle": "Catatan perubahan - GoodPlanCraftLauncher",
+    "ogDescription": "Catatan rilis dan unduhan pemasang untuk setiap versi."
+  },
+  "nav": {
+    "source": "Kode sumber",
+    "language": "Bahasa",
+    "download": "Unduh v{version}",
+    "mobileGitHub": "Kode sumber GitHub",
+    "openMenu": "Buka menu"
+  },
+  "hero": {
+    "tags": [
+      "Sumber terbuka",
+      "Gratis",
+      "Peluncur Minecraft"
+    ],
+    "subtitle": "Ringan · Efisien · Sumber terbuka",
+    "desc": "Peluncur Minecraft yang ditulis untuk Windows: login Microsoft dan offline, manajemen versi, serta pemasangan Forge / Fabric / OptiFine dengan satu klik. Saat game crash, ia memberi tahu penyebabnya, bukan sekadar menampilkan kotak kosong.",
+    "download": "Unduh sekarang",
+    "versionLabel": "Versi",
+    "updatedLabel": "Diperbarui",
+    "platformLabel": "Platform",
+    "platform": "Windows 10+",
+    "iframeTitle": "Antarmuka GoodPlanCraftLauncher",
+    "windowNote": "Jendela di atas dapat <b>diklik</b> — itu adalah antarmuka peluncur itu sendiri, berjalan di dalam halaman web.",
+    "iconAlt": "Ikon GoodPlanCraftLauncher"
+  },
+  "features": {
+    "tag": "Fitur",
+    "title": "Fitur utama",
+    "desc": "Perkakas praktis untuk pemain, semuanya bertujuan membuat Anda masuk ke game lebih cepat",
+    "items": [
+      {
+        "title": "Dua mode login",
+        "desc": "Login Microsoft dan offline, dapat diganti kapan saja; mode offline tidak memerlukan verifikasi online."
+      },
+      {
+        "title": "Unduhan mod bawaan",
+        "desc": "Cari di Modrinth dan CurseForge, lalu pasang mod, shader, atau resource pack ke folder yang benar-benar dipakai versi terpilih."
+      },
+      {
+        "title": "Empat pemuat mod",
+        "desc": "Forge, NeoForge, Fabric, dan OptiFine dipasang dari sumber resmi, dengan versi Java diperiksa lebih dulu."
+      },
+      {
+        "title": "25 bahasa antarmuka",
+        "desc": "Mengikuti bahasa sistem saat pertama dijalankan; bisa diganti kapan saja di pengaturan."
+      },
+      {
+        "title": "Manajemen versi otomatis",
+        "desc": "Unduh, pasang, dan ganti versi Minecraft dengan satu klik, sementara library dan aset ditangani otomatis."
+      },
+      {
+        "title": "Mulai cepat",
+        "desc": "Jalur peluncuran yang ringkas dan caching, jadi Anda tinggal klik dan bermain tanpa menunggu."
+      },
+      {
+        "title": "Manajemen runtime Java",
+        "desc": "Mendeteksi dan memasang runtime Java secara otomatis; sumber unduhan dapat disetel ke Tsinghua, Universitas Nanjing, Huawei Cloud, atau sumber resmi, lalu beralih ke sumber berikutnya bila gagal."
+      },
+      {
+        "title": "Dukungan tema",
+        "desc": "Dukungan penuh mode terang dan gelap, dengan skala antarmuka yang dapat diatur agar tampilan tetap konsisten."
+      },
+      {
+        "title": "Pembaruan dan perawatan otomatis",
+        "desc": "Pemeriksaan pembaruan bawaan dan pembersihan log otomatis yang dapat diatur menjaga peluncur tetap ringan seiring waktu."
+      },
+      {
+        "title": "Pemberitahuan crash dan laporan kesalahan",
+        "desc": "Saat game tertutup secara tidak normal, ia menjelaskan penyebabnya dan dapat mengekspor laporan kesalahan dengan satu klik (laporan crash + log + info sistem)."
+      },
+      {
+        "title": "Panel saat berjalan",
+        "desc": "Setelah diluncurkan, panel di sebelah kanan menampilkan versi, PID, durasi, dan penggunaan memori, serta dapat mengakhiri game kapan saja."
+      },
+      {
+        "title": "Judul jendela kustom",
+        "desc": "Tulis sendiri judul jendela game, dengan kata ajaib seperti {mc_version} dan {time}."
+      }
+    ]
+  },
+  "shots": {
+    "tag": "Tangkapan layar",
+    "title": "Tangkapan layar asli",
+    "desc": "Jendela di atas adalah rekreasi web dari antarmuka peluncur, dapat diklik tanpa memasang apa pun. Empat gambar di bawah adalah peluncur yang benar-benar berjalan di Windows, tanpa diedit.",
+    "items": [
+      {
+        "alt": "Layar peluncuran GoodPlanCraftLauncher",
+        "caption": "Layar peluncuran · pilih versi, masukkan nama pemain, mulai game"
+      },
+      {
+        "alt": "Layar unduhan GoodPlanCraftLauncher",
+        "caption": "Layar unduhan · versi game, mod, shader, resource pack, dan modpack"
+      },
+      {
+        "alt": "Pengaturan game GoodPlanCraftLauncher",
+        "caption": "Pengaturan · memori game, mode jendela, judul jendela, dan kata ajaib"
+      },
+      {
+        "alt": "Pengaturan tampilan GoodPlanCraftLauncher",
+        "caption": "Pengaturan · bahasa, gaya antarmuka, tema, dan skala"
+      }
+    ]
+  },
+  "download": {
+    "tag": "Unduhan",
+    "title": "Unduh sekarang",
+    "desc": "Pilih platform Anda dan mulai petualangan kotak-kotak",
+    "button": "Luncurkan dunia kotak!",
+    "updatedLabel": "Diperbarui",
+    "platformLabel": "Platform",
+    "licenseLabel": "Lisensi",
+    "platform": "Windows 10 64-bit",
+    "license": "Sumber terbuka, gratis",
+    "github": "Lihat di GitHub"
+  },
+  "requirements": {
+    "tag": "Sistem",
+    "title": "Persyaratan sistem",
+    "desc": "Tidak berat, tetapi perlu diketahui",
+    "items": [
+      {
+        "label": "Sistem operasi",
+        "text": "Windows 10 64-bit (1709+); Windows 11 juga berfungsi"
+      },
+      {
+        "label": "Runtime Java",
+        "text": "Dipasang otomatis oleh peluncur; disarankan membersihkan pemasangan Java yang berlebihan atau bertentangan di sistem"
+      },
+      {
+        "label": "Penyimpanan",
+        "text": "Minimal 90 MB ruang kosong untuk peluncur itu sendiri (belum termasuk berkas game)"
+      },
+      {
+        "label": "Memori",
+        "text": "Disarankan memori tersedia 2 GB atau lebih"
+      }
+    ]
+  },
+  "openSource": {
+    "tag": "Sumber Terbuka",
+    "title": "Sumber terbuka dan kontribusi",
+    "desc": "GPCL adalah proyek 100% sumber terbuka, dengan kode sumber yang di-host di GitHub. PR kami sambut, begitu juga saran di <a href=\"https://forum.xmuer.online/\" target=\"_blank\">forum</a>, untuk membangun peluncur Minecraft yang lebih baik bersama.",
+    "items": [
+      {
+        "title": "Lisensi",
+        "desc": "Dirilis di bawah CaelLab BY-SA Code License, Versi 3 (atau versi yang lebih baru). Anda dapat menggunakan, memodifikasi, dan mendistribusikannya secara bebas; versi modifikasi harus mempertahankan lisensi sumber terbuka yang sama. Beranda proyek: <a href=\"https://gamets.caellab.com/gpcl/\">gamets.caellab.com/gpcl</a>.",
+        "action": "Baca lisensi lengkapnya →"
+      },
+      {
+        "title": "Berkontribusi",
+        "desc": "Repositori sumber utama ada di GitHub, tempat issue dan PR dikelola. Laporan bug, saran fitur, dan kontribusi kode sangat kami sambut.",
+        "action": "Kunjungi GitHub →"
+      }
+    ],
+    "licenseSummary": "RINGKASAN LISENSI — CaelLab BY-SA Code License v3"
+  },
+  "history": {
+    "tag": "Riwayat",
+    "title": "Riwayat versi",
+    "desc": "Versi-versi sebelumnya dan catatan perubahannya",
+    "older": "Tampilkan {n} versi lama",
+    "more": "Lihat catatan perubahan lengkap (semua {total} versi dan pemasang) →",
+    "page": {
+      "back": "← Kembali ke beranda",
+      "tag": "Catatan perubahan",
+      "heading": "Catatan perubahan",
+      "intro": "Dari 1.0.0 hingga rilis terbaru, setiap versi — apa yang berubah dan apakah dapat diunduh — ada di halaman ini.",
+      "note": "Pemasang untuk 1.3.2 dan versi sebelumnya tidak disimpan; pembaruan otomatis bawaan di versi lama mungkin sudah tidak berfungsi, jadi sebaiknya pasang rilis terbaru untuk penggunaan sehari-hari.",
+      "indexLabel": "Indeks versi",
+      "latest": "Terbaru",
+      "download": "Unduh v{version}",
+      "unavailable": "Pemasang untuk versi ini tidak disimpan",
+      "fileNote": "{file} · {size} · Windows 64-bit"
+    }
+  },
+  "footer": {
+    "brand": "Tim pengembangan game dan perkakas independen di CaelLab. Menjelajahi tepi masa depan, membawa pembaruan tanpa batas.",
+    "projects": "Proyek",
+    "community": "Komunitas",
+    "openSource": "Sumber terbuka",
+    "help": "Pusat bantuan",
+    "changelog": "Catatan perubahan",
+    "forum": "Forum",
+    "license": "Lisensi",
+    "copyright": "&copy; 2026 GameTS oleh <a href=\"https://www.caellab.com/\" target=\"_blank\" class=\"footer-inline-link\">CaelLab</a>. Hak cipta dilindungi. Beranda proyek: <a href=\"https://gamets.caellab.com/gpcl/\" class=\"footer-inline-link\">gamets.caellab.com/gpcl</a>",
+    "disclaimer": "GoodPlanCraftLauncher adalah alat sumber terbuka pihak ketiga dan tidak memiliki afiliasi resmi dengan <a href=\"https://www.minecraft.net/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Mojang Studios</a>, <a href=\"https://www.microsoft.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Microsoft</a>, <a href=\"https://www.xbox.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Xbox</a>. Minecraft adalah merek dagang Mojang Studios; penggunaan peluncur ini memerlukan lisensi Minecraft yang sah.",
+    "licenseLine": "Lisensi sumber terbuka: <a href=\"https://www.caellab.com/license/cbs-v3\" target=\"_blank\" class=\"footer-inline-link\">CaelLab BY-SA Code License v3</a> | Sumber terbuka di <a href=\"https://github.com/CaelLab-org/GoodPlanCraftLauncher\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">GitHub</a>"
+  },
+  "labels": {
+    "platform": "Windows 64-bit",
+    "github": "GitHub"
+  }
+}

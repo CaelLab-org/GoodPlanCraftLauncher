@@ -1,0 +1,73 @@
+---
+title: Installation et mises à jour
+description: Télécharger, installer, mettre à jour et désinstaller GPCL ; le jeu et les réglages sont dans %APPDATA%\gpcl.
+---
+
+GPCL ne prend en charge que **Windows 10 / 11 64 bits**. Le paquet d'installation ne contient pas Java ; le lanceur l'ajoute selon la version du jeu.
+
+## Téléchargement
+
+Récupérez le paquet depuis la [zone de téléchargement du site](https://gamets.caellab.com/gpcl/#download) ou les [GitHub Releases](https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases) ; le fichier s'appelle `GPCL-<version>-Setup.exe`.
+
+N'utilisez pas de paquet venant d'un cloud, d'un groupe de discussion ou d'un site tiers : ces fichiers peuvent avoir été remplacés, et le lanceur ne peut pas vérifier leur origine.
+
+## Installation
+
+1. Double-cliquez sur le paquet et choisissez le dossier d'installation.
+2. Après l'installation, lancez GPCL depuis le bureau ou le menu Démarrer.
+3. Le premier démarrage crée la configuration, les journaux et le dossier de jeu par défaut.
+
+Pour passer d'une ancienne version, inutile de désinstaller d'abord. Le programme d'installation reprend l'installation existante (y compris les anciens paquets NSIS) ; le raccourci du bureau et les données sont conservés.
+
+## Où sont stockés le jeu et les réglages
+
+Tout se trouve dans `%APPDATA%\gpcl`, pas dans le dossier d'installation :
+
+| Chemin | Contenu |
+| --- | --- |
+| `%APPDATA%\gpcl\.minecraft` | Versions du jeu, bibliothèques, ressources, mods et sauvegardes |
+| `%APPDATA%\gpcl\gpcl\config\setting.ini` | Réglages du lanceur |
+| `%APPDATA%\gpcl\gpcl\log` | Journaux du lanceur |
+| `%APPDATA%\gpcl\gpcl\updata` | Paquets de mise à jour téléchargés et suivi de progression |
+
+Si vous avez changé le dossier de jeu, les versions et les ressources vont au nouvel emplacement, mais la configuration et les journaux restent dans `%APPDATA%\gpcl`.
+
+### Définir automatiquement la langue du jeu
+
+**Paramètres → Jeu → Définir automatiquement la langue du jeu** est activé par défaut, avec le chinois simplifié comme langue choisie. Avant chaque lancement, GPCL remplace la valeur `lang:` dans l'`options.txt` réellement utilisée par la version concernée, sans toucher aux autres lignes.
+
+Pour une version isolée, l'écriture se fait dans `versions/<version-name>/options.txt`, sinon dans l'`options.txt` à la racine du jeu. Désactivez l'option pour ne plus toucher du tout aux réglages du jeu.
+
+## Mises à jour
+
+Deux options sont activées par défaut :
+
+- **Rechercher les mises à jour automatiquement** : vérification au démarrage ; une nouvelle version affiche un indicateur en haut à droite.
+- **Installer les mises à jour automatiquement** : téléchargement silencieux en arrière-plan, sans occuper la page de téléchargement ni modifier la barre d'état. Une fois la vérification réussie, l'installation se fait silencieusement quand vous **quittez le lanceur**.
+
+Le badge rond en haut à droite affiche la progression ; cliquez dessus pour voir le numéro de version et les nouveautés. Vous pouvez aussi y choisir « Télécharger maintenant » ; après l'installation, le lanceur se rouvre automatiquement.
+
+Dans **Paramètres → À propos**, vous pouvez désactiver la recherche ou l'installation automatique, ou lancer « Rechercher des mises à jour » à la main.
+
+Le paquet est vérifié en SHA1 avant l'installation ; en cas d'échec, rien n'est installé. Si l'installation s'interrompt, le démarrage suivant signale « La dernière mise à jour n'a pas abouti » et propose de réessayer ; après trois échecs, GPCL vous renvoie vers le site pour retélécharger le paquet.
+
+:::warning Mise à jour depuis 1.5.2 ou antérieur
+Les anciennes versions ne connaissent pas encore les paramètres d'installation silencieuse : cette mise à jour affichera donc une dernière fois l'ancien assistant. À partir de 1.6.0, tout se fait en silence.
+:::
+
+Si le lanceur ne démarre plus après une mise à jour, consultez d'abord le journal le plus récent dans `%APPDATA%\gpcl\gpcl\log`, puis écrivez-nous avec ce journal.
+
+## Importer une version locale
+
+Dans le panneau « Choix de la version » de la page de démarrage, cliquez sur « Importer une version locale » pour importer :
+
+- un dossier de version (contenant un `<version-name>.json`) ;
+- une archive zip ou jar ; le lanceur la décompresse et cherche récursivement le dossier contenant le `<version-name>.json` ;
+
+Les modpacks (un `manifest.json` avec une section `minecraft`) ne sont pas encore importables : le lanceur les refuse directement, sans installation partielle.
+
+## Désinstallation
+
+Désinstallez GPCL depuis « Applications et fonctionnalités » de Windows. Le désinstalleur **ne supprime pas** `%APPDATA%\gpcl` ; après une réinstallation, le jeu et les réglages sont toujours là.
+
+Si vous n'en avez plus besoin, supprimez manuellement tout `%APPDATA%\gpcl`. Sauvegardez vos mondes avant.

@@ -1,0 +1,355 @@
+{
+  "schema": 1,
+  "latest": "1.8.0",
+  "updated": "2026-10-22",
+  "versions": [
+    {
+      "version": "1.8.0",
+      "anchor": "v1-8-0",
+      "date": "2026-10-22",
+      "title": "25 bahasa, dari launcher hingga situs web",
+      "log": [
+        "Launcher kini mendukung 25 bahasa: pilih di Pengaturan → Tampilan → Bahasa antarmuka, daftarnya bisa dicari",
+        "Saat pertama dibuka, ia mengikuti bahasa sistem; panduan selamat datang juga memungkinkan memilihnya lebih dulu",
+        "Panduan selamat datang baru: bahasa, gaya antarmuka, dan pengenalan singkat dalam 4 langkah, bisa dilewati",
+        "Tiga gaya antarmuka: Minecraft, Lanjutan (tampilan yang biasa), dan Minimal",
+        "Installer juga diterjemahkan ke 25 bahasa yang sama dan memilih bahasa sistem secara otomatis",
+        "Pusat bantuan tersedia dalam 25 bahasa, dan tautan bantuan di launcher membuka halaman sesuai bahasa antarmuka",
+        "Situs web dan demo interaktif di dalamnya juga tersedia dalam 25 bahasa",
+        "Arab, Persia, dan Ibrani membuat seluruh antarmuka ditulis dari kanan ke kiri",
+        "Pembukaan tidak lagi berkedip: layar pembuka dan jendela utama menjadi satu halaman, warna latar jendela mengikuti tema; mengganti bahasa tidak lagi menyisakan bingkai hitam"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.8.0-Setup.exe",
+        "file": "GPCL-1.8.0-Setup.exe",
+        "size": "94 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.7.2",
+      "anchor": "v1-7-2",
+      "date": "2026-10-22",
+      "title": "Avatar kustom, dan daftar versi yang bisa dicari",
+      "log": [
+        "Anda kini bisa mengganti avatar di layar peluncuran: klik avatar tersebut, atau pilih gambar di Pengaturan → Tampilan → Avatar; format PNG / JPG / GIF / WebP didukung",
+        "Gambar di atas 1 MB akan menanyakan apakah ingin dikompresi; batasnya 4 MB, dan avatar bawaan dapat dipulihkan dengan satu klik",
+        "Pengaturan tampilan menambahkan penggeser 'Ukuran avatar', 32–160 piksel",
+        "Daftar versi kini memiliki kotak pencarian; setiap versi menampilkan versi game dan mod loader-nya, dan yang dipilih disorot",
+        "Menyegarkan daftar versi tidak lagi membangun ulang daftarnya, jadi posisi gulir tetap; 'Impor versi lokal' dipindahkan ke kanan atas daftar",
+        "Di 1.20 dan versi lebih baru, memilih 'Gabung server' langsung terhubung; alamat yang kosong kini menampilkan pemberitahuan daripada diam-diam memulai singleplayer",
+        "Simpan otomatis pengaturan versi tidak lagi memunculkan 'Tersimpan' setiap kali",
+        "Pemasang mengecil dari sekitar 103 MB menjadi 93 MB: hanya paket bahasa Tionghoa dan Inggris yang disimpan, bahasa lain akan memakai bahasa Inggris",
+        "1.7.1 adalah build uji internal yang tidak dirilis dan telah ditarik; 1.7.2 mencakup semua perubahannya"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.7.2-Setup.exe",
+        "file": "GPCL-1.7.2-Setup.exe",
+        "size": "93 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.7.0",
+      "anchor": "v1-7-0",
+      "date": "2026-10-22",
+      "title": "Shader, resource pack, dan modpack, terpasang dengan satu klik",
+      "log": [
+        "Halaman unduhan menambahkan tab Shader dan Resource pack: cari di Modrinth / CurseForge dan pasang langsung ke folder yang sesuai untuk versi yang dipilih",
+        "Tab Modpack baru mendukung modpack Modrinth (.mrpack) dan CurseForge, memasang versi game, mod loader, dan semua mod yang sesuai secara otomatis",
+        "Setiap modpack menjadi versi tersendiri, dengan mod, konfigurasi, dan save di foldernya sendiri, sehingga modpack tidak saling tercampur",
+        "Modpack lokal juga bisa diimpor: pilih zip / .mrpack di manajemen versi, masukkan nama, dan pemasangan dimulai",
+        "Berkas modpack diperiksa ukuran dan SHA1-nya terhadap manifest, sehingga jar yang terunduh separuh akan diunduh ulang alih-alih menghasilkan game yang tidak bisa dijalankan",
+        "NeoForge kini dapat dipasang per versi seperti Forge / Fabric (1.20.1 dan lebih baru)",
+        "Menu 'Lainnya' disembunyikan secara bawaan; aktifkan di Pengaturan → Tampilan bila diperlukan, dan bug yang membuatnya muncul lagi setelah restart telah diperbaiki"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.7.0-Setup.exe",
+        "file": "GPCL-1.7.0-Setup.exe",
+        "size": "103 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.6.1",
+      "anchor": "v1-6-1",
+      "date": "2026-10-21",
+      "title": "Alasan crash, langsung dijelaskan",
+      "log": [
+        "Crash didiagnosis secara otomatis (kehabisan memori, versi Java salah, dependensi hilang, driver GPU, ketidakcocokan OptiFine / Forge, dan lainnya), dan dialog menampilkan 1–2 kesimpulan",
+        "'Lihat detail' menampilkan semua petunjuk dan baris bukti; 'Lihat log' membuka direktori game dari versi yang crash",
+        "Laporan kesalahan mengekspor zip lengkap: hasil analisis, ringkasan kesalahan, sistem dan GPU, versi Java, versi dan mod loader, daftar mod / resource pack / shader, argumen peluncuran, keluaran game, dan laporan crash",
+        "Laporan menyamarkan --accessToken dan nama pengguna sistem, sehingga aman dikirim ke orang lain untuk pemecahan masalah",
+        "Saat beberapa game berjalan sekaligus, setiap sesi menyimpan keluarannya sendiri, jadi konteks crash tidak pernah bocor ke versi lain",
+        "Halaman detail mod dibangun ulang: nama Tionghoa dan Inggris, jumlah unduhan, tag kategori, daftar berkas yang dikelompokkan per versi MC, kartu dependensi, tautan ke Modrinth / CurseForge / MCMod, dan penyalinan nama dengan satu klik",
+        "Memperbaiki dependensi untuk pemasangan 1.20.1 yang diresolusikan sebagai 1.20, yang menduplikasi versi Fabric API / GeckoLib dan membuat Fabric melaporkan Incompatible mods found serta menolak dijalankan",
+        "Memasang mod menghapus jar lama dari proyek yang sama, sehingga beberapa versi tidak lagi menumpuk"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.6.1-Setup.exe",
+        "file": "GPCL-1.6.1-Setup.exe",
+        "size": "103 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.6.0",
+      "anchor": "v1-6-0",
+      "date": "2026-10-20",
+      "title": "Pasang mod tanpa repot mencari berkas",
+      "log": [
+        "Halaman unduhan menambahkan tab Mod: cari di Modrinth / CurseForge, pilih berkas untuk versi game saat ini, dan tentukan versi tujuan pemasangan",
+        "Modrinth menarik dependensi yang diperlukan secara otomatis; pencarian bahasa Tionghoa didukung (kueri diteruskan ke MCMod dulu untuk mendapatkan nama Inggrisnya)",
+        "Juga berfungsi tanpa API key CurseForge: tempel tautan proyek atau cf:slug dan pasang satu berkas melalui mirror",
+        "Unduhan kini berupa antrean tugas: mengklik beberapa versi akan mengantrekannya, tugas dalam antrean dapat dihapus, dan membatalkan tugas yang sedang berjalan membuat antrean tetap lanjut",
+        "Pembaruan otomatis kini dipasang secara senyap: diunduh di latar belakang dan dipasang saat Anda keluar dari peluncur, dengan lencana bulat di kanan atas yang menunjukkan progres",
+        "Baru: bahasa game otomatis (Tionghoa Sederhana secara bawaan), direktori game kustom, dan mirror berkas kustom",
+        "Baru: impor versi lokal dari folder versi atau zip / jar",
+        "Fabric sekarang benar-benar terpasang, dengan Fabric API secara bawaan; dengan isolasi versi, mod dan save mengikuti versinya",
+        "Pemasangan Forge hanya menjalankan --installClient, menampilkan progres, dan memberi tahu dengan jelas bila versi Java terlalu lama",
+        "OptiFine dipasang secara senyap alih-alih membuka pemasang grafis",
+        "Memperbaiki unduhan 0 byte yang dianggap berhasil, pengalihan alamat relatif, dan unduhan kedua yang tidak menampilkan progres"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.6.0-Setup.exe",
+        "file": "GPCL-1.6.0-Setup.exe",
+        "size": "103 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.5.2",
+      "anchor": "v1-5-2",
+      "date": "2026-10-18",
+      "title": "Pengaturan, dibangun ulang",
+      "log": [
+        "Halaman pengaturan dibangun ulang: memori, jendela, perilaku peluncuran, sumber unduhan, dan argumen Java dikelompokkan ulang, dapat diatur dengan penggeser, sakelar, dan tombol bersegmen",
+        "Memori kini default ke 'Otomatis': 30% dari memori fisik, minimal 1 GB dan maksimal 8 GB, menyisakan 2 GB untuk sistem; juga dapat diatur manual",
+        "Manajemen memori kini benar-benar mengembalikan memori: hanya membersihkan proses peluncur sendiri, tidak pernah game yang sedang berjalan, dan dapat diatur untuk mengoptimalkan otomatis sebelum peluncuran",
+        "Sumber unduhan memiliki empat mode (otomatis / mirror dulu / resmi dulu / hanya resmi), dipilih terpisah untuk berkas dan daftar versi; batas kecepatan global 0–20 MB/s ditambahkan",
+        "Baru: penyetelan G1GC, argumen JVM kustom, prioritas proses, preset ukuran jendela, dan visibilitas peluncur",
+        "Halaman Tentang kini mencakup informasi proyek, lingkungan runtime, dan lisensi lengkap; situs web dan halaman bantuan juga ditulis ulang",
+        "Memperbaiki: pengaturan jumlah thread yang diabaikan, halaman 404 yang tersimpan sebagai berkas, dan berkas parsial yang tertinggal setelah unduhan gagal"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.5.2-Setup.exe",
+        "file": "GPCL-1.5.2-Setup.exe",
+        "size": "103 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.5.1",
+      "anchor": "v1-5-1",
+      "date": "2026-10-16",
+      "title": "Crash? Sini saya lihat",
+      "log": [
+        "Pemberitahuan crash baru: saat game tertutup secara tidak normal, ia menjelaskan penyebabnya, dengan laporan kesalahan satu klik (laporan crash + log + info sistem, token disamarkan)",
+        "Panel saat berjalan baru: setelah diluncurkan, ia menampilkan versi, PID, durasi, dan memori di sebelah kanan, serta dapat mengakhiri game kapan saja",
+        "Kolom nama pengguna menyimpan 5 nama terakhir dalam dropdown, masing-masing dapat dihapus",
+        "Game kini berjalan di prosesnya sendiri, jadi menutup peluncur tidak lagi mengakhirinya; menutup jendela game juga dikenali sebagai keluar",
+        "Judul jendela game kustom baru dengan kata ajaib ({mc_version}, {time}, dan lainnya)",
+        "Tips peluncuran kini muncul secara acak (dapat diatur di pengaturan), dengan banyak entri tambahan",
+        "Animasi mulai dan transisi halaman yang lebih halus"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.5.1-Setup.exe",
+        "file": "GPCL-1.5.1-Setup.exe",
+        "size": "103 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.5.0",
+      "anchor": "v1-5-0",
+      "date": "2026-10-16",
+      "title": "Java diperbaiki, dan tampilan baru",
+      "log": [
+        "Memperbaiki unduhan runtime Java: perubahan nama berkas di mirror membuat pemasangan gagal, jadi kini diambil secara dinamis",
+        "Pemasang beralih ke Inno Setup dan melakukan peningkatan di tempat dari versi lama",
+        "Warna global disatukan (biru langit sebagai warna utama, biru tua untuk mode gelap), dengan animasi mulai dan situs web baru",
+        "Memperbaiki layar mulai yang mengabaikan tema terang dan beberapa gaya tombol yang tidak diterapkan"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.5.0-Setup.exe",
+        "file": "GPCL-1.5.0-Setup.exe",
+        "size": "103 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.4.4",
+      "anchor": "v1-4-4",
+      "date": "2026-07-11",
+      "title": "Dukungan shader!",
+      "log": [
+        "Menambahkan dukungan OptiFine (shader)",
+        "Pemasangan satu klik yang menangani inheritance, library, dan tweakClass secara otomatis",
+        "Mendukung mekanisme pewarisan versi inheritsFrom"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.4.4-Setup.exe",
+        "file": "GPCL-1.4.4-Setup.exe",
+        "size": "104 MB",
+        "github": false
+      }
+    },
+    {
+      "version": "1.4.3",
+      "anchor": "v1-4-3",
+      "date": "2026-06-02",
+      "title": "Diperbaiki",
+      "log": [
+        "Memperbaiki masalah scrollbar ganda",
+        "Memperluas halaman Tentang dengan lebih banyak konten, termasuk kotak perkakas"
+      ],
+      "download": {
+        "url": "https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases/download/1.4.3/GPCL-1.4.3-Setup.exe",
+        "file": "GPCL-1.4.3-Setup.exe",
+        "size": "101 MB",
+        "github": true
+      }
+    },
+    {
+      "version": "1.4.2",
+      "anchor": "v1-4-2",
+      "date": "2026-06-02",
+      "title": "Diperbaiki? Ragu saya",
+      "log": [
+        "Layar splash punya beberapa masalah di versi sebelumnya",
+        "Merapikan pengaturan",
+        "Membatalkan peluncuran sekarang benar-benar mematikan prosesnya!"
+      ],
+      "download": {
+        "url": "https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases/download/1.4.2/GPCL-1.4.2-Setup.exe",
+        "file": "GPCL-1.4.2-Setup.exe",
+        "size": "101 MB",
+        "github": true
+      }
+    },
+    {
+      "version": "1.4.1",
+      "anchor": "v1-4-1",
+      "date": "2026-06-02",
+      "title": "Selamat datang!",
+      "log": [
+        "Menambahkan animasi selamat datang saat pertama kali diluncurkan",
+        "Menghapus anti-debugging berlebihan dan mengizinkan mode pengembang"
+      ],
+      "download": {
+        "url": "https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases/download/1.4.1/GPCL-1.4.1-Setup.exe",
+        "file": "GPCL-1.4.1-Setup.exe",
+        "size": "101 MB",
+        "github": true
+      }
+    },
+    {
+      "version": "1.4.0",
+      "anchor": "v1-4-0",
+      "date": "2026-06-01",
+      "title": "Lepas landas!",
+      "log": [
+        "Mencoba benar-benar mendukung Forge",
+        "Mulai instan! Ini build pemasang, dikompilasi ke kode mesin!",
+        "Memperbaiki bug, terima kasih kepada forum",
+        "Alur sangat diringkas; detail pembaruan kini dapat menampilkan log lengkap"
+      ],
+      "download": {
+        "url": "https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases/download/1.4.0/GPCL-1.4.0-Setup.exe",
+        "file": "GPCL-1.4.0-Setup.exe",
+        "size": "99 MB",
+        "github": true
+      }
+    },
+    {
+      "version": "1.3.3",
+      "anchor": "v1-3-3",
+      "date": "2026-05-28",
+      "title": "",
+      "log": [
+        "Forge / Fabric / OptiFine sekarang benar-benar berfungsi!",
+        "Ini adalah rilis sumber terbuka pertama!"
+      ],
+      "download": {
+        "url": "https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases/download/1.3.3/GoodPlanCraftLauncher.1.3.3.exe",
+        "file": "GoodPlanCraftLauncher.1.3.3.exe",
+        "size": "90 MB",
+        "github": true
+      }
+    },
+    {
+      "version": "1.3.2",
+      "anchor": "v1-3-2",
+      "date": "2026-05-23",
+      "title": "",
+      "log": [
+        "Menambahkan pengaturan per versi yang detail, dikelola secara bawaan; versi game dapat dihapus",
+        "Dukungan mode terang lebih banyak; 'Pulihkan default' dipindahkan ke bagian pengaturan kompatibilitas baru; API diperbarui",
+        "Merapikan dropdown dan berbagai detail lainnya"
+      ],
+      "download": null
+    },
+    {
+      "version": "1.3.0–1.3.1",
+      "anchor": "v1-3-1",
+      "date": "2026-05-22",
+      "title": "",
+      "log": [
+        "Memperbaiki grafik unduhan yang hilang (tidak dipanggil di build terpasang)",
+        "Memindahkan pengaturan pemeriksaan pembaruan otomatis ke Tentang",
+        "Halaman unduhan kini menampilkan Alpha, Beta, snapshot, dan rilis secara lengkap, memperbaiki versi rilis yang tidak tampil sepenuhnya",
+        "Membangun ulang layar peluncuran, menambahkan manajemen versi yang diurutkan berdasarkan waktu peluncuran terakhir",
+        "Menambahkan tips 'Tahukah Anda?' saat mulai dan pembersihan log otomatis (intervalnya dapat diubah di pengaturan)",
+        "Skala antarmuka di Tampilan kini benar-benar berfungsi; 1.3.1 memperbaiki masalah tidak tampilnya"
+      ],
+      "download": null
+    },
+    {
+      "version": "1.2.1",
+      "anchor": "v1-2-1",
+      "date": "2026-05-22",
+      "title": "",
+      "log": [
+        "Membundel library dinamis secara lokal",
+        "Menambahkan perlindungan terhadap peluncuran / instance ganda",
+        "Menghapus pengaturan yang tidak berguna, dan konten halaman unduhan kini dapat dilipat"
+      ],
+      "download": null
+    },
+    {
+      "version": "1.2.0",
+      "anchor": "v1-2-0",
+      "date": "2026-05-21",
+      "title": "",
+      "log": [
+        "Menambahkan scrollbar dan mode terang",
+        "Menambahkan animasi mulai peluncur penuh, mengurangi layar putih saat peluncuran",
+        "Memindahkan sidebar kiri ke atas dan memperbesar UI; merapikan halaman unduhan dan menambahkan runtime Java",
+        "Menambahkan banyak pengaturan, dikelompokkan menjadi Game, Unduhan, Tampilan, Lanjutan, dan Tentang"
+      ],
+      "download": null
+    },
+    {
+      "version": "1.1.0",
+      "anchor": "v1-1-0",
+      "date": "2026-05-21",
+      "title": "",
+      "log": [
+        "Menambahkan penyiapan Java otomatis, dengan sumber unduhan yang dapat diatur (terima kasih, Tsinghua!)",
+        "Meningkatkan performa, menambahkan animasi mulai, dan meningkatkan pemecahan masalah berbasis log",
+        "Memperbaiki banyak bug daftar unduhan, seperti tidak bisa membatalkan dan sisa berkas setelah pembatalan"
+      ],
+      "download": null
+    },
+    {
+      "version": "1.0.0",
+      "anchor": "v1-0-0",
+      "date": "2026-05-20",
+      "title": "",
+      "log": [
+        "Rilis stabil pertama"
+      ],
+      "download": null
+    }
+  ]
+}
