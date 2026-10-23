@@ -12,11 +12,11 @@ import { BrowserWindow, dialog, ipcMain, net } from 'electron';
 import fs from 'fs';
 import path from 'path';
 
-import { APP_VERSION, CACHE_DIR, GAME_DIR, formatTimestamp, loadSettings, markVersionIsolated, writeLog } from './config';
+import { APP_VERSION, CACHE_DIR, GAME_DIR, applyInitialVersionIsolation, formatTimestamp, loadSettings, setVersionIsolationChoice, writeLog } from './config';
 import { t } from './i18n';
 import { installVersionWithModLoader } from './modloader';
 import { mainWindow } from './shell';
-import { MAX_CONCURRENT, activeDownloads, completedDownloadFiles, currentDownloadPath, currentDownloadType, currentDownloadVersion, downloadQueue, isDownloading, isJavaDownloading, setActiveDownloads, setCompletedDownloadFiles, setCurrentDownloadPath, setCurrentDownloadType, setCurrentDownloadVersion, setDownloadQueue, setIsDownloading, setIsJavaDownloading, setMaxConcurrent, setShouldCancelDownload, setTotalDownloadFiles, shouldCancelDownload, totalDownloadFiles } from './state';
+import { MAX_CONCURRENT, activeDownloads, abortModDownloads, completedDownloadFiles, currentDownloadPath, currentDownloadType, currentDownloadVersion, downloadQueue, isDownloading, isJavaDownloading, setActiveDownloads, setCompletedDownloadFiles, setCurrentDownloadPath, setCurrentDownloadType, setCurrentDownloadVersion, setDownloadQueue, setIsDownloading, setIsJavaDownloading, setMaxConcurrent, setShouldCancelDownload, setTotalDownloadFiles, shouldCancelDownload, totalDownloadFiles } from './state';
 // __IMPORTS_END__
 
 ipcMain.handle('confirm-close-download', async () => {
@@ -62,6 +62,7 @@ ipcMain.handle('cancel-download-only', async () => {
   writeLog('[取消下载] 开始取消下载流程');
 
 setShouldCancelDownload(true);
+abortModDownloads();
 
   const pendingCount: number = downloadQueue.length;
 setDownloadQueue([]);
@@ -297,9 +298,203 @@ export function setOverallProgressMode(value: boolean): void {
   overallProgressMode = value;
 }
 
-function progressPercent(filePercent: number): number {
-  if (!overallProgressMode || totalDownloadFiles <= 1) return filePercent;
-  return Math.min(100, Math.floor((completedDownloadFiles / totalDownloadFiles) * 100));
+/**
+ * 下载进度统一在这里汇总：每个分片只更新内存里的计数，真正发 IPC 按 120ms 节流。
+ * 以前每收到一块数据就给渲染层发一次（并发 20 时一秒几千条），进度条会被刷得看不清，
+ * 而且渲染层用「单个文件的 loaded」算速度，一换文件就变成负数直接罢工。
+ * 现在百分比按总字节数算、速度按总已完成字节算，跟具体下到哪个文件无关。
+ */
+interface ActiveTransfer {
+  label: string;
+  loaded: number;
+  size: number;
+}
+
+const activeTransfers: Map<string, ActiveTransfer> = new Map();
+let progressTotalBytes: number = 0;
+let progressDoneBytes: number = 0;
+let progressKnownFiles: number = 0;
+let progressSessionActive: boolean = false;
+let progressStageLabel: string = '';
+let progressCurrentLabel: string = '';
+let progressLabelAt: number = 0;
+let progressLastSentAt: number = 0;
+let progressSampleAt: number = 0;
+let progressSampleBytes: number = 0;
+let progressSpeed: number = 0;
+let progressFlushTimer: ReturnType<typeof setTimeout> | null = null;
+
+function clearProgressTimer(): void {
+  if (progressFlushTimer) {
+    clearTimeout(progressFlushTimer);
+    progressFlushTimer = null;
+  }
+}
+
+function ensureProgressSession(): void {
+  if (progressSessionActive) return;
+  progressSessionActive = true;
+  progressTotalBytes = 0;
+  progressDoneBytes = 0;
+  progressKnownFiles = 0;
+  progressSpeed = 0;
+  progressSampleAt = Date.now();
+  progressSampleBytes = 0;
+}
+
+export function beginProgressSession(totalBytes: number, totalFiles: number): void {
+  clearProgressTimer();
+  activeTransfers.clear();
+  progressSessionActive = true;
+  progressTotalBytes = Math.max(0, totalBytes);
+  progressDoneBytes = 0;
+  progressKnownFiles = Math.max(0, totalFiles);
+  progressStageLabel = '';
+  progressCurrentLabel = '';
+  progressLabelAt = 0;
+  progressLastSentAt = 0;
+  progressSampleAt = Date.now();
+  progressSampleBytes = 0;
+  progressSpeed = 0;
+  setTotalDownloadFiles(totalFiles);
+  setCompletedDownloadFiles(0);
+}
+
+export function setProgressStage(label: string): void {
+  ensureProgressSession();
+  progressStageLabel = label;
+  progressCurrentLabel = label;
+  progressLabelAt = Date.now();
+  progressLastSentAt = 0;
+  flushProgress();
+}
+
+export function finishProgressSession(): void {
+  if (!progressSessionActive) return;
+  activeTransfers.clear();
+  const total: number = progressTotalBytes;
+  for (const w of BrowserWindow.getAllWindows()) {
+    w.webContents.send('download-progress', {
+      label: '',
+      percent: 100,
+      bytesDownloaded: total,
+      totalBytes: total,
+      speed: 0,
+      current: totalDownloadFiles,
+      total: totalDownloadFiles
+    });
+  }
+  resetProgressSession();
+}
+
+export function resetProgressSession(): void {
+  clearProgressTimer();
+  activeTransfers.clear();
+  progressSessionActive = false;
+  progressTotalBytes = 0;
+  progressDoneBytes = 0;
+  progressKnownFiles = 0;
+  progressStageLabel = '';
+  progressCurrentLabel = '';
+  progressSpeed = 0;
+}
+
+function currentTransferLabel(now: number): string {
+  let picked: ActiveTransfer | null = null;
+  for (const transfer of activeTransfers.values()) {
+    if (!picked || transfer.size > picked.size) picked = transfer;
+  }
+  if (picked && picked.label !== progressCurrentLabel && now - progressLabelAt > 700) {
+    progressCurrentLabel = picked.label;
+    progressLabelAt = now;
+  } else if (!picked && progressCurrentLabel && now - progressLabelAt > 700) {
+    progressCurrentLabel = '';
+  }
+  return progressCurrentLabel || progressStageLabel;
+}
+
+function flushProgress(): void {
+  if (!progressSessionActive) return;
+
+  const now: number = Date.now();
+  let activeLoaded: number = 0;
+  for (const transfer of activeTransfers.values()) activeLoaded += transfer.loaded;
+  const done: number = progressDoneBytes + activeLoaded;
+
+  let percent: number = 0;
+  if (overallProgressMode && totalDownloadFiles > 0) {
+    percent = (completedDownloadFiles / totalDownloadFiles) * 100;
+  } else if (progressTotalBytes > 0) {
+    percent = (done / progressTotalBytes) * 100;
+  } else if (progressKnownFiles > 1) {
+    percent = (completedDownloadFiles / progressKnownFiles) * 100;
+  } else {
+    for (const transfer of activeTransfers.values()) {
+      if (transfer.size > 0) percent = Math.max(percent, (transfer.loaded / transfer.size) * 100);
+    }
+  }
+  percent = Math.max(0, Math.min(100, Math.round(percent * 10) / 10));
+
+  const sampleSeconds: number = (now - progressSampleAt) / 1000;
+  if (sampleSeconds >= 0.25) {
+    const instant: number = Math.max(0, (done - progressSampleBytes) / sampleSeconds);
+    progressSpeed = progressSpeed > 0 ? progressSpeed * 0.6 + instant * 0.4 : instant;
+    progressSampleAt = now;
+    progressSampleBytes = done;
+  }
+
+  progressLastSentAt = now;
+  const label: string = currentTransferLabel(now);
+  const payload: any = {
+    label,
+    percent,
+    bytesDownloaded: done,
+    totalBytes: progressTotalBytes,
+    speed: Math.round(progressSpeed),
+    current: completedDownloadFiles,
+    total: totalDownloadFiles
+  };
+  for (const w of BrowserWindow.getAllWindows()) {
+    w.webContents.send('download-progress', payload);
+  }
+}
+
+function scheduleProgressFlush(): void {
+  if (progressFlushTimer) return;
+  const wait: number = Math.max(0, 120 - (Date.now() - progressLastSentAt));
+  progressFlushTimer = setTimeout(() => {
+    progressFlushTimer = null;
+    flushProgress();
+  }, wait);
+}
+
+function reportTransferProgress(dest: string, loaded: number, total: number, label: string): void {
+  ensureProgressSession();
+  if (progressStageLabel && loaded > 0) progressStageLabel = '';
+  const entry: ActiveTransfer = activeTransfers.get(dest) || { label, loaded: 0, size: 0 };
+  entry.loaded = loaded;
+  if (label) entry.label = label;
+  if (total > 0) entry.size = total;
+  activeTransfers.set(dest, entry);
+  scheduleProgressFlush();
+}
+
+function reportTransferDone(dest: string, loaded: number, label: string): void {
+  ensureProgressSession();
+  const entry: ActiveTransfer | undefined = activeTransfers.get(dest);
+  activeTransfers.delete(dest);
+  progressDoneBytes += Math.max(entry?.size || 0, loaded);
+  if (label || entry?.label) {
+    progressCurrentLabel = label || entry!.label;
+    progressLabelAt = Date.now();
+  }
+  setCompletedDownloadFiles(completedDownloadFiles + 1);
+  scheduleProgressFlush();
+}
+
+function reportTransferFailed(dest: string): void {
+  activeTransfers.delete(dest);
+  scheduleProgressFlush();
 }
 
 
@@ -324,7 +519,6 @@ export async function processDownloadQueue(): Promise<void> {
       })
       .finally(() => {
         setActiveDownloads(activeDownloads - 1);
-        setCompletedDownloadFiles(completedDownloadFiles + 1);
         processDownloadQueue();
       });
   }
@@ -346,14 +540,7 @@ export async function downloadFile(url: string, dest: string, label: string, sou
   if (fs.existsSync(dest)) {
     const stat = fs.statSync(dest);
     if (stat.size > 1024) {
-      for (const w of BrowserWindow.getAllWindows()) {
-        w.webContents.send('download-progress', {
-          label,
-          percent: progressPercent(100),
-          current: completedDownloadFiles,
-          total: totalDownloadFiles
-        });
-      }
+      reportTransferDone(dest, stat.size, label);
       return;
     }
   }
@@ -429,16 +616,7 @@ async function downloadFileOnce(url: string, dest: string, label: string, timeou
             }
             loaded += d.length;
             file.write(d);
-            const p: number = total > 0 ? Math.floor((loaded / total) * 100) : 0;
-            for (const w of BrowserWindow.getAllWindows()) {
-              w.webContents.send('download-progress', {
-                label,
-                percent: progressPercent(p),
-                bytesDownloaded: loaded,
-                current: completedDownloadFiles,
-                total: totalDownloadFiles
-              });
-            }
+            reportTransferProgress(dest, loaded, total, label);
             if (speedLimitBytes > 0) {
               res2.pause();
               void consumeDownloadTokens(d.length).then(() => {
@@ -459,6 +637,7 @@ async function downloadFileOnce(url: string, dest: string, label: string, timeou
             }
             file.end(() => {
               writeLog(`[下载] ${label} 下载完成，实际大小: ${loaded} bytes`);
+              reportTransferDone(dest, loaded, label);
               resolve();
             });
           });
@@ -521,16 +700,7 @@ async function downloadFileOnce(url: string, dest: string, label: string, timeou
           }
           loaded += d.length;
           file.write(d);
-          const p: number = total > 0 ? Math.floor((loaded / total) * 100) : 0;
-          for (const w of BrowserWindow.getAllWindows()) {
-            w.webContents.send('download-progress', {
-              label,
-              percent: progressPercent(p),
-              bytesDownloaded: loaded,
-              current: completedDownloadFiles,
-              total: totalDownloadFiles
-            });
-          }
+          reportTransferProgress(dest, loaded, total, label);
           if (speedLimitBytes > 0) {
             res.pause();
             void consumeDownloadTokens(d.length).then(() => {
@@ -551,6 +721,7 @@ async function downloadFileOnce(url: string, dest: string, label: string, timeou
           }
           file.end(() => {
             writeLog(`[下载] ${label} 下载完成，实际大小: ${loaded} bytes`);
+            reportTransferDone(dest, loaded, label);
             resolve();
           });
         });
@@ -582,6 +753,7 @@ export async function downloadFileInternal(sources: string[], dest: string, labe
       return;
     } catch (error: any) {
       lastError = error;
+      reportTransferFailed(dest);
       writeLog(`[下载] 下载源失败: ${url} - ${error.message}`);
       try {
         await new Promise<void>((resolve) => setTimeout(resolve, 100));
@@ -617,6 +789,7 @@ setDownloadQueue([]);
 setActiveDownloads(0);
 setTotalDownloadFiles(0);
 setCompletedDownloadFiles(0);
+setProgressStage(t('ui.preparing_download'));
 
     const versionDir2: string = path.join(GAME_DIR, 'versions', versionId);
     const versionExisted: boolean = fs.existsSync(versionDir2);
@@ -641,7 +814,9 @@ setCompletedDownloadFiles(0);
 
     if (!fs.existsSync(versionJarPath)) {
       const clientSources: string[] = buildSourceUrls(versionData.downloads.client.url, fileSourcePolicy, `https://bmclapi2.bangbang93.com/version/${versionId}/client`);
+      beginProgressSession(Number(versionData.downloads.client.size) || 0, 1);
       await downloadFile(versionData.downloads.client.url, versionJarPath, t('ui.client'), clientSources);
+      finishProgressSession();
     }
 
     if (shouldCancelDownload) {
@@ -652,7 +827,9 @@ setCompletedDownloadFiles(0);
     const assetIndexPath: string = path.join(GAME_DIR, 'assets', 'indexes', versionData.assetIndex.id + '.json');
     if (!fs.existsSync(assetIndexPath)) {
       const assetIndexSources: string[] = buildSourceUrls(versionData.assetIndex.url, versionSourcePolicy);
+      beginProgressSession(Number(versionData.assetIndex.size) || 0, 1);
       await downloadFile(versionData.assetIndex.url, assetIndexPath, t('ui.asset_index'), assetIndexSources);
+      finishProgressSession();
     }
 
     if (shouldCancelDownload) {
@@ -671,7 +848,9 @@ setCompletedDownloadFiles(0);
     }
     if (!assetIndexData) throw new Error(t('ui.could_not_read_the_asset_index'));
 
+    setProgressStage(t('ui.preparing_files'));
     const toDownload: any[] = [];
+    let totalBytes: number = 0;
 
     for (const [name, obj] of Object.entries(assetIndexData.objects) as [string, any][]) {
       const hash: string = obj.hash;
@@ -679,11 +858,14 @@ setCompletedDownloadFiles(0);
       const assetPath: string = path.join(GAME_DIR, 'assets', 'objects', prefix, hash);
       if (!fs.existsSync(assetPath)) {
         const assetUrl: string = `https://resources.download.minecraft.net/${prefix}/${hash}`;
+        const size: number = Number(obj.size) || 0;
+        totalBytes += size;
         toDownload.push({
           url: assetUrl,
           sources: buildSourceUrls(assetUrl, fileSourcePolicy),
           dest: assetPath,
-          label: t('ui.asset_name', { name })
+          label: t('ui.asset_name', { name }),
+          size
         });
       }
     }
@@ -692,11 +874,14 @@ setCompletedDownloadFiles(0);
       if (lib.downloads?.artifact) {
         const libPath: string = path.join(GAME_DIR, 'libraries', lib.downloads.artifact.path);
         if (!fs.existsSync(libPath)) {
+          const size: number = Number(lib.downloads.artifact.size) || 0;
+          totalBytes += size;
           toDownload.push({
             url: lib.downloads.artifact.url,
             sources: buildSourceUrls(lib.downloads.artifact.url, fileSourcePolicy),
             dest: libPath,
-            label: t('ui.library_name', { name: lib.name })
+            label: t('ui.library_name', { name: lib.name }),
+            size
           });
         }
       }
@@ -705,11 +890,14 @@ setCompletedDownloadFiles(0);
           if (cls.includes('natives-windows')) {
             const libPath: string = path.join(GAME_DIR, 'libraries', info.path);
             if (!fs.existsSync(libPath)) {
+              const size: number = Number(info.size) || 0;
+              totalBytes += size;
               toDownload.push({
                 url: info.url,
                 sources: buildSourceUrls(info.url, fileSourcePolicy),
                 dest: libPath,
-                label: t('ui.native_library_name', { name: lib.name })
+                label: t('ui.native_library_name', { name: lib.name }),
+                size
               });
             }
           }
@@ -717,11 +905,11 @@ setCompletedDownloadFiles(0);
       }
     }
 
-setTotalDownloadFiles(toDownload.length);
-setCompletedDownloadFiles(0);
+    beginProgressSession(totalBytes, toDownload.length);
 
     const downloadPromises: Promise<void>[] = toDownload.map((item: any) => downloadFile(item.url, item.dest, item.label, item.sources));
     await Promise.all(downloadPromises);
+    finishProgressSession();
 
     const nativesDir: string = path.join(GAME_DIR, 'versions', versionId, 'natives');
     if (!fs.existsSync(nativesDir)) fs.mkdirSync(nativesDir, { recursive: true });
@@ -747,7 +935,7 @@ setCompletedDownloadFiles(0);
     }
 
     writeLog(`下载完成：${versionId}`);
-    if (!versionExisted) markVersionIsolated(GAME_DIR, versionId);
+    if (!versionExisted) applyInitialVersionIsolation(versionId, { modable: false, versionType: String(vInfo.type || 'release') });
 
     updateVersionLastPlayed(versionId, targetDir);
     
@@ -764,6 +952,7 @@ setCompletedDownloadFiles(0);
     }
     return { success: false, error: e.message };
   } finally {
+resetProgressSession();
 setIsDownloading(false);
 setCurrentDownloadVersion(null);
 setCurrentDownloadType(null);
@@ -1008,6 +1197,10 @@ function importVersionFolder(srcDir: string): any {
     }
   }
 
+  const haystack: string = `${found.data.mainClass || ''} ${JSON.stringify(found.data.libraries || [])}`.toLowerCase();
+  const modable: boolean = /fabricmc|minecraftforge|neoforged|quiltmc|optifine/.test(haystack);
+  applyInitialVersionIsolation(versionId, { modable, versionType: String(found.data.type || 'release') });
+
   writeLog(`[本地安装] 已导入版本 ${versionId} 到 ${dest}`);
   return { success: true, versionId };
 }
@@ -1142,6 +1335,9 @@ ipcMain.handle('save-version-settings', async (_, versionId: string, settings: a
     const configPath: string = path.join(gpclDir, 'config.json');
 
     fs.writeFileSync(configPath, JSON.stringify(settings, null, 2), 'utf8');
+    if (typeof settings?.isolation === 'boolean') {
+      setVersionIsolationChoice(GAME_DIR, versionId, settings.isolation);
+    }
     
     writeLog(`[版本设置] 版本 ${versionId} 设置已保存`);
     

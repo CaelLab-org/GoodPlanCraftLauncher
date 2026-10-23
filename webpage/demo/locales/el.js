@@ -289,4 +289,7 @@ window.DEMO_DICTIONARY = {
   "months": "μήνες",
   "years": "χρόνια",
   "{n} downloads": "{n} λήψεις"
+,
+  "Expand": "Ανάπτυξη",
+  "Collapse": "Σύμπτυξη"
 };

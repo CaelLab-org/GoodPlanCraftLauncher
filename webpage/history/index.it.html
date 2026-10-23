@@ -74,7 +74,7 @@
                     </div>
                 </li>
                 <li class="lang-switch"><select aria-label="Lingua" onchange="if(this.value)location.href=this.value"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it" selected>Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select></li>
-                <li><a href="../index.it#download" class="nav-cta">&#9662; Scarica v1.8.0</a></li>
+                <li><a href="../index.it#download" class="nav-cta">&#9662; Scarica v1.9.0</a></li>
             </ul>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Apri menu" aria-expanded="false">&#9776;</button>
         </div>
@@ -92,6 +92,7 @@
             <p class="cl-intro">Dalla 1.0.0 all'ultima release, ogni versione — cosa è cambiato e se è scaricabile — è in questa pagina.</p>
             <p class="cl-note">Gli installer non sono stati conservati per la 1.3.2 e precedenti; l'aggiornamento automatico integrato nelle vecchie versioni potrebbe non funzionare più, quindi per l'uso quotidiano si consiglia di installare l'ultima release.</p>
             <div class="cl-index" role="navigation" aria-label="Indice delle versioni">
+                <a href="#v1-9-0">1.9.0</a>
                 <a href="#v1-8-0">1.8.0</a>
                 <a href="#v1-7-2">1.7.2</a>
                 <a href="#v1-7-0">1.7.0</a>
@@ -119,12 +120,37 @@
     <main class="history cl-history">
         <div class="container">
             <div class="timeline">
+                <article class="timeline-item" id="v1-9-0">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.9.0</span>
+                        <span class="version-title">Pagina di download rifatta, con modpack e shader</span>
+                        <span class="latest-chip">Ultima</span>
+                        <span class="version-date">2026-10-23</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>L'avanzamento del download ora è in fondo alla finestra: resti sulla pagina che stai usando, la barra mostra file, avanzamento e velocità e, aprendola, vedi l'elenco completo dove puoi annullare in qualsiasi momento</li>
+                        <li>La pagina di download ha ora le schede Shader, Pacchetti di risorse e Modpack: i modpack di Modrinth e CurseForge si installano con un clic, gli archivi locali si importano e NeoForge è supportato</li>
+                        <li>L'isolamento delle versioni è ora un'impostazione esplicita: ogni versione ha mod, salvataggi e impostazioni propri per impostazione predefinita, con cinque livelli e un interruttore per versione</li>
+                        <li>Puoi dare un nome alla versione durante il download e creare un'istanza separata, così configurazioni di mod diverse non si mescolano</li>
+                        <li>La ricerca dei mod è molto più veloce: «Tutte le fonti» funziona in parallelo con compressione, le ricerche ripetute usano la cache e quelle in cinese cercano prima il nome inglese sul wiki</li>
+                        <li>La ricerca ordina per pertinenza e alterna le fonti; la pagina dei dettagli indica da dove arriva il nome cinese e nelle Impostazioni puoi aggiungere fonti e dizionari personalizzati</li>
+                        <li>I loader dei mod ora si escludono a vicenda: scegliendo Forge gli altri risultano «incompatibili», l'elenco di destinazione mostra solo versioni compatibili e il pulsante indica la destinazione</li>
+                        <li>Corretti download troncati, annullamento lento e finestra principale non aggiornata dopo l'eliminazione di una versione; la prima installazione non riproduce più l'animazione iniziale</li>
+                    </ul>
+                    <div class="cl-download">
+                        <a class="cl-dl-btn" href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.0-Setup.exe">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                            Scarica v1.9.0
+                        </a>
+                        <span class="cl-file">GPCL-1.9.0-Setup.exe · 94 MB · Windows 64 bit</span>
+                    </div>
+                </article>
                 <article class="timeline-item" id="v1-8-0">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
                         <span class="version-number">v1.8.0</span>
                         <span class="version-title">25 lingue, dal launcher al sito</span>
-                        <span class="latest-chip">Ultima</span>
                         <span class="version-date">2026-10-22</span>
                     </div>
                     <ul class="changelog">

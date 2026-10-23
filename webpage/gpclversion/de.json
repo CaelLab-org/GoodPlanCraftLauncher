@@ -1,8 +1,30 @@
 {
   "schema": 1,
-  "latest": "1.8.0",
-  "updated": "2026-10-22",
+  "latest": "1.9.0",
+  "updated": "2026-10-23",
   "versions": [
+    {
+      "version": "1.9.0",
+      "anchor": "v1-9-0",
+      "date": "2026-10-23",
+      "title": "Neue Download-Seite mit Modpacks und Shadern",
+      "log": [
+        "Der Download-Fortschritt sitzt jetzt unten im Fenster: Du bleibst auf der aktuellen Seite, die Leiste zeigt Datei, Fortschritt und Geschwindigkeit und öffnet die vollständige Download-Liste, in der du jederzeit abbrechen kannst",
+        "Die Download-Seite hat jetzt Shader-, Ressourcenpaket- und Modpack-Reiter: Modpacks von Modrinth und CurseForge lassen sich mit einem Klick installieren, lokale Archive importieren, und NeoForge wird unterstützt",
+        "Die Versionsisolierung ist jetzt eine eigene Einstellung: Jede Version hat standardmäßig eigene Mods, Spielstände und Einstellungen, mit fünf Stufen und einem Schalter pro Version",
+        "Beim Download kannst du der Version einen Namen geben und eine eigene Instanz anlegen, damit sich verschiedene Mod-Setups nicht stören",
+        "Die Mod-Suche ist deutlich schneller: „Alle Quellen“ läuft parallel und komprimiert, wiederholte Suchen treffen den Cache, und chinesische Suchbegriffe werden zuerst über ein Wiki ins Englische übersetzt",
+        "Die Mod-Suche sortiert nach Relevanz und mischt die Quellen; die Detailseite zeigt, woher der chinesische Name stammt, und in den Einstellungen lassen sich eigene Mod-Quellen und Namenslisten hinzufügen",
+        "Mod-Loader schließen sich jetzt gegenseitig aus: Nach der Wahl von Forge werden die anderen als „inkompatibel“ markiert, die Ziel-Liste zeigt nur passende Versionen und der Button nennt das Ziel",
+        "Abgebrochene Downloads, träges Abbrechen und eine nicht aktualisierte Hauptansicht nach dem Löschen einer Version wurden behoben; beim ersten Start entfällt die Intro-Animation"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.0-Setup.exe",
+        "file": "GPCL-1.9.0-Setup.exe",
+        "size": "94 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.8.0",
       "anchor": "v1-8-0",

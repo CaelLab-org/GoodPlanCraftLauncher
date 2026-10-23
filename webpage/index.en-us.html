@@ -75,7 +75,7 @@
                     </div>
                 </li>
                 <li class="lang-switch"><select aria-label="Language" onchange="if(this.value)location.href=this.value"><option value="./index.en-us" selected>English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select></li>
-                <li><a href="#download" class="nav-cta">&#9662; Download v1.8.0</a></li>
+                <li><a href="#download" class="nav-cta">&#9662; Download v1.9.0</a></li>
             </ul>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu" aria-expanded="false">&#9776;</button>
         </div>
@@ -113,9 +113,9 @@
                 </a>
             </div>
             <div class="hero-meta">
-                <span>Version <b>v1.8.0</b></span>
+                <span>Version <b>v1.9.0</b></span>
                 <span class="sep">/</span>
-                <span>Updated <b>2026-10-22</b></span>
+                <span>Updated <b>2026-10-23</b></span>
                 <span class="sep">/</span>
                 <span>Platform <b>Windows 10+</b></span>
             </div>
@@ -264,13 +264,13 @@
                 <span class="dl-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
                 </span>
-                <div class="download-file">GPCL-1.8.0-Setup.exe</div>
-                <a href="https://dl.caellab.com/file/games/gpcl/GPCL-1.8.0-Setup.exe" class="download-btn">
+                <div class="download-file">GPCL-1.9.0-Setup.exe</div>
+                <a href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.0-Setup.exe" class="download-btn">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
                     Launch the block world!
                 </a>
                 <div class="update-info">
-                    <span>Updated <b>2026-10-22</b></span>
+                    <span>Updated <b>2026-10-23</b></span>
                     <span>Platform <b>Windows 10 64-bit</b></span>
                     <span>License <b>Open source, free</b></span>
                 </div>
@@ -381,9 +381,27 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                 <div class="timeline-item reveal">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
+                        <span class="version-number">v1.9.0</span>
+                        <span class="version-title">A rebuilt download page, with modpacks and shaders</span>
+                        <span class="latest-chip">Latest</span>
+                        <span class="version-date">2026-10-23</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Download progress now lives at the bottom of the window: stay on whatever page you are on, the bar shows the current file, progress and speed, and it opens into the full download queue where you can cancel at any time</li>
+                        <li>The download page now has Shaders, Resource packs and Modpacks tabs: Modrinth and CurseForge modpacks install in one click, local archives can be imported, and NeoForge is supported</li>
+                        <li>Version isolation is now an explicit setting: each version gets its own mods, saves and settings by default, with five levels to choose from and a per-version switch</li>
+                        <li>You can name a version while downloading it, creating a separate instance so different mod setups do not interfere with each other</li>
+                        <li>Mod search is much faster: All sources now runs in parallel with compression, repeated searches hit the cache, and Chinese searches look up the English name in a wiki first</li>
+                        <li>Mod search sorts by relevance with sources interleaved; the detail page shows where the Chinese name came from, and you can add custom mod sources and name dictionaries in Settings</li>
+                        <li>Mod loaders are now mutually exclusive: picking Forge marks the others as incompatible, and the install target list only shows compatible versions with the destination written on the button</li>
+                        <li>Fixed truncated downloads, slow cancellation and the main window not updating after deleting a version; first-time installs no longer play the intro animation</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
                         <span class="version-number">v1.8.0</span>
                         <span class="version-title">Twenty-five languages, from the launcher to the website</span>
-                        <span class="latest-chip">Latest</span>
                         <span class="version-date">2026-10-22</span>
                     </div>
                     <ul class="changelog">
@@ -507,6 +525,8 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                         <li>Smoother startup animation and page transitions</li>
                     </ul>
                 </div>
+                <details class="older-versions">
+                    <summary>Show 13 older versions</summary>
                 <div class="timeline-item reveal">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
@@ -521,8 +541,6 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                         <li>Fixed the startup screen ignoring the light theme and several button styles not applying</li>
                     </ul>
                 </div>
-                <details class="older-versions">
-                    <summary>Show 12 older versions</summary>
                 <div class="timeline-item reveal">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
@@ -674,7 +692,7 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                 </div>
                 </details>
                 <div class="history-more">
-                    <a href="./history/index.en-us">View the full changelog (all 20 versions and installers) →</a>
+                    <a href="./history/index.en-us">View the full changelog (all 21 versions and installers) →</a>
                 </div>
             </div>
         </div>

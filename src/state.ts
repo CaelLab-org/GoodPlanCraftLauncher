@@ -43,6 +43,15 @@ export let completedDownloadFiles: number = 0;
 
 export let currentDownloadSpeed: number = 0;
 
+let modDownloadAbortHandler: (() => void) | null = null;
+
+/** 模组下载持有正在进行的 HTTP 请求，取消时要能立刻打断，不能等下一个数据块 */
+export function setModDownloadAbortHandler(handler: (() => void) | null): void { modDownloadAbortHandler = handler; }
+
+export function abortModDownloads(): void {
+  if (modDownloadAbortHandler) modDownloadAbortHandler();
+}
+
 /** 跨模块写入用：isDeveloperMode 归本模块所有，其它模块只能经此写入 */
 export function setIsDeveloperMode(value: boolean): void { isDeveloperMode = value; }
 

@@ -10,7 +10,7 @@
 // __IMPORTS_BEGIN__
 import { t } from '../i18n';
 import { detailBackBtn, detailDownloadBtn, escapeHtml, icon, setStatus, showToast, versionCountLabel, versionDetailPage, versionListContainer, versionListSection, versionSelect } from './dom';
-import { startDownload } from './launch';
+import { beginVersionDownload } from './launch';
 // __IMPORTS_END__
 
 export async function loadVersions(silent: boolean = false): Promise<void> {
@@ -346,6 +346,21 @@ export function selectVersion(versionId: string): void {
 }
 
 
+export function clearVersionSelection(): void {
+  selectedVersionId = null;
+
+  const infoEl: HTMLElement | null = document.getElementById('selected-version-info');
+  const nameEl: HTMLElement | null = document.getElementById('selected-version-name');
+  const displayEl: HTMLElement | null = document.getElementById('selected-version-display');
+  const textEl: HTMLElement | null = document.getElementById('selected-version-text');
+
+  if (infoEl) infoEl.classList.add('hidden');
+  if (displayEl) displayEl.classList.add('hidden');
+  if (nameEl) nameEl.textContent = '-';
+  if (textEl) textEl.textContent = '-';
+}
+
+
 export async function isVersionInstalled(versionId: string): Promise<boolean> {
   try {
     const versions: string[] = await window.gpcl.scanVersions(null, true);
@@ -369,14 +384,40 @@ export let modLoaderState: any = {
 };
 
 
-export const MOD_LOADER_COMPATIBILITY: Record<string, string[]> = {
-  
-  forge: ['fabric'],
-  fabric: ['forge'],
-  neoforge: ['fabric'],
-  
-  optifine: ['forge', 'fabric', 'neoforge']
-};
+const LOADER_ORDER: string[] = ['forge', 'neoforge', 'fabric', 'optifine'];
+
+
+export function getSelectedLoader(): string | null {
+  for (const loader of LOADER_ORDER) {
+    if (modLoaderState[loader]?.selectedVersionId) return loader;
+  }
+  return null;
+}
+
+
+function syncLoaderHighlight(loader: string): void {
+  const state = modLoaderState[loader];
+  const container: HTMLElement | null = document.getElementById(`${loader}-versions`);
+  if (!container) return;
+  const items: NodeListOf<Element> = container.querySelectorAll('.detail-option-version-item');
+  items.forEach((item: Element) => {
+    item.classList.toggle('selected', (item as HTMLElement).dataset.versionId === state.selectedVersionId);
+  });
+}
+
+
+export function clearModLoaderSelection(loader: string): void {
+  const state = modLoaderState[loader];
+  state.selected = null;
+  state.selectedVersionId = null;
+  state.expanded = false;
+
+  const card: HTMLElement | null = document.getElementById(`${loader}-option`);
+  const arrow: HTMLElement | null = card?.querySelector('.detail-option-arrow') as HTMLElement | null;
+  if (arrow) arrow.classList.remove('expanded');
+  syncLoaderHighlight(loader);
+  updateModLoaderUI();
+}
 
 
 export async function checkForgeAvailability(mcVersion: string): Promise<{ available: boolean; versions: any[] }> {
@@ -469,6 +510,8 @@ export async function checkOptiFineAvailability(mcVersion: string): Promise<{ av
 
 
 export function updateModLoaderUI(): void {
+  const activeLoader: string | null = getSelectedLoader();
+
   for (const [loader, state] of Object.entries(modLoaderState) as [string, any][]) {
     const card: HTMLElement | null = document.getElementById(`${loader}-option`);
     const badge: HTMLElement | null = document.getElementById(`${loader}-badge`);
@@ -476,17 +519,37 @@ export function updateModLoaderUI(): void {
     const loading: HTMLElement | null = document.getElementById(`${loader}-loading`);
     const versionsContainer: HTMLElement | null = document.getElementById(`${loader}-versions`);
     const error: HTMLElement | null = document.getElementById(`${loader}-error`);
-    
+    const clearBtn: HTMLElement | null = document.getElementById(`${loader}-clear`);
+    const arrow: HTMLElement | null = card?.querySelector('.detail-option-arrow') as HTMLElement | null;
+
     if (!card || !badge) continue;
 
-    if (state.available) {
-      badge.textContent = '可用';
-      badge.className = 'detail-option-badge available';
-      card.classList.remove('not-available');
-    } else {
-      badge.textContent = '不可用';
+    // 每次下载只装一个加载器，选了一个之后其余加载器一律不兼容。
+    const incompatible: boolean = !!activeLoader && activeLoader !== loader;
+
+    if (!state.available) {
+      badge.textContent = t('ui.unavailable');
       badge.className = 'detail-option-badge unavailable';
       card.classList.add('not-available');
+      card.classList.remove('incompatible');
+    } else if (incompatible) {
+      badge.textContent = t('ui.incompatible_with_name', { name: getLoaderDisplayName(activeLoader!) });
+      badge.className = 'detail-option-badge unavailable';
+      card.classList.remove('not-available');
+      card.classList.add('incompatible');
+    } else {
+      badge.textContent = state.selectedVersionId ? String(state.selected || t('ui.selected')) : t('ui.available');
+      badge.className = 'detail-option-badge available';
+      card.classList.remove('not-available', 'incompatible');
+    }
+
+    if (clearBtn) clearBtn.classList.toggle('hidden', !state.selectedVersionId);
+
+    if (incompatible) {
+      state.expanded = false;
+      if (arrow) arrow.classList.remove('expanded');
+      if (content) content.classList.add('hidden');
+      continue;
     }
 
     if (state.expanded && state.available) {
@@ -539,25 +602,25 @@ export function selectModLoaderVersion(loader: string, version: string, versionI
   const state = modLoaderState[loader];
 
   if (state.selectedVersionId === versionId) {
-    state.selectedVersionId = null;
-    state.selected = null;
-  } else {
-    state.selectedVersionId = versionId;
-    state.selected = version;
+    clearModLoaderSelection(loader);
+    return;
   }
 
-  const container: HTMLElement | null = document.getElementById(`${loader}-versions`);
-  if (container) {
-    const items: NodeListOf<Element> = container.querySelectorAll('.detail-option-version-item');
-    items.forEach((item: Element) => {
-      item.classList.toggle('selected', (item as HTMLElement).dataset.versionId === state.selectedVersionId);
-    });
+  for (const other of LOADER_ORDER) {
+    if (other !== loader) {
+      const otherState = modLoaderState[other];
+      otherState.selected = null;
+      otherState.selectedVersionId = null;
+      otherState.expanded = false;
+      syncLoaderHighlight(other);
+    }
   }
-}
 
+  state.selectedVersionId = versionId;
+  state.selected = version;
 
-export function updateIncompatibilityUI(): void {
-  
+  syncLoaderHighlight(loader);
+  updateModLoaderUI();
 }
 
 
@@ -581,6 +644,9 @@ export function toggleModLoader(loader: string): void {
   if (!content) return;
 
   if (!state.available) return;
+
+  const activeLoader: string | null = getSelectedLoader();
+  if (activeLoader && activeLoader !== loader) return;
   
   state.expanded = !state.expanded;
   
@@ -603,6 +669,14 @@ export function bindModLoaderEvents(): void {
     if (header) {
       header.addEventListener('click', () => toggleModLoader(loader));
     }
+
+    const clearBtn: HTMLElement | null = document.getElementById(`${loader}-clear`);
+    if (clearBtn) {
+      clearBtn.addEventListener('click', (e: Event) => {
+        e.stopPropagation();
+        clearModLoaderSelection(loader);
+      });
+    }
   }
 }
 
@@ -622,19 +696,21 @@ export function resetModLoaderState(): void {
     const loading: HTMLElement | null = document.getElementById(`${loader}-loading`);
     const versions: HTMLElement | null = document.getElementById(`${loader}-versions`);
     const error: HTMLElement | null = document.getElementById(`${loader}-error`);
+    const clearBtn: HTMLElement | null = document.getElementById(`${loader}-clear`);
     const arrow: HTMLElement | null = card?.querySelector('.detail-option-arrow') as HTMLElement | null;
     
     if (card) {
       card.classList.remove('not-available', 'incompatible');
     }
     if (badge) {
-      badge.textContent = '检测中...';
+      badge.textContent = t('ui.checking_2');
       badge.className = 'detail-option-badge';
     }
     if (content) content.classList.add('hidden');
     if (loading) loading.classList.remove('hidden');
     if (versions) versions.classList.add('hidden');
     if (error) error.classList.add('hidden');
+    if (clearBtn) clearBtn.classList.add('hidden');
     if (arrow) arrow.classList.remove('expanded');
   }
 }
@@ -726,6 +802,8 @@ export function showVersionDetail(version: any): void {
   selectedVersionId = version.id;
   if (versionListSection) versionListSection.classList.add('hidden');
   if (versionDetailPage) versionDetailPage.classList.remove('hidden');
+  const page: HTMLElement | null = document.getElementById('download-page');
+  if (page) page.scrollTop = 0;
 
   if (detailDownloadBtn) detailDownloadBtn.disabled = false;
 
@@ -751,6 +829,8 @@ export function hideVersionDetail(): void {
   selectedVersionId = null;
   if (versionDetailPage) versionDetailPage.classList.add('hidden');
   if (versionListSection) versionListSection.classList.remove('hidden');
+  const page: HTMLElement | null = document.getElementById('download-page');
+  if (page) page.scrollTop = 0;
 }
 
 
@@ -830,7 +910,7 @@ if (detailBackBtn) {
 if (detailDownloadBtn) {
   detailDownloadBtn.addEventListener('click', () => {
     if (selectedVersionId) {
-      startDownload(selectedVersionId);
+      void beginVersionDownload(selectedVersionId);
     }
   });
 }

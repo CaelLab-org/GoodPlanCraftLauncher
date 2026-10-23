@@ -1,8 +1,30 @@
 {
   "schema": 1,
-  "latest": "1.8.0",
-  "updated": "2026-10-22",
+  "latest": "1.9.0",
+  "updated": "2026-10-23",
   "versions": [
+    {
+      "version": "1.9.0",
+      "anchor": "v1-9-0",
+      "date": "2026-10-23",
+      "title": "Halaman unduhan baru, dengan modpack dan shader",
+      "log": [
+        "Progres unduhan kini ada di bagian bawah jendela: Anda tetap di halaman yang sedang dibuka, bilah menampilkan berkas, progres, dan kecepatan, dan saat dibuka menampilkan daftar unduhan lengkap yang bisa dibatalkan kapan saja",
+        "Halaman unduhan kini punya tab Shader, Resource pack, dan Modpack: modpack Modrinth dan CurseForge terpasang dengan satu klik, arsip lokal bisa diimpor, dan NeoForge didukung",
+        "Isolasi versi kini menjadi pengaturan tersendiri: setiap versi punya mod, save, dan pengaturan sendiri secara default, dengan lima tingkat dan sakelar per versi",
+        "Anda bisa memberi nama versi saat mengunduh dan membuat instance terpisah, agar pengaturan mod yang berbeda tidak saling mengganggu",
+        "Pencarian mod jauh lebih cepat: «Semua sumber» berjalan paralel dengan kompresi, pencarian berulang memakai cache, dan pencarian dalam bahasa Mandarin mencari nama Inggris di wiki terlebih dahulu",
+        "Pencarian mod diurutkan berdasarkan relevansi dan sumbernya bergantian; halaman detail menunjukkan asal nama Mandarin, dan di Pengaturan Anda bisa menambah sumber mod serta kamus nama sendiri",
+        "Pemuat mod kini saling eksklusif: memilih Forge menandai yang lain «tidak kompatibel», daftar tujuan hanya menampilkan versi yang kompatibel dan tombolnya menyebutkan tujuan",
+        "Memperbaiki unduhan terpotong, pembatalan yang lambat, dan jendela utama yang tidak diperbarui setelah versi dihapus; instalasi pertama tidak lagi memutar animasi pembuka"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.0-Setup.exe",
+        "file": "GPCL-1.9.0-Setup.exe",
+        "size": "94 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.8.0",
       "anchor": "v1-8-0",

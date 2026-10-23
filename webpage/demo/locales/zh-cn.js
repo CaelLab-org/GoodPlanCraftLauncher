@@ -289,4 +289,7 @@ window.DEMO_DICTIONARY = {
   "months": "月",
   "years": "年",
   "{n} downloads": "{n} 次下载"
+,
+  "Expand": "展开",
+  "Collapse": "折叠"
 };

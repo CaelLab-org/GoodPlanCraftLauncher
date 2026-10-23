@@ -924,57 +924,125 @@ body.light-mode .custom-select-option.selected { background: rgba(11, 127, 184, 
 }
 .detail-download-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px var(--accent-glow); }
 
-.download-status-panel {
+.download-dock {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 180;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 58px;
+  padding: 0 14px 0 18px;
   background: var(--bg-card);
-  border-radius: 12px;
-  padding: 20px;
-  border: 1px solid var(--border-light);
-  margin-bottom: 20px;
-  animation: pageEnter 0.3s ease;
+  border-top: 1px solid var(--border-light);
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.22);
+  transform: translateY(calc(100% + 10px));
+  transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+  user-select: none;
 }
-.download-stats { display: flex; gap: 24px; }
-.chart-container { flex: 1; background: var(--bg-dark); border-radius: 8px; padding: 12px; min-height: 150px; }
-#speedChart { width: 100%; height: 150px; display: block; }
-.progress-section { width: 300px; display: flex; flex-direction: column; gap: 14px; flex-shrink: 0; }
-.speed-info { display: flex; gap: 12px; }
-.speed-item { flex: 1; background: var(--bg-dark); border-radius: 8px; padding: 10px; text-align: center; }
-.speed-label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
-.speed-value { display: block; font-size: 18px; font-weight: 700; color: var(--accent-primary); font-family: var(--font-mono); }
-.progress-bar-wrapper { background: var(--bg-dark); border-radius: 8px; padding: 14px; }
-.progress-bar-bg { background: var(--bg-input); border-radius: 6px; height: 12px; overflow: hidden; }
-.progress-bar-wrapper .progress-bar-fill {
-  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
-  height: 100%;
-  border-radius: 6px;
-  box-shadow: 0 0 10px var(--accent-glow);
+.download-dock.show { transform: translateY(0); }
+.download-dock-track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -1px;
+  height: 3px;
+  background: var(--bg-input);
+  overflow: hidden;
 }
-.progress-text { text-align: center; margin-top: 8px; font-size: 14px; color: var(--text-secondary); font-weight: 500; font-family: var(--font-mono); }
-.download-filename {
-  background: var(--bg-dark);
-  border-radius: 8px;
-  padding: 12px 15px;
-  font-size: 12px;
-  font-family: var(--font-mono);
-  color: var(--text-tertiary);
+.download-dock-fill { height: 100%; width: 0; background: var(--accent-primary); transition: width 0.2s linear; }
+.download-dock.is-done .download-dock-fill { background: var(--success); }
+.download-dock.is-error .download-dock-fill { background: var(--error); }
+.download-dock-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: none;
+  text-align: start;
+  color: inherit;
+  cursor: pointer;
+}
+.download-dock-glyph { flex-shrink: 0; font-size: 18px; color: var(--accent-primary); }
+.download-dock-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.download-dock-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.cancel-download-btn {
-  width: 100%;
-  padding: 10px;
-  background: rgba(255, 87, 87, 0.15);
-  color: var(--error);
-  border: 1px solid rgba(255, 87, 87, 0.3);
-  border-radius: 6px;
-  font-family: inherit;
-  font-size: 13px;
-  cursor: pointer;
-  transition: all 0.2s;
+.download-dock-main:hover .download-dock-title { color: var(--accent-primary); }
+.download-dock-current {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.cancel-download-btn:hover { background: rgba(255, 87, 87, 0.25); border-color: rgba(255, 87, 87, 0.5); }
-.cancel-download-btn.complete { background: rgba(102, 187, 106, 0.15); color: var(--success); border-color: rgba(102, 187, 106, 0.3); cursor: default; }
-.cancel-download-btn.complete:hover { background: rgba(102, 187, 106, 0.15); border-color: rgba(102, 187, 106, 0.3); }
+.download-dock-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+.download-dock-count { font-size: 11.5px; color: var(--text-muted); }
+.download-dock-speed { font-size: 11.5px; color: var(--text-secondary); min-width: 66px; text-align: right; }
+.download-dock-percent { font-size: 17px; font-weight: 600; color: var(--accent-primary); min-width: 46px; text-align: right; }
+.download-dock.is-done .download-dock-percent { color: var(--success); }
+.download-dock.is-error .download-dock-percent { color: var(--error); }
+.download-dock-toggle {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 10px;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 11.5px;
+  cursor: pointer;
+}
+.download-dock-toggle:hover { background: var(--bg-card-hover); color: var(--text-primary); }
+.download-dock-chevron {
+  flex-shrink: 0;
+  font-size: 11px;
+  color: var(--text-muted);
+  transform: rotate(180deg);
+  transition: transform 0.2s;
+}
+.download-dock.expanded .download-dock-chevron { transform: rotate(0deg); }
+.download-dock-panel {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 10px);
+  width: min(430px, calc(100% - 24px));
+  max-height: 58vh;
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.28);
+}
+.download-dock-panel-head { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.download-dock-panel-title { font-size: 13px; font-weight: 600; color: var(--text-title); }
+.download-dock-panel-count { font-size: 11px; color: var(--text-muted); }
+.download-dock-panel .download-task-list { margin: 10px 0 0; padding-right: 2px; flex: 1; min-height: 0; overflow-y: auto; }
+.download-dock-panel .download-task { background: var(--bg-input); }
+body.download-dock-open .main-content { padding-bottom: 86px; }
 
 /* ===== 设置页 ===== */
 .settings-page { display: flex; flex: 1; min-height: 0; }

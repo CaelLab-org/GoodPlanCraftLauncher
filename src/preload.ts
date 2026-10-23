@@ -83,6 +83,11 @@ const gpclApi: GPCLApi = {
   minimizeWindow: () => ipcRenderer.invoke('window-minimize'),
   focusWindow: () => ipcRenderer.invoke('window-focus'),
   closeWindow: () => ipcRenderer.invoke('window-close'),
+  getWindowState: () => ipcRenderer.invoke('get-window-state'),
+  onWindowState: (callback) => {
+    ipcRenderer.on('window-state', (_event, state) => callback(state));
+  },
+  createVersionInstance: (options) => ipcRenderer.invoke('create-version-instance', options),
   deleteVersion: (versionId: string) => ipcRenderer.invoke('delete-version', versionId),
   getVersionSettings: (versionId: string) => ipcRenderer.invoke('get-version-settings', versionId),
   saveVersionSettings: (versionId: string, settings: any) => ipcRenderer.invoke('save-version-settings', versionId, settings),
@@ -102,8 +107,6 @@ const gpclApi: GPCLApi = {
   getAvatar: () => ipcRenderer.invoke('get-avatar'),
   chooseAvatar: () => ipcRenderer.invoke('choose-avatar'),
   resetAvatar: () => ipcRenderer.invoke('reset-avatar'),
-  playStartupAnimation: () => ipcRenderer.invoke('play-startup-animation'),
-  dismissStartupAnimation: () => ipcRenderer.invoke('dismiss-startup-animation'),
   setDeveloperMode: (enabled: boolean) => ipcRenderer.invoke('set-developer-mode', enabled),
   restartApp: () => ipcRenderer.invoke('restart-app'),
 
@@ -125,6 +128,7 @@ const gpclApi: GPCLApi = {
   getLaunchDisplayName: (versionId: string) => ipcRenderer.invoke('get-launch-display-name', versionId),
 
   modsSearch: (options) => ipcRenderer.invoke('mods-search', options),
+  getModSources: () => ipcRenderer.invoke('get-mod-sources'),
   modsVersions: (options) => ipcRenderer.invoke('mods-versions', options),
   modsProjectInfo: (options) => ipcRenderer.invoke('mods-project-info', options),
   modsInstall: (options) => ipcRenderer.invoke('mods-install', options),

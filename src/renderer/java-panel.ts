@@ -279,9 +279,14 @@ export function getRecommendedJavaVersionFromMC(mcVersion: string): { version: s
 
 
 if (window.gpcl && window.gpcl.onDownloadProgress) {
-  const originalCallback: any = window.gpcl.onDownloadProgress;
   window.gpcl.onDownloadProgress((data: any): void => {
-    
+    const downloadPanelEl: HTMLElement | null = document.getElementById('download-panel');
+    const panelVisible: boolean = !!downloadPanelEl && !downloadPanelEl.classList.contains('hidden');
+    const floatNotification: HTMLElement | null = document.getElementById('float-notification');
+    const floatVisible: boolean = !!floatNotification && !floatNotification.classList.contains('hidden');
+    // 游戏版本下载走底部下载条，这里只在 Java / 启动器更新真的把面板打开时更新
+    if (!panelVisible && !floatVisible) return;
+
     const progressFill: HTMLElement | null = document.getElementById('progress-fill');
     const progressText: HTMLElement | null = document.getElementById('progress-text');
     const filenameEl: HTMLElement | null = document.getElementById('download-filename');
@@ -301,16 +306,11 @@ if (window.gpcl && window.gpcl.onDownloadProgress) {
 
     const floatProgressFill: HTMLElement | null = document.getElementById('float-progress-fill');
     const floatProgressText: HTMLElement | null = document.getElementById('float-progress-text');
-    const floatNotification: HTMLElement | null = document.getElementById('float-notification');
-    
-    if (floatProgressFill && floatProgressText && floatNotification && !floatNotification.classList.contains('hidden')) {
+
+    if (floatProgressFill && floatProgressText && floatVisible) {
       const percent: number = data.percent || 0;
       floatProgressFill.style.width = percent + '%';
       floatProgressText.textContent = percent.toFixed(1) + '%';
-    }
-
-    if (typeof originalCallback === 'function') {
-      originalCallback(data);
     }
   });
 }

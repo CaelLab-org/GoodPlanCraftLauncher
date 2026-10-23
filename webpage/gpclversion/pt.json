@@ -1,8 +1,30 @@
 {
   "schema": 1,
-  "latest": "1.8.0",
-  "updated": "2026-10-22",
+  "latest": "1.9.0",
+  "updated": "2026-10-23",
   "versions": [
+    {
+      "version": "1.9.0",
+      "anchor": "v1-9-0",
+      "date": "2026-10-23",
+      "title": "Página de download refeita, com modpacks e shaders",
+      "log": [
+        "O progresso do download agora fica na parte inferior da janela: você continua na página em que está, a barra mostra arquivo, progresso e velocidade, e ao abrir exibe a lista completa onde pode cancelar a qualquer momento",
+        "A página de download agora tem abas de Shaders, Pacotes de recursos e Modpacks: modpacks do Modrinth e CurseForge instalam com um clique, arquivos locais podem ser importados e o NeoForge é suportado",
+        "O isolamento de versões agora é uma configuração explícita: cada versão tem seus próprios mods, mundos e configurações por padrão, com cinco níveis e uma chave por versão",
+        "Você pode dar um nome à versão durante o download e criar uma instância separada, para que configurações de mods diferentes não se misturem",
+        "A busca de mods está muito mais rápida: «Todas as fontes» roda em paralelo com compressão, buscas repetidas usam o cache e buscas em chinês procuram primeiro o nome em inglês na wiki",
+        "A busca ordena por relevância e alterna as fontes; a página de detalhes mostra de onde veio o nome em chinês, e nas Configurações você pode adicionar fontes e dicionários próprios",
+        "Os carregadores de mods agora são mutuamente exclusivos: escolher Forge marca os outros como «incompatíveis», a lista de destino mostra apenas versões compatíveis e o botão indica o destino",
+        "Corrigidos downloads truncados, cancelamento lento e a janela principal que não atualizava após excluir uma versão; a primeira instalação não reproduz mais a animação de abertura"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.0-Setup.exe",
+        "file": "GPCL-1.9.0-Setup.exe",
+        "size": "94 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.8.0",
       "anchor": "v1-8-0",

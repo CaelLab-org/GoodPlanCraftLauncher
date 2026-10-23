@@ -75,7 +75,7 @@
                     </div>
                 </li>
                 <li class="lang-switch"><select aria-label="Lingua" onchange="if(this.value)location.href=this.value"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it" selected>Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select></li>
-                <li><a href="#download" class="nav-cta">&#9662; Scarica v1.8.0</a></li>
+                <li><a href="#download" class="nav-cta">&#9662; Scarica v1.9.0</a></li>
             </ul>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Apri menu" aria-expanded="false">&#9776;</button>
         </div>
@@ -113,9 +113,9 @@
                 </a>
             </div>
             <div class="hero-meta">
-                <span>Versione <b>v1.8.0</b></span>
+                <span>Versione <b>v1.9.0</b></span>
                 <span class="sep">/</span>
-                <span>Aggiornato <b>2026-10-22</b></span>
+                <span>Aggiornato <b>2026-10-23</b></span>
                 <span class="sep">/</span>
                 <span>Piattaforma <b>Windows 10+</b></span>
             </div>
@@ -264,13 +264,13 @@
                 <span class="dl-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
                 </span>
-                <div class="download-file">GPCL-1.8.0-Setup.exe</div>
-                <a href="https://dl.caellab.com/file/games/gpcl/GPCL-1.8.0-Setup.exe" class="download-btn">
+                <div class="download-file">GPCL-1.9.0-Setup.exe</div>
+                <a href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.0-Setup.exe" class="download-btn">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
                     Lancia il mondo a blocchi!
                 </a>
                 <div class="update-info">
-                    <span>Aggiornato <b>2026-10-22</b></span>
+                    <span>Aggiornato <b>2026-10-23</b></span>
                     <span>Piattaforma <b>Windows 10 a 64 bit</b></span>
                     <span>Licenza <b>Open source, gratuito</b></span>
                 </div>
@@ -381,9 +381,27 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                 <div class="timeline-item reveal">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
+                        <span class="version-number">v1.9.0</span>
+                        <span class="version-title">Pagina di download rifatta, con modpack e shader</span>
+                        <span class="latest-chip">Ultima</span>
+                        <span class="version-date">2026-10-23</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>L'avanzamento del download ora è in fondo alla finestra: resti sulla pagina che stai usando, la barra mostra file, avanzamento e velocità e, aprendola, vedi l'elenco completo dove puoi annullare in qualsiasi momento</li>
+                        <li>La pagina di download ha ora le schede Shader, Pacchetti di risorse e Modpack: i modpack di Modrinth e CurseForge si installano con un clic, gli archivi locali si importano e NeoForge è supportato</li>
+                        <li>L'isolamento delle versioni è ora un'impostazione esplicita: ogni versione ha mod, salvataggi e impostazioni propri per impostazione predefinita, con cinque livelli e un interruttore per versione</li>
+                        <li>Puoi dare un nome alla versione durante il download e creare un'istanza separata, così configurazioni di mod diverse non si mescolano</li>
+                        <li>La ricerca dei mod è molto più veloce: «Tutte le fonti» funziona in parallelo con compressione, le ricerche ripetute usano la cache e quelle in cinese cercano prima il nome inglese sul wiki</li>
+                        <li>La ricerca ordina per pertinenza e alterna le fonti; la pagina dei dettagli indica da dove arriva il nome cinese e nelle Impostazioni puoi aggiungere fonti e dizionari personalizzati</li>
+                        <li>I loader dei mod ora si escludono a vicenda: scegliendo Forge gli altri risultano «incompatibili», l'elenco di destinazione mostra solo versioni compatibili e il pulsante indica la destinazione</li>
+                        <li>Corretti download troncati, annullamento lento e finestra principale non aggiornata dopo l'eliminazione di una versione; la prima installazione non riproduce più l'animazione iniziale</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
                         <span class="version-number">v1.8.0</span>
                         <span class="version-title">25 lingue, dal launcher al sito</span>
-                        <span class="latest-chip">Ultima</span>
                         <span class="version-date">2026-10-22</span>
                     </div>
                     <ul class="changelog">
@@ -507,6 +525,8 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                         <li>Animazione di avvio e transizioni tra pagine più fluide</li>
                     </ul>
                 </div>
+                <details class="older-versions">
+                    <summary>Mostra 13 versioni precedenti</summary>
                 <div class="timeline-item reveal">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
@@ -521,8 +541,6 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                         <li>Corrette la schermata di avvio che ignorava il tema chiaro e diverse regole di stile dei pulsanti che non venivano applicate</li>
                     </ul>
                 </div>
-                <details class="older-versions">
-                    <summary>Mostra 12 versioni precedenti</summary>
                 <div class="timeline-item reveal">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
@@ -674,7 +692,7 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                 </div>
                 </details>
                 <div class="history-more">
-                    <a href="./history/index.it">Vedi il changelog completo (tutte le 20 versioni e gli installer) →</a>
+                    <a href="./history/index.it">Vedi il changelog completo (tutte le 21 versioni e gli installer) →</a>
                 </div>
             </div>
         </div>

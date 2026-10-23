@@ -189,6 +189,77 @@ if (dialogBtnCancel) {
     hideDialog();
   });
 }
+
+
+const namePromptOverlay: HTMLElement | null = document.getElementById('name-prompt-overlay');
+const namePromptTitle: HTMLElement | null = document.getElementById('name-prompt-title');
+const namePromptFile: HTMLElement | null = document.getElementById('name-prompt-file');
+const namePromptInput: HTMLInputElement | null = document.getElementById('name-prompt-input') as HTMLInputElement | null;
+const namePromptNote: HTMLElement | null = document.getElementById('name-prompt-note');
+const namePromptConfirm: HTMLElement | null = document.getElementById('name-prompt-confirm');
+const namePromptCancel: HTMLElement | null = document.getElementById('name-prompt-cancel');
+const namePromptClose: HTMLElement | null = document.getElementById('name-prompt-close');
+
+let namePromptResolve: ((value: string | null) => void) | null = null;
+
+function closeNamePrompt(value: string | null): void {
+  namePromptOverlay?.classList.add('hidden');
+  const resolve = namePromptResolve;
+  namePromptResolve = null;
+  if (resolve) resolve(value);
+}
+
+function confirmNamePrompt(): void {
+  const value: string = (namePromptInput?.value || '').trim();
+  if (!value) {
+    namePromptInput?.focus();
+    return;
+  }
+  closeNamePrompt(value);
+}
+
+export function showNamePrompt(options: {
+  title?: string;
+  file?: string;
+  value: string;
+  note?: string;
+  confirmText?: string;
+}): Promise<string | null> {
+  if (!namePromptOverlay || !namePromptInput) return Promise.resolve(options.value || null);
+
+  if (namePromptTitle) namePromptTitle.textContent = translateText(options.title || t('ui.download'));
+  if (namePromptFile) namePromptFile.textContent = options.file || '';
+  if (namePromptNote) namePromptNote.textContent = translateText(options.note || '');
+  if (namePromptConfirm) namePromptConfirm.textContent = translateText(options.confirmText || t('ui.download'));
+  namePromptInput.value = options.value || '';
+  namePromptOverlay.classList.remove('hidden');
+  namePromptInput.focus();
+  namePromptInput.select();
+
+  return new Promise<string | null>((resolve) => {
+    namePromptResolve = resolve;
+  });
+}
+
+if (namePromptConfirm) namePromptConfirm.addEventListener('click', confirmNamePrompt);
+if (namePromptCancel) namePromptCancel.addEventListener('click', () => closeNamePrompt(null));
+if (namePromptClose) namePromptClose.addEventListener('click', () => closeNamePrompt(null));
+if (namePromptOverlay) {
+  namePromptOverlay.addEventListener('click', (event: Event) => {
+    if (event.target === namePromptOverlay) closeNamePrompt(null);
+  });
+}
+if (namePromptInput) {
+  namePromptInput.addEventListener('keydown', (event: KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      confirmNamePrompt();
+    } else if (event.key === 'Escape') {
+      event.preventDefault();
+      closeNamePrompt(null);
+    }
+  });
+}
 /**
  * 图标一律用 renderer/icons/*.svg 里的独立文件，靠 CSS mask 跟随 currentColor
  * （跟站群那套一致，不在代码里硬写 svg 路径）。
@@ -280,6 +351,7 @@ export const downloadPanel: HTMLElement | null = document.getElementById('downlo
 export const memoryOptimizeBtn: HTMLElement | null = document.getElementById('memory-optimize-btn');
 
 export const customSelectHandlers: Map<string, { setValue: (value: string, label?: string) => void; getValue: () => string | null }> = new Map();
+const customSelectCallbacks: Map<string, (value: string) => void> = new Map();
 
 
 export function initCustomSelect(selectId: string, onChangeCallback?: (value: string) => void): void {
@@ -289,52 +361,52 @@ export function initCustomSelect(selectId: string, onChangeCallback?: (value: st
   const trigger: HTMLElement | null = selectContainer.querySelector('.custom-select-trigger');
   const dropdown: HTMLElement | null = selectContainer.querySelector('.custom-select-dropdown');
   const valueSpan: HTMLElement | null = selectContainer.querySelector('.custom-select-value');
-  const options: NodeListOf<Element> = selectContainer.querySelectorAll('.custom-select-option');
+  if (onChangeCallback) customSelectCallbacks.set(selectId, onChangeCallback);
 
   let currentValue: string | null = null;
-  options.forEach((option: Element) => {
-    if (option.classList.contains('selected')) {
-      currentValue = (option as HTMLElement).dataset.value || null;
-    }
-  });
+  const selectedOption: HTMLElement | null = selectContainer.querySelector('.custom-select-option.selected') as HTMLElement | null;
+  if (selectedOption) currentValue = selectedOption.dataset.value || null;
 
-  trigger?.addEventListener('click', (e: Event) => {
-    e.stopPropagation();
+  const selectOption = (value: string, label: string): void => {
     if (!dropdown) return;
-    const isOpen: boolean = dropdown.classList.contains('open');
+    dropdown.querySelectorAll('.custom-select-option').forEach((opt: Element) => opt.classList.remove('selected'));
+    const target: Element | undefined = Array.from(dropdown.querySelectorAll('.custom-select-option'))
+      .find((opt: Element) => (opt as HTMLElement).dataset.value === value);
+    target?.classList.add('selected');
+    if (valueSpan) valueSpan.textContent = label;
+    currentValue = value || null;
     closeAllCustomSelects();
-    if (!isOpen) {
-      dropdown.classList.add('open');
-      trigger.classList.add('active');
-      placeDropdown(dropdown, trigger);
-    }
-  });
+    const callback = customSelectCallbacks.get(selectId);
+    if (callback && value) callback(value);
+  };
 
-  options.forEach((option: Element) => {
-    option.addEventListener('click', (e: Event) => {
+  if (selectContainer.dataset.initialized !== '1') {
+    selectContainer.dataset.initialized = '1';
+    trigger?.addEventListener('click', (e: Event) => {
       e.stopPropagation();
-      if (option.classList.contains('disabled')) return;
-
-      const value: string | undefined = (option as HTMLElement).dataset.value;
-      const label: string | null = option.textContent;
-
-      options.forEach((opt: Element) => opt.classList.remove('selected'));
-      option.classList.add('selected');
-      if (valueSpan) valueSpan.textContent = label;
-      currentValue = value || null;
-
+      if (!dropdown) return;
+      const isOpen: boolean = dropdown.classList.contains('open');
       closeAllCustomSelects();
-
-      if (onChangeCallback && value) {
-        onChangeCallback(value);
+      if (!isOpen) {
+        dropdown.classList.add('open');
+        trigger.classList.add('active');
+        placeDropdown(dropdown, trigger);
       }
     });
-  });
+    dropdown?.addEventListener('click', (e: Event) => {
+      const option: HTMLElement | null = (e.target as Element | null)?.closest('.custom-select-option') as HTMLElement | null;
+      if (!option || option.classList.contains('disabled')) return;
+      e.stopPropagation();
+      selectOption(option.dataset.value || '', option.textContent || '');
+    });
+  }
 
   customSelectHandlers.set(selectId, {
     setValue: (value: string, label?: string) => {
-      options.forEach((opt: Element) => opt.classList.remove('selected'));
-      const targetOpt: Element | null = selectContainer.querySelector(`.custom-select-option[data-value="${value}"]`);
+      if (!dropdown) return;
+      dropdown.querySelectorAll('.custom-select-option').forEach((opt: Element) => opt.classList.remove('selected'));
+      const targetOpt: HTMLElement | null = Array.from(dropdown.querySelectorAll('.custom-select-option'))
+        .find((opt: Element) => (opt as HTMLElement).dataset.value === value) as HTMLElement | null;
       if (targetOpt) {
         targetOpt.classList.add('selected');
         if (valueSpan) valueSpan.textContent = targetOpt.textContent;
@@ -346,6 +418,28 @@ export function initCustomSelect(selectId: string, onChangeCallback?: (value: st
     },
     getValue: () => currentValue
   });
+}
+
+
+export function setCustomSelectOptions(selectId: string, options: Array<{ value: string; label: string; disabled?: boolean }>, selectedValue?: string): void {
+  const selectContainer: HTMLElement | null = document.querySelector(`.custom-select[data-select-id="${selectId}"]`) as HTMLElement | null;
+  if (!selectContainer) return;
+  const dropdown: HTMLElement | null = selectContainer.querySelector('.custom-select-dropdown');
+  if (!dropdown) return;
+
+  const selected: { value: string; label: string } | undefined = options.find((opt) => opt.value === selectedValue) || options[0];
+  dropdown.innerHTML = options.map((opt) => {
+    const classes: string = `custom-select-option${opt.value === selected?.value ? ' selected' : ''}${opt.disabled ? ' disabled' : ''}`;
+    return `<div class="${classes}" data-value="${escapeHtml(opt.value)}">${escapeHtml(opt.label)}</div>`;
+  }).join('');
+
+  const handler = customSelectHandlers.get(selectId);
+  if (handler) {
+    handler.setValue(selected?.value || '', selected?.label);
+  } else {
+    const valueSpan: HTMLElement | null = selectContainer.querySelector('.custom-select-value');
+    if (valueSpan && selected) valueSpan.textContent = selected.label;
+  }
 }
 
 

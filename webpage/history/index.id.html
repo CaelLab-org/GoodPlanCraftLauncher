@@ -74,7 +74,7 @@
                     </div>
                 </li>
                 <li class="lang-switch"><select aria-label="Bahasa" onchange="if(this.value)location.href=this.value"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id" selected>Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select></li>
-                <li><a href="../index.id#download" class="nav-cta">&#9662; Unduh v1.8.0</a></li>
+                <li><a href="../index.id#download" class="nav-cta">&#9662; Unduh v1.9.0</a></li>
             </ul>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Buka menu" aria-expanded="false">&#9776;</button>
         </div>
@@ -92,6 +92,7 @@
             <p class="cl-intro">Dari 1.0.0 hingga rilis terbaru, setiap versi — apa yang berubah dan apakah dapat diunduh — ada di halaman ini.</p>
             <p class="cl-note">Pemasang untuk 1.3.2 dan versi sebelumnya tidak disimpan; pembaruan otomatis bawaan di versi lama mungkin sudah tidak berfungsi, jadi sebaiknya pasang rilis terbaru untuk penggunaan sehari-hari.</p>
             <div class="cl-index" role="navigation" aria-label="Indeks versi">
+                <a href="#v1-9-0">1.9.0</a>
                 <a href="#v1-8-0">1.8.0</a>
                 <a href="#v1-7-2">1.7.2</a>
                 <a href="#v1-7-0">1.7.0</a>
@@ -119,12 +120,37 @@
     <main class="history cl-history">
         <div class="container">
             <div class="timeline">
+                <article class="timeline-item" id="v1-9-0">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.9.0</span>
+                        <span class="version-title">Halaman unduhan baru, dengan modpack dan shader</span>
+                        <span class="latest-chip">Terbaru</span>
+                        <span class="version-date">2026-10-23</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Progres unduhan kini ada di bagian bawah jendela: Anda tetap di halaman yang sedang dibuka, bilah menampilkan berkas, progres, dan kecepatan, dan saat dibuka menampilkan daftar unduhan lengkap yang bisa dibatalkan kapan saja</li>
+                        <li>Halaman unduhan kini punya tab Shader, Resource pack, dan Modpack: modpack Modrinth dan CurseForge terpasang dengan satu klik, arsip lokal bisa diimpor, dan NeoForge didukung</li>
+                        <li>Isolasi versi kini menjadi pengaturan tersendiri: setiap versi punya mod, save, dan pengaturan sendiri secara default, dengan lima tingkat dan sakelar per versi</li>
+                        <li>Anda bisa memberi nama versi saat mengunduh dan membuat instance terpisah, agar pengaturan mod yang berbeda tidak saling mengganggu</li>
+                        <li>Pencarian mod jauh lebih cepat: «Semua sumber» berjalan paralel dengan kompresi, pencarian berulang memakai cache, dan pencarian dalam bahasa Mandarin mencari nama Inggris di wiki terlebih dahulu</li>
+                        <li>Pencarian mod diurutkan berdasarkan relevansi dan sumbernya bergantian; halaman detail menunjukkan asal nama Mandarin, dan di Pengaturan Anda bisa menambah sumber mod serta kamus nama sendiri</li>
+                        <li>Pemuat mod kini saling eksklusif: memilih Forge menandai yang lain «tidak kompatibel», daftar tujuan hanya menampilkan versi yang kompatibel dan tombolnya menyebutkan tujuan</li>
+                        <li>Memperbaiki unduhan terpotong, pembatalan yang lambat, dan jendela utama yang tidak diperbarui setelah versi dihapus; instalasi pertama tidak lagi memutar animasi pembuka</li>
+                    </ul>
+                    <div class="cl-download">
+                        <a class="cl-dl-btn" href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.0-Setup.exe">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                            Unduh v1.9.0
+                        </a>
+                        <span class="cl-file">GPCL-1.9.0-Setup.exe · 94 MB · Windows 64-bit</span>
+                    </div>
+                </article>
                 <article class="timeline-item" id="v1-8-0">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
                         <span class="version-number">v1.8.0</span>
                         <span class="version-title">25 bahasa, dari launcher hingga situs web</span>
-                        <span class="latest-chip">Terbaru</span>
                         <span class="version-date">2026-10-22</span>
                     </div>
                     <ul class="changelog">

@@ -19,12 +19,12 @@ import { isDeveloperMode, setIsDeveloperMode } from './state';
 import './auth';
 import './download';
 import './game';
+import './instance';
 import './java';
 import './modloader';
 import './modpack';
 import './mods';
 import './player';
-import './startup-anim';
 // __IMPORTS_END__
 
 process.env.TZ = 'Asia/Shanghai';

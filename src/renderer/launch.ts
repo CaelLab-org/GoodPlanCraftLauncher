@@ -9,8 +9,8 @@
 
 // __IMPORTS_BEGIN__
 import { t } from '../i18n';
-import { initChart, loadChartJs, peakSpeed, resetChart, setPeakSpeed, updateChart } from './chart';
-import { detailDownloadBtn, downloadPanel, gameMonitor, gameMonitorMemory, gameMonitorPid, launchBtn, menuDownload, setStatus, showDialog, showToast, usernameInput } from './dom';
+import { beginDownloadDockCancel, finishDownloadDock, hideDownloadDock, scheduleDownloadDockHide, setDownloadDockClearHandler, setDownloadDockPanelCount, setDownloadDockQueue, setDownloadDockStage, showDownloadDock, updateDownloadDock } from './download-dock';
+import { gameMonitor, gameMonitorMemory, gameMonitorPid, launchBtn, setStatus, showDialog, showNamePrompt, showToast, usernameInput } from './dom';
 import { crashReported, gameRunning, handleGameLog, hideGameMonitor, lastGameStatusAt, monitorStartedAt, refreshGameMonitor, setCrashReported, setLastGameStatusAt, setMonitorStartedAt, setMonitorState, setMonitorVersion, showCrashDialog, showGameMonitor } from './monitor';
 import { showPage } from './nav';
 import { playerHistory, setPlayerHistory } from './player';
@@ -58,22 +58,7 @@ export async function launchGame(): Promise<void> {
     setStatus('[动画] 开始启动游戏');
 
     const settings = await loadSettings();
-    let windowMode: string = settings.game?.windowMode || 'windowed';
-    let welcomeAnimPlaying: boolean = false;
-    
-    if (settings.appearance?.playStartupAnimation && window.gpcl && window.gpcl.playStartupAnimation) {
-      setStatus('[启动动画] 正在播放欢迎动画...');
-      welcomeAnimPlaying = true;
-      windowMode = 'fullscreen';
-      
-      settings.appearance.playStartupAnimation = false;
-      await gpcl.saveSettings(settings);
-      const playStartupEl: HTMLInputElement | null = document.getElementById('play-startup-animation') as HTMLInputElement | null;
-      if (playStartupEl) playStartupEl.checked = false;
-      
-      await window.gpcl.playStartupAnimation();
-      setStatus('[启动动画] 动画播放完毕，正在启动游戏...');
-    }
+    const windowMode: string = settings.game?.windowMode || 'windowed';
 
     setupGameWindowListener();
     
@@ -90,10 +75,6 @@ export async function launchGame(): Promise<void> {
     if (result.success) {
       setStatus('[动画] 游戏启动成功，窗口已创建');
       
-      if (welcomeAnimPlaying && window.gpcl && window.gpcl.dismissStartupAnimation) {
-        window.gpcl.dismissStartupAnimation();
-      }
-
       showLaunchSuccess();
       
       setTimeout(() => {
@@ -105,24 +86,15 @@ export async function launchGame(): Promise<void> {
       showToast('ui.game_launched', `Minecraft ${versionId} (${username})`, 'success', 'game-started');
     } else if (result.cancelled) {
       
-      if (welcomeAnimPlaying && window.gpcl && window.gpcl.dismissStartupAnimation) {
-        window.gpcl.dismissStartupAnimation();
-      }
       hideLaunchAnimation();
       setStatus('启动已取消', 'info');
       showToast('ui.launch_cancelled', '用户取消了游戏启动', 'info', 'launch-cancelled');
     } else {
-      if (welcomeAnimPlaying && window.gpcl && window.gpcl.dismissStartupAnimation) {
-        window.gpcl.dismissStartupAnimation();
-      }
       hideLaunchAnimation();
       setStatus(result.error, 'error');
       showToast('ui.launch_failed', result.error, 'error', 'game-launch-failed');
     }
   } catch (err: any) {
-    if (welcomeAnimPlaying && window.gpcl && window.gpcl.dismissStartupAnimation) {
-      window.gpcl.dismissStartupAnimation();
-    }
     hideLaunchAnimation();
     setStatus('启动出错', 'error');
     showToast('ui.launch_error', err.message, 'error', 'launch-error');
@@ -446,25 +418,35 @@ interface DownloadTask {
   loaderName: string;
   installFabricApi: boolean;
   displayName: string;
+  instanceName?: string;
   status: 'queued' | 'running' | 'done' | 'error';
   percent: number;
   message: string;
   finalVersionId?: string;
   error?: string;
   modpack?: { source: 'modrinth' | 'curseforge'; projectId: string; versionId: string; gameVersion: string; instanceName: string };
+  modInstall?: { direct: boolean; payload: any };
 }
 
 const downloadTasks: DownloadTask[] = [];
+const modTaskResolvers: Map<string, (result: any) => void> = new Map();
 let activeDownloadTask: DownloadTask | null = null;
 let queueRunning: boolean = false;
 let queueTaskSeq: number = 0;
-let lastProgressAt: number = Date.now();
-let lastProgressBytes: number = 0;
-let lastProgressLabel: string = '';
-let chartReady: boolean = false;
+
+function resolveModTask(taskId: string, result: any): void {
+  const resolve: ((result: any) => void) | undefined = modTaskResolvers.get(taskId);
+  if (!resolve) return;
+  modTaskResolvers.delete(taskId);
+  resolve(result);
+}
 
 export function hasQueuedDownloads(): boolean {
   return downloadTasks.some((t: DownloadTask) => t.status === 'queued');
+}
+
+function queuedCount(): number {
+  return downloadTasks.filter((task: DownloadTask) => task.status === 'queued').length;
 }
 
 function taskListEl(): HTMLElement | null {
@@ -476,6 +458,10 @@ function taskStateText(task: DownloadTask): string {
   if (task.status === 'done') return t('ui.done');
   if (task.status === 'error') return task.error ? t('ui.failed_error', { error: task.error }) : t('ui.failed');
   return task.message || t('ui.downloading');
+}
+
+function normalizeDownloadError(message: string): string {
+  return /cancel/i.test(message) ? t('ui.download_cancelled') : message;
 }
 
 function updateTaskRow(task: DownloadTask): void {
@@ -490,9 +476,24 @@ function updateTaskRow(task: DownloadTask): void {
   if (fill) fill.style.width = `${task.status === 'done' ? 100 : task.percent}%`;
 }
 
+function cancelActiveDownload(): void {
+  const task: DownloadTask | null = activeDownloadTask;
+  if (!task) return;
+  task.message = t('ui.cancelling');
+  updateTaskRow(task);
+  const pageCancelBtn: HTMLElement | null = document.getElementById('cancel-download-btn');
+  if (pageCancelBtn) {
+    pageCancelBtn.textContent = t('ui.cancelling');
+    (pageCancelBtn as HTMLButtonElement).disabled = true;
+  }
+  beginDownloadDockCancel();
+}
+
 function renderDownloadTasks(): void {
   const list = taskListEl();
   if (!list) return;
+  const hasCompleted: boolean = downloadTasks.some((task: DownloadTask) => task.status === 'done' || task.status === 'error');
+  setDownloadDockPanelCount(downloadTasks.length, hasCompleted);
   if (downloadTasks.length === 0) {
     list.classList.add('hidden');
     list.innerHTML = '';
@@ -501,7 +502,13 @@ function renderDownloadTasks(): void {
   list.classList.remove('hidden');
   list.innerHTML = '';
 
-  for (const task of downloadTasks) {
+  const statusOrder: Record<string, number> = { running: 0, queued: 1, done: 2, error: 3 };
+  const ordered: DownloadTask[] = downloadTasks
+    .map((task: DownloadTask, index: number) => ({ task, index }))
+    .sort((a: any, b: any) => (statusOrder[a.task.status] - statusOrder[b.task.status]) || (a.index - b.index))
+    .map((entry: any) => entry.task);
+
+  for (const task of ordered) {
     const row: HTMLDivElement = document.createElement('div');
     row.className = 'download-task';
     row.dataset.taskId = task.id;
@@ -526,16 +533,30 @@ function renderDownloadTasks(): void {
       remove.className = 'download-task-remove';
       remove.type = 'button';
       remove.textContent = '×';
-      remove.title = '移出队列';
+      remove.title = t('ui.remove_from_queue');
       remove.addEventListener('click', (e: Event) => {
         e.stopPropagation();
         const index: number = downloadTasks.findIndex((t: DownloadTask) => t.id === task.id);
         if (index >= 0 && downloadTasks[index].status === 'queued') {
-          downloadTasks.splice(index, 1);
+          const removed: DownloadTask = downloadTasks.splice(index, 1)[0];
+          resolveModTask(removed.id, { success: false, error: t('ui.cancelled') });
           renderDownloadTasks();
+          setDownloadDockQueue(queuedCount());
         }
       });
       head.appendChild(remove);
+    } else if (task.status === 'running') {
+      const cancel: HTMLButtonElement = document.createElement('button');
+      cancel.className = 'download-task-cancel';
+      cancel.type = 'button';
+      cancel.textContent = t('ui.cancel');
+      cancel.title = t('ui.cancel_current_download');
+      cancel.addEventListener('click', (e: Event) => {
+        e.stopPropagation();
+        cancel.disabled = true;
+        cancelActiveDownload();
+      });
+      head.appendChild(cancel);
     }
 
     const bar: HTMLDivElement = document.createElement('div');
@@ -551,33 +572,19 @@ function renderDownloadTasks(): void {
   }
 }
 
-function prepareDownloadPanel(): void {
-  void loadChartJs().then(() => {
-    if (!chartReady) {
-      initChart();
-      chartReady = true;
-    }
-    resetChart();
-  });
-  if (downloadPanel) downloadPanel.classList.remove('hidden');
-}
-
 async function runDownloadTask(task: DownloadTask): Promise<void> {
   activeDownloadTask = task;
   task.status = 'running';
   task.percent = 0;
-  task.message = '准备下载…';
-  lastProgressAt = Date.now();
-  lastProgressBytes = 0;
-  lastProgressLabel = '';
+  task.message = t('ui.preparing_download');
   renderDownloadTasks();
-
-  prepareDownloadPanel();
+  showDownloadDock(task.displayName);
+  setDownloadDockQueue(queuedCount());
 
   const downloadStatusEl: HTMLElement | null = document.getElementById('download-status');
   const cancelBtn: HTMLElement | null = document.getElementById('cancel-download-btn');
   if (cancelBtn) {
-    cancelBtn.textContent = '取消当前下载';
+    cancelBtn.textContent = t('ui.cancel_current_download');
     cancelBtn.classList.remove('complete');
     (cancelBtn as HTMLButtonElement).disabled = false;
   }
@@ -586,21 +593,62 @@ async function runDownloadTask(task: DownloadTask): Promise<void> {
 
   try {
     const maxConcurrent: number = getMaxConcurrentFromSettings();
-    const result: any = task.modpack
-      ? await window.gpcl.modpackInstall({ ...task.modpack, maxConcurrent })
-      : task.loaderType
-        ? await window.gpcl.downloadWithModLoader(task.versionId, task.loaderType, task.loaderVersion, maxConcurrent, { installFabricApi: task.installFabricApi })
-        : await window.gpcl.downloadVersion(task.versionId, maxConcurrent);
+    const result: any = task.modInstall
+      ? await (task.modInstall.direct
+          ? window.gpcl.modsInstallDirect(task.modInstall.payload)
+          : window.gpcl.modsInstall(task.modInstall.payload))
+      : task.modpack
+        ? await window.gpcl.modpackInstall({ ...task.modpack, maxConcurrent })
+        : task.loaderType
+          ? await window.gpcl.downloadWithModLoader(task.versionId, task.loaderType, task.loaderVersion, maxConcurrent, { installFabricApi: task.installFabricApi })
+          : await window.gpcl.downloadVersion(task.versionId, maxConcurrent);
+
+    if (task.modInstall) {
+      if (result && result.success) {
+        task.status = 'done';
+        task.percent = 100;
+        task.message = t('ui.done');
+        updateTaskRow(task);
+        if (downloadStatusEl) downloadStatusEl.textContent = t('ui.installation_complete');
+        setStatus(t('ui.installation_complete'), 'success');
+        finishDownloadDock(t('ui.installation_complete'), 'done');
+      } else {
+        task.status = 'error';
+        task.error = normalizeDownloadError(result?.error || t('ui.unknown_error'));
+        updateTaskRow(task);
+        if (downloadStatusEl) downloadStatusEl.textContent = t('ui.download_failed_error_2', { error: task.error });
+        setStatus(t('ui.download_failed_error_2', { error: task.error }), 'error');
+        finishDownloadDock(t('ui.download_failed_error_2', { error: task.error }), 'error');
+      }
+      resolveModTask(task.id, result && result.success ? result : { success: false, error: task.error });
+      return;
+    }
 
     if (result && result.success) {
       task.status = 'done';
       task.percent = 100;
-      task.finalVersionId = result.finalVersionId || result.instanceName || task.versionId;
-      task.message = '完成';
+      let finalVersionId: string = result.finalVersionId || result.instanceName || task.versionId;
+
+      if (task.instanceName && task.instanceName !== finalVersionId) {
+        const created: any = await window.gpcl.createVersionInstance({
+          baseVersionId: finalVersionId,
+          name: task.instanceName,
+          loaderType: task.loaderType,
+          loaderVersion: task.loaderVersion
+        });
+        if (created?.success && created.versionId) {
+          finalVersionId = created.versionId;
+        } else if (created?.error) {
+          showToast(t('ui.instance_create_failed', { error: created.error }), '', 'warning', 'instance-create-failed');
+        }
+      }
+
+      task.finalVersionId = finalVersionId;
+      task.message = t('ui.done');
       updateTaskRow(task);
 
-      await recordVersionDownload(task.finalVersionId);
-      showToast('ui.download_complete', t('ui.name_is_ready', { name: task.displayName }), 'success', 'download-complete');
+      await recordVersionDownload(finalVersionId);
+      showToast('ui.download_complete', t('ui.name_is_ready', { name: finalVersionId }), 'success', 'download-complete');
       if (result.fabricApiError) {
         showToast('ui.fabric_api_was_not_installed', result.fabricApiError, 'warning', 'fabric-api-failed');
       } else if (Array.isArray(result.fabricApiFiles) && result.fabricApiFiles.length > 0) {
@@ -611,42 +659,44 @@ async function runDownloadTask(task: DownloadTask): Promise<void> {
       }
       await loadVersions();
       renderVersionSelectList();
-      if (downloadStatusEl) downloadStatusEl.textContent = t('ui.download_complete_name', { name: task.displayName });
-      setStatus(t('ui.download_complete_name', { name: task.displayName }), 'success');
-      setTimeout(() => {
-        const index: number = downloadTasks.findIndex((t: DownloadTask) => t.id === task.id);
-        if (index >= 0 && downloadTasks[index].status === 'done') {
-          downloadTasks.splice(index, 1);
-          renderDownloadTasks();
-        }
-      }, 8000);
+      if (downloadStatusEl) downloadStatusEl.textContent = t('ui.download_complete_name', { name: finalVersionId });
+      setStatus(t('ui.download_complete_name', { name: finalVersionId }), 'success');
+      finishDownloadDock(t('ui.download_complete_name', { name: finalVersionId }), 'done');
     } else {
       task.status = 'error';
-      task.error = result?.error || t('ui.unknown_error');
+      task.error = normalizeDownloadError(result?.error || t('ui.unknown_error'));
       updateTaskRow(task);
       showToast('ui.download_failed', t('ui.name_error', { name: task.displayName, error: task.error }), 'error', 'download-error');
       if (downloadStatusEl) downloadStatusEl.textContent = t('ui.download_failed_error_2', { error: task.error });
       setStatus(t('ui.download_failed_error_2', { error: task.error }), 'error');
+      finishDownloadDock(t('ui.download_failed_error_2', { error: task.error }), 'error');
     }
   } catch (e: any) {
     task.status = 'error';
-    task.error = e.message || String(e);
+    task.error = normalizeDownloadError(e.message || String(e));
     updateTaskRow(task);
+    if (task.modInstall) {
+      finishDownloadDock(t('ui.download_failed_error_2', { error: task.error }), 'error');
+      resolveModTask(task.id, { success: false, error: task.error });
+      return;
+    }
     showToast('ui.download_error', task.error, 'error', 'download-error');
     if (downloadStatusEl) downloadStatusEl.textContent = t('ui.download_error_error', { error: task.error });
     setStatus(t('ui.download_error_error', { error: task.error }), 'error');
+    finishDownloadDock(t('ui.download_error_error', { error: task.error }), 'error');
   } finally {
     activeDownloadTask = null;
-    updateTaskRow(task);
+    renderDownloadTasks();
+    setDownloadDockQueue(queuedCount());
     if (cancelBtn) {
       const hasMore: boolean = downloadTasks.some((t: DownloadTask) => t.status === 'queued');
       if (!hasMore) {
         const cancelled: boolean = task.status === 'error' && /取消|cancel/i.test(task.error || '');
-        cancelBtn.textContent = cancelled ? '已取消' : '下载完成';
+        cancelBtn.textContent = cancelled ? t('ui.download_cancelled') : t('ui.download_complete');
         cancelBtn.classList.add('complete');
         (cancelBtn as HTMLButtonElement).disabled = true;
       } else {
-        cancelBtn.textContent = '取消当前下载';
+        cancelBtn.textContent = t('ui.cancel_current_download');
         (cancelBtn as HTMLButtonElement).disabled = false;
       }
     }
@@ -656,15 +706,19 @@ async function runDownloadTask(task: DownloadTask): Promise<void> {
 async function processDownloadQueue(): Promise<void> {
   if (queueRunning) return;
   queueRunning = true;
+  let lastStatus: 'done' | 'error' = 'done';
   try {
     while (true) {
       const task: DownloadTask | undefined = downloadTasks.find((t: DownloadTask) => t.status === 'queued');
       if (!task) break;
       await runDownloadTask(task);
+      lastStatus = task.status === 'error' ? 'error' : 'done';
     }
   } finally {
     queueRunning = false;
     renderDownloadTasks();
+    setDownloadDockQueue(queuedCount());
+    scheduleDownloadDockHide(lastStatus);
   }
 }
 
@@ -679,46 +733,88 @@ export function startModpackInstall(options: { source: 'modrinth' | 'curseforge'
     displayName: t('ui.modpack_name', { name: options.instanceName }),
     status: 'queued',
     percent: 0,
-    message: '等待中',
+    message: t('ui.queued'),
     modpack: options
   });
 
   renderDownloadTasks();
-  showPage('download');
-  const scrollContainer: HTMLElement | null = document.querySelector('.main-content') as HTMLElement | null;
-  if (scrollContainer) scrollContainer.scrollTop = 0;
-
   if (!queueRunning) void processDownloadQueue();
 }
 
 
-export async function startDownload(versionId: string): Promise<void> {
+export function startModInstall(options: { direct: boolean; payload: any; displayName: string }): Promise<any> {
+  return new Promise((resolve) => {
+    const task: DownloadTask = {
+      id: `task-${++queueTaskSeq}`,
+      versionId: '',
+      loaderType: '',
+      loaderVersion: '',
+      loaderName: '',
+      installFabricApi: false,
+      displayName: options.displayName,
+      status: 'queued',
+      percent: 0,
+      message: t('ui.queued'),
+      modInstall: { direct: options.direct, payload: options.payload }
+    };
+    modTaskResolvers.set(task.id, resolve);
+    downloadTasks.push(task);
+    renderDownloadTasks();
+    setDownloadDockQueue(queuedCount());
+    if (!queueRunning) void processDownloadQueue();
+  });
+}
+
+
+function currentLoaderSelection(): { type: string; version: string; name: string } {
+  for (const [loader, state] of Object.entries(modLoaderState) as [string, any][]) {
+    if (state.selectedVersionId) {
+      return { type: loader, version: state.selectedVersionId, name: getLoaderDisplayName(loader) };
+    }
+  }
+  return { type: '', version: '', name: '' };
+}
+
+
+export async function beginVersionDownload(versionId: string): Promise<void> {
+  if (!versionId) return;
+  const loader = currentLoaderSelection();
+  const autoName: string = loader.type ? `${loader.name} ${versionId}` : `Minecraft ${versionId}`;
+  const name: string | null = await showNamePrompt({
+    title: t('ui.download'),
+    file: autoName,
+    value: autoName,
+    note: t('ui.version_name_note', { version: versionId })
+  });
+  if (name === null) return;
+  await startDownload(versionId, name);
+}
+
+
+export async function startDownload(versionId: string, requestedName?: string): Promise<void> {
   if (!versionId) {
     setStatus('请先选择要下载的版本', 'error');
     return;
   }
 
-  let loaderType: string = '';
-  let loaderVersion: string = '';
-  let loaderName: string = '';
-  for (const [loader, state] of Object.entries(modLoaderState) as [string, any][]) {
-    if (state.selectedVersionId) {
-      loaderType = loader;
-      loaderVersion = state.selectedVersionId;
-      loaderName = getLoaderDisplayName(loader);
-      break;
-    }
-  }
-
-  const duplicate: boolean = downloadTasks.some((t: DownloadTask) =>
-    (t.status === 'queued' || t.status === 'running') && t.versionId === versionId && t.loaderType === loaderType);
-  if (duplicate) {
-    showToast('ui.already_in_the_queue', `${loaderName || 'Minecraft'} ${versionId}`, 'info', 'download-duplicate');
-    return;
-  }
+  const loader = currentLoaderSelection();
+  const loaderType: string = loader.type;
+  const loaderVersion: string = loader.version;
+  const loaderName: string = loader.name;
 
   const fabricApiAuto: HTMLInputElement | null = document.getElementById('fabric-api-auto') as HTMLInputElement | null;
-  const displayName: string = loaderType ? `${loaderName} ${versionId}` : `Minecraft ${versionId}`;
+  const autoName: string = loaderType ? `${loaderName} ${versionId}` : `Minecraft ${versionId}`;
+  const customName: string = String(requestedName || '').trim();
+  const displayName: string = customName || autoName;
+  const duplicate: boolean = downloadTasks.some((t: DownloadTask) =>
+    (t.status === 'queued' || t.status === 'running') &&
+    t.versionId === versionId &&
+    t.loaderType === loaderType &&
+    (!customName || t.displayName === customName));
+  if (duplicate) {
+    showToast('ui.already_in_the_queue', displayName, 'info', 'download-duplicate');
+    return;
+  }
   downloadTasks.push({
     id: `task-${++queueTaskSeq}`,
     versionId,
@@ -727,18 +823,14 @@ export async function startDownload(versionId: string): Promise<void> {
     loaderName,
     installFabricApi: fabricApiAuto ? fabricApiAuto.checked : true,
     displayName,
+    instanceName: customName && customName !== autoName ? customName : undefined,
     status: 'queued',
     percent: 0,
-    message: '等待中'
+    message: t('ui.queued')
   });
 
   renderDownloadTasks();
   hideVersionDetail();
-  showPage('download');
-  const versionTab: HTMLButtonElement | null = document.getElementById('download-tab-versions') as HTMLButtonElement | null;
-  if (versionTab) versionTab.click();
-  const scrollContainer: HTMLElement | null = document.querySelector('.main-content') as HTMLElement | null;
-  if (scrollContainer) scrollContainer.scrollTop = 0;
 
   if (!queueRunning) void processDownloadQueue();
 }
@@ -749,52 +841,61 @@ function registerDownloadListeners(): void {
 
   window.gpcl.onDownloadProgress((data: any): void => {
     const task: DownloadTask | null = activeDownloadTask;
-    if (!task) return;
+    if (!task || task.modInstall) return;
 
-    const currentTime: number = Date.now();
-    const timeDiff: number = (currentTime - lastProgressAt) / 1000;
-
-    if (data.label && data.label !== lastProgressLabel) {
-      lastProgressLabel = data.label;
-      lastProgressBytes = 0;
-      lastProgressAt = currentTime;
-    }
-
-    if (timeDiff >= 0.5 && data.bytesDownloaded !== undefined) {
-      const bytesDiff: number = data.bytesDownloaded - lastProgressBytes;
-      if (bytesDiff >= 0) {
-        const speedBps: number = Math.max(0, (bytesDiff * 8) / timeDiff / 1000000);
-        const currentSpeedEl: HTMLElement | null = document.getElementById('current-speed');
-        const peakSpeedEl: HTMLElement | null = document.getElementById('peak-speed');
-        if (currentSpeedEl) currentSpeedEl.textContent = speedBps.toFixed(2) + ' Mbps';
-        if (speedBps > peakSpeed) {
-          setPeakSpeed(speedBps);
-          if (peakSpeedEl) peakSpeedEl.textContent = peakSpeed.toFixed(2) + ' Mbps';
-        }
-        updateChart(speedBps);
-        lastProgressAt = currentTime;
-        lastProgressBytes = data.bytesDownloaded;
-      }
-    }
-
-    task.percent = Number(data.percent) || 0;
-    task.message = data.label ? t('ui.downloading_label', { label: data.label }) : t('ui.downloading');
+    const percent: number = Number(data?.percent) || 0;
+    task.percent = percent;
+    task.message = data?.label ? t('ui.downloading_label', { label: data.label }) : t('ui.downloading');
     updateTaskRow(task);
+    updateDownloadDock({
+      percent,
+      label: String(data?.label || ''),
+      speed: Number(data?.speed) || 0,
+      current: Number(data?.current) || 0,
+      total: Number(data?.total) || 0
+    });
   });
 
   if (window.gpcl.onInstallStage) {
     window.gpcl.onInstallStage((data: any): void => {
-      if (!activeDownloadTask || !data?.message) return;
+      if (!activeDownloadTask || activeDownloadTask.modInstall || !data?.message) return;
       activeDownloadTask.message = data.message;
       updateTaskRow(activeDownloadTask);
       const downloadStatusEl: HTMLElement | null = document.getElementById('download-status');
       if (downloadStatusEl) downloadStatusEl.textContent = data.message;
       setStatus(data.message);
+      setDownloadDockStage(data.message);
+    });
+  }
+
+  if (window.gpcl.onModDownloadProgress) {
+    window.gpcl.onModDownloadProgress((data: any): void => {
+      const task: DownloadTask | null = activeDownloadTask;
+      if (!task || !task.modInstall || !data) return;
+      const percent: number = Number(data.percent) || 0;
+      task.percent = percent;
+      task.message = data.label ? t('ui.downloading_label', { label: data.label }) : t('ui.downloading');
+      updateTaskRow(task);
+      updateDownloadDock({
+        percent,
+        label: String(data.label || ''),
+        speed: Number(data.speed) || 0
+      });
     });
   }
 }
 
 registerDownloadListeners();
+
+setDownloadDockClearHandler(() => {
+  for (let index: number = downloadTasks.length - 1; index >= 0; index--) {
+    const status: string = downloadTasks[index].status;
+    if (status === 'done' || status === 'error') downloadTasks.splice(index, 1);
+  }
+  renderDownloadTasks();
+  setDownloadDockQueue(queuedCount());
+  if (downloadTasks.length === 0) hideDownloadDock();
+});
 
 
 export function handleGameClosed(code: number): void {

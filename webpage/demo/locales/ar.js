@@ -289,4 +289,7 @@ window.DEMO_DICTIONARY = {
   "months": "أشهر",
   "years": "سنوات",
   "{n} downloads": "{n} التنزيلات"
+,
+  "Expand": "توسيع",
+  "Collapse": "طي"
 };

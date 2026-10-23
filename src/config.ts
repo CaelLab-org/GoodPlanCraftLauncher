@@ -104,13 +104,13 @@ export const DEFAULT_SETTINGS = {
     windowHeight: 480,
     optimizeBeforeLaunch: false,
     autoLanguage: true,
-    language: 'zh_cn'
+    language: 'zh_cn',
+    versionIsolation: 'all'
   },
   appearance: {
     theme: 'light',
     style: 'advanced',
     scale: '110',
-    playStartupAnimation: true,
     skipSplash: false,
     tipFrequency: 'rare',
     enableMore: false,
@@ -125,7 +125,11 @@ export const DEFAULT_SETTINGS = {
     speedLimit: 0,
     installDir: '',
     customFileMirror: '',
-    curseForgeApiKey: ''
+    curseForgeApiKey: '',
+    modNameMapping: true,
+    modNameProviders: 'mcmod,130wiki',
+    modNameDictionaries: '',
+    modSources: ''
   },
   advanced: {
     autoCheckUpdate: true,
@@ -314,22 +318,92 @@ export function resolveGameDir(installDir?: string): string {
 }
 
 
-export function markVersionIsolated(root: string, versionId: string): void {
+export type VersionIsolationMode = 'off' | 'modded' | 'nonRelease' | 'moddedAndNonRelease' | 'all';
+
+
+export function getVersionIsolationChoice(versionId: string, root: string = GAME_DIR): boolean | null {
+  const versionDir: string = path.join(root, 'versions', versionId);
   try {
-    const dir: string = path.join(root, 'versions', versionId, 'gpcl');
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(path.join(dir, 'isolated'), '1', 'utf8');
+    const configPath: string = path.join(versionDir, 'gpcl', 'config.json');
+    if (fs.existsSync(configPath)) {
+      const config: any = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+      if (typeof config?.isolation === 'boolean') return config.isolation;
+    }
+  } catch (e) {}
+  if (fs.existsSync(path.join(versionDir, 'gpcl', 'isolated'))) return true;
+  return null;
+}
+
+
+export function setVersionIsolationChoice(root: string, versionId: string, isolated: boolean): void {
+  try {
+    const gpclDir: string = path.join(root, 'versions', versionId, 'gpcl');
+    if (!fs.existsSync(gpclDir)) fs.mkdirSync(gpclDir, { recursive: true });
+    const configPath: string = path.join(gpclDir, 'config.json');
+    let config: any = {};
+    if (fs.existsSync(configPath)) {
+      try { config = JSON.parse(fs.readFileSync(configPath, 'utf8')) || {}; } catch { config = {}; }
+    }
+    config.isolation = isolated;
+    fs.writeFileSync(configPath, JSON.stringify(config, null, 2), 'utf8');
+    const markerPath: string = path.join(gpclDir, 'isolated');
+    if (isolated) fs.writeFileSync(markerPath, '1', 'utf8');
+    else if (fs.existsSync(markerPath)) fs.unlinkSync(markerPath);
   } catch (e: any) {
-    writeLog(`[版本隔离] 写入标记失败: ${e.message}`);
+    writeLog(`[版本隔离] 写入设置失败: ${e.message}`);
   }
 }
 
 
+export function markVersionIsolated(root: string, versionId: string): void {
+  setVersionIsolationChoice(root, versionId, true);
+}
+
+
+function hasVersionContent(versionDir: string): boolean {
+  try {
+    const modsDir: string = path.join(versionDir, 'mods');
+    if (fs.existsSync(modsDir) && fs.readdirSync(modsDir).length > 0) return true;
+    const savesDir: string = path.join(versionDir, 'saves');
+    if (fs.existsSync(savesDir) && fs.readdirSync(savesDir, { withFileTypes: true }).some((entry: fs.Dirent) => entry.isDirectory())) return true;
+  } catch (e) {}
+  return false;
+}
+
+
 export function isVersionIsolated(versionId: string, root: string = GAME_DIR): boolean {
+  const choice: boolean | null = getVersionIsolationChoice(versionId, root);
+  if (choice !== null) return choice;
+  return hasVersionContent(path.join(root, 'versions', versionId));
+}
+
+
+export function shouldIsolateNewVersion(modable: boolean, versionType: string, mode?: string): boolean {
+  const selected: string = String(mode ?? currentSettings?.game?.versionIsolation ?? 'all');
+  const nonRelease: boolean = versionType !== 'release';
+  switch (selected) {
+    case 'off':
+      return false;
+    case 'modded':
+      return modable;
+    case 'nonRelease':
+      return nonRelease;
+    case 'moddedAndNonRelease':
+      return modable || nonRelease;
+    default:
+      return true;
+  }
+}
+
+
+export function applyInitialVersionIsolation(versionId: string, info: { modable?: boolean; versionType?: string }, root: string = GAME_DIR): boolean {
+  const existing: boolean | null = getVersionIsolationChoice(versionId, root);
+  if (existing !== null) return existing;
   const versionDir: string = path.join(root, 'versions', versionId);
-  return fs.existsSync(path.join(versionDir, 'gpcl', 'isolated'))
-    || fs.existsSync(path.join(versionDir, 'mods'))
-    || fs.existsSync(path.join(versionDir, 'saves'));
+  const isolated: boolean = hasVersionContent(versionDir) || shouldIsolateNewVersion(info.modable === true, String(info.versionType || 'release'));
+  setVersionIsolationChoice(root, versionId, isolated);
+  writeLog(`[版本隔离] ${versionId} 初始化为${isolated ? '独立' : '共用'}`);
+  return isolated;
 }
 
 

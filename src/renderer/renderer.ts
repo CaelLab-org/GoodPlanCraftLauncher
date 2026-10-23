@@ -32,7 +32,7 @@ import { msAuthData, setMsAuthData } from './session';
 import { applyScale, applyStyle, applyTheme, initScale, initTheme, loadSettings, updateSettingsBadge } from './settings';
 import { allNewerVersions, autoDownloadUpdate, checkForUpdates, installReadyUpdate, isUpdateDownloadActive, renderUpdateVersionCards, showUpdateStartupNotice, startUpdateDownload, updateAvailable } from './update';
 import { initUpdateBadge } from './update-badge';
-import { bindModLoaderEvents, loadRemoteVersions, loadVersions, renderVersionSelectList, selectedVersionId } from './versions';
+import { bindModLoaderEvents, clearVersionSelection, loadRemoteVersions, loadVersions, renderVersionSelectList, selectedVersionId } from './versions';
 import { initWelcome } from './welcome';
 
 import './chart';
@@ -195,6 +195,7 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
     });
 
     if (result) {
+      setStatus(t('ui.cancelling'));
       if (window.gpcl && window.gpcl.cancelDownloadOnly) {
         await window.gpcl.cancelDownloadOnly();
         if (!hasQueuedDownloads()) {
@@ -455,21 +456,6 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
     });
   }
 
-  const playStartupAnimation: HTMLInputElement | null = document.getElementById('play-startup-animation') as HTMLInputElement | null;
-  if (playStartupAnimation) {
-    (async (): Promise<void> => {
-      const settings = await loadSettings();
-      playStartupAnimation.checked = settings.appearance?.playStartupAnimation === true;
-    })();
-
-    playStartupAnimation.addEventListener('change', async (): Promise<void> => {
-      const settings = await loadSettings();
-      if (!settings.appearance) settings.appearance = {} as any;
-      settings.appearance.playStartupAnimation = playStartupAnimation.checked;
-      await gpcl.saveSettings(settings);
-    });
-  }
-
   const skipSplash: HTMLInputElement | null = document.getElementById('skip-splash') as HTMLInputElement | null;
   if (skipSplash) {
     (async (): Promise<void> => {
@@ -598,11 +584,6 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
     setCustomSelectValue('settings-scale', scale);
     applyScale(scale);
 
-    const playStartupAnimSync: HTMLInputElement | null = document.getElementById('play-startup-animation') as HTMLInputElement | null;
-    if (playStartupAnimSync) {
-      playStartupAnimSync.checked = settings.appearance?.playStartupAnimation === true;
-    }
-
     const skipSplashSync: HTMLInputElement | null = document.getElementById('skip-splash') as HTMLInputElement | null;
     if (skipSplashSync) {
       skipSplashSync.checked = settings.appearance?.skipSplash === true;
@@ -722,31 +703,55 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
     setCustomSelectValue('version-memory', settings.memory || 'global');
     setCustomSelectValue('version-window-mode', settings.windowMode || 'global');
     setCustomSelectValue('version-startup-mode', settings.startupMode || 'default');
+    const isolated: boolean = typeof settings.isolation === 'boolean'
+      ? settings.isolation
+      : currentVersionInfo?.isolated !== false;
+    setCustomSelectValue('version-isolation', isolated ? 'on' : 'off');
     if (versionServerIpInput) versionServerIpInput.value = settings.serverIp || '';
     
     updateServerIpVisibility();
+  }
+
+  function collectVersionSettings(): any {
+    return {
+      memory: getCustomSelectValue('version-memory') || 'global',
+      windowMode: getCustomSelectValue('version-window-mode') || 'global',
+      startupMode: getCustomSelectValue('version-startup-mode') || 'default',
+      serverIp: versionServerIpInput?.value || '',
+      isolation: getCustomSelectValue('version-isolation') !== 'off'
+    };
+  }
+
+  async function saveVersionSettingsNow(): Promise<boolean> {
+    if (!currentVersionForSettings) return false;
+    return saveVersionSettings(currentVersionForSettings, collectVersionSettings());
   }
   
   let saveTimeout: ReturnType<typeof setTimeout> | null = null;
   function saveCurrentVersionSettings(): void {
     if (!currentVersionForSettings) return;
     
-    const settings = {
-      memory: getCustomSelectValue('version-memory') || 'global',
-      windowMode: getCustomSelectValue('version-window-mode') || 'global',
-      startupMode: getCustomSelectValue('version-startup-mode') || 'default',
-      serverIp: versionServerIpInput?.value || ''
-    };
-    
     if (saveTimeout) clearTimeout(saveTimeout);
     saveTimeout = setTimeout(async (): Promise<void> => {
-      const success: boolean = await saveVersionSettings(currentVersionForSettings!, settings);
+      const success: boolean = await saveVersionSettingsNow();
       if (!success) {
         showToast('ui.save_failed', '无法保存版本设置', 'error');
       }
     }, 300);
   }
   
+  async function refreshCurrentVersionInfo(): Promise<void> {
+    if (!currentVersionForSettings) return;
+    try {
+      const infoResult: any = await window.gpcl.getVersionInfo(currentVersionForSettings);
+      if (infoResult?.success) currentVersionInfo = infoResult.info;
+    } catch {}
+    const modFolderItem: HTMLElement | null = document.getElementById('version-mod-folder-item');
+    const shaderFolderItem: HTMLElement | null = document.getElementById('version-shader-folder-item');
+    modFolderItem?.classList.toggle('hidden', !currentVersionInfo?.hasModLoader);
+    shaderFolderItem?.classList.toggle('hidden', !currentVersionInfo?.hasOptiFine);
+  }
+
   function setVersionListOpen(open: boolean): void {
     if (versionSelectPanel) versionSelectPanel.classList.toggle('hidden', !open);
   }
@@ -758,14 +763,7 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
     currentVersionInfo = null;
     if (versionSettingsTitle) versionSettingsTitle.textContent = t('ui.version_settings_version', { version: versionId });
 
-    try {
-      const infoResult: any = await window.gpcl.getVersionInfo(versionId);
-      if (infoResult?.success) currentVersionInfo = infoResult.info;
-    } catch {}
-    const modFolderItem: HTMLElement | null = document.getElementById('version-mod-folder-item');
-    const shaderFolderItem: HTMLElement | null = document.getElementById('version-shader-folder-item');
-    modFolderItem?.classList.toggle('hidden', !currentVersionInfo?.hasModLoader);
-    shaderFolderItem?.classList.toggle('hidden', !currentVersionInfo?.hasOptiFine);
+    await refreshCurrentVersionInfo();
     
     versionListWasOpen = !!versionSelectPanel && !versionSelectPanel.classList.contains('hidden');
     if (versionSelectPanel) versionSelectPanel.classList.add('hidden');
@@ -777,19 +775,11 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
     await loadVersionSettingsToUI(versionId);
   }
   
-  async function hideVersionSettingsPanel(): Promise<void> {
+  async function hideVersionSettingsPanel(options?: { save?: boolean; showVersionList?: boolean }): Promise<void> {
     if (!versionSettingsPanel) return;
 
     if (saveTimeout) clearTimeout(saveTimeout);
-    if (currentVersionForSettings) {
-      const settings = {
-        memory: getCustomSelectValue('version-memory') || 'global',
-        windowMode: getCustomSelectValue('version-window-mode') || 'global',
-        startupMode: getCustomSelectValue('version-startup-mode') || 'default',
-        serverIp: versionServerIpInput?.value || ''
-      };
-      await saveVersionSettings(currentVersionForSettings, settings);
-    }
+    if (options?.save !== false) await saveVersionSettingsNow();
     
     versionSettingsPanel.classList.add('slide-out');
     
@@ -798,7 +788,7 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
         versionSettingsPanel.classList.add('hidden');
         versionSettingsPanel.classList.remove('slide-out');
       }
-      setVersionListOpen(versionListWasOpen);
+      setVersionListOpen(options?.showVersionList ?? versionListWasOpen);
       if (statusElement) statusElement.style.display = '';
       currentVersionForSettings = null;
       currentVersionInfo = null;
@@ -824,22 +814,30 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
   if (versionDeleteEnable) {
     versionDeleteEnable.addEventListener('change', async function(this: HTMLInputElement): Promise<void> {
       if (this.checked) {
+        const deletedVersion: string | null = currentVersionForSettings;
+        if (!deletedVersion) {
+          this.checked = false;
+          return;
+        }
+
         const confirmed: boolean = await showDialog({
           type: 'confirm',
           title: '确认删除',
-          message: t('ui.delete_version_name_this_cannot_be_undone', { name: currentVersionForSettings })
+          message: t('ui.delete_version_name_this_cannot_be_undone', { name: deletedVersion })
         });
         
         if (confirmed) {
           if (window.gpcl && window.gpcl.deleteVersion) {
             try {
-              const result = await window.gpcl.deleteVersion(currentVersionForSettings);
+              const result = await window.gpcl.deleteVersion(deletedVersion);
               if (result.success) {
-                showToast('ui.deleted', t('ui.version_name_deleted', { name: currentVersionForSettings }), 'success');
-                
-                await hideVersionSettingsPanel();
-                loadVersions(true);
-                renderVersionSelectList();
+                showToast('ui.deleted', t('ui.version_name_deleted', { name: deletedVersion }), 'success');
+
+                // 已删除的版本不能再留在主界面，直接回到版本选择
+                await hideVersionSettingsPanel({ save: false, showVersionList: true });
+                if (selectedVersionId === deletedVersion) clearVersionSelection();
+                await loadVersions(true);
+                await renderVersionSelectList();
               } else {
                 showToast('ui.delete_failed', result.error || '无法删除版本', 'error');
                 this.checked = false;
@@ -890,6 +888,15 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
       versionServerIpContainer.scrollIntoView({ block: 'nearest' });
     }
     saveCurrentVersionSettings();
+  });
+
+  initCustomSelect('version-isolation', async (): Promise<void> => {
+    const success: boolean = await saveVersionSettingsNow();
+    if (!success) {
+      showToast('ui.save_failed', '无法保存版本设置', 'error');
+      return;
+    }
+    await refreshCurrentVersionInfo();
   });
 
   if (versionServerIpInput) {

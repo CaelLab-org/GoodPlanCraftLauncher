@@ -66,9 +66,11 @@ function copyStatic() {
   }
 
   // 复制 CSS
-  const cssSrc = path.join('renderer', 'style.css');
-  if (fs.existsSync(cssSrc)) {
-    fs.copyFileSync(cssSrc, path.join(rendererDir, 'style.css'));
+  for (const css of ['style.css', 'native.css']) {
+    const cssSrc = path.join('renderer', css);
+    if (fs.existsSync(cssSrc)) {
+      fs.copyFileSync(cssSrc, path.join(rendererDir, css));
+    }
   }
 
   // 复制 chart.js

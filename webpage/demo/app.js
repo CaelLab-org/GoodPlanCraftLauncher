@@ -68,7 +68,7 @@
       pages[k].classList.toggle('hidden', k !== name);
       menus[k].classList.toggle('active', k === name);
     });
-    if (name === 'download') { showDownloadTab(currentDownloadTab); drawChart(); }
+    if (name === 'download') showDownloadTab(currentDownloadTab);
   }
   Object.keys(menus).forEach(function (k) {
     menus[k].addEventListener('click', function () { showPage(k); });
@@ -435,7 +435,6 @@
 
     $('version-list-section').classList.add('hidden');
     $('version-detail-page').classList.remove('hidden');
-    $('download-panel').classList.add('hidden');
   }
 
   function toggleLoaderCard(key, card, value) {
@@ -476,84 +475,75 @@
     $('version-list-section').classList.remove('hidden');
   });
 
-  $('cancel-download-btn').addEventListener('click', function () {
-    if (this.classList.contains('complete')) return;
-    stopDownload();
-    if (activeVersionTask) {
-      activeVersionTask.set('error', t('Cancelled'), 0);
-      activeVersionTask = null;
-    }
-    $('download-panel').classList.add('hidden');
-    toast(t('Download cancelled'), t('Temporary files cleaned up'), 'info');
-  });
+  /* ===== 底部下载条 ===== */
+  var dockEl = $('download-dock');
+  var dockPanel = $('download-dock-panel');
+  var dockHideTimer = null;
+  var dockTaskRow = null;
+  var dockState = { title: '-', current: '', speed: '', percent: 0, status: 'running' };
 
-  /* ===== 速度曲线 ===== */
-  var chart = $('speedChart');
-  var ctx = chart.getContext('2d');
-  var speeds = [];
-  var peakSpeed = 0;
-
-  function drawChart() {
-    var dpr = window.devicePixelRatio || 1;
-    var w = chart.clientWidth || 300;
-    var h = 150;
-    if (chart.width !== Math.round(w * dpr)) {
-      chart.width = Math.round(w * dpr);
-      chart.height = Math.round(h * dpr);
-    }
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.clearRect(0, 0, w, h);
-
-    var style = getComputedStyle(body);
-    var line = style.getPropertyValue('--accent-primary').trim() || '#4fc3f7';
-    var dim = style.getPropertyValue('--text-dim').trim() || '#5b6d88';
-
-    ctx.strokeStyle = dim;
-    ctx.globalAlpha = 0.22;
-    ctx.lineWidth = 1;
-    for (var g = 1; g < 4; g++) {
-      var y = (h - 8) * g / 4 + 4;
-      ctx.beginPath();
-      ctx.moveTo(0, y);
-      ctx.lineTo(w, y);
-      ctx.stroke();
-    }
-    ctx.globalAlpha = 1;
-
-    if (speeds.length < 2) {
-      ctx.fillStyle = dim;
-      ctx.globalAlpha = 0.5;
-      ctx.font = '12px -apple-system, "Segoe UI", sans-serif';
-      ctx.fillText(t('Waiting for download to start…'), 10, h / 2);
-      ctx.globalAlpha = 1;
-      return;
-    }
-
-    var max = Math.max.apply(null, speeds) * 1.15 || 1;
-    var step = w / Math.max(1, speeds.length - 1);
-    var points = speeds.map(function (s, i) {
-      return [i * step, h - 6 - (h - 14) * (s / max)];
-    });
-
-    var grad = ctx.createLinearGradient(0, 0, 0, h);
-    grad.addColorStop(0, line + '55');
-    grad.addColorStop(1, line + '00');
-    ctx.beginPath();
-    ctx.moveTo(points[0][0], h);
-    points.forEach(function (p) { ctx.lineTo(p[0], p[1]); });
-    ctx.lineTo(points[points.length - 1][0], h);
-    ctx.closePath();
-    ctx.fillStyle = grad;
-    ctx.fill();
-
-    ctx.beginPath();
-    points.forEach(function (p, i) { i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); });
-    ctx.strokeStyle = line;
-    ctx.lineWidth = 2;
-    ctx.lineJoin = 'round';
-    ctx.stroke();
+  function renderDock() {
+    $('download-dock-title').textContent = dockState.title;
+    $('download-dock-current').textContent = dockState.current;
+    $('download-dock-speed').textContent = dockState.speed;
+    $('download-dock-percent').textContent = Math.round(dockState.percent) + '%';
+    $('download-dock-fill').style.width = Math.max(0, Math.min(100, dockState.percent)) + '%';
+    dockEl.classList.toggle('is-done', dockState.status === 'done');
+    dockEl.classList.toggle('is-error', dockState.status === 'error');
   }
-  window.addEventListener('resize', drawChart);
+
+  function updateDockCount() {
+    var list = $('download-task-list');
+    var rows = list.querySelectorAll('.download-task');
+    var settled = list.querySelectorAll('.download-task[data-status="done"], .download-task[data-status="error"]').length;
+    $('download-dock-count').textContent = rows.length ? settled + ' / ' + rows.length : '';
+    $('download-dock-panel-count').textContent = rows.length ? '(' + rows.length + ')' : '';
+  }
+
+  function showDock() {
+    clearTimeout(dockHideTimer);
+    body.classList.add('download-dock-open');
+    dockEl.classList.remove('hidden');
+    requestAnimationFrame(function () { dockEl.classList.add('show'); });
+  }
+
+  function hideDock() {
+    clearTimeout(dockHideTimer);
+    setDockExpanded(false);
+    body.classList.remove('download-dock-open');
+    dockEl.classList.remove('show');
+    dockHideTimer = setTimeout(function () {
+      if (!dockEl.classList.contains('show')) dockEl.classList.add('hidden');
+    }, 320);
+  }
+
+  function scheduleDockHide(delay) {
+    clearTimeout(dockHideTimer);
+    if (dockEl.classList.contains('expanded')) return;
+    dockHideTimer = setTimeout(hideDock, delay || 3000);
+  }
+
+  function setDockExpanded(open) {
+    dockEl.classList.toggle('expanded', open);
+    dockPanel.classList.toggle('hidden', !open);
+    $('download-dock-toggle').setAttribute('aria-expanded', open ? 'true' : 'false');
+    $('download-dock-toggle-label').textContent = open ? t('Collapse') : t('Expand');
+  }
+
+  function toggleDock() {
+    var open = !dockEl.classList.contains('expanded');
+    setDockExpanded(open);
+    if (open) clearTimeout(dockHideTimer);
+    else scheduleDockHide();
+  }
+  $('download-dock-open').addEventListener('click', toggleDock);
+  $('download-dock-toggle').addEventListener('click', toggleDock);
+  document.addEventListener('click', function (e) {
+    if (!dockEl.classList.contains('expanded')) return;
+    if (e.target.closest('#download-dock')) return;
+    setDockExpanded(false);
+    scheduleDockHide();
+  });
 
   /* ===== 下载流程 ===== */
   var downloadTimer = null;
@@ -567,60 +557,62 @@
   ];
 
   function startDownload() {
+    if (activeVersionTask) return;
     clearInterval(downloadTimer);
     downloadCancelled = false;
-    speeds = [];
-    peakSpeed = 0;
     var done = 0;
-    var btn = $('cancel-download-btn');
-    btn.classList.remove('complete');
-    btn.textContent = t('Cancel Download');
-    btn.disabled = false;
-    $('download-panel').classList.remove('hidden');
-    $('current-speed').textContent = '0.00 Mbps';
-    $('peak-speed').textContent = '0.00 Mbps';
-    $('progress-fill').style.width = '0%';
-    $('progress-text').textContent = '0%';
-    $('download-filename').textContent = t('Preparing…');
-    drawChart();
-    var versionTask = addTask('Minecraft ' + currentRelease.id + (pickedLoader ? ' + ' + pickedLoader : ''));
+    var label = 'Minecraft ' + currentRelease.id + (pickedLoader ? ' + ' + pickedLoader : '');
+    var versionTask = addTask(label, cancelVersionDownload);
     activeVersionTask = versionTask;
+    dockState.title = label;
+    dockState.current = t('Preparing…');
+    dockState.speed = '';
+    dockState.percent = 0;
+    dockState.status = 'running';
+    renderDock();
     versionTask.set('running', t('Preparing…'), 0);
     toast(t('Download started'), currentRelease.id + (pickedLoader ? ' + ' + pickedLoader : ''), 'info');
 
     downloadTimer = setInterval(function () {
-      if (downloadCancelled) return;
-      var mbps = 30 + Math.random() * 62;
-      speeds.push(mbps);
-      if (speeds.length > 60) speeds.shift();
-      peakSpeed = Math.max(peakSpeed, mbps);
-      done += mbps * 0.125 * 0.35;
+      var speed = 30 + Math.random() * 62;
+      done += speed * 0.35;
       if (done >= TOTAL_MB) done = TOTAL_MB;
-
-      $('current-speed').textContent = mbps.toFixed(2) + ' Mbps';
-      $('peak-speed').textContent = peakSpeed.toFixed(2) + ' Mbps';
       var pct = Math.min(100, done / TOTAL_MB * 100);
-      $('progress-fill').style.width = pct.toFixed(1) + '%';
-      $('progress-text').textContent = pct.toFixed(1) + '%';
-      if (done < TOTAL_MB) {
-        $('download-filename').textContent =
-          files[Math.floor(Math.random() * files.length)] + '  ·  ' + Math.round(done) + ' / ' + TOTAL_MB + ' MB';
-        versionTask.set('running', pct.toFixed(0) + '%', pct);
-      }
-      drawChart();
+      dockState.percent = pct;
 
-      if (done >= TOTAL_MB) {
+      if (done < TOTAL_MB) {
+        versionTask.set('running', pct.toFixed(0) + '%', pct);
+        dockState.current =
+          files[Math.floor(Math.random() * files.length)] + '  ·  ' + Math.round(done) + ' / ' + TOTAL_MB + ' MB';
+        dockState.speed = speed.toFixed(1) + ' MB/s';
+        renderDock();
+      } else {
         clearInterval(downloadTimer);
         downloadTimer = null;
-        btn.textContent = t('Download complete');
-        btn.classList.add('complete');
-        $('download-filename').textContent = currentRelease.id + ' · ' + t('Installed — go to the Launch page');
-        $('current-speed').textContent = '0.00 Mbps';
         versionTask.set('done', t('Done'), 100);
+        dockState.current = currentRelease.id + ' · ' + t('Installed — go to the Launch page');
+        dockState.speed = '';
+        dockState.status = 'done';
+        renderDock();
         activeVersionTask = null;
         toast(t('Download complete'), 'Minecraft ' + currentRelease.id + ' ' + t('installed'), 'success');
+        scheduleDockHide();
       }
     }, 260);
+  }
+
+  function cancelVersionDownload() {
+    if (!activeVersionTask) return;
+    stopDownload();
+    var task = activeVersionTask;
+    activeVersionTask = null;
+    task.set('error', t('Cancelled'), 0);
+    dockState.status = 'error';
+    dockState.current = t('Cancelled');
+    dockState.speed = '';
+    renderDock();
+    toast(t('Download cancelled'), t('Temporary files cleaned up'), 'info');
+    scheduleDockHide(4000);
   }
 
   function stopDownload() {
@@ -808,7 +800,6 @@
     $('version-list-section').classList.toggle('hidden', !isVersions);
     $('version-detail-page').classList.add('hidden');
     $('mod-download-section').classList.toggle('hidden', isVersions);
-    $('download-panel').classList.add('hidden');
     if (isVersions) {
       renderReleaseList();
       return;
@@ -845,9 +836,8 @@
 
   /* ===== 下载任务队列 ===== */
   var taskSeq = 0;
-  function addTask(name) {
+  function addTask(name, onCancel) {
     var list = $('download-task-list');
-    list.classList.remove('hidden');
     var row = document.createElement('div');
     row.className = 'download-task';
     row.dataset.status = 'running';
@@ -860,16 +850,34 @@
       '<div class="download-task-bar"><div class="download-task-fill"></div></div>';
     row.querySelector('.download-task-name').textContent = name;
     row.querySelector('.download-task-remove').addEventListener('click', function () {
+      if (row.dataset.status === 'running' && onCancel) { onCancel(); return; }
       row.remove();
-      if (!list.childElementCount) list.classList.add('hidden');
+      updateDockCount();
+      if (!list.childElementCount) scheduleDockHide(1000);
     });
     list.appendChild(row);
+    dockTaskRow = row;
+    dockState.title = name;
+    dockState.current = t('Preparing…');
+    dockState.speed = '';
+    dockState.percent = 0;
+    dockState.status = 'running';
+    showDock();
+    renderDock();
+    updateDockCount();
     return {
+      row: row,
       set: function (status, state, pct) {
         if (!row.isConnected) return;
         row.dataset.status = status;
         row.querySelector('.download-task-state').textContent = state;
         row.querySelector('.download-task-fill').style.width = Math.max(0, Math.min(100, pct || 0)) + '%';
+        updateDockCount();
+        if (row !== dockTaskRow) return;
+        dockState.status = status === 'error' ? 'error' : status === 'done' ? 'done' : 'running';
+        dockState.percent = status === 'done' ? 100 : (pct || 0);
+        if (state) dockState.current = state;
+        renderDock();
       }
     };
   }
@@ -918,6 +926,7 @@
         clearInterval(timer);
         task.set('done', t('Installed to {version}', { version: targetVersion }), 100);
         toast(t('Install complete'), item.title + ' · ' + targetVersion, 'success');
+        scheduleDockHide();
       } else {
         task.set('running', pct.toFixed(0) + '%', pct);
       }
@@ -983,7 +992,6 @@
       if (!r.checked) return;
       followsSystemTheme = false;
       applyTheme(r.value);
-      drawChart();
     });
   });
 
@@ -991,7 +999,6 @@
   function applyStyle(style) {
     body.classList.toggle('style-mc', style === 'mc');
     body.classList.toggle('style-minimal', style === 'minimal');
-    drawChart();
   }
   styleRadios.forEach(function (r) {
     r.addEventListener('change', function () {
@@ -1103,10 +1110,8 @@
     if (id === 'theme') {
       followsSystemTheme = false;
       applyTheme(value);
-      drawChart();
     } else if (id === 'scale') {
       document.documentElement.style.setProperty('--app-zoom', String(Number(value) / 100));
-      setTimeout(drawChart, 60);
     } else if (id === 'tip') {
       toast(t('Saved'), t('Launch tips: {value}', { value: label }), 'success');
     } else if (id === 'java-mirror') {
@@ -1154,8 +1159,6 @@
       launchOverlay.classList.remove('show', 'fade-out');
     }
   });
-
-  if (!fitMode) drawChart();
 
   tellParent({ gpcl: 'ready' });
 })();

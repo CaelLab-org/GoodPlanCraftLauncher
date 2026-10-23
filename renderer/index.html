@@ -12,6 +12,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GoodPlanCraftLauncher</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="native.css">
   <script>
     // 页面解析前先按上次的设置把主题 / 缩放 / 恢复页应用到 <html>，否则会先用默认深色英文界面画一帧
     (function () {
@@ -206,6 +207,23 @@
                 <div class="version-settings-section">
                   <h4 class="section-title" data-i18n="ui.game_settings">Game settings</h4>
                   <p class="section-desc" data-i18n="ui.use_global_setting_follows_the_value_in_settings">Use global setting follows the value in Settings</p>
+
+                  <div class="setting-item">
+                    <div class="setting-info">
+                      <div class="setting-label" data-i18n="ui.version_isolation">Version isolation</div>
+                      <div class="setting-desc" data-i18n="ui.version_isolation_desc">Isolated versions keep their own saves, mods and resource packs</div>
+                    </div>
+                    <div class="custom-select" data-select-id="version-isolation">
+                      <div class="custom-select-trigger">
+                        <span class="custom-select-value" data-i18n="ui.isolation_enabled">Enabled</span>
+                        <span class="custom-select-arrow icon icon-chevron" ></span>
+                      </div>
+                      <div class="custom-select-dropdown">
+                        <div class="custom-select-option selected" data-value="on" data-i18n="ui.isolation_enabled">Enabled</div>
+                        <div class="custom-select-option" data-value="off" data-i18n="ui.isolation_disabled">Disabled</div>
+                      </div>
+                    </div>
+                  </div>
                   
                   <div class="setting-item">
                     <div class="setting-info">
@@ -335,19 +353,18 @@
         </div>
 
         <div id="download-page" class="download-page hidden">
-          <div class="download-header">
-            <h3 data-i18n="ui.download">Download</h3>
-            <div class="download-header-actions">
-              <button id="refresh-btn-page" class="refresh-btn hidden" data-i18n="ui.refresh_versions">Refresh versions</button>
+          <div class="download-top">
+            <div class="download-header">
+              <h3 data-i18n="ui.download">Download</h3>
             </div>
-          </div>
 
-          <div class="download-tabs">
-            <button id="download-tab-versions" class="download-tab active" type="button" data-i18n="ui.game_version">Game version</button>
-            <button id="download-tab-mods" class="download-tab" type="button" data-i18n="ui.mods">Mods</button>
-            <button id="download-tab-shaders" class="download-tab" type="button" data-i18n="ui.shaders">Shaders</button>
-            <button id="download-tab-resourcepacks" class="download-tab" type="button" data-i18n="ui.resource_packs">Resource packs</button>
-            <button id="download-tab-modpacks" class="download-tab" type="button" data-i18n="ui.modpacks">Modpacks</button>
+            <div class="download-tabs">
+              <button id="download-tab-versions" class="download-tab active" type="button" data-i18n="ui.game_version">Game version</button>
+              <button id="download-tab-mods" class="download-tab" type="button" data-i18n="ui.mods">Mods</button>
+              <button id="download-tab-shaders" class="download-tab" type="button" data-i18n="ui.shaders">Shaders</button>
+              <button id="download-tab-resourcepacks" class="download-tab" type="button" data-i18n="ui.resource_packs">Resource packs</button>
+              <button id="download-tab-modpacks" class="download-tab" type="button" data-i18n="ui.modpacks">Modpacks</button>
+            </div>
           </div>
 
           <div id="download-panel" class="download-status-panel hidden">
@@ -383,27 +400,47 @@
           </div>
 
           <div id="download-status" class="status-message"></div>
-          <div id="download-task-list" class="download-task-list hidden"></div>
 
           <div id="mod-download-section" class="mod-download-section hidden">
             <div class="mod-search-row">
+              <span class="mod-search-icon icon icon-search"></span>
               <input id="mod-search-input" class="mod-search-input" type="text" data-i18n-placeholder="ui.search_mods_or_paste_a_curseforge_project_link" placeholder="Search mods, or paste a CurseForge project link">
               <button id="mod-search-btn" class="mod-search-btn" type="button" data-i18n="ui.search">Search</button>
             </div>
             <div class="mod-filter-row">
-              <select id="mod-game-version" class="mod-select"></select>
-              <select id="mod-loader" class="mod-select">
-                <option value="" data-i18n="ui.all_loaders">All loaders</option>
-                <option value="fabric">Fabric</option>
-                <option value="forge">Forge</option>
-                <option value="neoforge">NeoForge</option>
-                <option value="quilt">Quilt</option>
-              </select>
-              <select id="mod-source" class="mod-select">
-                <option value="both" selected data-i18n="ui.all_sources">All sources</option>
-                <option value="modrinth">Modrinth</option>
-                <option value="curseforge">CurseForge</option>
-              </select>
+              <div class="custom-select mod-filter-select" data-select-id="mod-game-version">
+                <div class="custom-select-trigger">
+                  <span class="custom-select-value" data-i18n="ui.all_versions">All versions</span>
+                  <span class="custom-select-arrow icon icon-chevron"></span>
+                </div>
+                <div class="custom-select-dropdown custom-select-dropdown--scroll">
+                  <div class="custom-select-option selected" data-value="" data-i18n="ui.all_versions">All versions</div>
+                </div>
+              </div>
+              <div class="custom-select mod-filter-select" data-select-id="mod-loader">
+                <div class="custom-select-trigger">
+                  <span class="custom-select-value" data-i18n="ui.all_loaders">All loaders</span>
+                  <span class="custom-select-arrow icon icon-chevron"></span>
+                </div>
+                <div class="custom-select-dropdown">
+                  <div class="custom-select-option selected" data-value="" data-i18n="ui.all_loaders">All loaders</div>
+                  <div class="custom-select-option" data-value="fabric">Fabric</div>
+                  <div class="custom-select-option" data-value="forge">Forge</div>
+                  <div class="custom-select-option" data-value="neoforge">NeoForge</div>
+                  <div class="custom-select-option" data-value="quilt">Quilt</div>
+                </div>
+              </div>
+              <div class="custom-select mod-filter-select" data-select-id="mod-source">
+                <div class="custom-select-trigger">
+                  <span class="custom-select-value" data-i18n="ui.all_sources">All sources</span>
+                  <span class="custom-select-arrow icon icon-chevron"></span>
+                </div>
+                <div class="custom-select-dropdown">
+                  <div class="custom-select-option selected" data-value="both" data-i18n="ui.all_sources">All sources</div>
+                  <div class="custom-select-option" data-value="modrinth">Modrinth</div>
+                  <div class="custom-select-option" data-value="curseforge">CurseForge</div>
+                </div>
+              </div>
             </div>
             <div id="mod-status" class="status-message"></div>
             <div id="mod-results" class="mod-results"></div>
@@ -417,7 +454,10 @@
           <div id="version-list-section" class="version-list-section">
             <div class="version-list-header">
               <h4 class="section-title" data-i18n="ui.game_version">Game version</h4>
-              <span id="version-count-label" class="version-count-label" data-i18n="ui.loading">Loading...</span>
+              <div class="version-list-meta">
+                <span id="version-count-label" class="version-count-label" data-i18n="ui.loading">Loading...</span>
+                <button id="refresh-btn-page" class="refresh-btn hidden" data-i18n="ui.refresh_versions">Refresh versions</button>
+              </div>
             </div>
             <div id="version-list-container" class="version-list-container">
               <div class="version-list-loading" data-i18n="ui.loading_versions">Loading versions...</div>
@@ -452,6 +492,7 @@
                       </div>
                     </div>
                     <div class="detail-option-right">
+                      <button class="detail-option-clear hidden" id="forge-clear" type="button" data-i18n-title="ui.remove"><span class="icon icon-close"></span></button>
                       <span class="detail-option-badge" id="forge-badge" data-i18n="ui.checking_2">Checking...</span>
                       <span class="detail-option-arrow icon icon-chevron" ></span>
                     </div>
@@ -473,6 +514,7 @@
                       </div>
                     </div>
                     <div class="detail-option-right">
+                      <button class="detail-option-clear hidden" id="neoforge-clear" type="button" data-i18n-title="ui.remove"><span class="icon icon-close"></span></button>
                       <span class="detail-option-badge" id="neoforge-badge" data-i18n="ui.checking_2">Checking...</span>
                       <span class="detail-option-arrow icon icon-chevron" ></span>
                     </div>
@@ -494,6 +536,7 @@
                       </div>
                     </div>
                     <div class="detail-option-right">
+                      <button class="detail-option-clear hidden" id="fabric-clear" type="button" data-i18n-title="ui.remove"><span class="icon icon-close"></span></button>
                       <span class="detail-option-badge" id="fabric-badge" data-i18n="ui.checking_2">Checking...</span>
                       <span class="detail-option-arrow icon icon-chevron" ></span>
                     </div>
@@ -519,6 +562,7 @@
                       </div>
                     </div>
                     <div class="detail-option-right">
+                      <button class="detail-option-clear hidden" id="optifine-clear" type="button" data-i18n-title="ui.remove"><span class="icon icon-close"></span></button>
                       <span class="detail-option-badge" id="optifine-badge" data-i18n="ui.checking_2">Checking...</span>
                       <span class="detail-option-arrow icon icon-chevron" ></span>
                     </div>
@@ -879,6 +923,38 @@
                       </div>
                     </div>
                   </div>
+
+                  <div class="setting-card setting-card--group">
+                    <div class="setting-card-head">
+                      <span class="setting-card-icon"><span class="icon icon-box"></span></span>
+                      <div>
+                        <div class="setting-card-title" data-i18n="ui.version_isolation">Version isolation</div>
+                        <div class="setting-card-desc" data-i18n="ui.default_version_isolation_desc">Applies to versions installed from now on. Existing versions can be changed in their own version settings.</div>
+                      </div>
+                    </div>
+
+                    <div class="setting-row">
+                      <div class="setting-left">
+                        <div class="setting-label" data-i18n="ui.default_version_isolation">Default version isolation</div>
+                        <div class="setting-desc" data-i18n="ui.version_isolation_desc">Isolated versions keep their own saves, mods and resource packs</div>
+                      </div>
+                      <div class="setting-control setting-control-wide">
+                        <div class="custom-select" data-select-id="settings-version-isolation">
+                          <div class="custom-select-trigger">
+                            <span class="custom-select-value" data-i18n="ui.isolation_all">Isolate all versions</span>
+                            <span class="custom-select-arrow icon icon-chevron" ></span>
+                          </div>
+                          <div class="custom-select-dropdown">
+                            <div class="custom-select-option" data-value="off" data-i18n="ui.isolation_off">Off (shared saves and mods)</div>
+                            <div class="custom-select-option" data-value="modded" data-i18n="ui.isolation_modded">Isolate mod-capable versions</div>
+                            <div class="custom-select-option" data-value="nonRelease" data-i18n="ui.isolation_non_release">Isolate non-release versions</div>
+                            <div class="custom-select-option" data-value="moddedAndNonRelease" data-i18n="ui.isolation_modded_non_release">Isolate mod-capable and non-release versions</div>
+                            <div class="custom-select-option selected" data-value="all" data-i18n="ui.isolation_all">Isolate all versions</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1049,19 +1125,6 @@
 
                     <div class="setting-row">
                       <div class="setting-left">
-                        <div class="setting-label" data-i18n="ui.play_startup_animation">Play startup animation</div>
-                        <div class="setting-desc" data-i18n="ui.play_the_full_screen_minecraft_welcome_animation_when_launching">Play the full-screen Minecraft welcome animation when launching</div>
-                      </div>
-                      <div class="setting-control">
-                        <label class="switch">
-                          <input type="checkbox" id="play-startup-animation">
-                          <span class="slider"></span>
-                        </label>
-                      </div>
-                    </div>
-
-                    <div class="setting-row">
-                      <div class="setting-left">
                         <div class="setting-label" data-i18n="ui.skip_splash_screen">Skip splash screen</div>
                         <div class="setting-desc" data-i18n="ui.go_straight_to_the_main_window_without_the_splash_screen_may_show_a_whit_a2bb2a">Go straight to the main window without the splash screen; may show a white screen for longer</div>
                       </div>
@@ -1204,6 +1267,56 @@
 
                   <div class="setting-card setting-card--group">
                     <div class="setting-card-head">
+                      <span class="setting-card-icon"><span class="icon icon-search"></span></span>
+                      <div>
+                        <div class="setting-card-title" data-i18n="ui.mod_name_mapping">Chinese name mapping</div>
+                        <div class="setting-card-desc" data-i18n="ui.mod_name_mapping_desc">Translate Chinese mod names into English before searching</div>
+                      </div>
+                    </div>
+
+                    <div class="setting-row">
+                      <div class="setting-left">
+                        <div class="setting-label" data-i18n="ui.enable_mod_name_mapping">Enable mapping</div>
+                        <div class="setting-desc" data-i18n="ui.enable_mod_name_mapping_desc">When off, Chinese queries are sent to the sources as-is</div>
+                      </div>
+                      <div class="setting-control">
+                        <label class="switch">
+                          <input type="checkbox" id="settings-mod-name-mapping">
+                          <span class="slider"></span>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="setting-row">
+                      <div class="setting-left">
+                        <div class="setting-label" data-i18n="ui.mapping_sources">Mapping sources</div>
+                        <div class="setting-desc" data-i18n="ui.mapping_sources_desc">Only the checked sources are queried</div>
+                      </div>
+                      <div class="setting-control setting-control-column">
+                        <div class="settings-check-list">
+                          <label class="settings-check"><input type="checkbox" id="settings-map-mcmod" value="mcmod"> <span>MC 百科</span></label>
+                          <label class="settings-check"><input type="checkbox" id="settings-map-130wiki" value="130wiki"> <span>轻之舟百科</span></label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="setting-row">
+                      <div class="setting-left">
+                        <div class="setting-label" data-i18n="ui.custom_dictionaries">Custom dictionaries</div>
+                        <div class="setting-desc" data-i18n="ui.custom_dictionaries_desc">JSON file URL or local path, e.g. {"zh":"English"}</div>
+                      </div>
+                      <div class="setting-control setting-control-column setting-control--form">
+                        <div class="settings-inline-add">
+                          <input type="text" id="settings-map-dict-input" class="setting-input" placeholder="https://.../mods.json">
+                          <button id="settings-map-dict-add" class="settings-action-btn" type="button" data-i18n="ui.add">Add</button>
+                        </div>
+                        <div id="settings-map-dict-list" class="settings-tag-list"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="setting-card setting-card--group">
+                    <div class="setting-card-head">
                       <span class="setting-card-icon"><span class="icon icon-box"></span></span>
                       <div>
                         <div class="setting-card-title" data-i18n="ui.mod_source">Mod source</div>
@@ -1218,6 +1331,31 @@
                       </div>
                       <div class="setting-control setting-control-column">
                         <input type="text" id="settings-curseforge-key" class="setting-input" data-i18n-placeholder="ui.leave_empty_to_use_modrinth_and_the_mirror_only" placeholder="Leave empty to use Modrinth and the mirror only">
+                      </div>
+                    </div>
+
+                    <div class="setting-row">
+                      <div class="setting-left">
+                        <div class="setting-label" data-i18n="ui.custom_mod_sources">Custom mod sources</div>
+                        <div class="setting-desc" data-i18n="ui.custom_mod_sources_desc">Add Modrinth- or CurseForge-compatible API endpoints</div>
+                      </div>
+                      <div class="setting-control setting-control-column setting-control--form">
+                        <div class="settings-source-form">
+                          <input type="text" id="settings-mod-source-name" class="setting-input" data-i18n-placeholder="ui.source_name" placeholder="Name">
+                          <div class="custom-select settings-source-kind" data-select-id="settings-mod-source-kind">
+                            <div class="custom-select-trigger">
+                              <span class="custom-select-value" data-i18n="ui.modrinth_compatible">Modrinth-compatible</span>
+                              <span class="custom-select-arrow icon icon-chevron"></span>
+                            </div>
+                            <div class="custom-select-dropdown">
+                              <div class="custom-select-option selected" data-value="modrinth" data-i18n="ui.modrinth_compatible">Modrinth-compatible</div>
+                              <div class="custom-select-option" data-value="curseforge" data-i18n="ui.curseforge_compatible">CurseForge-compatible</div>
+                            </div>
+                          </div>
+                          <input type="text" id="settings-mod-source-url" class="setting-input" data-i18n-placeholder="ui.source_base_url" placeholder="API base URL">
+                          <button id="settings-mod-source-add" class="settings-action-btn" type="button" data-i18n="ui.add_source">Add source</button>
+                        </div>
+                        <div id="settings-mod-source-list" class="settings-tag-list"></div>
                       </div>
                     </div>
                   </div>
@@ -1633,6 +1771,35 @@
 
   </div>
 
+  <div id="download-dock" class="download-dock hidden" aria-live="polite">
+    <div class="download-dock-panel hidden" id="download-dock-panel">
+      <div class="download-dock-panel-head">
+        <span class="download-dock-panel-title" data-i18n="ui.download_process">Downloads</span>
+        <span id="download-dock-panel-count" class="download-dock-panel-count"></span>
+        <button id="download-dock-panel-clear" class="download-dock-panel-action hidden" type="button" data-i18n="ui.clear_completed">Clear completed</button>
+      </div>
+      <div id="download-task-list" class="download-task-list hidden"></div>
+    </div>
+    <div class="download-dock-track"><div id="download-dock-fill" class="download-dock-fill"></div></div>
+    <button id="download-dock-open" class="download-dock-main" type="button" data-i18n-title="ui.open_download_queue" title="Open download queue">
+      <span class="download-dock-glyph icon icon-download"></span>
+      <span class="download-dock-text">
+        <span id="download-dock-title" class="download-dock-title">-</span>
+        <span id="download-dock-current" class="download-dock-current"></span>
+      </span>
+    </button>
+    <div class="download-dock-meta">
+      <span id="download-dock-queued" class="download-dock-queued hidden"></span>
+      <span id="download-dock-count" class="download-dock-count"></span>
+      <span id="download-dock-speed" class="download-dock-speed"></span>
+      <span id="download-dock-percent" class="download-dock-percent">0%</span>
+    </div>
+    <button id="download-dock-toggle" class="download-dock-toggle" type="button" aria-expanded="false">
+      <span id="download-dock-toggle-label" data-i18n="ui.expand_panel">Expand</span>
+      <span class="download-dock-chevron icon icon-chevron"></span>
+    </button>
+  </div>
+
   <div id="launch-animation-overlay" class="launch-animation-overlay hidden">
     <div class="launch-animation-content">
       <div class="pickaxe-container">
@@ -1750,6 +1917,25 @@
         <div class="mod-target-actions-right">
           <button id="modpack-name-cancel" class="mod-target-btn" type="button" data-i18n="ui.cancel">Cancel</button>
           <button id="modpack-name-confirm" class="mod-target-btn primary" type="button" data-i18n="ui.start_installation">Start installation</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="name-prompt-overlay" class="mod-target-overlay hidden">
+    <div class="mod-target-dialog">
+      <div class="mod-target-header">
+        <h3 id="name-prompt-title" data-i18n="ui.download">Download</h3>
+        <button id="name-prompt-close" class="mod-target-close" type="button" data-i18n-aria-label="ui.close" aria-label="Close"><span class="icon icon-close"></span></button>
+      </div>
+      <div id="name-prompt-file" class="mod-target-file"></div>
+      <label class="modpack-name-label" for="name-prompt-input" data-i18n="ui.version_name">Version name</label>
+      <input id="name-prompt-input" class="modpack-name-input" type="text" maxlength="64" spellcheck="false">
+      <div id="name-prompt-note" class="modpack-name-note"></div>
+      <div class="mod-target-actions">
+        <div class="mod-target-actions-right">
+          <button id="name-prompt-cancel" class="mod-target-btn" type="button" data-i18n="ui.cancel">Cancel</button>
+          <button id="name-prompt-confirm" class="mod-target-btn primary" type="button" data-i18n="ui.download">Download</button>
         </div>
       </div>
     </div>

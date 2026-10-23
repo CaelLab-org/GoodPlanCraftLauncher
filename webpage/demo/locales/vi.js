@@ -289,4 +289,7 @@ window.DEMO_DICTIONARY = {
   "months": "tháng",
   "years": "năm",
   "{n} downloads": "{n} lượt tải xuống"
+,
+  "Expand": "Mở rộng",
+  "Collapse": "Thu gọn"
 };

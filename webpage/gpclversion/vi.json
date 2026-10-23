@@ -1,8 +1,30 @@
 {
   "schema": 1,
-  "latest": "1.8.0",
-  "updated": "2026-10-22",
+  "latest": "1.9.0",
+  "updated": "2026-10-23",
   "versions": [
+    {
+      "version": "1.9.0",
+      "anchor": "v1-9-0",
+      "date": "2026-10-23",
+      "title": "Trang tải xuống mới, có modpack và shader",
+      "log": [
+        "Tiến trình tải xuống giờ nằm ở cuối cửa sổ: bạn vẫn ở trang đang dùng, thanh hiển thị tệp, tiến trình và tốc độ, mở ra sẽ thấy danh sách tải xuống đầy đủ và có thể hủy bất cứ lúc nào",
+        "Trang tải xuống có thêm thẻ Shader, Gói tài nguyên và Modpack: modpack của Modrinth và CurseForge cài bằng một cú nhấp, tệp nén cục bộ có thể nhập vào, và NeoForge được hỗ trợ",
+        "Cách ly phiên bản giờ là một cài đặt rõ ràng: mỗi phiên bản mặc định có mod, bản lưu và cài đặt riêng, chọn trong năm mức và bật tắt riêng cho từng phiên bản",
+        "Có thể đặt tên phiên bản khi tải xuống và tạo phiên bản độc lập để các bộ mod khác nhau không ảnh hưởng lẫn nhau",
+        "Tìm kiếm mod nhanh hơn nhiều: «Tất cả nguồn» chạy song song và nén dữ liệu, tìm kiếm lặp lại dùng bộ nhớ đệm, và tìm kiếm tiếng Trung sẽ tra tên tiếng Anh trên wiki trước",
+        "Tìm kiếm mod sắp xếp theo độ liên quan và luân phiên nguồn; trang chi tiết cho biết tên tiếng Trung đến từ đâu, và trong Cài đặt có thể thêm nguồn mod cùng từ điển tên của riêng bạn",
+        "Trình tải mod giờ loại trừ lẫn nhau: chọn Forge thì các mục khác hiện «không tương thích», danh sách đích cài chỉ hiện phiên bản tương thích và nút ghi rõ đích đến",
+        "Đã sửa tải xuống bị cắt, hủy chậm và cửa sổ chính không cập nhật sau khi xóa phiên bản; lần cài đầu tiên không còn phát hoạt ảnh mở đầu"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.0-Setup.exe",
+        "file": "GPCL-1.9.0-Setup.exe",
+        "size": "94 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.8.0",
       "anchor": "v1-8-0",

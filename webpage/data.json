@@ -2,6 +2,26 @@
     "Launcher": [
         {
             "name": "version",
+            "key": "1.9.0"
+        },
+        {
+            "name": "versiontitle",
+            "key": "下载页重做，整合包和光影也能装"
+        },
+        {
+            "name": "versiontitle_en",
+            "key": "A rebuilt download page, with modpacks and shaders"
+        },
+        {
+            "name": "versionlog",
+            "key": "下载进度移到窗口底部：下载时不用离开当前页面，底部条显示文件、进度、速度，点开能看到完整下载进程，随时可以取消<br>下载页新增「光影」「资源包」「整合包」三个分类：支持 Modrinth 和 CurseForge 整合包，本地压缩包也能导入，还支持 NeoForge 加载器<br>版本隔离成为明确设置：默认每个版本独立存放模组、存档和设置，可在设置里选五档，单个版本也能单独开关<br>下载时可以给版本起名字，生成独立实例，不同的整合配置不会互相干扰<br>模组搜索更快：「全部来源」并行请求并启用压缩，重复搜索直接命中缓存；中文搜索会先查百科拿英文名再搜<br>模组搜索按相关度排序，来源交替出现；详情页标注中文名来自 MC 百科还是轻之舟百科；设置里能加自定义模组源和中文词表<br>模组加载器改为互斥：选中 Forge 后其他加载器标「不兼容」；安装目标只列兼容版本，按钮写明装到哪个版本<br>修复下载被截断、取消下载不及时、删除版本后主界面没更新；首次安装不再播放开场动画"
+        },
+        {
+            "name": "versionlog_en",
+            "key": "Download progress now lives at the bottom of the window: stay on whatever page you are on, the bar shows the current file, progress and speed, and it opens into the full download queue where you can cancel at any time<br>The download page now has Shaders, Resource packs and Modpacks tabs: Modrinth and CurseForge modpacks install in one click, local archives can be imported, and NeoForge is supported<br>Version isolation is now an explicit setting: each version gets its own mods, saves and settings by default, with five levels to choose from and a per-version switch<br>You can name a version while downloading it, creating a separate instance so different mod setups do not interfere with each other<br>Mod search is much faster: All sources now runs in parallel with compression, repeated searches hit the cache, and Chinese searches look up the English name in a wiki first<br>Mod search sorts by relevance with sources interleaved; the detail page shows where the Chinese name came from, and you can add custom mod sources and name dictionaries in Settings<br>Mod loaders are now mutually exclusive: picking Forge marks the others as incompatible, and the install target list only shows compatible versions with the destination written on the button<br>Fixed truncated downloads, slow cancellation and the main window not updating after deleting a version; first-time installs no longer play the intro animation"
+        },
+        {
+            "name": "version",
             "key": "1.8.0"
         },
         {

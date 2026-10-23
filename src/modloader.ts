@@ -12,8 +12,8 @@ import { BrowserWindow, app, ipcMain } from 'electron';
 import fs from 'fs';
 import path from 'path';
 
-import { GAME_DIR, getVersionGameDir, markVersionIsolated, writeLog } from './config';
-import { downloadFile, fetchText, installVersion, mirrorUrlFor, updateVersionLastPlayed } from './download';
+import { GAME_DIR, applyInitialVersionIsolation, getVersionGameDir, writeLog } from './config';
+import { beginProgressSession, downloadFile, fetchText, finishProgressSession, installVersion, mirrorUrlFor, updateVersionLastPlayed } from './download';
 import { t, translateText } from './i18n';
 import { ensureJavaRuntime, findJavaExecutable, getJavaRuntimeDir, getJavaVersionForMCVersion } from './java';
 import { installModrinthProjectTo } from './mods';
@@ -260,6 +260,8 @@ export async function installFabric(mcVersion: string, loaderVersion: string): P
 
   fs.writeFileSync(path.join(versionDir, `${versionId}.json`), JSON.stringify(profile, null, 2), 'utf8');
 
+  const pendingLibs: Array<{ dest: string; url: string; label: string; sources: string[]; size: number }> = [];
+  let totalBytes: number = 0;
   for (const lib of profile.libraries || []) {
     const artifact: any = lib.downloads?.artifact;
     if (!artifact?.path) continue;
@@ -271,7 +273,18 @@ export async function installFabric(mcVersion: string, loaderVersion: string): P
     const mirrored: string | null = mirrorUrlFor(fullUrl);
     if (mirrored) sources.push(mirrored);
     sources.push(fullUrl);
-    await downloadFile(fullUrl, dest, `库: ${lib.name}`, sources);
+    const size: number = Number(artifact.size) || 0;
+    totalBytes += size;
+    pendingLibs.push({ dest, url: fullUrl, label: `库: ${lib.name}`, sources, size });
+  }
+
+  beginProgressSession(totalBytes, pendingLibs.length);
+  try {
+    for (const lib of pendingLibs) {
+      await downloadFile(lib.url, lib.dest, lib.label, lib.sources);
+    }
+  } finally {
+    finishProgressSession();
   }
 
   writeLog(`[Fabric] 安装完成: ${versionId}`);
@@ -358,7 +371,7 @@ export async function installVersionWithModLoader(versionId: string, loaderType:
     }
     
     writeLog(`[模组加载器] 安装完成: ${finalVersionId}`);
-    markVersionIsolated(GAME_DIR, finalVersionId);
+    applyInitialVersionIsolation(finalVersionId, { modable: true, versionType: 'release' });
 
     updateVersionLastPlayed(finalVersionId);
 

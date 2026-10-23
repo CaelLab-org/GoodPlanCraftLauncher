@@ -75,7 +75,7 @@
                     </div>
                 </li>
                 <li class="lang-switch"><select aria-label="语言" onchange="if(this.value)location.href=this.value"><option value="./index.en-us">English</option><option value="./index.zh-cn" selected>简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select></li>
-                <li><a href="#download" class="nav-cta">&#9662; 下载 v1.8.0</a></li>
+                <li><a href="#download" class="nav-cta">&#9662; 下载 v1.9.0</a></li>
             </ul>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="打开菜单" aria-expanded="false">&#9776;</button>
         </div>
@@ -113,9 +113,9 @@
                 </a>
             </div>
             <div class="hero-meta">
-                <span>版本 <b>v1.8.0</b></span>
+                <span>版本 <b>v1.9.0</b></span>
                 <span class="sep">/</span>
-                <span>更新 <b>2026-10-22</b></span>
+                <span>更新 <b>2026-10-23</b></span>
                 <span class="sep">/</span>
                 <span>平台 <b>Windows 10+</b></span>
             </div>
@@ -264,13 +264,13 @@
                 <span class="dl-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
                 </span>
-                <div class="download-file">GPCL-1.8.0-Setup.exe</div>
-                <a href="https://dl.caellab.com/file/games/gpcl/GPCL-1.8.0-Setup.exe" class="download-btn">
+                <div class="download-file">GPCL-1.9.0-Setup.exe</div>
+                <a href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.0-Setup.exe" class="download-btn">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
                     启动方块世界！
                 </a>
                 <div class="update-info">
-                    <span>更新日期 <b>2026-10-22</b></span>
+                    <span>更新日期 <b>2026-10-23</b></span>
                     <span>平台 <b>Windows 10 64 位</b></span>
                     <span>许可证 <b>开源免费</b></span>
                 </div>
@@ -381,9 +381,27 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                 <div class="timeline-item reveal">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
+                        <span class="version-number">v1.9.0</span>
+                        <span class="version-title">下载页重做，整合包和光影也能装</span>
+                        <span class="latest-chip">最新</span>
+                        <span class="version-date">2026-10-23</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>下载进度移到窗口底部：下载时不用离开当前页面，底部条显示文件、进度、速度，点开能看到完整下载进程，随时可以取消</li>
+                        <li>下载页新增「光影」「资源包」「整合包」三个分类：支持 Modrinth 和 CurseForge 整合包，本地压缩包也能导入，还支持 NeoForge 加载器</li>
+                        <li>版本隔离成为明确设置：默认每个版本独立存放模组、存档和设置，可在设置里选五档，单个版本也能单独开关</li>
+                        <li>下载时可以给版本起名字，生成独立实例，不同的整合配置不会互相干扰</li>
+                        <li>模组搜索更快：「全部来源」并行请求并启用压缩，重复搜索直接命中缓存；中文搜索会先查百科拿英文名再搜</li>
+                        <li>模组搜索按相关度排序，来源交替出现；详情页标注中文名来自 MC 百科还是轻之舟百科；设置里能加自定义模组源和中文词表</li>
+                        <li>模组加载器改为互斥：选中 Forge 后其他加载器标「不兼容」；安装目标只列兼容版本，按钮写明装到哪个版本</li>
+                        <li>修复下载被截断、取消下载不及时、删除版本后主界面没更新；首次安装不再播放开场动画</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
                         <span class="version-number">v1.8.0</span>
                         <span class="version-title">25 种语言，从启动器到官网</span>
-                        <span class="latest-chip">最新</span>
                         <span class="version-date">2026-10-22</span>
                     </div>
                     <ul class="changelog">
@@ -507,6 +525,8 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                         <li>启动动画与页面切换更顺滑</li>
                     </ul>
                 </div>
+                <details class="older-versions">
+                    <summary>展开更早的 13 个版本</summary>
                 <div class="timeline-item reveal">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
@@ -521,8 +541,6 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                         <li>修复浅色模式下启动界面不跟随主题、若干按钮样式失效</li>
                     </ul>
                 </div>
-                <details class="older-versions">
-                    <summary>展开更早的 12 个版本</summary>
                 <div class="timeline-item reveal">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
@@ -674,7 +692,7 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                 </div>
                 </details>
                 <div class="history-more">
-                    <a href="./history/index.zh-cn">查看完整更新日志（全部 20 个版本与安装包） →</a>
+                    <a href="./history/index.zh-cn">查看完整更新日志（全部 21 个版本与安装包） →</a>
                 </div>
             </div>
         </div>

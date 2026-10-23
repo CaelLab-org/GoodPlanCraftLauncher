@@ -1,8 +1,30 @@
 {
   "schema": 1,
-  "latest": "1.8.0",
-  "updated": "2026-10-22",
+  "latest": "1.9.0",
+  "updated": "2026-10-23",
   "versions": [
+    {
+      "version": "1.9.0",
+      "anchor": "v1-9-0",
+      "date": "2026-10-23",
+      "title": "Yenilenen indirme sayfası, mod paketleri ve shader desteğiyle",
+      "log": [
+        "İndirme ilerlemesi artık pencerenin altında: bulunduğunuz sayfada kalırsınız, çubuk dosyayı, ilerlemeyi ve hızı gösterir, açıldığında istediğiniz zaman iptal edebileceğiniz tam indirme listesini görürsünüz",
+        "İndirme sayfasına Shader, Kaynak paketi ve Mod paketi sekmeleri eklendi: Modrinth ve CurseForge mod paketleri tek tıkla kurulur, yerel arşivler içe aktarılır ve NeoForge desteklenir",
+        "Sürüm izolasyonu artık açık bir ayar: her sürümün varsayılan olarak kendi modları, kayıtları ve ayarları vardır; beş seviye arasından seçilir ve her sürüm için ayrı anahtar bulunur",
+        "İndirirken sürüme ad verebilir ve ayrı bir örnek oluşturabilirsiniz, böylece farklı mod düzenleri birbirine karışmaz",
+        "Mod araması çok daha hızlı: «Tüm kaynaklar» paralel ve sıkıştırmalı çalışır, tekrarlanan aramalar önbellekten gelir ve Çince aramalar önce vikide İngilizce adı arar",
+        "Mod araması alaka düzeyine göre sıralanır ve kaynaklar dönüşümlü görünür; ayrıntı sayfası Çince adın kaynağını gösterir ve Ayarlar'da kendi mod kaynaklarınızı ve ad sözlüklerinizi ekleyebilirsiniz",
+        "Mod yükleyicileri artık birbirini dışlar: Forge seçildiğinde diğerleri «uyumsuz» olarak işaretlenir, kurulum hedefi listesi yalnızca uyumlu sürümleri gösterir ve düğme hedefi yazar",
+        "Kesilen indirmeler, yavaş iptal ve sürüm silindikten sonra ana pencerenin güncellenmemesi düzeltildi; ilk kurulumda artık açılış animasyonu oynamıyor"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.0-Setup.exe",
+        "file": "GPCL-1.9.0-Setup.exe",
+        "size": "94 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.8.0",
       "anchor": "v1-8-0",

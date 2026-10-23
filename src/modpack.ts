@@ -484,7 +484,7 @@ export async function installModpack(options: { archivePath: string; instanceNam
 
 
 ipcMain.handle('modpack-install', async (_, options: any) => {
-  const source: string = options?.source === 'curseforge' ? 'curseforge' : 'modrinth';
+  const source: string = String(options?.source || 'modrinth');
   const projectId: string = String(options?.projectId || '').trim();
   const versionId: string = String(options?.versionId || '').trim();
   const gameVersion: string = String(options?.gameVersion || '').trim();

@@ -11,7 +11,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GoodPlanCraftLauncher</title>
-  <link rel="stylesheet" href="app.css?v=h3m9c4x2">
+  <link rel="stylesheet" href="app.css?v=r4k8m2w7">
   <script>
     (function () {
       var q = new URLSearchParams(location.search);
@@ -23,7 +23,7 @@
       if (!known[slug]) slug = 'en-us';
       window.DEMO_SLUG = slug;
       if (slug !== 'en-us') {
-        document.write('<script src="./locales/' + slug + '.js?v=f2k8m4v6"><\/script>');
+        document.write('<script src="./locales/' + slug + '.js?v=c5j7r3x9"><\/script>');
       }
     })();
   </script>
@@ -141,26 +141,6 @@
                 <button class="download-tab" type="button" data-download-tab="resourcepacks" data-i18n="Resource packs">Resource packs</button>
                 <button class="download-tab" type="button" data-download-tab="modpacks" data-i18n="Modpacks">Modpacks</button>
               </div>
-
-              <div id="download-panel" class="download-status-panel hidden">
-                <div class="download-stats">
-                  <div class="chart-container"><canvas id="speedChart" width="640" height="300"></canvas></div>
-                  <div class="progress-section">
-                    <div class="speed-info">
-                      <div class="speed-item"><span class="speed-label" data-i18n="Current">Current</span><span id="current-speed" class="speed-value">0.00 Mbps</span></div>
-                      <div class="speed-item"><span class="speed-label" data-i18n="Peak">Peak</span><span id="peak-speed" class="speed-value">0.00 Mbps</span></div>
-                    </div>
-                    <div class="progress-bar-wrapper">
-                      <div class="progress-bar-bg"><div id="progress-fill" class="progress-bar-fill"></div></div>
-                      <div id="progress-text" class="progress-text">0%</div>
-                    </div>
-                    <div id="download-filename" class="download-filename" data-i18n="File name">File name</div>
-                    <button id="cancel-download-btn" class="cancel-download-btn" type="button" data-i18n="Cancel Download">Cancel Download</button>
-                  </div>
-                </div>
-              </div>
-
-              <div id="download-task-list" class="download-task-list hidden"></div>
 
               <div id="mod-download-section" class="mod-download-section hidden">
                 <div class="mod-search-row">
@@ -850,6 +830,33 @@
         </main>
       </div>
 
+      <div id="download-dock" class="download-dock hidden" aria-live="polite">
+        <div class="download-dock-panel hidden" id="download-dock-panel">
+          <div class="download-dock-panel-head">
+            <span class="download-dock-panel-title" data-i18n="Downloads">Downloads</span>
+            <span id="download-dock-panel-count" class="download-dock-panel-count"></span>
+          </div>
+          <div id="download-task-list" class="download-task-list"></div>
+        </div>
+        <div class="download-dock-track"><div id="download-dock-fill" class="download-dock-fill"></div></div>
+        <button id="download-dock-open" class="download-dock-main" type="button" data-i18n-title="Downloads" title="Downloads">
+          <span class="download-dock-glyph icon icon-download"></span>
+          <span class="download-dock-text">
+            <span id="download-dock-title" class="download-dock-title">-</span>
+            <span id="download-dock-current" class="download-dock-current"></span>
+          </span>
+        </button>
+        <div class="download-dock-meta">
+          <span id="download-dock-count" class="download-dock-count"></span>
+          <span id="download-dock-speed" class="download-dock-speed"></span>
+          <span id="download-dock-percent" class="download-dock-percent">0%</span>
+        </div>
+        <button id="download-dock-toggle" class="download-dock-toggle" type="button" aria-expanded="false">
+          <span id="download-dock-toggle-label" data-i18n="Expand">Expand</span>
+          <span class="download-dock-chevron icon icon-chevron"></span>
+        </button>
+      </div>
+
       <div id="mod-target-overlay" class="dialog-overlay hidden">
         <div class="dialog-box mod-target-dialog">
           <div class="dialog-header">
@@ -933,6 +940,6 @@
   </div>
   <script src="versions.js?v=y7p3q9d5"></script>
   <script src="i18n.js?v=t4r9k3m8"></script>
-  <script src="app.js?v=z6w2n8p4"></script>
+  <script src="app.js?v=q9t3v6n2"></script>
 </body>
 </html>

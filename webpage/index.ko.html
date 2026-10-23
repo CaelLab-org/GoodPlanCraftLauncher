@@ -75,7 +75,7 @@
                     </div>
                 </li>
                 <li class="lang-switch"><select aria-label="언어" onchange="if(this.value)location.href=this.value"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko" selected>한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select></li>
-                <li><a href="#download" class="nav-cta">&#9662; v1.8.0 다운로드</a></li>
+                <li><a href="#download" class="nav-cta">&#9662; v1.9.0 다운로드</a></li>
             </ul>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="메뉴 열기" aria-expanded="false">&#9776;</button>
         </div>
@@ -113,9 +113,9 @@
                 </a>
             </div>
             <div class="hero-meta">
-                <span>버전 <b>v1.8.0</b></span>
+                <span>버전 <b>v1.9.0</b></span>
                 <span class="sep">/</span>
-                <span>업데이트 <b>2026-10-22</b></span>
+                <span>업데이트 <b>2026-10-23</b></span>
                 <span class="sep">/</span>
                 <span>플랫폼 <b>Windows 10 이상</b></span>
             </div>
@@ -264,13 +264,13 @@
                 <span class="dl-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
                 </span>
-                <div class="download-file">GPCL-1.8.0-Setup.exe</div>
-                <a href="https://dl.caellab.com/file/games/gpcl/GPCL-1.8.0-Setup.exe" class="download-btn">
+                <div class="download-file">GPCL-1.9.0-Setup.exe</div>
+                <a href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.0-Setup.exe" class="download-btn">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
                     블록 세계로 출발!
                 </a>
                 <div class="update-info">
-                    <span>업데이트 <b>2026-10-22</b></span>
+                    <span>업데이트 <b>2026-10-23</b></span>
                     <span>플랫폼 <b>Windows 10 64비트</b></span>
                     <span>라이선스 <b>오픈소스, 무료</b></span>
                 </div>
@@ -381,9 +381,27 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                 <div class="timeline-item reveal">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
+                        <span class="version-number">v1.9.0</span>
+                        <span class="version-title">다운로드 화면 개편, 모드팩과 셰이더 지원</span>
+                        <span class="latest-chip">최신</span>
+                        <span class="version-date">2026-10-23</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>다운로드 진행 상황이 창 아래로 이동했습니다. 현재 페이지에 그대로 있으면서 막대에서 파일, 진행률, 속도를 볼 수 있고, 펼치면 전체 다운로드 목록에서 언제든 취소할 수 있습니다</li>
+                        <li>다운로드 화면에 셰이더, 리소스 팩, 모드팩 탭이 추가되었습니다. Modrinth와 CurseForge 모드팩을 한 번에 설치하고 로컬 압축 파일도 가져올 수 있으며 NeoForge도 지원합니다</li>
+                        <li>버전 격리가 명확한 설정이 되었습니다. 기본적으로 각 버전이 자체 모드, 저장, 설정을 가지며 다섯 단계 중에서 고를 수 있고 버전별로 따로 켜고 끌 수 있습니다</li>
+                        <li>다운로드할 때 버전 이름을 지정해 별도 인스턴스를 만들 수 있어, 서로 다른 모드 구성이 충돌하지 않습니다</li>
+                        <li>모드 검색이 훨씬 빨라졌습니다. «모든 소스»가 병렬 및 압축으로 동작하고, 반복 검색은 캐시에서 나오며, 중국어 검색은 먼저 위키에서 영어 이름을 찾습니다</li>
+                        <li>모드 검색은 관련도순으로 정렬되고 소스가 번갈아 표시됩니다. 상세 화면에는 중국어 이름의 출처가 표시되며, 설정에서 사용자 지정 모드 소스와 용어 사전을 추가할 수 있습니다</li>
+                        <li>모드 로더가 상호 배타적으로 바뀌었습니다. Forge를 고르면 나머지는 «호환되지 않음»으로 표시되고, 설치 대상 목록에는 호환되는 버전만 나오며 버튼에 대상이 표시됩니다</li>
+                        <li>잘린 다운로드, 느린 취소, 버전 삭제 후 메인 화면이 갱신되지 않는 문제를 수정했습니다. 첫 설치 시 오프닝 애니메이션도 제거했습니다</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
                         <span class="version-number">v1.8.0</span>
                         <span class="version-title">런처부터 공식 사이트까지, 25개 언어</span>
-                        <span class="latest-chip">최신</span>
                         <span class="version-date">2026-10-22</span>
                     </div>
                     <ul class="changelog">
@@ -507,6 +525,8 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                         <li>시작 애니메이션과 페이지 전환이 부드러워졌습니다</li>
                     </ul>
                 </div>
+                <details class="older-versions">
+                    <summary>이전 버전 13개 보기</summary>
                 <div class="timeline-item reveal">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
@@ -521,8 +541,6 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                         <li>시작 화면이 라이트 테마를 따르지 않던 문제와 여러 버튼 스타일이 적용되지 않던 문제를 수정했습니다</li>
                     </ul>
                 </div>
-                <details class="older-versions">
-                    <summary>이전 버전 12개 보기</summary>
                 <div class="timeline-item reveal">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
@@ -674,7 +692,7 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                 </div>
                 </details>
                 <div class="history-more">
-                    <a href="./history/index.ko">전체 업데이트 내역 보기(모든 20개 버전과 설치 파일) →</a>
+                    <a href="./history/index.ko">전체 업데이트 내역 보기(모든 21개 버전과 설치 파일) →</a>
                 </div>
             </div>
         </div>

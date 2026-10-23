@@ -289,4 +289,7 @@ window.DEMO_DICTIONARY = {
   "months": "месяцы",
   "years": "годы",
   "{n} downloads": "{n} загрузок"
+,
+  "Expand": "Развернуть",
+  "Collapse": "Свернуть"
 };

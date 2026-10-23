@@ -1,8 +1,30 @@
 {
   "schema": 1,
-  "latest": "1.8.0",
-  "updated": "2026-10-22",
+  "latest": "1.9.0",
+  "updated": "2026-10-23",
   "versions": [
+    {
+      "version": "1.9.0",
+      "anchor": "v1-9-0",
+      "date": "2026-10-23",
+      "title": "A rebuilt download page, with modpacks and shaders",
+      "log": [
+        "Download progress now lives at the bottom of the window: stay on whatever page you are on, the bar shows the current file, progress and speed, and it opens into the full download queue where you can cancel at any time",
+        "The download page now has Shaders, Resource packs and Modpacks tabs: Modrinth and CurseForge modpacks install in one click, local archives can be imported, and NeoForge is supported",
+        "Version isolation is now an explicit setting: each version gets its own mods, saves and settings by default, with five levels to choose from and a per-version switch",
+        "You can name a version while downloading it, creating a separate instance so different mod setups do not interfere with each other",
+        "Mod search is much faster: All sources now runs in parallel with compression, repeated searches hit the cache, and Chinese searches look up the English name in a wiki first",
+        "Mod search sorts by relevance with sources interleaved; the detail page shows where the Chinese name came from, and you can add custom mod sources and name dictionaries in Settings",
+        "Mod loaders are now mutually exclusive: picking Forge marks the others as incompatible, and the install target list only shows compatible versions with the destination written on the button",
+        "Fixed truncated downloads, slow cancellation and the main window not updating after deleting a version; first-time installs no longer play the intro animation"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.0-Setup.exe",
+        "file": "GPCL-1.9.0-Setup.exe",
+        "size": "94 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.8.0",
       "anchor": "v1-8-0",

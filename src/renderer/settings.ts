@@ -9,7 +9,7 @@
 
 // __IMPORTS_BEGIN__
 import { t } from '../i18n';
-import { enableMoreEl, icon, initCustomSelect, memoryOptimizeBtn, setCustomSelectValue, settingsNumInput, showToast } from './dom';
+import { enableMoreEl, getCustomSelectValue, icon, initCustomSelect, memoryOptimizeBtn, setCustomSelectValue, settingsNumInput, showToast } from './dom';
 import { allNewerVersions, updateAvailable } from './update';
 // __IMPORTS_END__
 
@@ -203,13 +203,13 @@ export async function loadSettings(): Promise<any> {
         windowHeight: 480,
         optimizeBeforeLaunch: false,
         autoLanguage: true,
-        language: 'zh_cn'
+        language: 'zh_cn',
+        versionIsolation: 'all'
       },
       appearance: {
         theme: 'light',
         style: 'advanced',
         scale: '100',
-        playStartupAnimation: true,
         skipSplash: false,
         tipFrequency: 'rare',
         enableMore: false
@@ -466,6 +466,10 @@ export async function initLaunchSettings(): Promise<void> {
     await saveGameSetting({ gcPreset: value });
   });
 
+  initCustomSelect('settings-version-isolation', async (value: string): Promise<void> => {
+    await saveGameSetting({ versionIsolation: value });
+  });
+
   const settings = await loadSettings();
   const windowSize: string = settings.game?.windowSize || 'default';
   setCustomSelectValue('settings-window-size', windowSize);
@@ -474,6 +478,7 @@ export async function initLaunchSettings(): Promise<void> {
   if (heightInput) heightInput.value = String(settings.game?.windowHeight || 480);
   setCustomSelectValue('settings-process-priority', settings.game?.processPriority || 'normal');
   setCustomSelectValue('settings-gc-preset', settings.game?.gcPreset || 'default');
+  setCustomSelectValue('settings-version-isolation', settings.game?.versionIsolation || 'all');
   setCustomSelectValue('settings-game-language', settings.game?.language || 'zh_cn');
   if (jvmArgs) jvmArgs.value = settings.game?.jvmArgs || '';
   if (keepTitle) keepTitle.checked = settings.game?.keepWindowTitle === true;
@@ -535,6 +540,16 @@ export async function initDownloadSettings(): Promise<void> {
   const speedLabel: HTMLElement | null = document.getElementById('settings-speed-limit-value');
   const mirrorInput: HTMLInputElement | null = document.getElementById('settings-custom-file-mirror') as HTMLInputElement | null;
   const curseForgeKey: HTMLInputElement | null = document.getElementById('settings-curseforge-key') as HTMLInputElement | null;
+  const nameMappingToggle: HTMLInputElement | null = document.getElementById('settings-mod-name-mapping') as HTMLInputElement | null;
+  const mapMcmod: HTMLInputElement | null = document.getElementById('settings-map-mcmod') as HTMLInputElement | null;
+  const map130wiki: HTMLInputElement | null = document.getElementById('settings-map-130wiki') as HTMLInputElement | null;
+  const dictInput: HTMLInputElement | null = document.getElementById('settings-map-dict-input') as HTMLInputElement | null;
+  const dictAdd: HTMLElement | null = document.getElementById('settings-map-dict-add');
+  const dictList: HTMLElement | null = document.getElementById('settings-map-dict-list');
+  const modSourceName: HTMLInputElement | null = document.getElementById('settings-mod-source-name') as HTMLInputElement | null;
+  const modSourceUrl: HTMLInputElement | null = document.getElementById('settings-mod-source-url') as HTMLInputElement | null;
+  const modSourceAdd: HTMLElement | null = document.getElementById('settings-mod-source-add');
+  const modSourceList: HTMLElement | null = document.getElementById('settings-mod-source-list');
   const installDirLabel: HTMLElement | null = document.getElementById('settings-install-dir-label');
   const installDirChange: HTMLElement | null = document.getElementById('settings-install-dir-change');
   const installDirReset: HTMLElement | null = document.getElementById('settings-install-dir-reset');
@@ -574,6 +589,140 @@ export async function initDownloadSettings(): Promise<void> {
   const settings = await loadSettings();
   setCustomSelectValue('settings-file-source', settings.download?.fileSource || 'auto');
   setCustomSelectValue('settings-version-source', settings.download?.versionSource || 'auto');
+
+  const parseJsonArray = (raw: any): any[] => {
+    try {
+      const value = JSON.parse(String(raw || '[]'));
+      return Array.isArray(value) ? value : [];
+    } catch {
+      return [];
+    }
+  };
+
+  const renderSettingsTags = (container: HTMLElement | null, entries: string[], onRemove: (entry: string) => void): void => {
+    if (!container) return;
+    container.innerHTML = '';
+    for (const entry of entries) {
+      const row: HTMLDivElement = document.createElement('div');
+      row.className = 'settings-tag';
+      const text: HTMLSpanElement = document.createElement('span');
+      text.textContent = entry;
+      text.title = entry;
+      const remove: HTMLButtonElement = document.createElement('button');
+      remove.type = 'button';
+      remove.className = 'settings-tag-remove';
+      remove.textContent = '×';
+      remove.title = t('ui.remove');
+      remove.addEventListener('click', () => onRemove(entry));
+      row.appendChild(text);
+      row.appendChild(remove);
+      container.appendChild(row);
+    }
+  };
+
+  if (nameMappingToggle) {
+    nameMappingToggle.checked = settings.download?.modNameMapping !== false;
+    nameMappingToggle.addEventListener('change', async (): Promise<void> => {
+      await saveDownloadField({ modNameMapping: nameMappingToggle.checked });
+    });
+  }
+
+  const currentProviders: string[] = String(settings.download?.modNameProviders || 'mcmod,130wiki')
+    .split(',').map((item: string) => item.trim()).filter(Boolean);
+
+  const saveProviders = async (): Promise<void> => {
+    const providers: string[] = [];
+    if (mapMcmod?.checked) providers.push('mcmod');
+    if (map130wiki?.checked) providers.push('130wiki');
+    await saveDownloadField({ modNameProviders: providers.join(',') });
+  };
+
+  if (mapMcmod) {
+    mapMcmod.checked = currentProviders.includes('mcmod');
+    mapMcmod.addEventListener('change', () => void saveProviders());
+  }
+  if (map130wiki) {
+    map130wiki.checked = currentProviders.includes('130wiki');
+    map130wiki.addEventListener('change', () => void saveProviders());
+  }
+
+  let dictionaries: string[] = parseJsonArray(settings.download?.modNameDictionaries)
+    .map((item: any) => String(item).trim()).filter(Boolean);
+
+  const saveDictionaries = async (): Promise<void> => {
+    await saveDownloadField({ modNameDictionaries: JSON.stringify(dictionaries) });
+  };
+
+  const renderDictionaries = (): void => {
+    renderSettingsTags(dictList, dictionaries, (entry: string) => {
+      dictionaries = dictionaries.filter((item: string) => item !== entry);
+      void saveDictionaries().then(renderDictionaries);
+    });
+  };
+  renderDictionaries();
+
+  if (dictAdd && dictInput) {
+    dictAdd.addEventListener('click', (): void => {
+      const value: string = dictInput.value.trim();
+      if (!value || dictionaries.includes(value)) return;
+      dictionaries.push(value);
+      dictInput.value = '';
+      void saveDictionaries().then(renderDictionaries);
+    });
+  }
+
+  initCustomSelect('settings-mod-source-kind');
+
+  let customSources: any[] = parseJsonArray(settings.download?.modSources)
+    .filter((entry: any) => entry && entry.id && entry.baseUrl);
+
+  const saveCustomSources = async (): Promise<void> => {
+    await saveDownloadField({ modSources: JSON.stringify(customSources) });
+    window.dispatchEvent(new CustomEvent('gpcl-mod-sources-changed'));
+  };
+
+  const renderCustomSources = (): void => {
+    if (!modSourceList) return;
+    modSourceList.innerHTML = '';
+    for (const source of customSources) {
+      const row: HTMLDivElement = document.createElement('div');
+      row.className = 'settings-tag';
+      const text: HTMLSpanElement = document.createElement('span');
+      const kindLabel: string = source.kind === 'curseforge' ? t('ui.curseforge_compatible') : t('ui.modrinth_compatible');
+      text.textContent = `${source.name} · ${kindLabel} · ${source.baseUrl}`;
+      text.title = text.textContent;
+      const remove: HTMLButtonElement = document.createElement('button');
+      remove.type = 'button';
+      remove.className = 'settings-tag-remove';
+      remove.textContent = '×';
+      remove.title = t('ui.remove');
+      remove.addEventListener('click', () => {
+        customSources = customSources.filter((item: any) => item.id !== source.id);
+        void saveCustomSources().then(renderCustomSources);
+      });
+      row.appendChild(text);
+      row.appendChild(remove);
+      modSourceList.appendChild(row);
+    }
+  };
+  renderCustomSources();
+
+  if (modSourceAdd) {
+    modSourceAdd.addEventListener('click', (): void => {
+      const name: string = modSourceName?.value.trim() || '';
+      const baseUrl: string = (modSourceUrl?.value.trim() || '').replace(/\/+$/, '');
+      const kind: string = getCustomSelectValue('settings-mod-source-kind') === 'curseforge' ? 'curseforge' : 'modrinth';
+      if (!name || !/^https?:\/\//i.test(baseUrl)) {
+        showToast(t('ui.invalid_source_url'), t('ui.invalid_source_url'), 'error', 'mod-source-invalid');
+        return;
+      }
+      const id: string = `custom-${Date.now().toString(36)}`;
+      customSources.push({ id, name, kind, baseUrl });
+      if (modSourceName) modSourceName.value = '';
+      if (modSourceUrl) modSourceUrl.value = '';
+      void saveCustomSources().then(renderCustomSources);
+    });
+  }
 
   if (mirrorInput) {
     mirrorInput.value = settings.download?.customFileMirror || '';

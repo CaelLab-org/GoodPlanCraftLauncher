@@ -68,6 +68,18 @@ export function createWindow(): void {
 
   mainWindow.loadFile(path.join(__dirname, 'renderer', 'index.html'));
 
+  const sendWindowState = (): void => {
+    if (!mainWindow) return;
+    mainWindow.webContents.send('window-state', {
+      maximized: mainWindow.isMaximized(),
+      fullScreen: mainWindow.isFullScreen()
+    });
+  };
+  mainWindow.on('maximize', sendWindowState);
+  mainWindow.on('unmaximize', sendWindowState);
+  mainWindow.on('enter-full-screen', sendWindowState);
+  mainWindow.on('leave-full-screen', sendWindowState);
+
   mainWindow.on('close', (event: any) => {
     if (isDownloading || isJavaDownloading) {
       event.preventDefault();
@@ -112,6 +124,12 @@ export function createGPCLShortcut(): void {
     writeLog(`[快捷方式] 创建 GPCL 快捷方式失败: ${e.message}`);
   }
 }
+
+
+ipcMain.handle('get-window-state', () => ({
+  maximized: mainWindow ? mainWindow.isMaximized() : false,
+  fullScreen: mainWindow ? mainWindow.isFullScreen() : false
+}));
 
 
 ipcMain.handle('show-message-dialog', async (_: any, options: any) => {

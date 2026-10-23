@@ -9,8 +9,8 @@
 
 // __IMPORTS_BEGIN__
 import { getLocale, t } from '../i18n';
-import { escapeHtml, setStatus, showToast } from './dom';
-import { startModpackInstall } from './launch';
+import { escapeHtml, getCustomSelectValue, initCustomSelect, setCustomSelectOptions, setStatus, showToast } from './dom';
+import { startModInstall, startModpackInstall } from './launch';
 import { allVersions, loadVersions, renderVersionSelectList, selectedVersionId } from './versions';
 // __IMPORTS_END__
 
@@ -25,9 +25,9 @@ const versionDetail: HTMLElement | null = document.getElementById('version-detai
 const javaSection: HTMLElement | null = document.getElementById('java-download-section');
 const searchInput: HTMLInputElement | null = document.getElementById('mod-search-input') as HTMLInputElement | null;
 const searchBtn: HTMLElement | null = document.getElementById('mod-search-btn');
-const gameVersionSelect: HTMLSelectElement | null = document.getElementById('mod-game-version') as HTMLSelectElement | null;
-const loaderSelect: HTMLSelectElement | null = document.getElementById('mod-loader') as HTMLSelectElement | null;
-const sourceSelect: HTMLSelectElement | null = document.getElementById('mod-source') as HTMLSelectElement | null;
+const gameVersionFilter: HTMLElement | null = document.querySelector('.custom-select[data-select-id="mod-game-version"]');
+const loaderFilter: HTMLElement | null = document.querySelector('.custom-select[data-select-id="mod-loader"]');
+const sourceFilter: HTMLElement | null = document.querySelector('.custom-select[data-select-id="mod-source"]');
 const modStatus: HTMLElement | null = document.getElementById('mod-status');
 const resultsEl: HTMLElement | null = document.getElementById('mod-results');
 const detailEl: HTMLElement | null = document.getElementById('mod-detail');
@@ -89,6 +89,11 @@ const RESOURCE_TYPES: Record<ResourceProjectType, ResourceTypeConfig> = {
 
 let currentProjectType: ResourceProjectType = 'mod';
 
+function resetDownloadScroll(): void {
+  const page: HTMLElement | null = document.getElementById('download-page');
+  if (page) page.scrollTop = 0;
+}
+
 let currentProject: any = null;
 let installedVersions: any[] = [];
 let targetChoice: TargetChoice | null = null;
@@ -130,32 +135,41 @@ async function loadInstalledVersions(): Promise<void> {
 }
 
 function populateGameVersions(): void {
-  if (!gameVersionSelect) return;
-  const current: string = gameVersionSelect.value;
-  gameVersionSelect.innerHTML = '';
-
-  const all: HTMLOptionElement = document.createElement('option');
-  all.value = '';
-  all.textContent = t('ui.all_versions');
-  gameVersionSelect.appendChild(all);
-
+  if (!gameVersionFilter) return;
+  const current: string = getCustomSelectValue('mod-game-version') || '';
   const releases: string[] = (allVersions || [])
     .filter((v: any) => v.type === 'release')
     .map((v: any) => v.id);
 
-  for (const id of releases) {
-    const opt: HTMLOptionElement = document.createElement('option');
-    opt.value = id;
-    opt.textContent = `Minecraft ${id}`;
-    gameVersionSelect.appendChild(opt);
+  const options: Array<{ value: string; label: string }> = [
+    { value: '', label: t('ui.all_versions') },
+    ...releases.map((id: string) => ({ value: id, label: `Minecraft ${id}` }))
+  ];
+  setCustomSelectOptions('mod-game-version', options, current && releases.includes(current) ? current : '');
+}
+
+
+async function refreshModSources(): Promise<void> {
+  let sources: any[] = [];
+  try {
+    const result: any = await window.gpcl.getModSources();
+    sources = result?.success ? (result.sources || []) : [];
+  } catch {
+    sources = [];
   }
 
-  gameVersionSelect.value = current && releases.includes(current) ? current : '';
+  const current: string = getCustomSelectValue('mod-source') || 'both';
+  const options: Array<{ value: string; label: string }> = [
+    { value: 'both', label: t('ui.all_sources') },
+    ...sources.map((source: any) => ({ value: String(source.id), label: String(source.label) }))
+  ];
+  setCustomSelectOptions('mod-source', options, options.some((opt) => opt.value === current) ? current : 'both');
 }
 
 function showResourceTab(projectType: ResourceProjectType): void {
   currentProjectType = projectType;
   const config: ResourceTypeConfig = RESOURCE_TYPES[projectType];
+  resetDownloadScroll();
 
   tabVersions?.classList.remove('active');
   tabMods?.classList.toggle('active', projectType === 'mod');
@@ -168,14 +182,18 @@ function showResourceTab(projectType: ResourceProjectType): void {
   javaSection?.classList.add('hidden');
 
   if (searchInput) searchInput.placeholder = t(config.placeholder);
-  loaderSelect?.classList.toggle('hidden', projectType !== 'mod');
+  loaderFilter?.classList.toggle('hidden', projectType !== 'mod');
 
   projectStack = [];
   currentDetail = null;
   detailEl?.classList.add('hidden');
   resultsEl?.classList.remove('hidden');
   populateGameVersions();
-  void loadInstalledVersions().then(() => void searchMods());
+  void (async (): Promise<void> => {
+    await loadInstalledVersions();
+    await refreshModSources();
+    await searchMods();
+  })();
 }
 
 
@@ -185,6 +203,7 @@ function showModTab(): void {
 
 
 function showVersionTab(): void {
+  resetDownloadScroll();
   tabMods?.classList.remove('active');
   tabShaders?.classList.remove('active');
   tabResourcepacks?.classList.remove('active');
@@ -212,8 +231,8 @@ function parseCurseForgeSlug(input: string): string | null {
 
 function currentFilters(): { gameVersion: string; loader: string } {
   return {
-    gameVersion: gameVersionSelect?.value || '',
-    loader: currentProjectType === 'mod' ? (loaderSelect?.value || '') : ''
+    gameVersion: getCustomSelectValue('mod-game-version') || '',
+    loader: currentProjectType === 'mod' ? (getCustomSelectValue('mod-loader') || '') : ''
   };
 }
 
@@ -263,7 +282,7 @@ async function searchMods(): Promise<void> {
   if (!resultsEl) return;
   const query: string = (searchInput?.value || '').trim();
   const filters = currentFilters();
-  const source: 'modrinth' | 'curseforge' | 'both' = ((sourceSelect?.value as any) || 'both') as 'modrinth' | 'curseforge' | 'both';
+  const source: string = getCustomSelectValue('mod-source') || 'both';
 
   const curseForgeSlug: string | null = currentProjectType === 'mod' ? parseCurseForgeSlug(query) : null;
   if (curseForgeSlug) {
@@ -279,8 +298,8 @@ async function searchMods(): Promise<void> {
   projectStack = [];
   detailEl?.classList.add('hidden');
   resultsEl.classList.remove('hidden');
-  resultsEl.innerHTML = `<div class="mod-empty">${t('ui.searching')}</div>`;
-  setModStatus(t('ui.searching'));
+  resultsEl.innerHTML = `<div class="mod-empty mod-empty-loading">${t('ui.searching')}</div>`;
+  setModStatus('');
   if (searchBtn) (searchBtn as HTMLButtonElement).disabled = true;
 
   try {
@@ -295,17 +314,14 @@ async function searchMods(): Promise<void> {
     if (!result.items || result.items.length === 0) {
       resultsEl.innerHTML = `<div class="mod-empty">${escapeHtml(t(RESOURCE_TYPES[currentProjectType].empty))}</div>`;
     } else {
-      if (result.translatedTo && result.translatedFrom) {
-        const english: string = String(result.translatedTo).toLowerCase();
-        for (const item of result.items) {
-          const title: string = String(item.title || '').toLowerCase();
-          if (title.includes(english) || english.includes(title)) item.chineseName = result.translatedFrom;
-        }
-      }
+      const nameProviders: any[] = Array.isArray(result.nameProviders) ? result.nameProviders : [];
+      for (const item of result.items) item.nameProviders = nameProviders;
       renderResults(result.items);
     }
 
     const notes: string[] = [];
+    const sourcesInResults: Set<string> = new Set((result.items || []).map((item: any) => String(item.source)));
+    if (sourcesInResults.size > 1) notes.push(t('ui.combined_ranking'));
     if (result.translatedTo) notes.push(t('ui.searched_for_query', { query: result.translatedTo }));
     const errors: string[] = Array.isArray(result.errors) ? result.errors : [];
     if (errors.length > 0) notes.push(t('ui.curseforge_is_unavailable_right_now'));
@@ -335,7 +351,7 @@ function renderResults(items: any[]): void {
         <div class="mod-card-title">
           <span>${escapeHtml(item.chineseName || item.title)}</span>
           ${item.chineseName ? `<span class="mod-card-en">${escapeHtml(item.title)}</span>` : ''}
-          <span class="mod-source-tag">${item.source === 'curseforge' ? 'CurseForge' : 'Modrinth'}</span>
+          <span class="mod-source-tag">${escapeHtml(item.sourceLabel || (item.sourceKind === 'curseforge' ? 'CurseForge' : 'Modrinth'))}</span>
         </div>
         <div class="mod-card-desc">${escapeHtml(item.description || '')}</div>
         <div class="mod-card-meta">${escapeHtml(item.author || '')} · ${t('ui.count_downloads', { count: formatCount(item.downloads) })}${item.categories?.length ? ` · ${escapeHtml(item.categories.slice(0, 3).map((c: string) => t(CATEGORY_NAMES[String(c).toLowerCase()] || c)).join(' / '))}` : ''}</div>
@@ -411,7 +427,10 @@ function projectWebUrl(item: any): string {
       : 'mc-mods';
     return item.slug ? `https://www.curseforge.com/minecraft/${section}/${item.slug}` : '';
   }
-  return `https://modrinth.com/${projectType}/${item.slug || item.id}`;
+  if (item.source === 'modrinth') {
+    return `https://modrinth.com/${projectType}/${item.slug || item.id}`;
+  }
+  return '';
 }
 
 function renderProjectHeader(item: any, versions: any[]): void {
@@ -429,7 +448,12 @@ function renderProjectHeader(item: any, versions: any[]): void {
   )).filter(Boolean);
   const loaderSummary: string = loadersList.map((l: string) => l.charAt(0).toUpperCase() + l.slice(1)).join(' / ');
   const webUrl: string = projectWebUrl(item);
-  const mcmodUrl: string = `https://www.mcmod.cn/s?key=${encodeURIComponent(display)}`;
+  const sourceLabel: string = String(item.sourceLabel || (item.sourceKind === 'curseforge' ? 'CurseForge' : 'Modrinth'));
+  const nameProviders: any[] = Array.isArray(item.nameProviders) ? item.nameProviders : [];
+  const providerButtons: string = nameProviders.map((provider: any) => {
+    const label: string = provider.id === 'mcmod' ? t('ui.open_on_mcmod') : t('ui.open_on_130wiki');
+    return `<button class="mod-detail-action" data-act="name-provider" data-url="${escapeHtml(String(provider.url || ''))}" type="button">${escapeHtml(label)}</button>`;
+  }).join('');
 
   detailHead.innerHTML = `
     <img src="${escapeHtml(item.iconUrl || '')}" alt="" onerror="this.style.visibility='hidden'">
@@ -442,12 +466,12 @@ function renderProjectHeader(item: any, versions: any[]): void {
         ${categoryLabel(item.categories || []) ? `${escapeHtml(categoryLabel(item.categories || []))} · ` : ''}
         ${loaderSummary ? `${escapeHtml(loaderSummary)} ` : ''}${versionSummary ? `${escapeHtml(versionSummary)} · ` : ''}
         ${t('ui.count_downloads', { count: formatCount(item.downloads || 0) })}
-        <span class="mod-source-tag">${item.source === 'curseforge' ? 'CurseForge' : 'Modrinth'}</span>
+        <span class="mod-source-tag">${escapeHtml(sourceLabel)}</span>
       </div>
       <div class="mod-detail-desc">${escapeHtml(item.description || '')}</div>
       <div class="mod-detail-actions">
-        ${webUrl ? `<button class="mod-detail-action" data-act="web" type="button">${t('ui.open_on_source', { source: item.source === 'curseforge' ? 'CurseForge' : 'Modrinth' })}</button>` : ''}
-        ${(item.projectType || currentProjectType) === 'mod' ? `<button class="mod-detail-action" data-act="mcmod" type="button">${t('ui.open_on_mcmod')}</button>` : ''}
+        ${webUrl ? `<button class="mod-detail-action" data-act="web" type="button">${t('ui.open_on_source', { source: sourceLabel })}</button>` : ''}
+        ${providerButtons}
         <button class="mod-detail-action" data-act="copy" type="button">${t('ui.copy_name')}</button>
       </div>
     </div>
@@ -455,8 +479,12 @@ function renderProjectHeader(item: any, versions: any[]): void {
 
   const webBtn: HTMLButtonElement | null = detailHead.querySelector('[data-act="web"]') as HTMLButtonElement | null;
   if (webBtn && webUrl) webBtn.addEventListener('click', () => void window.gpcl.openExternal(webUrl));
-  const mcmodBtn: HTMLButtonElement | null = detailHead.querySelector('[data-act="mcmod"]') as HTMLButtonElement | null;
-  if (mcmodBtn) mcmodBtn.addEventListener('click', () => void window.gpcl.openExternal(mcmodUrl));
+  detailHead.querySelectorAll('[data-act="name-provider"]').forEach((btn: Element) => {
+    btn.addEventListener('click', () => {
+      const url: string = (btn as HTMLElement).dataset.url || '';
+      if (url) void window.gpcl.openExternal(url);
+    });
+  });
   const copyBtn: HTMLButtonElement | null = detailHead.querySelector('[data-act="copy"]') as HTMLButtonElement | null;
   if (copyBtn) copyBtn.addEventListener('click', () => copyToClipboard(display));
 }
@@ -542,11 +570,13 @@ async function loadDependencies(section: HTMLElement, mcVersion: string, files: 
         <div class="mod-dep-info">
           <div class="mod-dep-name">${escapeHtml(dep.title)}${(dep.categories || []).some((c: string) => String(c).toLowerCase() === 'library') ? ` <span class="mod-dep-tag">${t('ui.library')}</span>` : ''}</div>
           <div class="mod-dep-desc">${escapeHtml(dep.description || '')}</div>
-          <div class="mod-dep-meta">${t('ui.count_downloads', { count: formatCount(dep.downloads || 0) })}${dep.updatedAt ? ` · ${t('ui.updated_time', { time: relativeTime(dep.updatedAt) })}` : ''} · ${dep.source === 'curseforge' ? 'CurseForge' : 'Modrinth'}</div>
+          <div class="mod-dep-meta">${t('ui.count_downloads', { count: formatCount(dep.downloads || 0) })}${dep.updatedAt ? ` · ${t('ui.updated_time', { time: relativeTime(dep.updatedAt) })}` : ''} · ${escapeHtml(dep.sourceLabel || (dep.sourceKind === 'curseforge' ? 'CurseForge' : 'Modrinth'))}</div>
         </div>
       `;
       card.addEventListener('click', () => void openProject({
         source: dep.source,
+        sourceLabel: dep.sourceLabel,
+        sourceKind: dep.sourceKind,
         id: dep.id,
         slug: dep.slug,
         title: dep.title,
@@ -650,14 +680,15 @@ async function openProject(item: any, keepStack: boolean = false): Promise<void>
   currentProject = item;
   if (!item.projectType) item.projectType = currentProjectType;
   if (!resultsEl || !detailEl || !detailHead || !detailVersions) return;
+  resetDownloadScroll();
   if (!keepStack) projectStack.push(item);
   await loadInstalledVersions();
 
   resultsEl.classList.add('hidden');
   detailEl.classList.remove('hidden');
   renderProjectHeader(item, []);
-  detailVersions.innerHTML = `<div class="mod-empty">${t('ui.loading_available_files')}</div>`;
-  setModStatus(t('ui.loading_available_files'));
+  detailVersions.innerHTML = `<div class="mod-empty mod-empty-loading">${t('ui.loading_available_files')}</div>`;
+  setModStatus('');
 
   try {
     const result: any = await window.gpcl.modsVersions({
@@ -703,7 +734,11 @@ function selectTarget(choice: TargetChoice): void {
   targetList?.querySelectorAll('.mod-target-item').forEach((el: Element) => {
     el.classList.toggle('selected', (el as HTMLElement).dataset.key === `${choice.kind}:${choice.kind === 'version' ? choice.id : choice.dir}`);
   });
-  if (targetConfirm) targetConfirm.disabled = false;
+  if (targetConfirm) {
+    targetConfirm.disabled = false;
+    const name: string = choice.kind === 'dir' ? t('ui.custom_folder') : choice.label;
+    targetConfirm.textContent = t('ui.install_to_name', { name });
+  }
 }
 
 function renderCustomDir(dir: string): void {
@@ -730,16 +765,24 @@ async function openTargetPicker(fileLabel: string, version: any, projectType: Re
   targetFile.textContent = fileLabel;
   targetList.innerHTML = '';
   targetChoice = null;
-  if (targetConfirm) targetConfirm.disabled = true;
+  if (targetConfirm) {
+    targetConfirm.disabled = true;
+    targetConfirm.textContent = t('ui.install');
+  }
 
   const candidates: any[] = projectType === 'mod'
     ? installedVersions.filter((v: any) => v.hasModLoader || v.hasOptiFine)
     : installedVersions;
+  const isBlocked = (target: any): boolean => {
+    if (projectType !== 'mod') return false;
+    const compat = versionMatches(version, target, projectType);
+    return !compat.game || !compat.loader;
+  };
   candidates.sort((a: any, b: any) => {
     const ca = versionMatches(version, a, projectType);
     const cb = versionMatches(version, b, projectType);
     const score = (v: any, c: any): number =>
-      (v.id === selectedVersionId ? 8 : 0) + (c.game ? 4 : 0) + (c.loader ? 2 : 0);
+      (isBlocked(v) ? 0 : 8) + (v.id === selectedVersionId ? 8 : 0) + (c.game ? 4 : 0) + (c.loader ? 2 : 0);
     return score(b, cb) - score(a, ca) || b.id.localeCompare(a.id, undefined, { numeric: true });
   });
 
@@ -755,32 +798,42 @@ async function openTargetPicker(fileLabel: string, version: any, projectType: Re
 
   for (const target of candidates) {
     const compat = versionMatches(version, target, projectType);
+    const blocked: boolean = isBlocked(target);
     const loaderLabel: string = (target.loaders || []).length ? target.loaders.join(' / ') : (target.hasOptiFine ? 'OptiFine' : t('ui.vanilla'));
     const notes: string[] = [];
     if (target.id === selectedVersionId) notes.push(t('ui.currently_launching'));
-    if (!compat.game) notes.push(t('ui.game_version_mismatch'));
-    if (!compat.loader) notes.push(t('ui.loader_mismatch'));
-    if (projectType === 'mod' && !target.isolated) notes.push(t('ui.first_install_will_enable_version_isolation'));
+    if (!blocked && !compat.game) notes.push(t('ui.game_version_mismatch'));
+    if (!blocked && !compat.loader) notes.push(t('ui.loader_mismatch'));
+    if (projectType === 'mod' && !blocked && !target.isolated) notes.push(t('ui.first_install_will_enable_version_isolation'));
+
+    const reasons: string[] = [];
+    if (blocked && !compat.game) reasons.push(t('ui.game_version_mismatch'));
+    if (blocked && !compat.loader) reasons.push(t('ui.loader_mismatch'));
 
     const row: HTMLDivElement = document.createElement('div');
-    row.className = 'mod-target-item';
+    row.className = blocked ? 'mod-target-item incompatible' : 'mod-target-item';
     row.dataset.key = `version:${target.id}`;
     row.innerHTML = `
-      <div class="mod-target-name">${escapeHtml(target.id)}</div>
+      <div class="mod-target-name">
+        <span>${escapeHtml(target.id)}</span>
+        ${reasons.length ? `<span class="mod-target-badge">${escapeHtml(reasons.join(' · '))}</span>` : ''}
+      </div>
       <div class="mod-target-meta">Minecraft ${escapeHtml(target.mcVersion)} · ${escapeHtml(loaderLabel)}</div>
       ${notes.length ? `<div class="mod-target-notes">${notes.map((n: string) => `<span>${escapeHtml(n)}</span>`).join('')}</div>` : ''}
     `;
-    row.addEventListener('click', () => selectTarget({ kind: 'version', id: target.id, label: target.id }));
-    row.addEventListener('dblclick', () => {
-      selectTarget({ kind: 'version', id: target.id, label: target.id });
-      void confirmTarget();
-    });
+    if (!blocked) {
+      row.addEventListener('click', () => selectTarget({ kind: 'version', id: target.id, label: target.id }));
+      row.addEventListener('dblclick', () => {
+        selectTarget({ kind: 'version', id: target.id, label: target.id });
+        void confirmTarget();
+      });
+    }
     targetList.appendChild(row);
   }
 
-  const preferred: any = candidates.find((v: any) => v.id === selectedVersionId)
+  const preferred: any = candidates.find((v: any) => v.id === selectedVersionId && !isBlocked(v))
     || candidates.find((v: any) => { const c = versionMatches(version, v, projectType); return c.game && c.loader; })
-    || candidates[0];
+    || candidates.find((v: any) => !isBlocked(v));
   if (preferred) selectTarget({ kind: 'version', id: preferred.id, label: preferred.id });
 
   targetOverlay.classList.remove('hidden');
@@ -862,17 +915,27 @@ async function installMod(item: any, version: any, btn: HTMLButtonElement): Prom
 
     const depGameVersion: string = (version.gameVersions || [])[0] || currentFilters().gameVersion;
     const depLoader: string = (version.loaders || [])[0] || currentFilters().loader;
+    const targetLabel: string = choice.kind === 'dir' ? t('ui.custom_folder') : choice.label;
+    const displayName: string = `${item.title || fileLabel} → ${targetLabel}`;
     const result: any = item.direct
-      ? await window.gpcl.modsInstallDirect({ url: version.downloadUrl, fileName: version.fileName, targetVersionId, targetDir, projectType })
-      : await window.gpcl.modsInstall({
-          source: item.source,
-          projectId: item.id,
-          versionId: version.id,
-          targetVersionId,
-          targetDir,
-          gameVersion: depGameVersion,
-          loader: depLoader,
-          projectType
+      ? await startModInstall({
+          direct: true,
+          displayName,
+          payload: { url: version.downloadUrl, fileName: version.fileName, targetVersionId, targetDir, projectType }
+        })
+      : await startModInstall({
+          direct: false,
+          displayName,
+          payload: {
+            source: item.source,
+            projectId: item.id,
+            versionId: version.id,
+            targetVersionId,
+            targetDir,
+            gameVersion: depGameVersion,
+            loader: depLoader,
+            projectType
+          }
         });
 
     if (result && result.success) {
@@ -910,9 +973,10 @@ if (searchInput) {
     if (e.key === 'Enter') void searchMods();
   });
 }
-if (gameVersionSelect) gameVersionSelect.addEventListener('change', () => void searchMods());
-if (loaderSelect) loaderSelect.addEventListener('change', () => void searchMods());
-if (sourceSelect) sourceSelect.addEventListener('change', () => void searchMods());
+initCustomSelect('mod-game-version', () => void searchMods());
+initCustomSelect('mod-loader', () => void searchMods());
+initCustomSelect('mod-source', () => void searchMods());
+window.addEventListener('gpcl-mod-sources-changed', () => void refreshModSources());
 
 if (detailBack) {
   detailBack.addEventListener('click', () => {
@@ -925,6 +989,7 @@ if (detailBack) {
     detailEl?.classList.add('hidden');
     resultsEl?.classList.remove('hidden');
     setModStatus('');
+    resetDownloadScroll();
   });
 }
 

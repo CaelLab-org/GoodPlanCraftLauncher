@@ -74,7 +74,7 @@
                     </div>
                 </li>
                 <li class="lang-switch"><select aria-label="Langue" onchange="if(this.value)location.href=this.value"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr" selected>Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select></li>
-                <li><a href="../index.fr#download" class="nav-cta">&#9662; Télécharger v1.8.0</a></li>
+                <li><a href="../index.fr#download" class="nav-cta">&#9662; Télécharger v1.9.0</a></li>
             </ul>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Ouvrir le menu" aria-expanded="false">&#9776;</button>
         </div>
@@ -92,6 +92,7 @@
             <p class="cl-intro">De la 1.0.0 à la dernière version, chaque version — ce qui a changé et si elle peut être téléchargée — figure sur cette page.</p>
             <p class="cl-note">Les installeurs n'ont pas été conservés pour la 1.3.2 et les versions antérieures ; le programme de mise à jour intégré des anciennes versions peut ne plus fonctionner, il est donc recommandé d'installer la dernière version pour un usage quotidien.</p>
             <div class="cl-index" role="navigation" aria-label="Index des versions">
+                <a href="#v1-9-0">1.9.0</a>
                 <a href="#v1-8-0">1.8.0</a>
                 <a href="#v1-7-2">1.7.2</a>
                 <a href="#v1-7-0">1.7.0</a>
@@ -119,12 +120,37 @@
     <main class="history cl-history">
         <div class="container">
             <div class="timeline">
+                <article class="timeline-item" id="v1-9-0">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.9.0</span>
+                        <span class="version-title">Page de téléchargement refaite, avec modpacks et shaders</span>
+                        <span class="latest-chip">Dernière</span>
+                        <span class="version-date">2026-10-23</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>La progression du téléchargement est maintenant en bas de la fenêtre : vous restez sur votre page, la barre affiche le fichier, la progression et la vitesse, et s'ouvre sur la liste complète où vous pouvez annuler à tout moment</li>
+                        <li>La page de téléchargement a désormais des onglets Shaders, Packs de ressources et Modpacks : les modpacks Modrinth et CurseForge s'installent en un clic, les archives locales s'importent et NeoForge est pris en charge</li>
+                        <li>L'isolation des versions est maintenant un réglage explicite : chaque version a ses propres mods, sauvegardes et réglages par défaut, avec cinq niveaux et un interrupteur par version</li>
+                        <li>Vous pouvez nommer la version pendant le téléchargement et créer une instance séparée, pour que des configurations de mods différentes ne se mélangent pas</li>
+                        <li>La recherche de mods est bien plus rapide : « Toutes les sources » fonctionne en parallèle avec compression, les recherches répétées utilisent le cache et les recherches en chinois passent d'abord par le wiki pour trouver le nom anglais</li>
+                        <li>La recherche trie par pertinence et alterne les sources ; la page de détails indique l'origine du nom chinois, et vous pouvez ajouter des sources et des dictionnaires personnalisés dans les réglages</li>
+                        <li>Les chargeurs de mods sont désormais exclusifs : choisir Forge marque les autres « incompatible », la liste de destination n'affiche que les versions compatibles et le bouton indique la destination</li>
+                        <li>Correction des téléchargements tronqués, de l'annulation lente et de la fenêtre principale qui ne se mettait pas à jour après suppression d'une version ; la première installation ne joue plus l'animation d'intro</li>
+                    </ul>
+                    <div class="cl-download">
+                        <a class="cl-dl-btn" href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.0-Setup.exe">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                            Télécharger v1.9.0
+                        </a>
+                        <span class="cl-file">GPCL-1.9.0-Setup.exe · 94 MB · Windows 64 bits</span>
+                    </div>
+                </article>
                 <article class="timeline-item" id="v1-8-0">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
                         <span class="version-number">v1.8.0</span>
                         <span class="version-title">25 langues, du lanceur au site web</span>
-                        <span class="latest-chip">Dernière</span>
                         <span class="version-date">2026-10-22</span>
                     </div>
                     <ul class="changelog">

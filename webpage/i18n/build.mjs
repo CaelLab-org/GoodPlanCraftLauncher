@@ -443,16 +443,12 @@ function renderEntry(isHistory) {
   const base = `https://gamets.caellab.com/gpcl/${isHistory ? 'history/' : ''}`;
   const hreflang = LOCALES.map(item => `    <link rel="alternate" hreflang="${item.code}" href="${base}index.${item.slug}">`).join('\n');
   const map = LOCALES.map(item => `'${item.slug}':'${item.slug}'`).join(',');
-  const bodyLinks = ['en-us', 'zh-cn', 'zh-tw'].map(slug => {
-    const item = LOCALES.find(l => l.slug === slug);
-    return `<a href="./index.${slug}">${item.name}</a>`;
-  }).join(' · ');
   return `<!DOCTYPE html>
 <html lang="en-US">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex">
+<meta http-equiv="refresh" content="1; url=./index.en-us">
 <title>GoodPlanCraftLauncher</title>
 ${hreflang}
     <link rel="alternate" hreflang="x-default" href="${base}index.en-us">
@@ -473,7 +469,6 @@ ${hreflang}
 </script>
 </head>
 <body>
-<p>${bodyLinks}</p>
 </body>
 </html>
 `;

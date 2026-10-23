@@ -1,8 +1,30 @@
 {
   "schema": 1,
-  "latest": "1.8.0",
-  "updated": "2026-10-22",
+  "latest": "1.9.0",
+  "updated": "2026-10-23",
   "versions": [
+    {
+      "version": "1.9.0",
+      "anchor": "v1-9-0",
+      "date": "2026-10-23",
+      "title": "Pagina di download rifatta, con modpack e shader",
+      "log": [
+        "L'avanzamento del download ora è in fondo alla finestra: resti sulla pagina che stai usando, la barra mostra file, avanzamento e velocità e, aprendola, vedi l'elenco completo dove puoi annullare in qualsiasi momento",
+        "La pagina di download ha ora le schede Shader, Pacchetti di risorse e Modpack: i modpack di Modrinth e CurseForge si installano con un clic, gli archivi locali si importano e NeoForge è supportato",
+        "L'isolamento delle versioni è ora un'impostazione esplicita: ogni versione ha mod, salvataggi e impostazioni propri per impostazione predefinita, con cinque livelli e un interruttore per versione",
+        "Puoi dare un nome alla versione durante il download e creare un'istanza separata, così configurazioni di mod diverse non si mescolano",
+        "La ricerca dei mod è molto più veloce: «Tutte le fonti» funziona in parallelo con compressione, le ricerche ripetute usano la cache e quelle in cinese cercano prima il nome inglese sul wiki",
+        "La ricerca ordina per pertinenza e alterna le fonti; la pagina dei dettagli indica da dove arriva il nome cinese e nelle Impostazioni puoi aggiungere fonti e dizionari personalizzati",
+        "I loader dei mod ora si escludono a vicenda: scegliendo Forge gli altri risultano «incompatibili», l'elenco di destinazione mostra solo versioni compatibili e il pulsante indica la destinazione",
+        "Corretti download troncati, annullamento lento e finestra principale non aggiornata dopo l'eliminazione di una versione; la prima installazione non riproduce più l'animazione iniziale"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.0-Setup.exe",
+        "file": "GPCL-1.9.0-Setup.exe",
+        "size": "94 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.8.0",
       "anchor": "v1-8-0",

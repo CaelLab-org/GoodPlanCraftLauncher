@@ -289,4 +289,7 @@ window.DEMO_DICTIONARY = {
   "months": "মাস",
   "years": "বছর",
   "{n} downloads": "{n} ডাউনলোড"
+,
+  "Expand": "প্রসারিত করুন",
+  "Collapse": "সংকুচিত করুন"
 };

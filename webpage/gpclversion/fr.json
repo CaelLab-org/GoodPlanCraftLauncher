@@ -1,8 +1,30 @@
 {
   "schema": 1,
-  "latest": "1.8.0",
-  "updated": "2026-10-22",
+  "latest": "1.9.0",
+  "updated": "2026-10-23",
   "versions": [
+    {
+      "version": "1.9.0",
+      "anchor": "v1-9-0",
+      "date": "2026-10-23",
+      "title": "Page de téléchargement refaite, avec modpacks et shaders",
+      "log": [
+        "La progression du téléchargement est maintenant en bas de la fenêtre : vous restez sur votre page, la barre affiche le fichier, la progression et la vitesse, et s'ouvre sur la liste complète où vous pouvez annuler à tout moment",
+        "La page de téléchargement a désormais des onglets Shaders, Packs de ressources et Modpacks : les modpacks Modrinth et CurseForge s'installent en un clic, les archives locales s'importent et NeoForge est pris en charge",
+        "L'isolation des versions est maintenant un réglage explicite : chaque version a ses propres mods, sauvegardes et réglages par défaut, avec cinq niveaux et un interrupteur par version",
+        "Vous pouvez nommer la version pendant le téléchargement et créer une instance séparée, pour que des configurations de mods différentes ne se mélangent pas",
+        "La recherche de mods est bien plus rapide : « Toutes les sources » fonctionne en parallèle avec compression, les recherches répétées utilisent le cache et les recherches en chinois passent d'abord par le wiki pour trouver le nom anglais",
+        "La recherche trie par pertinence et alterne les sources ; la page de détails indique l'origine du nom chinois, et vous pouvez ajouter des sources et des dictionnaires personnalisés dans les réglages",
+        "Les chargeurs de mods sont désormais exclusifs : choisir Forge marque les autres « incompatible », la liste de destination n'affiche que les versions compatibles et le bouton indique la destination",
+        "Correction des téléchargements tronqués, de l'annulation lente et de la fenêtre principale qui ne se mettait pas à jour après suppression d'une version ; la première installation ne joue plus l'animation d'intro"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.0-Setup.exe",
+        "file": "GPCL-1.9.0-Setup.exe",
+        "size": "94 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.8.0",
       "anchor": "v1-8-0",

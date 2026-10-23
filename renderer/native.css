@@ -1,0 +1,1079 @@
+button:disabled,
+input:disabled,
+textarea:disabled,
+select:disabled {
+  cursor: default !important;
+}
+
+@keyframes native-spin {
+  to { transform: rotate(360deg); }
+}
+
+.launch-button {
+  background: var(--accent-primary);
+  border-radius: 7px;
+  font-weight: 600;
+  transition: background 0.12s ease;
+}
+
+.launch-button:hover:not(:disabled) {
+  background: var(--accent-secondary);
+  transform: none;
+  box-shadow: none;
+}
+
+.launch-button:active {
+  background: var(--accent-tertiary);
+  transform: none;
+}
+
+.launch-button.no-game {
+  background: var(--bg-card-hover);
+  border: 1px solid var(--border-accent);
+  color: var(--accent-primary);
+  animation: none;
+}
+
+.launch-button.no-game:hover:not(:disabled) {
+  background: var(--accent-glow);
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+  box-shadow: none;
+}
+
+.auth-tabs {
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  background: var(--bg-dark);
+}
+
+.auth-tab {
+  padding: 9px 8px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+}
+
+.auth-tab:hover:not(:disabled) {
+  border-color: transparent;
+  background: var(--bg-card-hover);
+}
+
+.auth-tab.auth-tab-active {
+  background: var(--bg-card);
+  border: none;
+  color: var(--accent-primary);
+  box-shadow: inset 0 0 0 1px var(--border-accent);
+}
+
+.auth-tab-active .auth-badge {
+  background: rgba(239, 83, 80, 0.16);
+  color: var(--error);
+}
+
+.mod-target-dialog {
+  padding: 16px;
+  border-radius: 9px;
+}
+
+.mod-target-actions-right {
+  margin-left: auto;
+}
+
+.mod-target-list {
+  gap: 4px;
+}
+
+.mod-target-item {
+  border-radius: 6px;
+  background: var(--bg-dark);
+}
+
+.mod-target-item:hover {
+  background: var(--bg-card-hover);
+}
+
+.mod-target-item.selected {
+  border-color: var(--accent-primary);
+  background: var(--accent-glow);
+}
+
+.mod-target-btn {
+  border-radius: 6px;
+}
+
+.modpack-name-input {
+  border-radius: 6px;
+}
+
+.mod-empty-loading,
+.version-list-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.mod-empty-loading::before,
+.version-list-loading::before {
+  content: "";
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--border-medium);
+  border-top-color: var(--accent-primary);
+  border-radius: 50%;
+  animation: native-spin 0.8s linear infinite;
+}
+
+body:has(#download-page:not(.hidden)) .container {
+  max-width: 1080px;
+}
+
+.download-page {
+  padding: 0 8px 24px 0;
+  scrollbar-gutter: stable;
+}
+
+.download-top {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  padding-top: 2px;
+  background: var(--bg-primary);
+}
+
+.download-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 38px;
+  margin: 0 0 4px;
+}
+
+.download-header h3 {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text-title);
+}
+
+.download-tabs {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  width: 100%;
+  margin: 0 0 16px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border-light);
+  border-radius: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.download-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.download-tab {
+  position: relative;
+  flex: 0 0 auto;
+  padding: 9px 15px 11px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text-tertiary);
+  font-size: 13px;
+  font-weight: 500;
+  transition: color 0.12s ease;
+}
+
+.download-tab:hover {
+  background: transparent;
+  color: var(--text-primary);
+}
+
+.download-tab.active {
+  background: transparent;
+  color: var(--accent-primary);
+  font-weight: 600;
+}
+
+.download-tab.active::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: -1px;
+  height: 2px;
+  border-radius: 2px 2px 0 0;
+  background: var(--accent-primary);
+}
+
+.download-page .download-status-panel {
+  margin: 0 0 16px;
+  padding: 14px 16px;
+  border: 1px solid var(--border-light);
+  border-radius: 9px;
+  background: var(--bg-card);
+}
+
+.progress-bar-bg {
+  height: 8px;
+  border-radius: 4px;
+}
+
+.progress-bar-fill {
+  border-radius: 4px;
+  background: var(--accent-primary);
+  box-shadow: none;
+}
+
+.download-page .version-list-section {
+  margin-top: 0;
+  padding: 14px 16px 10px;
+  border: 1px solid var(--border-light);
+  border-radius: 9px;
+  background: var(--bg-card);
+}
+
+.download-page .version-list-header {
+  margin: 0 0 6px;
+  padding: 0 2px 10px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.download-page .version-list-header .section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-title);
+}
+
+.version-list-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.download-page .version-count-label {
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.refresh-btn {
+  padding: 4px 10px;
+  border: 1px solid var(--border-light);
+  border-radius: 5px;
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  font-size: 11.5px;
+}
+
+.refresh-btn:hover {
+  background: var(--bg-input-hover);
+  border-color: var(--border-medium);
+}
+
+.version-category {
+  margin-bottom: 2px;
+}
+
+.version-category-header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  margin-bottom: 0;
+  padding: 8px;
+  border-bottom: 1px solid var(--border-light);
+  border-radius: 5px;
+  background: var(--bg-card);
+}
+
+.version-category-header:hover {
+  background: var(--bg-card-hover);
+}
+
+#version-list-container {
+  max-height: clamp(260px, 42vh, 520px);
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.version-category-arrow {
+  font-size: 11px;
+}
+
+.version-category-icon {
+  font-size: 13px;
+}
+
+.version-category-name {
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.version-category-count {
+  font-size: 11px;
+}
+
+.version-items {
+  padding-left: 16px;
+}
+
+#version-list-container .version-item {
+  padding: 6px 10px;
+  border-radius: 5px;
+}
+
+#version-list-container .version-item-id {
+  font-size: 12.5px;
+  font-weight: 400;
+  color: var(--text-primary);
+}
+
+#version-list-container .version-item-time {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+#version-list-container .version-item.active {
+  background: var(--accent-glow);
+  box-shadow: inset 2px 0 0 var(--accent-primary);
+}
+
+.download-page .version-detail-page {
+  margin-top: 0;
+  padding: 16px 18px;
+  border-radius: 9px;
+}
+
+.download-page .detail-version-id {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.detail-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 12px;
+  padding: 5px 9px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--text-tertiary);
+  font-size: 12.5px;
+}
+
+.detail-back-btn:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-light);
+  color: var(--text-primary);
+}
+
+.detail-info-item {
+  padding: 10px 12px;
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  background: var(--bg-dark);
+}
+
+.detail-option-card {
+  border-radius: 7px;
+  background: var(--bg-dark);
+}
+
+.detail-option-card:hover {
+  border-color: var(--border-medium);
+}
+
+.detail-option-header {
+  padding: 10px 12px;
+}
+
+.detail-option-version-item {
+  margin-bottom: 2px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background: var(--bg-input);
+}
+
+.detail-option-version-item.selected {
+  background: var(--accent-glow);
+  border-color: var(--accent-primary);
+}
+
+.detail-download-btn {
+  min-width: 150px;
+  padding: 9px 22px;
+  border-radius: 6px;
+}
+
+.mod-download-section {
+  padding-bottom: 4px;
+}
+
+.mod-search-row {
+  position: relative;
+  gap: 8px;
+  max-width: 720px;
+  margin-bottom: 10px;
+}
+
+.mod-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  width: 15px;
+  height: 15px;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.mod-search-input {
+  height: 38px;
+  padding: 0 12px 0 35px;
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  background: var(--bg-input);
+  font-size: 13px;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+
+.mod-search-input:hover {
+  background: var(--bg-input-hover);
+}
+
+.mod-search-input:focus {
+  border-color: var(--accent-primary);
+  background: var(--bg-input);
+}
+
+.mod-search-btn {
+  height: 38px;
+  padding: 0 18px;
+  border-radius: 6px;
+  background: var(--accent-primary);
+  font-size: 12.5px;
+  font-weight: 600;
+  transition: background 0.12s ease;
+}
+
+.mod-search-btn:hover:not(:disabled) {
+  background: var(--accent-secondary);
+}
+
+.mod-search-btn:disabled {
+  border: 1px solid var(--border-light);
+  background: var(--bg-input);
+  color: var(--text-muted);
+  opacity: 1;
+}
+
+.mod-filter-row {
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.mod-filter-row .custom-select {
+  min-width: 132px;
+  font-size: 12px;
+}
+
+.mod-filter-row .custom-select-trigger {
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 6px;
+}
+
+#mod-status {
+  min-height: 0;
+  margin: 0 2px 10px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+#mod-status:empty {
+  display: none;
+}
+
+.mod-results {
+  gap: 0;
+  border: 1px solid var(--border-light);
+  border-radius: 9px;
+  background: var(--bg-card);
+  overflow: hidden;
+}
+
+.mod-card {
+  gap: 12px;
+  padding: 12px 14px;
+  border: none;
+  border-bottom: 1px solid var(--border-light);
+  border-radius: 0;
+  background: transparent;
+  transition: background 0.1s ease;
+}
+
+.mod-card:last-child {
+  border-bottom: none;
+}
+
+.mod-card:hover {
+  background: var(--bg-card-hover);
+  border-color: transparent;
+}
+
+.mod-card-icon {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  border-radius: 7px;
+}
+
+.mod-card-title {
+  gap: 7px;
+  font-size: 13.5px;
+}
+
+.mod-card-desc {
+  margin-top: 3px;
+  font-size: 11.5px;
+  line-height: 1.5;
+}
+
+.mod-card-meta {
+  margin-top: 5px;
+  font-size: 10.5px;
+}
+
+.mod-card-en {
+  font-size: 10.5px;
+}
+
+.mod-source-tag {
+  padding: 1px 5px;
+  border: 1px solid var(--border-light);
+  border-radius: 3px;
+  font-size: 9.5px;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: var(--bg-input);
+}
+
+.mod-empty {
+  padding: 34px 16px;
+  font-size: 12px;
+}
+
+.mod-detail-head {
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 9px;
+  background: var(--bg-card);
+}
+
+.mod-detail-head img {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+}
+
+.mod-detail-cn {
+  font-size: 16px;
+}
+
+.mod-detail-en {
+  font-size: 12px;
+}
+
+.mod-detail-title {
+  font-size: 15px;
+  gap: 7px;
+}
+
+.mod-detail-meta {
+  margin-top: 4px;
+  font-size: 11px;
+}
+
+.mod-detail-desc {
+  margin-top: 6px;
+  font-size: 11.5px;
+  line-height: 1.55;
+}
+
+.mod-detail-actions {
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.mod-detail-action {
+  padding: 5px 11px;
+  border: 1px solid var(--border-light);
+  border-radius: 5px;
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  font-size: 11.5px;
+}
+
+.mod-detail-action:hover {
+  border-color: var(--border-medium);
+  background: var(--bg-input-hover);
+  color: var(--text-primary);
+}
+
+.mod-mc-tabs {
+  gap: 2px;
+  flex-wrap: nowrap;
+  margin: 12px 0;
+  padding: 0;
+  border: none;
+  border-bottom: 1px solid var(--border-light);
+  border-radius: 0;
+  background: transparent;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.mod-mc-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.mod-mc-tab {
+  position: relative;
+  flex: 0 0 auto;
+  padding: 7px 12px 9px;
+  border-radius: 0;
+  font-size: 11.5px;
+}
+
+.mod-mc-tab:hover {
+  background: transparent;
+  color: var(--text-primary);
+}
+
+.mod-mc-tab.active {
+  background: transparent;
+  color: var(--accent-primary);
+  font-weight: 600;
+}
+
+.mod-mc-tab.active::after {
+  content: "";
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: -1px;
+  height: 2px;
+  background: var(--accent-primary);
+}
+
+.mod-mc-section {
+  margin-bottom: 6px;
+  border-radius: 8px;
+  background: var(--bg-card);
+}
+
+.mod-mc-section-head {
+  padding: 10px 12px;
+  font-size: 12.5px;
+}
+
+.mod-mc-section-head:hover {
+  background: var(--bg-dark);
+}
+
+.mod-mc-section-body {
+  padding: 0 12px 12px;
+}
+
+.mod-deps-title,
+.mod-version-heading {
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.mod-deps-list,
+.mod-version-list {
+  gap: 0;
+  border: 1px solid var(--border-light);
+  border-radius: 7px;
+  background: var(--bg-dark);
+  overflow: hidden;
+}
+
+.mod-deps-list:has(.mod-deps-empty) {
+  border-color: transparent;
+  background: transparent;
+}
+
+.mod-deps-empty {
+  padding: 2px 0 8px;
+}
+
+.mod-dep-card,
+.mod-version-row {
+  padding: 9px 11px;
+  border: none;
+  border-bottom: 1px solid var(--border-light);
+  border-radius: 0;
+  background: transparent;
+}
+
+.mod-dep-card:last-child,
+.mod-version-row:last-child {
+  border-bottom: none;
+}
+
+.mod-dep-card:hover,
+.mod-version-row:hover {
+  border-color: var(--border-light);
+  background: var(--bg-card-hover);
+}
+
+.mod-dep-card img {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  border-radius: 6px;
+}
+
+.mod-dep-name {
+  font-size: 12px;
+}
+
+.mod-dep-desc {
+  font-size: 11px;
+}
+
+.mod-dep-meta {
+  font-size: 10px;
+}
+
+.mod-version-name {
+  font-size: 11.5px;
+}
+
+.mod-version-meta {
+  font-size: 10.5px;
+}
+
+.mod-install-btn {
+  padding: 4px 11px;
+  border: 1px solid var(--border-medium);
+  border-radius: 5px;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-size: 11.5px;
+}
+
+.mod-install-btn:hover:not(:disabled) {
+  border-color: var(--accent-primary);
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+}
+
+.java-download-section {
+  margin: 16px 0 0;
+  padding: 16px;
+  border: 1px solid var(--border-light);
+  border-radius: 9px;
+  background: var(--bg-card);
+}
+
+.java-download-section .section-title {
+  margin-bottom: 4px;
+  font-size: 14px;
+  color: var(--text-title);
+}
+
+.java-download-section .section-desc {
+  margin-bottom: 14px;
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.java-version-grid {
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.java-version-card {
+  padding: 14px;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  background: var(--bg-dark);
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+
+.java-version-card:hover {
+  border-color: var(--border-medium);
+  background: var(--bg-card-hover);
+  transform: none;
+  box-shadow: none;
+}
+
+.java-version-card.installed {
+  border-color: rgba(102, 187, 106, 0.4);
+}
+
+.java-version-num {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.java-version-badge {
+  padding: 2px 7px;
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  background: var(--bg-input);
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: none;
+}
+
+.java-info-row {
+  padding: 4px 0;
+}
+
+.info-label,
+.info-value {
+  font-size: 11.5px;
+}
+
+.java-install-btn {
+  padding: 8px;
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 500;
+  transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+}
+
+.java-install-btn:hover:not(:disabled) {
+  border-color: var(--accent-primary);
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  transform: none;
+  box-shadow: none;
+}
+
+.java-install-btn.installed {
+  border-color: rgba(239, 83, 80, 0.3);
+  background: transparent;
+  color: var(--error);
+}
+
+.download-page .status-message {
+  margin: 10px 2px 0;
+  padding: 0;
+  background: transparent;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+body.download-dock-open #download-status {
+  display: none;
+}
+
+.java-install-status {
+  padding: 9px 12px;
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  background: var(--bg-dark);
+  font-size: 11.5px;
+}
+
+.java-version-badge:empty {
+  display: none;
+}
+
+.download-dock {
+  height: 56px;
+  gap: 12px;
+  padding: 0 14px 0 16px;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-medium);
+  box-shadow: 0 -12px 32px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(16px);
+}
+
+html.window-maximized .download-dock {
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  border-radius: 9px;
+}
+
+.download-dock-track {
+  top: 0;
+  height: 2px;
+  background: var(--bg-input);
+}
+
+html.window-maximized .download-dock-track {
+  border-radius: 9px 9px 0 0;
+}
+
+.download-dock-fill {
+  transition: width 0.18s linear;
+}
+
+.download-dock-glyph {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  color: var(--accent-primary);
+}
+
+.download-dock.is-done .download-dock-glyph {
+  color: var(--success);
+}
+
+.download-dock.is-error .download-dock-glyph {
+  color: var(--error);
+}
+
+.download-dock-main {
+  gap: 10px;
+}
+
+.download-dock-title {
+  font-size: 12.5px;
+}
+
+.download-dock-current {
+  font-size: 11px;
+}
+
+.download-dock-meta {
+  gap: 12px;
+}
+
+.download-dock-percent {
+  font-size: 16px;
+}
+
+.download-dock-toggle {
+  padding: 5px 9px;
+  border-radius: 5px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-light);
+}
+
+.download-dock-toggle:hover {
+  background: var(--bg-input-hover);
+}
+
+.download-dock-panel {
+  width: min(460px, calc(100vw - 24px));
+  padding: 10px;
+  border: 1px solid var(--border-medium);
+  border-radius: 9px;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.36);
+}
+
+.download-dock-panel-title {
+  font-size: 12px;
+}
+
+.download-dock-panel-action {
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 10.5px;
+}
+
+.download-dock-panel .download-task-list {
+  gap: 0;
+  margin-top: 8px;
+  border: 1px solid var(--border-light);
+  border-radius: 7px;
+  background: var(--bg-dark);
+  overflow: hidden;
+}
+
+.download-dock-panel .download-task {
+  position: relative;
+  padding: 9px 10px 10px 22px;
+  border: none;
+  border-bottom: 1px solid var(--border-light);
+  border-radius: 0;
+  background: transparent;
+}
+
+.download-dock-panel .download-task:last-child {
+  border-bottom: none;
+}
+
+.download-task::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: 14px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+
+.download-task[data-status="running"]::before {
+  background: var(--accent-primary);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.download-task[data-status="done"]::before {
+  background: var(--success);
+}
+
+.download-task[data-status="error"]::before {
+  background: var(--error);
+}
+
+.download-dock-panel .download-task[data-status="done"] {
+  opacity: 0.62;
+}
+
+.download-task-name {
+  font-size: 11.5px;
+}
+
+.download-task-state {
+  font-size: 10.5px;
+}
+
+.download-task-bar {
+  height: 2px;
+  margin-top: 6px;
+}
+
+.download-task-cancel {
+  padding: 1px 7px;
+  border-radius: 4px;
+  font-size: 10.5px;
+}
+
+.download-task-remove {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+@media (max-width: 900px) {
+  .mod-search-row {
+    max-width: none;
+  }
+
+  .java-version-grid {
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  }
+}

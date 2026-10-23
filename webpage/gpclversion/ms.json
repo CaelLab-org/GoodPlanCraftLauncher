@@ -1,8 +1,30 @@
 {
   "schema": 1,
-  "latest": "1.8.0",
-  "updated": "2026-10-22",
+  "latest": "1.9.0",
+  "updated": "2026-10-23",
   "versions": [
+    {
+      "version": "1.9.0",
+      "anchor": "v1-9-0",
+      "date": "2026-10-23",
+      "title": "Halaman muat turun baharu, dengan modpack dan shader",
+      "log": [
+        "Kemajuan muat turun kini di bahagian bawah tetingkap: anda kekal pada halaman semasa, bar menunjukkan fail, kemajuan dan kelajuan, dan apabila dibuka memaparkan senarai muat turun penuh untuk dibatalkan bila-bila masa",
+        "Halaman muat turun kini mempunyai tab Shader, Pek sumber dan Modpack: modpack Modrinth dan CurseForge dipasang dengan satu klik, arkib tempatan boleh diimport, dan NeoForge disokong",
+        "Pengasingan versi kini tetapan yang jelas: setiap versi mempunyai mod, simpanan dan tetapan sendiri secara lalai, dengan lima tahap dan suis setiap versi",
+        "Anda boleh menamakan versi semasa memuat turun dan mencipta instans berasingan supaya tetapan mod yang berbeza tidak bercampur",
+        "Carian mod jauh lebih pantas: «Semua sumber» berjalan selari dengan pemampatan, carian berulang menggunakan cache, dan carian Cina mencari nama Inggeris di wiki dahulu",
+        "Carian mod disusun mengikut kaitan dan sumber bergilir-gilir; halaman butiran menunjukkan asal nama Cina, dan dalam Tetapan anda boleh menambah sumber mod serta kamus nama sendiri",
+        "Pemuat mod kini saling eksklusif: memilih Forge menandakan yang lain «tidak serasi», senarai sasaran pemasangan hanya menunjukkan versi yang serasi dan butang menyatakan sasaran",
+        "Memperbaiki muat turun terpotong, pembatalan lambat dan tetingkap utama tidak dikemas kini selepas versi dipadam; pemasangan pertama tidak lagi memainkan animasi pembuka"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.0-Setup.exe",
+        "file": "GPCL-1.9.0-Setup.exe",
+        "size": "94 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.8.0",
       "anchor": "v1-8-0",

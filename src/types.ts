@@ -47,6 +47,9 @@ export interface GPCLApi {
   minimizeWindow(): Promise<void>;
   focusWindow(): Promise<void>;
   closeWindow(): Promise<void>;
+  getWindowState(): Promise<{ maximized: boolean; fullScreen: boolean }>;
+  onWindowState(callback: (state: { maximized: boolean; fullScreen: boolean }) => void): void;
+  createVersionInstance(options: { baseVersionId: string; name: string; loaderType?: string; loaderVersion?: string }): Promise<any>;
   deleteVersion(versionId: string): Promise<any>;
   getVersionSettings(versionId: string): Promise<any>;
   saveVersionSettings(versionId: string, settings: any): Promise<void>;
@@ -65,8 +68,6 @@ export interface GPCLApi {
   getAvatar(): Promise<{ success: boolean; path: string; url: string }>;
   chooseAvatar(): Promise<{ success: boolean; cancelled?: boolean; error?: string; url?: string; compressed?: boolean }>;
   resetAvatar(): Promise<{ success: boolean; error?: string }>;
-  playStartupAnimation(): Promise<void>;
-  dismissStartupAnimation(): Promise<void>;
   setDeveloperMode(enabled: boolean): Promise<void>;
   restartApp(): Promise<void>;
   readJsonFile(subPath: string, fileName: string): Promise<any>;
@@ -84,11 +85,12 @@ export interface GPCLApi {
   getLaunchDisplayName(versionId: string): Promise<string>;
 
   modsSearch(options: ModSearchOptions): Promise<any>;
+  getModSources(): Promise<any>;
   modsVersions(options: any): Promise<any>;
-  modsProjectInfo(options: { source: 'modrinth' | 'curseforge'; ids: string[]; gameVersion: string; loader: string }): Promise<any>;
+  modsProjectInfo(options: { source: string; ids: string[]; gameVersion: string; loader: string }): Promise<any>;
   modsInstall(options: ModInstallOptions): Promise<any>;
   modsInstallDirect(options: { url: string; fileName: string; targetVersionId?: string; targetDir?: string; projectType?: ResourceProjectType }): Promise<any>;
-  modpackInstall(options: { source: 'modrinth' | 'curseforge'; projectId: string; versionId?: string; gameVersion?: string; instanceName?: string; maxConcurrent?: number }): Promise<any>;
+  modpackInstall(options: { source: string; projectId: string; versionId?: string; gameVersion?: string; instanceName?: string; maxConcurrent?: number }): Promise<any>;
   curseforgeLookup(options: { slug: string; gameVersion: string; loader: string; preferGameVersion?: string }): Promise<any>;
   getModsDir(versionId?: string): Promise<string>;
   getVersionInfo(versionId: string): Promise<any>;
@@ -141,6 +143,8 @@ export interface GameSettings {
   autoLanguage: boolean;
   /** Minecraft 语言代码，如 zh_cn */
   language: string;
+  /** 新安装版本的默认隔离方式：off / modded / nonRelease / moddedAndNonRelease / all */
+  versionIsolation: string;
 }
 
 export interface AppearanceSettings {
@@ -148,7 +152,6 @@ export interface AppearanceSettings {
   /** 界面风格：mc / advanced / minimal */
   style: string;
   scale: string;
-  playStartupAnimation: boolean;
   skipSplash: boolean;
   /** 启动小知识的出现频率：off / rare / half / always */
   tipFrequency: string;
@@ -169,6 +172,21 @@ export interface DownloadSettings {
   customFileMirror: string;
   /** CurseForge 官方 API Key，镜像不可用时使用 */
   curseForgeApiKey: string;
+  /** 是否启用中文模组名 → 英文名映射 */
+  modNameMapping: boolean;
+  /** 启用的映射来源，逗号分隔：mcmod,130wiki */
+  modNameProviders: string;
+  /** 自定义词表地址（JSON 字符串数组，支持 URL 和本地路径） */
+  modNameDictionaries: string;
+  /** 自定义模组源（JSON 字符串数组） */
+  modSources: string;
+}
+
+export interface CustomModSource {
+  id: string;
+  name: string;
+  kind: 'modrinth' | 'curseforge';
+  baseUrl: string;
 }
 
 export interface AdvancedSettings {
@@ -286,7 +304,7 @@ export interface VersionInfo {
 export type ResourceProjectType = 'mod' | 'shader' | 'resourcepack' | 'modpack';
 
 export interface ModSearchOptions {
-  source: 'modrinth' | 'curseforge' | 'both';
+  source: string;
   query: string;
   gameVersion: string;
   loader: string;
@@ -296,7 +314,7 @@ export interface ModSearchOptions {
 }
 
 export interface ModInstallOptions {
-  source: 'modrinth' | 'curseforge';
+  source: string;
   projectId: string;
   versionId?: string;
   targetVersionId?: string;
