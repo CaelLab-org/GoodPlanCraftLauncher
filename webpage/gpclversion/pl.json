@@ -1,8 +1,32 @@
 {
   "schema": 1,
-  "latest": "1.9.0",
+  "latest": "1.9.1",
   "updated": "2026-10-23",
   "versions": [
+    {
+      "version": "1.9.1",
+      "anchor": "v1-9-1",
+      "date": "2026-10-23",
+      "title": "Konta Microsoft, wiele folderów gry i Java dla każdej wersji",
+      "log": [
+        "Logowanie Microsoft zostało przebudowane: możesz zapisać kilka kont, przełączać się między nimi lub usuwać je w dowolnym momencie, a po restarcie launchera pozostajesz zalogowany",
+        "Tokeny logowania są automatycznie odnawiane przed uruchomieniem; jeśli wygasną, launcher poprosi o ponowne zalogowanie zamiast zgłaszać błąd przy dołączaniu do serwera",
+        "Zapisane konta pokazują prawdziwą głowę skina Minecraft",
+        "Dodawaj wiele folderów gry i filtruj wersje według folderu; wybierając folder nadrzędny, np. katalog główny PCL2, launcher sam znajdzie znajdujący się w nim .minecraft",
+        "Każda wersja może używać własnej Javy: automatycznie, 8, 16, 17, 21, 25 lub własnej ścieżki",
+        "Analiza awarii jest dostępna we wszystkich 25 językach, a raporty błędów zawierają strefę czasową i czas lokalny",
+        "Panel pobierania pokazuje wykres prędkości na żywo, aktualną i szczytową prędkość oraz zadania w kolejce; prędkość można wyświetlać w MB/s lub Mbps",
+        "Pobieranie środowiska Java przeniesiono na osobną kartę strony pobierania",
+        "Użycie pamięci w ustawieniach odświeża się teraz na żywo zamiast pokazywać wartość z chwili otwarcia strony",
+        "Usunięcie wybranej wersji natychmiast wraca do listy wersji zamiast nadal pokazywać usuniętą wersję"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.1-Setup.exe",
+        "file": "GPCL-1.9.1-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.9.0",
       "anchor": "v1-9-0",

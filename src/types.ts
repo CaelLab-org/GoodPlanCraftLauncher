@@ -8,7 +8,11 @@
 export interface GPCLApi {
   initialI18n: { locale: string; dir: string; systemLocale: string; firstRun: boolean; theme: string; style: string; scale: string; skipSplash: boolean };
   getGameDir(): Promise<string>;
+  getGameDirs(): Promise<{ success: boolean; dirs: GameDirEntry[]; installDir: string }>;
+  addGameDir(dir: string): Promise<{ success: boolean; path: string; dirs: GameDirEntry[]; installDir: string }>;
+  removeGameDir(dir: string): Promise<{ success: boolean; dirs: GameDirEntry[]; installDir: string }>;
   scanVersions(gameDir: string, silent?: boolean): Promise<any>;
+  scanVersionEntries(gameDir?: string, silent?: boolean): Promise<VersionEntry[]>;
   launch(options: LaunchOptions): Promise<any>;
   getVersionManifest(): Promise<any>;
   downloadVersion(versionId: string, maxConcurrent: number): Promise<any>;
@@ -36,6 +40,7 @@ export interface GPCLApi {
   getJavaDownloadUrl(javaVersion: string): Promise<string>;
   cancelClose(): Promise<void>;
   checkJava(versionId: string): Promise<JavaCheckResult>;
+  listJavaRuntimes(): Promise<JavaRuntimeInfo[]>;
   showJavaInstallDialog(callback: (data: any) => void): void;
   selectJavaVersion(data: any): Promise<any>;
   installJava(javaVersion: string): Promise<any>;
@@ -50,9 +55,9 @@ export interface GPCLApi {
   getWindowState(): Promise<{ maximized: boolean; fullScreen: boolean }>;
   onWindowState(callback: (state: { maximized: boolean; fullScreen: boolean }) => void): void;
   createVersionInstance(options: { baseVersionId: string; name: string; loaderType?: string; loaderVersion?: string }): Promise<any>;
-  deleteVersion(versionId: string): Promise<any>;
-  getVersionSettings(versionId: string): Promise<any>;
-  saveVersionSettings(versionId: string, settings: any): Promise<void>;
+  deleteVersion(versionId: string, root?: string): Promise<any>;
+  getVersionSettings(versionId: string, root?: string): Promise<any>;
+  saveVersionSettings(versionId: string, settings: any, root?: string): Promise<void>;
   selectDirectory(): Promise<string | null>;
   cancelLaunch(): Promise<void>;
   checkForUpdates(locale?: string): Promise<any>;
@@ -80,20 +85,20 @@ export interface GPCLApi {
   getNeoForgeVersions(mcVersion: string): Promise<any>;
   getOptiFineVersions(mcVersion: string): Promise<any>;
   downloadWithModLoader(versionId: string, loaderType: string, loaderVersion: string, maxConcurrent: number, options?: { installFabricApi?: boolean }): Promise<any>;
-  getVersionConfig(versionId: string): Promise<any>;
-  getVersionDisplayName(versionId: string): Promise<string>;
-  getLaunchDisplayName(versionId: string): Promise<string>;
+  getVersionConfig(versionId: string, root?: string): Promise<any>;
+  getVersionDisplayName(versionId: string, root?: string): Promise<string>;
+  getLaunchDisplayName(versionId: string, root?: string): Promise<string>;
 
   modsSearch(options: ModSearchOptions): Promise<any>;
   getModSources(): Promise<any>;
   modsVersions(options: any): Promise<any>;
   modsProjectInfo(options: { source: string; ids: string[]; gameVersion: string; loader: string }): Promise<any>;
   modsInstall(options: ModInstallOptions): Promise<any>;
-  modsInstallDirect(options: { url: string; fileName: string; targetVersionId?: string; targetDir?: string; projectType?: ResourceProjectType }): Promise<any>;
+  modsInstallDirect(options: { url: string; fileName: string; targetVersionId?: string; versionRoot?: string; targetDir?: string; projectType?: ResourceProjectType }): Promise<any>;
   modpackInstall(options: { source: string; projectId: string; versionId?: string; gameVersion?: string; instanceName?: string; maxConcurrent?: number }): Promise<any>;
   curseforgeLookup(options: { slug: string; gameVersion: string; loader: string; preferGameVersion?: string }): Promise<any>;
-  getModsDir(versionId?: string): Promise<string>;
-  getVersionInfo(versionId: string): Promise<any>;
+  getModsDir(versionId?: string, root?: string): Promise<string>;
+  getVersionInfo(versionId: string, root?: string): Promise<any>;
   listInstalledVersions(): Promise<any>;
   onModDownloadProgress(callback: (data: any) => void): void;
   onInstallStage(callback: (data: any) => void): void;
@@ -112,6 +117,16 @@ export interface GPCLApi {
 
   // Microsoft 正版登录
   startMicrosoftAuth(): Promise<void>;
+  cancelMicrosoftAuth(): Promise<void>;
+  openMicrosoftAuthBrowser(): Promise<{ success: boolean; message?: string }>;
+  getMicrosoftAuth(): Promise<MicrosoftAuthResult>;
+  logoutMicrosoftAuth(): Promise<{ success: boolean }>;
+  listMicrosoftAccounts(): Promise<{ current: string | null; accounts: { uuid: string; username: string; expiresAt?: number }[] }>;
+  switchMicrosoftAccount(uuid: string): Promise<MicrosoftAuthResult>;
+  removeMicrosoftAccount(uuid: string): Promise<{ success: boolean; current: string | null; accounts: { uuid: string; username: string; expiresAt?: number }[] }>;
+  getMicrosoftAvatar(uuid: string, refresh?: boolean): Promise<{ dataUrl: string | null; width: number; height: number }>;
+  refreshMicrosoftAuth(): Promise<MicrosoftAuthResult>;
+  validateMicrosoftAuth(): Promise<{ valid: boolean; relogin?: boolean; unchecked?: boolean; uuid?: string; username?: string; accessToken?: string; expiresAt?: number; code?: string; message?: string }>;
   onMicrosoftAuthResult(callback: (result: MicrosoftAuthResult) => void): void;
 }
 
@@ -166,8 +181,12 @@ export interface DownloadSettings {
   fileSource: string;
   versionSource: string;
   speedLimit: number;
-  /** 自定义游戏目录，留空使用启动器默认目录 */
+  /** 速度显示单位：mbps / mbs */
+  speedUnit: string;
+  /** 自定义游戏目录（新下载写到这里），留空使用启动器默认目录 */
   installDir: string;
+  /** 额外添加的游戏目录（JSON 字符串数组），版本选择里可以按目录筛选 */
+  gameDirs: string;
   /** 自定义下载镜像根地址，留空使用 BMCLAPI */
   customFileMirror: string;
   /** CurseForge 官方 API Key，镜像不可用时使用 */
@@ -212,8 +231,9 @@ export interface AppSettings {
 export interface LaunchOptions {
   versionId: string;
   gameDir: string;
-  playerName: string;
-  memory: string;
+  playerName?: string;
+  username?: string;
+  memory?: string;
   javaPath?: string;
   jvmArgs?: string;
   windowMode?: string;
@@ -231,9 +251,33 @@ export interface MicrosoftAuthResult {
   username?: string;
   accessToken?: string;
   refreshToken?: string;
+  expiresAt?: number;
   skins?: any[];
   capes?: any[];
+  code?: string;
+  relogin?: boolean;
   message?: string;
+}
+
+export interface GameDirEntry {
+  path: string;
+  name: string;
+  isDefault: boolean;
+  isInstall: boolean;
+}
+
+export interface VersionEntry {
+  id: string;
+  root: string;
+  name: string;
+  isDefault: boolean;
+  isInstall: boolean;
+}
+
+export interface JavaRuntimeInfo {
+  major: string;
+  path: string;
+  custom?: boolean;
 }
 
 export interface DownloadProgress {
@@ -318,6 +362,7 @@ export interface ModInstallOptions {
   projectId: string;
   versionId?: string;
   targetVersionId?: string;
+  versionRoot?: string;
   targetDir?: string;
   gameVersion: string;
   loader: string;

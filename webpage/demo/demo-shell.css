@@ -1,0 +1,42 @@
+
+/* Demo shell: the fixed 1000x620 window scaled into the page */
+html, body { height: 100%; }
+body { background: var(--bg-primary); }
+
+.stage {
+  --stage-w: 1000px;
+  --stage-h: 620px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--stage-w);
+  height: var(--stage-h);
+  margin-left: calc(var(--stage-w) / -2);
+  margin-top: calc(var(--stage-h) / -2);
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+}
+
+.app-root {
+  zoom: var(--app-zoom);
+  width: calc(var(--stage-w) / var(--app-zoom));
+  height: calc(var(--stage-h) / var(--app-zoom));
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-layout { height: calc(var(--stage-h) / var(--app-zoom)); }
+.container { display: flex; flex-direction: column; min-height: 0; }
+.page { flex: 1; min-height: 0; display: flex; flex-direction: column; animation: pageEnter 0.32s cubic-bezier(0.22, 1, 0.36, 1); }
+.page.hidden { display: none !important; }
+
+.launch-version-info { margin-top: 10px; font-size: 13px; color: var(--text-muted); font-family: var(--font-mono); }
+.log-view { background: var(--bg-dark); border-radius: 8px; padding: 12px 14px; max-height: 220px; overflow-y: auto; font-family: var(--font-mono); font-size: 11.5px; line-height: 1.7; color: var(--text-secondary); white-space: pre-wrap; word-break: break-all; }
+.log-view .log-warn { color: var(--warning); }
+.log-view .log-ok { color: var(--success); }
+.mod-target-hint { margin-top: 10px; font-size: 11.5px; line-height: 1.6; color: var(--text-muted); }
+.version-category-items.collapsed { display: none; }
+.version-category-arrow.collapsed { transform: rotate(-90deg); }
+.version-category-header { cursor: pointer; user-select: none; }
+.download-dock-stat-value { font-size: 14px; }

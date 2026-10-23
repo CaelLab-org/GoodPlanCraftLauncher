@@ -75,7 +75,7 @@
                     </div>
                 </li>
                 <li class="lang-switch"><select aria-label="भाषा" onchange="if(this.value)location.href=this.value"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi" selected>हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select></li>
-                <li><a href="#download" class="nav-cta">&#9662; v1.9.0 डाउनलोड करें</a></li>
+                <li><a href="#download" class="nav-cta">&#9662; v1.9.1 डाउनलोड करें</a></li>
             </ul>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="मेन्यू खोलें" aria-expanded="false">&#9776;</button>
         </div>
@@ -113,7 +113,7 @@
                 </a>
             </div>
             <div class="hero-meta">
-                <span>संस्करण <b>v1.9.0</b></span>
+                <span>संस्करण <b>v1.9.1</b></span>
                 <span class="sep">/</span>
                 <span>अपडेट <b>2026-10-23</b></span>
                 <span class="sep">/</span>
@@ -123,7 +123,7 @@
 
         <div class="window-stage" id="heroWindow">
             <div class="window">
-                <iframe src="./demo/index.html?fit=1&v=q8m3x2vd&lang=hi" title="GoodPlanCraftLauncher इंटरफ़ेस" loading="eager"></iframe>
+                <iframe src="./demo/index.html?fit=1&v=h6p4r8w2&lang=hi" title="GoodPlanCraftLauncher इंटरफ़ेस" loading="eager"></iframe>
             </div>
         </div>
         <p class="window-note">ऊपर वाली विंडो <b>क्लिक करने योग्य</b> है — यह खुद लॉन्चर का इंटरफ़ेस है, जो वेब पेज के अंदर चल रहा है।</p>
@@ -264,8 +264,8 @@
                 <span class="dl-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
                 </span>
-                <div class="download-file">GPCL-1.9.0-Setup.exe</div>
-                <a href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.0-Setup.exe" class="download-btn">
+                <div class="download-file">GPCL-1.9.1-Setup.exe</div>
+                <a href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.1-Setup.exe" class="download-btn">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
                     ब्लॉक की दुनिया में कूदें!
                 </a>
@@ -381,9 +381,29 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                 <div class="timeline-item reveal">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
+                        <span class="version-number">v1.9.1</span>
+                        <span class="version-title">Microsoft खाते, कई गेम फ़ोल्डर और हर वर्ज़न के लिए Java</span>
+                        <span class="latest-chip">नवीनतम</span>
+                        <span class="version-date">2026-10-23</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Microsoft साइन-इन फिर से बनाया गया है: कई खाते सहेजें, कभी भी बदलें या हटाएँ, और लॉन्चर दोबारा शुरू करने पर भी साइन-इन रहें</li>
+                        <li>लॉन्च से पहले साइन-इन टोकन अपने आप रिन्यू हो जाते हैं; समय खत्म होने पर अब सर्वर से जुड़ते समय विफल होने के बजाय दोबारा साइन-इन करने को कहा जाता है</li>
+                        <li>सहेजे गए खाते असली Minecraft स्किन हेड दिखाते हैं</li>
+                        <li>कई गेम फ़ोल्डर जोड़ें और वर्ज़न को फ़ोल्डर के अनुसार फ़िल्टर करें; PCL2 रूट जैसा ऊपरी फ़ोल्डर चुनने पर उसके अंदर का .minecraft अपने आप मिल जाता है</li>
+                        <li>हर वर्ज़न अपना Java इस्तेमाल कर सकता है: अपने आप, 8, 16, 17, 21, 25 या कस्टम पथ</li>
+                        <li>क्रैश विश्लेषण अब सभी 25 भाषाओं में उपलब्ध है, और त्रुटि रिपोर्ट में आपका टाइम ज़ोन और स्थानीय समय भी शामिल है</li>
+                        <li>डाउनलोड पैनल अब लाइव स्पीड ग्राफ़, मौजूदा और अधिकतम स्पीड तथा कतार में लगे कार्य दिखाता है; स्पीड MB/s या Mbps में दिखाई जा सकती है</li>
+                        <li>Java डाउनलोड अब डाउनलोड पेज के अलग टैब में है</li>
+                        <li>सेटिंग्स पेज पर मेमोरी उपयोग अब लाइव अपडेट होता है, न कि पेज खोलने के समय की पुरानी संख्या</li>
+                        <li>चुना हुआ वर्ज़न हटाने पर अब तुरंत वर्ज़न सूची पर लौटते हैं, हटाया गया वर्ज़न दिखता नहीं रहता</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
                         <span class="version-number">v1.9.0</span>
                         <span class="version-title">नया डाउनलोड पेज, मॉडपैक और शेडर के साथ</span>
-                        <span class="latest-chip">नवीनतम</span>
                         <span class="version-date">2026-10-23</span>
                     </div>
                     <ul class="changelog">
@@ -508,6 +528,8 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                         <li>ठीक हुआ: थ्रेड संख्या सेटिंग का अनदेखा होना, 404 पेज का फ़ाइल के रूप में सेव होना, और असफल डाउनलोड के बाद बची आधी फ़ाइलें</li>
                     </ul>
                 </div>
+                <details class="older-versions">
+                    <summary>14 पुराने संस्करण दिखाएँ</summary>
                 <div class="timeline-item reveal">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
@@ -525,8 +547,6 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                         <li>स्टार्टअप एनिमेशन और पेज ट्रांज़िशन ज़्यादा सहज</li>
                     </ul>
                 </div>
-                <details class="older-versions">
-                    <summary>13 पुराने संस्करण दिखाएँ</summary>
                 <div class="timeline-item reveal">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
@@ -692,7 +712,7 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                 </div>
                 </details>
                 <div class="history-more">
-                    <a href="./history/index.hi">पूरा चेंजलॉग देखें (सभी 21 संस्करण और इंस्टॉलर) →</a>
+                    <a href="./history/index.hi">पूरा चेंजलॉग देखें (सभी 22 संस्करण और इंस्टॉलर) →</a>
                 </div>
             </div>
         </div>

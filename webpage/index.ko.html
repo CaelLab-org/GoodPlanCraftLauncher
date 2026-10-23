@@ -75,7 +75,7 @@
                     </div>
                 </li>
                 <li class="lang-switch"><select aria-label="언어" onchange="if(this.value)location.href=this.value"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko" selected>한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select></li>
-                <li><a href="#download" class="nav-cta">&#9662; v1.9.0 다운로드</a></li>
+                <li><a href="#download" class="nav-cta">&#9662; v1.9.1 다운로드</a></li>
             </ul>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="메뉴 열기" aria-expanded="false">&#9776;</button>
         </div>
@@ -113,7 +113,7 @@
                 </a>
             </div>
             <div class="hero-meta">
-                <span>버전 <b>v1.9.0</b></span>
+                <span>버전 <b>v1.9.1</b></span>
                 <span class="sep">/</span>
                 <span>업데이트 <b>2026-10-23</b></span>
                 <span class="sep">/</span>
@@ -123,7 +123,7 @@
 
         <div class="window-stage" id="heroWindow">
             <div class="window">
-                <iframe src="./demo/index.html?fit=1&v=q8m3x2vd&lang=ko" title="GoodPlanCraftLauncher 인터페이스" loading="eager"></iframe>
+                <iframe src="./demo/index.html?fit=1&v=h6p4r8w2&lang=ko" title="GoodPlanCraftLauncher 인터페이스" loading="eager"></iframe>
             </div>
         </div>
         <p class="window-note">위 창은 <b>클릭할 수 있습니다</b> — 웹 페이지 안에서 실행되는 런처 인터페이스 자체입니다.</p>
@@ -264,8 +264,8 @@
                 <span class="dl-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
                 </span>
-                <div class="download-file">GPCL-1.9.0-Setup.exe</div>
-                <a href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.0-Setup.exe" class="download-btn">
+                <div class="download-file">GPCL-1.9.1-Setup.exe</div>
+                <a href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.1-Setup.exe" class="download-btn">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
                     블록 세계로 출발!
                 </a>
@@ -381,9 +381,29 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                 <div class="timeline-item reveal">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
+                        <span class="version-number">v1.9.1</span>
+                        <span class="version-title">Microsoft 계정, 여러 게임 폴더, 버전별 Java</span>
+                        <span class="latest-chip">최신</span>
+                        <span class="version-date">2026-10-23</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Microsoft 로그인을 새로 만들었습니다. 여러 계정을 저장하고 언제든 전환하거나 삭제할 수 있으며, 런처를 다시 시작해도 로그인이 유지됩니다</li>
+                        <li>실행 전에 로그인 토큰을 자동으로 갱신합니다. 토큰이 만료되면 다시 로그인하도록 안내하고, 서버 접속 시 실패하지 않습니다</li>
+                        <li>저장된 계정에 실제 Minecraft 스킨 머리가 표시됩니다</li>
+                        <li>게임 폴더를 여러 개 추가하고 폴더별로 버전을 필터링할 수 있습니다. PCL2 루트 같은 상위 폴더를 고르면 안의 .minecraft를 자동으로 찾습니다</li>
+                        <li>버전마다 Java를 따로 선택할 수 있습니다(자동 / 8 / 16 / 17 / 21 / 25 / 사용자 지정 경로)</li>
+                        <li>크래시 분석이 25개 언어를 모두 지원하고, 오류 보고서에 시간대와 현지 시간이 추가되었습니다</li>
+                        <li>다운로드 패널에 실시간 속도 그래프, 현재 및 최고 속도, 대기 중인 작업이 표시됩니다. 속도 단위는 MB/s 또는 Mbps로 선택할 수 있습니다</li>
+                        <li>Java 런타임 다운로드를 다운로드 페이지의 별도 탭으로 옮겼습니다</li>
+                        <li>설정 페이지의 메모리 사용량이 실시간으로 갱신되어, 페이지를 열었을 때의 오래된 숫자가 아니게 되었습니다</li>
+                        <li>선택한 버전을 삭제하면 즉시 버전 목록으로 돌아가고, 삭제된 버전이 계속 표시되지 않습니다</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
                         <span class="version-number">v1.9.0</span>
                         <span class="version-title">다운로드 화면 개편, 모드팩과 셰이더 지원</span>
-                        <span class="latest-chip">최신</span>
                         <span class="version-date">2026-10-23</span>
                     </div>
                     <ul class="changelog">
@@ -508,6 +528,8 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                         <li>수정: 스레드 수 설정이 무시되던 문제, 404 페이지가 파일로 저장되던 문제, 다운로드 실패 후 부분 파일이 남던 문제</li>
                     </ul>
                 </div>
+                <details class="older-versions">
+                    <summary>이전 버전 14개 보기</summary>
                 <div class="timeline-item reveal">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
@@ -525,8 +547,6 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                         <li>시작 애니메이션과 페이지 전환이 부드러워졌습니다</li>
                     </ul>
                 </div>
-                <details class="older-versions">
-                    <summary>이전 버전 13개 보기</summary>
                 <div class="timeline-item reveal">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
@@ -692,7 +712,7 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                 </div>
                 </details>
                 <div class="history-more">
-                    <a href="./history/index.ko">전체 업데이트 내역 보기(모든 21개 버전과 설치 파일) →</a>
+                    <a href="./history/index.ko">전체 업데이트 내역 보기(모든 22개 버전과 설치 파일) →</a>
                 </div>
             </div>
         </div>

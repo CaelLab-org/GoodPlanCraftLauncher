@@ -11,7 +11,7 @@
 import { getLocale, t } from '../i18n';
 import { escapeHtml, getCustomSelectValue, initCustomSelect, setCustomSelectOptions, setStatus, showToast } from './dom';
 import { startModInstall, startModpackInstall } from './launch';
-import { allVersions, loadVersions, renderVersionSelectList, selectedVersionId } from './versions';
+import { allVersions, loadVersions, renderVersionSelectList, selectedVersionId, selectedVersionRoot } from './versions';
 // __IMPORTS_END__
 
 const tabVersions: HTMLElement | null = document.getElementById('download-tab-versions');
@@ -19,6 +19,7 @@ const tabMods: HTMLElement | null = document.getElementById('download-tab-mods')
 const tabShaders: HTMLElement | null = document.getElementById('download-tab-shaders');
 const tabResourcepacks: HTMLElement | null = document.getElementById('download-tab-resourcepacks');
 const tabModpacks: HTMLElement | null = document.getElementById('download-tab-modpacks');
+const tabJava: HTMLElement | null = document.getElementById('download-tab-java');
 const modSection: HTMLElement | null = document.getElementById('mod-download-section');
 const versionSection: HTMLElement | null = document.getElementById('version-list-section');
 const versionDetail: HTMLElement | null = document.getElementById('version-detail-page');
@@ -50,7 +51,7 @@ const packConfirm: HTMLButtonElement | null = document.getElementById('modpack-n
 const packCancel: HTMLElement | null = document.getElementById('modpack-name-cancel');
 const packClose: HTMLElement | null = document.getElementById('modpack-name-close');
 
-type TargetChoice = { kind: 'version'; id: string; label: string } | { kind: 'dir'; dir: string; label: string };
+type TargetChoice = { kind: 'version'; id: string; root: string; label: string } | { kind: 'dir'; dir: string; label: string };
 type ResourceProjectType = 'mod' | 'shader' | 'resourcepack' | 'modpack';
 
 interface ResourceTypeConfig {
@@ -176,6 +177,7 @@ function showResourceTab(projectType: ResourceProjectType): void {
   tabShaders?.classList.toggle('active', projectType === 'shader');
   tabResourcepacks?.classList.toggle('active', projectType === 'resourcepack');
   tabModpacks?.classList.toggle('active', projectType === 'modpack');
+  tabJava?.classList.remove('active');
   modSection?.classList.remove('hidden');
   versionSection?.classList.add('hidden');
   versionDetail?.classList.add('hidden');
@@ -208,12 +210,28 @@ function showVersionTab(): void {
   tabShaders?.classList.remove('active');
   tabResourcepacks?.classList.remove('active');
   tabModpacks?.classList.remove('active');
+  tabJava?.classList.remove('active');
   tabVersions?.classList.add('active');
   modSection?.classList.add('hidden');
   versionSection?.classList.remove('hidden');
-  javaSection?.classList.remove('hidden');
+  javaSection?.classList.add('hidden');
   detailEl?.classList.add('hidden');
   resultsEl?.classList.remove('hidden');
+}
+
+function showJavaTab(): void {
+  resetDownloadScroll();
+  tabVersions?.classList.remove('active');
+  tabMods?.classList.remove('active');
+  tabShaders?.classList.remove('active');
+  tabResourcepacks?.classList.remove('active');
+  tabModpacks?.classList.remove('active');
+  tabJava?.classList.add('active');
+  modSection?.classList.add('hidden');
+  versionSection?.classList.add('hidden');
+  versionDetail?.classList.add('hidden');
+  detailEl?.classList.add('hidden');
+  javaSection?.classList.remove('hidden');
 }
 
 export function resetToVersionTab(): void {
@@ -237,7 +255,7 @@ function currentFilters(): { gameVersion: string; loader: string } {
 }
 
 function preferredGameVersion(): string {
-  const current: any = installedVersions.find((v: any) => v.id === selectedVersionId);
+  const current: any = installedVersions.find((v: any) => v.id === selectedVersionId && v.root === selectedVersionRoot);
   return current?.mcVersion || '';
 }
 
@@ -356,6 +374,7 @@ function renderResults(items: any[]): void {
         <div class="mod-card-desc">${escapeHtml(item.description || '')}</div>
         <div class="mod-card-meta">${escapeHtml(item.author || '')} · ${t('ui.count_downloads', { count: formatCount(item.downloads) })}${item.categories?.length ? ` · ${escapeHtml(item.categories.slice(0, 3).map((c: string) => t(CATEGORY_NAMES[String(c).toLowerCase()] || c)).join(' / '))}` : ''}</div>
       </div>
+      <span class="mod-card-chevron icon icon-chevron"></span>
     `;
     card.addEventListener('click', () => void openProject(item));
     resultsEl.appendChild(card);
@@ -731,8 +750,9 @@ function closeTargetPicker(choice: TargetChoice | null): void {
 
 function selectTarget(choice: TargetChoice): void {
   targetChoice = choice;
+  const key: string = choice.kind === 'version' ? `version:${choice.root}:${choice.id}` : `dir:${choice.dir}`;
   targetList?.querySelectorAll('.mod-target-item').forEach((el: Element) => {
-    el.classList.toggle('selected', (el as HTMLElement).dataset.key === `${choice.kind}:${choice.kind === 'version' ? choice.id : choice.dir}`);
+    el.classList.toggle('selected', (el as HTMLElement).dataset.key === key);
   });
   if (targetConfirm) {
     targetConfirm.disabled = false;
@@ -782,7 +802,7 @@ async function openTargetPicker(fileLabel: string, version: any, projectType: Re
     const ca = versionMatches(version, a, projectType);
     const cb = versionMatches(version, b, projectType);
     const score = (v: any, c: any): number =>
-      (isBlocked(v) ? 0 : 8) + (v.id === selectedVersionId ? 8 : 0) + (c.game ? 4 : 0) + (c.loader ? 2 : 0);
+      (isBlocked(v) ? 0 : 8) + (v.id === selectedVersionId && v.root === selectedVersionRoot ? 8 : 0) + (c.game ? 4 : 0) + (c.loader ? 2 : 0);
     return score(b, cb) - score(a, ca) || b.id.localeCompare(a.id, undefined, { numeric: true });
   });
 
@@ -801,7 +821,7 @@ async function openTargetPicker(fileLabel: string, version: any, projectType: Re
     const blocked: boolean = isBlocked(target);
     const loaderLabel: string = (target.loaders || []).length ? target.loaders.join(' / ') : (target.hasOptiFine ? 'OptiFine' : t('ui.vanilla'));
     const notes: string[] = [];
-    if (target.id === selectedVersionId) notes.push(t('ui.currently_launching'));
+    if (target.id === selectedVersionId && target.root === selectedVersionRoot) notes.push(t('ui.currently_launching'));
     if (!blocked && !compat.game) notes.push(t('ui.game_version_mismatch'));
     if (!blocked && !compat.loader) notes.push(t('ui.loader_mismatch'));
     if (projectType === 'mod' && !blocked && !target.isolated) notes.push(t('ui.first_install_will_enable_version_isolation'));
@@ -812,7 +832,7 @@ async function openTargetPicker(fileLabel: string, version: any, projectType: Re
 
     const row: HTMLDivElement = document.createElement('div');
     row.className = blocked ? 'mod-target-item incompatible' : 'mod-target-item';
-    row.dataset.key = `version:${target.id}`;
+    row.dataset.key = `version:${target.root}:${target.id}`;
     row.innerHTML = `
       <div class="mod-target-name">
         <span>${escapeHtml(target.id)}</span>
@@ -822,9 +842,12 @@ async function openTargetPicker(fileLabel: string, version: any, projectType: Re
       ${notes.length ? `<div class="mod-target-notes">${notes.map((n: string) => `<span>${escapeHtml(n)}</span>`).join('')}</div>` : ''}
     `;
     if (!blocked) {
-      row.addEventListener('click', () => selectTarget({ kind: 'version', id: target.id, label: target.id }));
+      const label: string = target.id === target.dirName || !target.dirName
+        ? target.id
+        : `${target.id} · ${target.dirName}`;
+      row.addEventListener('click', () => selectTarget({ kind: 'version', id: target.id, root: target.root, label }));
       row.addEventListener('dblclick', () => {
-        selectTarget({ kind: 'version', id: target.id, label: target.id });
+        selectTarget({ kind: 'version', id: target.id, root: target.root, label });
         void confirmTarget();
       });
     }
@@ -834,7 +857,7 @@ async function openTargetPicker(fileLabel: string, version: any, projectType: Re
   const preferred: any = candidates.find((v: any) => v.id === selectedVersionId && !isBlocked(v))
     || candidates.find((v: any) => { const c = versionMatches(version, v, projectType); return c.game && c.loader; })
     || candidates.find((v: any) => !isBlocked(v));
-  if (preferred) selectTarget({ kind: 'version', id: preferred.id, label: preferred.id });
+  if (preferred) selectTarget({ kind: 'version', id: preferred.id, root: preferred.root, label: preferred.id });
 
   targetOverlay.classList.remove('hidden');
 
@@ -911,6 +934,7 @@ async function installMod(item: any, version: any, btn: HTMLButtonElement): Prom
 
   try {
     const targetVersionId: string = choice.kind === 'version' ? choice.id : '';
+    const versionRoot: string = choice.kind === 'version' ? choice.root : '';
     const targetDir: string = choice.kind === 'dir' ? choice.dir : '';
 
     const depGameVersion: string = (version.gameVersions || [])[0] || currentFilters().gameVersion;
@@ -921,7 +945,7 @@ async function installMod(item: any, version: any, btn: HTMLButtonElement): Prom
       ? await startModInstall({
           direct: true,
           displayName,
-          payload: { url: version.downloadUrl, fileName: version.fileName, targetVersionId, targetDir, projectType }
+          payload: { url: version.downloadUrl, fileName: version.fileName, targetVersionId, versionRoot, targetDir, projectType }
         })
       : await startModInstall({
           direct: false,
@@ -931,6 +955,7 @@ async function installMod(item: any, version: any, btn: HTMLButtonElement): Prom
             projectId: item.id,
             versionId: version.id,
             targetVersionId,
+            versionRoot,
             targetDir,
             gameVersion: depGameVersion,
             loader: depLoader,
@@ -966,6 +991,7 @@ if (tabShaders) tabShaders.addEventListener('click', () => showResourceTab('shad
 if (tabResourcepacks) tabResourcepacks.addEventListener('click', () => showResourceTab('resourcepack'));
 if (tabModpacks) tabModpacks.addEventListener('click', () => showResourceTab('modpack'));
 if (tabVersions) tabVersions.addEventListener('click', showVersionTab);
+if (tabJava) tabJava.addEventListener('click', showJavaTab);
 
 if (searchBtn) searchBtn.addEventListener('click', () => void searchMods());
 if (searchInput) {

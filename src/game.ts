@@ -18,7 +18,7 @@ import { APP_VERSION, DEFAULT_SETTINGS, GAME_DIR, computeAutoMemoryMB, getVersio
 import { CrashRecord, buildErrorReport, analyzeCrash, listCrashArtifacts } from './crash-report';
 import { generateLaunchDisplayName } from './download';
 import { t } from './i18n';
-import { downloadAndInstallJava, ensureJavaRuntime, getJavaVersionFromVersionData } from './java';
+import { downloadAndInstallJava, ensureJavaRuntime, findJavaExecutableInDir, getJavaVersionFromVersionData } from './java';
 import { mainWindow, trimWorkingSets } from './shell';
 // __IMPORTS_END__
 
@@ -36,6 +36,7 @@ export interface GameSession {
   versionId: string;
   username: string;
   startedAt: number;
+  rootDir: string;
   gameDir: string;
   javaPath: string | null;
   args: string[];
@@ -46,6 +47,19 @@ export interface GameSession {
 
 
 export let gameSessions: Map<number, GameSession> = new Map();
+
+
+function resolveJavaExecutable(value: string): string | null {
+  const target: string = String(value || '').trim();
+  if (!target) return null;
+  try {
+    if (!fs.existsSync(target)) return null;
+    const stat: fs.Stats = fs.statSync(target);
+    if (stat.isDirectory()) return findJavaExecutableInDir(target);
+    if (stat.isFile() && /^(java|javaw)\.exe$/i.test(path.basename(target))) return target;
+  } catch {}
+  return null;
+}
 
 
 export let currentGameVersionId: string | null = null;
@@ -884,6 +898,8 @@ ipcMain.handle('launch-minecraft', async (_, opt: any) => {
     let memoryMB: number | null = null;
     let actualWindowMode: string = mode;
     let serverIp: string | null = null;
+    let versionJavaChoice: string = 'auto';
+    let versionJavaPath: string = '';
 
     try {
       const versionConfigPath: string = path.join(rootDir, 'versions', versionId, 'gpcl', 'config.json');
@@ -905,6 +921,13 @@ ipcMain.handle('launch-minecraft', async (_, opt: any) => {
         if (versionSettings.windowMode && versionSettings.windowMode !== 'global') {
           actualWindowMode = versionSettings.windowMode;
           writeLog(`[启动] 使用版本窗口模式: ${actualWindowMode}`);
+        }
+
+        if (versionSettings.javaVersion) {
+          versionJavaChoice = String(versionSettings.javaVersion);
+        }
+        if (versionSettings.javaPath) {
+          versionJavaPath = String(versionSettings.javaPath);
         }
 
         if (versionSettings.startupMode === 'join') {
@@ -939,7 +962,37 @@ ipcMain.handle('launch-minecraft', async (_, opt: any) => {
       return { success: false, error: 'Launch cancelled', cancelled: true };
     }
 
-    let java: string | null = await ensureJavaRuntime(javaVersion);
+    let java: string | null = null;
+    let javaVersionToUse: string = javaVersion;
+
+    // 版本设置里明确选了 Java 就用它；否则有全局自定义路径就先用自定义路径，
+    // 最后才回到“按游戏版本自动选择”的推荐 Java。
+    if (versionJavaPath) {
+      const resolved: string | null = resolveJavaExecutable(versionJavaPath);
+      if (resolved) {
+        java = resolved;
+        writeLog(`[启动] 使用版本自定义 Java: ${java}`);
+      } else {
+        writeLog(`[启动] 版本自定义 Java 路径无效: ${versionJavaPath}`);
+      }
+    } else if (versionJavaChoice && versionJavaChoice !== 'auto' && versionJavaChoice !== 'custom') {
+      javaVersionToUse = versionJavaChoice;
+      java = await ensureJavaRuntime(javaVersionToUse);
+    } else if (versionJavaChoice === 'custom') {
+      const resolved: string | null = resolveJavaExecutable(String(settings.game?.javaPath || ''));
+      if (resolved) {
+        java = resolved;
+        writeLog(`[启动] 使用全局自定义 Java: ${java}`);
+      }
+    } else if (settings.game?.javaPath) {
+      const resolved: string | null = resolveJavaExecutable(String(settings.game.javaPath));
+      if (resolved) {
+        java = resolved;
+        writeLog(`[启动] 使用全局 Java 路径: ${java}`);
+      }
+    } else {
+      java = await ensureJavaRuntime(javaVersionToUse);
+    }
 
     if (launchCancelFlag) {
       writeLog('[启动] 用户已取消启动');
@@ -947,16 +1000,16 @@ ipcMain.handle('launch-minecraft', async (_, opt: any) => {
     }
 
     if (!java) {
-      writeLog(`[Java] Java ${javaVersion} 未安装，自动开始下载`);
+      writeLog(`[Java] Java ${javaVersionToUse} 未安装，自动开始下载`);
 
       if (mainWindow) {
         mainWindow.webContents.send('java-auto-download-start', {
-          javaVersion: javaVersion,
+          javaVersion: javaVersionToUse,
           mcVersion: versionId
         });
       }
 
-      const installResult: any = await downloadAndInstallJava(javaVersion);
+      const installResult: any = await downloadAndInstallJava(javaVersionToUse);
 
       if (launchCancelFlag) {
         writeLog('[启动] 用户已取消启动（Java下载完成后）');
@@ -965,19 +1018,19 @@ ipcMain.handle('launch-minecraft', async (_, opt: any) => {
       
       if (installResult.success) {
         java = installResult.javaPath;
-        writeLog(`[Java] Java ${javaVersion} 安装成功: ${java}`);
+        writeLog(`[Java] Java ${javaVersionToUse} 安装成功: ${java}`);
 
         if (mainWindow) {
           mainWindow.webContents.send('java-auto-download-complete', {
-            javaVersion: javaVersion,
+            javaVersion: javaVersionToUse,
             javaPath: java
           });
         }
       } else {
-        writeLog(`[Java] Java ${javaVersion} 安装失败: ${installResult.error}`);
+        writeLog(`[Java] Java ${javaVersionToUse} 安装失败: ${installResult.error}`);
         return {
           success: false,
-          error: t('ui.java_version_installation_failed_error', { version: javaVersion, error: installResult.error })
+          error: t('ui.java_version_installation_failed_error', { version: javaVersionToUse, error: installResult.error })
         };
       }
     }
@@ -1007,7 +1060,7 @@ ipcMain.handle('launch-minecraft', async (_, opt: any) => {
     // （实测 1.21.11 日志：Completely ignored arguments: [--title, ...]）
     {
       const previewContext: any = {
-        mcVersion: generateLaunchDisplayName(versionId),
+        mcVersion: generateLaunchDisplayName(versionId, rootDir),
         mcId: versionId,
         username: username,
         java: java ? path.basename(path.dirname(java)) : '',
@@ -1070,12 +1123,13 @@ ipcMain.handle('launch-minecraft', async (_, opt: any) => {
       versionId: versionId,
       username: username,
       startedAt: Date.now(),
+      rootDir: rootDir,
       gameDir: gameDir,
       javaPath: java,
       args: maskLaunchArgs(args),
       output: '',
       titleContext: {
-        mcVersion: generateLaunchDisplayName(versionId),
+        mcVersion: generateLaunchDisplayName(versionId, rootDir),
         mcId: versionId,
         username: username,
         java: java ? path.basename(path.dirname(java)) : '',
@@ -1153,7 +1207,7 @@ ipcMain.handle('launch-minecraft', async (_, opt: any) => {
       const crashInfo: any = crash ? {
         exitCode: code,
         versionId: session.versionId,
-        versionName: generateLaunchDisplayName(session.versionId),
+        versionName: generateLaunchDisplayName(session.versionId, session.rootDir),
         username: session.username,
         startedAt: session.startedAt,
         durationSec: Math.round((Date.now() - session.startedAt) / 1000),

@@ -357,6 +357,9 @@ export async function initMemorySettings(): Promise<void> {
   if (!modeGroup && !slider) return;
 
   let systemInfo: any = { totalMB: 0, freeMB: 0, autoMemoryMB: 0 };
+  let autoMode: boolean = true;
+  let refreshing: boolean = false;
+  const settingsPage: HTMLElement | null = document.getElementById('settings-page');
 
   const updateLabels = (auto: boolean): void => {
     const customGB: number = slider ? (parseInt(slider.value, 10) || 1) : 4;
@@ -380,6 +383,7 @@ export async function initMemorySettings(): Promise<void> {
   };
 
   const setMode = (auto: boolean): void => {
+    autoMode = auto;
     if (modeGroup) {
       modeGroup.querySelectorAll<HTMLInputElement>('input[name="memory-mode"]').forEach((radio: HTMLInputElement) => {
         radio.checked = radio.value === (auto ? 'auto' : 'custom');
@@ -432,6 +436,21 @@ export async function initMemorySettings(): Promise<void> {
   }
 
   await refresh();
+
+  // 设置页开着的时候系统内存会变（别的程序在吃内存），隔几秒重新取一次，
+  // 只刷新数字，不动滑块和当前选择，免得把用户正在拖的值顶掉。
+  setInterval(async (): Promise<void> => {
+    if (refreshing) return;
+    if (settingsPage && settingsPage.classList.contains('hidden')) return;
+    refreshing = true;
+    try {
+      systemInfo = await window.gpcl.getSystemMemory();
+      updateLabels(autoMode);
+    } catch {
+    } finally {
+      refreshing = false;
+    }
+  }, 2500);
 }
 
 
@@ -553,11 +572,98 @@ export async function initDownloadSettings(): Promise<void> {
   const installDirLabel: HTMLElement | null = document.getElementById('settings-install-dir-label');
   const installDirChange: HTMLElement | null = document.getElementById('settings-install-dir-change');
   const installDirReset: HTMLElement | null = document.getElementById('settings-install-dir-reset');
+  const gameDirList: HTMLElement | null = document.getElementById('settings-game-dir-list');
+  const addGameDirBtn: HTMLElement | null = document.getElementById('settings-add-game-dir');
 
   const refreshInstallDirLabel = (custom: string): void => {
     if (!installDirLabel) return;
     installDirLabel.textContent = custom ? custom : t('ui.default_folder_minecraft_in_the_launcher_data_folder');
   };
+
+  const notifyGameDirsChanged = (): void => {
+    window.dispatchEvent(new CustomEvent('gpcl-game-dirs-changed'));
+  };
+
+  function renderGameDirs(data: any): void {
+    if (!gameDirList) return;
+    gameDirList.innerHTML = '';
+    const dirs: any[] = Array.isArray(data?.dirs) ? data.dirs : [];
+    for (const dir of dirs) {
+      const row: HTMLDivElement = document.createElement('div');
+      row.className = 'settings-dir-row';
+
+      const main: HTMLDivElement = document.createElement('div');
+      main.className = 'settings-dir-main';
+      const name: HTMLDivElement = document.createElement('div');
+      name.className = 'settings-dir-name';
+      name.textContent = dir.name || dir.path;
+      const pathEl: HTMLDivElement = document.createElement('div');
+      pathEl.className = 'settings-dir-path';
+      pathEl.textContent = dir.path;
+      pathEl.title = dir.path;
+      main.appendChild(name);
+      main.appendChild(pathEl);
+
+      const badges: HTMLDivElement = document.createElement('div');
+      badges.className = 'settings-dir-badges';
+      if (dir.isInstall) badges.innerHTML += `<span class="settings-dir-badge">${t('ui.current_download_folder')}</span>`;
+      if (dir.isDefault) badges.innerHTML += `<span class="settings-dir-badge muted">${t('ui.default_folder')}</span>`;
+
+      const actions: HTMLDivElement = document.createElement('div');
+      actions.className = 'settings-dir-actions';
+
+      if (!dir.isInstall) {
+        const useBtn: HTMLButtonElement = document.createElement('button');
+        useBtn.type = 'button';
+        useBtn.className = 'settings-action-btn settings-action-btn-secondary';
+        useBtn.textContent = t('ui.use_for_downloads');
+        useBtn.addEventListener('click', async (): Promise<void> => {
+          await saveDownloadField({ installDir: dir.path });
+          refreshInstallDirLabel(dir.path);
+          await refreshGameDirs();
+          notifyGameDirsChanged();
+          showToast('ui.download_folder_changed', dir.path, 'success', 'game-dir-target');
+        });
+        actions.appendChild(useBtn);
+      }
+
+      const openBtn: HTMLButtonElement = document.createElement('button');
+      openBtn.type = 'button';
+      openBtn.className = 'settings-action-btn settings-action-btn-secondary';
+      openBtn.textContent = t('ui.open');
+      openBtn.addEventListener('click', (): void => { void window.gpcl.openFolder(dir.path); });
+      actions.appendChild(openBtn);
+
+      if (!dir.isDefault) {
+        const removeBtn: HTMLButtonElement = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'settings-action-btn settings-action-btn-secondary';
+        removeBtn.textContent = t('ui.remove');
+        removeBtn.addEventListener('click', async (): Promise<void> => {
+          const result: any = await window.gpcl.removeGameDir(dir.path);
+          if (result?.success) {
+            await refreshGameDirs();
+            notifyGameDirsChanged();
+            showToast('ui.folder_removed', dir.path, 'info', 'game-dir-removed');
+          }
+        });
+        actions.appendChild(removeBtn);
+      }
+
+      row.appendChild(main);
+      row.appendChild(badges);
+      row.appendChild(actions);
+      gameDirList.appendChild(row);
+    }
+  }
+
+  async function refreshGameDirs(): Promise<void> {
+    try {
+      const data: any = await window.gpcl.getGameDirs();
+      renderGameDirs(data);
+      if (data?.installDir) refreshInstallDirLabel(data.installDir);
+    } catch {}
+  }
 
   const saveDownloadField = async (patch: Record<string, any>): Promise<void> => {
     const settings = await loadSettings();
@@ -571,6 +677,11 @@ export async function initDownloadSettings(): Promise<void> {
     const value: number = parseInt(speedSlider.value, 10) || 0;
     speedLabel.textContent = value > 0 ? `${value} MB/s` : t('ui.unlimited');
   };
+
+  initCustomSelect('settings-speed-unit', async (value: string): Promise<void> => {
+    await saveDownloadField({ speedUnit: value === 'mbs' ? 'mbs' : 'mbps' });
+    window.dispatchEvent(new CustomEvent('gpcl-speed-unit-changed', { detail: value }));
+  });
 
   initCustomSelect('settings-file-source', async (value: string): Promise<void> => {
     const settings = await loadSettings();
@@ -589,6 +700,7 @@ export async function initDownloadSettings(): Promise<void> {
   const settings = await loadSettings();
   setCustomSelectValue('settings-file-source', settings.download?.fileSource || 'auto');
   setCustomSelectValue('settings-version-source', settings.download?.versionSource || 'auto');
+  setCustomSelectValue('settings-speed-unit', settings.download?.speedUnit === 'mbs' ? 'mbs' : 'mbps');
 
   const parseJsonArray = (raw: any): any[] => {
     try {
@@ -759,8 +871,12 @@ export async function initDownloadSettings(): Promise<void> {
       if ((confirmResult?.response ?? 1) !== 0) return;
 
       await saveDownloadField({ installDir: dir });
-      refreshInstallDirLabel(dir);
-      showToast('ui.game_directory_switched', dir, 'success', 'install-dir-changed');
+      const added: any = await window.gpcl.addGameDir(dir);
+      const target: string = String(added?.path || added?.installDir || dir);
+      refreshInstallDirLabel(target);
+      await refreshGameDirs();
+      notifyGameDirsChanged();
+      showToast('ui.game_directory_switched', target, 'success', 'install-dir-changed');
     });
   }
 
@@ -768,9 +884,24 @@ export async function initDownloadSettings(): Promise<void> {
     installDirReset.addEventListener('click', async (): Promise<void> => {
       await saveDownloadField({ installDir: '' });
       refreshInstallDirLabel('');
+      await refreshGameDirs();
+      notifyGameDirsChanged();
       showToast('ui.default_directory_restored', '新下载会放回启动器数据目录', 'info', 'install-dir-reset');
     });
   }
+
+  if (addGameDirBtn) {
+    addGameDirBtn.addEventListener('click', async (): Promise<void> => {
+      const dir: string | null = await window.gpcl.selectDirectory();
+      if (!dir) return;
+      const result: any = await window.gpcl.addGameDir(dir);
+      await refreshGameDirs();
+      notifyGameDirsChanged();
+      showToast('ui.folder_added', result?.path || dir, result?.success ? 'success' : 'error', 'game-dir-added');
+    });
+  }
+
+  void refreshGameDirs();
 
   if (speedSlider) {
     speedSlider.value = String(settings.download?.speedLimit || 0);
@@ -802,7 +933,6 @@ export async function initAboutPage(): Promise<void> {
       'runtime-app': info.appVersion,
       'runtime-electron': info.electron,
       'runtime-chrome': info.chrome,
-      'runtime-node': info.node,
       'runtime-platform': info.platform
     };
     for (const [id, value] of Object.entries(fields)) {

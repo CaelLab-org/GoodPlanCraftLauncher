@@ -1,8 +1,32 @@
 {
   "schema": 1,
-  "latest": "1.9.0",
+  "latest": "1.9.1",
   "updated": "2026-10-23",
   "versions": [
+    {
+      "version": "1.9.1",
+      "anchor": "v1-9-1",
+      "date": "2026-10-23",
+      "title": "Microsoft accounts, multiple game folders, per-version Java",
+      "log": [
+        "Microsoft sign-in has been rebuilt: save several accounts, switch or remove them at any time, and stay signed in after restarting the launcher",
+        "Sign-in tokens refresh automatically before launch; if a token expires, the launcher now asks you to sign in again instead of failing when joining a server",
+        "Saved accounts show their real Minecraft skin head",
+        "Add several game folders and filter versions by folder; choosing a parent folder such as a PCL2 root automatically finds the .minecraft inside it",
+        "Each version can use its own Java runtime: automatic, 8, 16, 17, 21, 25 or a custom path",
+        "Crash analysis now speaks all 25 languages, and error reports include your time zone and local time",
+        "The download panel shows a live speed graph, current and peak speed and queued tasks; speed can be displayed in MB/s or Mbps",
+        "Java runtime downloads moved to their own tab on the download page",
+        "Memory usage on the settings page now refreshes live instead of showing the value from when the page was opened",
+        "Deleting the selected version returns to the version list immediately instead of still showing the deleted version"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.1-Setup.exe",
+        "file": "GPCL-1.9.1-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.9.0",
       "anchor": "v1-9-0",

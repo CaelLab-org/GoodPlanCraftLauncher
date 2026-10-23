@@ -296,7 +296,7 @@ export async function openGameLogFile(gameDir?: string): Promise<void> {
   if (result && result.success) {
     showToast('ui.log_opened', (result.opened || '').split(/[\\/]/).pop() || 'logs', 'info', 'log-opened');
   } else {
-    showToast('ui.could_not_open_the_log', (result && result.error) || '找不到日志文件', 'error');
+    showToast('ui.could_not_open_the_log', (result && result.error) || t('ui.log_file_not_found'), 'error');
   }
 }
 
@@ -311,18 +311,18 @@ if (gameMonitorStopBtn) {
     const countNote: string = monitorRunningCount > 1 ? t('ui.count_games_are_running_and_will_be_closed_together', { count: monitorRunningCount }) : '';
     const confirmed: boolean = await showDialog({
       type: 'confirm',
-      title: '结束游戏',
+      title: t('ui.end_game'),
       message: t('ui.end_the_running_game_unsaved_progress_will_be_lost_note', { note: countNote }),
-      confirmText: '结束游戏',
-      cancelText: '取消'
+      confirmText: t('ui.end_game'),
+      cancelText: t('ui.cancel')
     });
     if (!confirmed) return;
     if (window.gpcl && window.gpcl.stopGame) {
       const result: any = await window.gpcl.stopGame();
       if (result && result.success) {
-        showToast('ui.ending_the_game', '已请求关闭 Minecraft 进程', 'info', 'game-stopping');
+        showToast('ui.ending_the_game', t('ui.game_stop_requested'), 'info', 'game-stopping');
       } else {
-        showToast('ui.could_not_end_the_game', (result && result.error) || '没有找到运行中的游戏', 'error');
+        showToast('ui.could_not_end_the_game', (result && result.error) || t('ui.no_running_game_found'), 'error');
       }
     }
   });
@@ -337,8 +337,8 @@ if (crashDialogOk) {
 if (crashDialogDetail) {
   crashDialogDetail.addEventListener('click', (e: Event): void => {
     e.preventDefault();
-    const message: string = crashAnalysisReady ? formatCrashDetail(currentCrashAnalysis) : '正在分析日志，稍等一下再看。';
-    void showDialog({ type: 'info', title: '错误详情', message });
+    const message: string = crashAnalysisReady ? formatCrashDetail(currentCrashAnalysis) : t('ui.crash_analysis_wait');
+    void showDialog({ type: 'info', title: t('ui.error_details'), message });
   });
 }
 
@@ -355,21 +355,21 @@ if (crashDialogExport) {
     if (!window.gpcl || !window.gpcl.exportErrorReport) return;
     const button: HTMLButtonElement = crashDialogExport as HTMLButtonElement;
     button.disabled = true;
-    button.textContent = '正在导出...';
+    button.textContent = t('ui.exporting_report');
     try {
       const result: any = await window.gpcl.exportErrorReport(currentCrashInfo);
       if (result && result.success) {
-        showToast('ui.error_report_exported', '已包含分析结果、Mod 列表和各份日志，请把整个压缩包发给帮助你的人', 'success', 'report-exported');
+        showToast('ui.error_report_exported', t('ui.report_export_hint'), 'success', 'report-exported');
       } else if (result && result.cancelled) {
         showToast('ui.export_cancelled', '', 'info', 'report-export-cancelled');
       } else {
-        showToast('ui.export_failed', (result && result.error) || '未知错误', 'error');
+        showToast('ui.export_failed', (result && result.error) || t('ui.unknown_error'), 'error');
       }
     } catch (e: any) {
-      showToast('ui.export_failed', e.message || '未知错误', 'error');
+      showToast('ui.export_failed', e.message || t('ui.unknown_error'), 'error');
     } finally {
       button.disabled = false;
-      button.textContent = '导出错误报告';
+      button.textContent = t('ui.export_error_report');
     }
   });
 }

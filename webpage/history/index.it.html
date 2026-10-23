@@ -74,7 +74,7 @@
                     </div>
                 </li>
                 <li class="lang-switch"><select aria-label="Lingua" onchange="if(this.value)location.href=this.value"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it" selected>Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select></li>
-                <li><a href="../index.it#download" class="nav-cta">&#9662; Scarica v1.9.0</a></li>
+                <li><a href="../index.it#download" class="nav-cta">&#9662; Scarica v1.9.1</a></li>
             </ul>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Apri menu" aria-expanded="false">&#9776;</button>
         </div>
@@ -92,6 +92,7 @@
             <p class="cl-intro">Dalla 1.0.0 all'ultima release, ogni versione — cosa è cambiato e se è scaricabile — è in questa pagina.</p>
             <p class="cl-note">Gli installer non sono stati conservati per la 1.3.2 e precedenti; l'aggiornamento automatico integrato nelle vecchie versioni potrebbe non funzionare più, quindi per l'uso quotidiano si consiglia di installare l'ultima release.</p>
             <div class="cl-index" role="navigation" aria-label="Indice delle versioni">
+                <a href="#v1-9-1">1.9.1</a>
                 <a href="#v1-9-0">1.9.0</a>
                 <a href="#v1-8-0">1.8.0</a>
                 <a href="#v1-7-2">1.7.2</a>
@@ -120,12 +121,39 @@
     <main class="history cl-history">
         <div class="container">
             <div class="timeline">
+                <article class="timeline-item" id="v1-9-1">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.9.1</span>
+                        <span class="version-title">Account Microsoft, più cartelle di gioco e Java per versione</span>
+                        <span class="latest-chip">Ultima</span>
+                        <span class="version-date">2026-10-23</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>L'accesso Microsoft è stato rifatto: salva più account, cambiali o rimuovili quando vuoi e resta connesso dopo il riavvio del launcher</li>
+                        <li>I token di accesso si rinnovano automaticamente prima dell'avvio; se scadono, ora ti viene chiesto di accedere di nuovo invece di fallire entrando in un server</li>
+                        <li>Gli account salvati mostrano la vera testa della skin di Minecraft</li>
+                        <li>Aggiungi più cartelle di gioco e filtra le versioni per cartella; scegliendo una cartella superiore come la radice di PCL2, il .minecraft al suo interno viene trovato automaticamente</li>
+                        <li>Ogni versione può usare il proprio Java: automatico, 8, 16, 17, 21, 25 o un percorso personalizzato</li>
+                        <li>L'analisi dei crash è disponibile in tutte le 25 lingue e i rapporti di errore includono fuso orario e ora locale</li>
+                        <li>Il pannello di download mostra un grafico della velocità in tempo reale, la velocità attuale e massima e le attività in coda; la velocità può essere mostrata in MB/s o Mbps</li>
+                        <li>Il download di Java è passato a una scheda dedicata nella pagina di download</li>
+                        <li>L'uso della memoria nelle impostazioni ora si aggiorna in tempo reale invece di mostrare il valore di quando hai aperto la pagina</li>
+                        <li>Eliminando la versione selezionata si torna subito all'elenco delle versioni invece di continuare a mostrare quella eliminata</li>
+                    </ul>
+                    <div class="cl-download">
+                        <a class="cl-dl-btn" href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.1-Setup.exe">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                            Scarica v1.9.1
+                        </a>
+                        <span class="cl-file">GPCL-1.9.1-Setup.exe · 94.0 MB · Windows 64 bit</span>
+                    </div>
+                </article>
                 <article class="timeline-item" id="v1-9-0">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
                         <span class="version-number">v1.9.0</span>
                         <span class="version-title">Pagina di download rifatta, con modpack e shader</span>
-                        <span class="latest-chip">Ultima</span>
                         <span class="version-date">2026-10-23</span>
                     </div>
                     <ul class="changelog">

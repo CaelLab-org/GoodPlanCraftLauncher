@@ -74,7 +74,7 @@
                     </div>
                 </li>
                 <li class="lang-switch"><select aria-label="Language" onchange="if(this.value)location.href=this.value"><option value="./index.en-us" selected>English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select></li>
-                <li><a href="../index.en-us#download" class="nav-cta">&#9662; Download v1.9.0</a></li>
+                <li><a href="../index.en-us#download" class="nav-cta">&#9662; Download v1.9.1</a></li>
             </ul>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu" aria-expanded="false">&#9776;</button>
         </div>
@@ -92,6 +92,7 @@
             <p class="cl-intro">From 1.0.0 to the latest release, every version — what changed, and whether it can be downloaded — is on this page.</p>
             <p class="cl-note">Installers were not kept for 1.3.2 and earlier; the built-in updater in old versions may no longer work, so installing the latest release is recommended for daily use.</p>
             <div class="cl-index" role="navigation" aria-label="Version index">
+                <a href="#v1-9-1">1.9.1</a>
                 <a href="#v1-9-0">1.9.0</a>
                 <a href="#v1-8-0">1.8.0</a>
                 <a href="#v1-7-2">1.7.2</a>
@@ -120,12 +121,39 @@
     <main class="history cl-history">
         <div class="container">
             <div class="timeline">
+                <article class="timeline-item" id="v1-9-1">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.9.1</span>
+                        <span class="version-title">Microsoft accounts, multiple game folders, per-version Java</span>
+                        <span class="latest-chip">Latest</span>
+                        <span class="version-date">2026-10-23</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Microsoft sign-in has been rebuilt: save several accounts, switch or remove them at any time, and stay signed in after restarting the launcher</li>
+                        <li>Sign-in tokens refresh automatically before launch; if a token expires, the launcher now asks you to sign in again instead of failing when joining a server</li>
+                        <li>Saved accounts show their real Minecraft skin head</li>
+                        <li>Add several game folders and filter versions by folder; choosing a parent folder such as a PCL2 root automatically finds the .minecraft inside it</li>
+                        <li>Each version can use its own Java runtime: automatic, 8, 16, 17, 21, 25 or a custom path</li>
+                        <li>Crash analysis now speaks all 25 languages, and error reports include your time zone and local time</li>
+                        <li>The download panel shows a live speed graph, current and peak speed and queued tasks; speed can be displayed in MB/s or Mbps</li>
+                        <li>Java runtime downloads moved to their own tab on the download page</li>
+                        <li>Memory usage on the settings page now refreshes live instead of showing the value from when the page was opened</li>
+                        <li>Deleting the selected version returns to the version list immediately instead of still showing the deleted version</li>
+                    </ul>
+                    <div class="cl-download">
+                        <a class="cl-dl-btn" href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.1-Setup.exe">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                            Download v1.9.1
+                        </a>
+                        <span class="cl-file">GPCL-1.9.1-Setup.exe · 94.0 MB · Windows 64-bit</span>
+                    </div>
+                </article>
                 <article class="timeline-item" id="v1-9-0">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
                         <span class="version-number">v1.9.0</span>
                         <span class="version-title">A rebuilt download page, with modpacks and shaders</span>
-                        <span class="latest-chip">Latest</span>
                         <span class="version-date">2026-10-23</span>
                     </div>
                     <ul class="changelog">

@@ -13,7 +13,7 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
-import { getLocale, getLocaleMeta, getSystemLocale, initI18n, isSupportedLocale, translateText } from './i18n';
+import { getLocale, getLocaleMeta, getSystemLocale, initI18n, isSupportedLocale, t, translateText } from './i18n';
 // __IMPORTS_END__
 
 export function computeAutoMemoryMB(totalBytes: number = os.totalmem(), freeBytes: number = os.freemem()): number {
@@ -123,7 +123,9 @@ export const DEFAULT_SETTINGS = {
     fileSource: 'auto',
     versionSource: 'auto',
     speedLimit: 0,
+    speedUnit: 'mbps',
     installDir: '',
+    gameDirs: '',
     customFileMirror: '',
     curseForgeApiKey: '',
     modNameMapping: true,
@@ -312,10 +314,163 @@ export function initLanguage(): void {
 }
 
 
+// 选到的是启动器文件夹（里面还有一层 .minecraft）时落到那一层；选到 .minecraft 本身也照收
+export function normalizeGameDir(dir: string): string {
+  const raw: string = String(dir || '').trim();
+  if (!raw) return '';
+  const resolved: string = path.resolve(raw);
+  try {
+    if (path.basename(resolved).toLowerCase() === '.minecraft') return resolved;
+    const nested: string = path.join(resolved, '.minecraft');
+    if (fs.statSync(nested).isDirectory()) return nested;
+  } catch (e) {}
+  return resolved;
+}
+
+
 export function resolveGameDir(installDir?: string): string {
   const custom: string = String(installDir === undefined ? (currentSettings?.download?.installDir || '') : installDir).trim();
-  return custom ? path.resolve(custom) : path.join(BASE_DIR, '.minecraft');
+  return custom ? normalizeGameDir(custom) : path.join(BASE_DIR, '.minecraft');
 }
+
+
+export interface GameDirEntry {
+  path: string;
+  name: string;
+  isDefault: boolean;
+  isInstall: boolean;
+}
+
+function gameDirKey(dir: string): string {
+  return path.resolve(dir).replace(/[\\/]+$/, '').toLowerCase();
+}
+
+function ensureSettingsLoaded(): any {
+  if (!currentSettings) currentSettings = loadSettings();
+  return currentSettings;
+}
+
+export function getExtraGameDirs(): string[] {
+  const settings: any = ensureSettingsLoaded();
+  let parsed: any = [];
+  try {
+    parsed = JSON.parse(String(settings?.download?.gameDirs || '[]'));
+  } catch {
+    parsed = [];
+  }
+  if (!Array.isArray(parsed)) return [];
+  return parsed
+    .map((item: any) => normalizeGameDir(String(item || '')))
+    .filter((item: string) => item.length > 0);
+}
+
+export function getAllGameDirs(): string[] {
+  const defaultDir: string = path.join(BASE_DIR, '.minecraft');
+  const installDir: string = GAME_DIR || resolveGameDir();
+  const all: string[] = [defaultDir, installDir, ...getExtraGameDirs()];
+  const seen: Set<string> = new Set();
+  const result: string[] = [];
+  for (const dir of all) {
+    const key: string = gameDirKey(dir);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    result.push(path.resolve(dir));
+  }
+  return result;
+}
+
+// .minecraft 这个名字对所有目录都一样，没法区分，换成它所在文件夹的名字（PCL\.minecraft → PCL）
+function gameDirDisplayName(dir: string): string {
+  const base: string = path.basename(dir);
+  if (base.toLowerCase() !== '.minecraft') return base || dir;
+  return path.basename(path.dirname(dir)) || base;
+}
+
+
+function gameDirQualifiedName(dir: string): string {
+  const label: string = gameDirDisplayName(dir);
+  const containerDir: string = path.basename(dir).toLowerCase() === '.minecraft' ? path.dirname(path.dirname(dir)) : path.dirname(dir);
+  const container: string = path.basename(containerDir);
+  return container ? `${container}/${label}` : label;
+}
+
+
+export function getGameDirEntries(): GameDirEntry[] {
+  const defaultKey: string = gameDirKey(path.join(BASE_DIR, '.minecraft'));
+  const installKey: string = gameDirKey(GAME_DIR || resolveGameDir());
+  const entries: GameDirEntry[] = getAllGameDirs().map((dir: string) => {
+    const key: string = gameDirKey(dir);
+    const isDefault: boolean = key === defaultKey;
+    return {
+      path: dir,
+      name: isDefault ? t('ui.default_folder_label') : gameDirDisplayName(dir),
+      isDefault,
+      isInstall: key === installKey
+    };
+  });
+
+  const nameCounts: Map<string, number> = new Map();
+  for (const entry of entries) {
+    if (entry.isDefault) continue;
+    nameCounts.set(entry.name, (nameCounts.get(entry.name) || 0) + 1);
+  }
+  for (const entry of entries) {
+    if (entry.isDefault || (nameCounts.get(entry.name) || 0) < 2) continue;
+    entry.name = gameDirQualifiedName(entry.path);
+  }
+  return entries;
+}
+
+export function addExtraGameDir(dir: string): boolean {
+  const resolved: string = normalizeGameDir(dir);
+  if (!resolved) return false;
+  const settings: any = ensureSettingsLoaded();
+  const extras: string[] = getExtraGameDirs();
+  const defaultKey: string = gameDirKey(path.join(BASE_DIR, '.minecraft'));
+  if (gameDirKey(resolved) === defaultKey) return true;
+  if (extras.some((item: string) => gameDirKey(item) === gameDirKey(resolved))) return true;
+  extras.push(resolved);
+  settings.download = settings.download || {};
+  settings.download.gameDirs = JSON.stringify(extras);
+  return saveSettings(settings);
+}
+
+export function removeExtraGameDir(dir: string): boolean {
+  const target: string = normalizeGameDir(dir);
+  if (!target) return false;
+  const key: string = gameDirKey(target);
+  const defaultKey: string = gameDirKey(path.join(BASE_DIR, '.minecraft'));
+  if (key === defaultKey) return false;
+
+  const settings: any = ensureSettingsLoaded();
+  settings.download = settings.download || {};
+  settings.download.gameDirs = JSON.stringify(
+    getExtraGameDirs().filter((item: string) => gameDirKey(item) !== key)
+  );
+  if (gameDirKey(GAME_DIR || resolveGameDir()) === key) {
+    settings.download.installDir = '';
+  }
+  const saved: boolean = saveSettings(settings);
+  applyInstallDir();
+  return saved;
+}
+
+
+ipcMain.handle('get-game-dirs', () => ({
+  success: true,
+  dirs: getGameDirEntries(),
+  installDir: GAME_DIR
+}));
+
+ipcMain.handle('add-game-dir', (_: any, dir: string) => {
+  const success: boolean = addExtraGameDir(dir);
+  return { success, path: normalizeGameDir(dir), dirs: getGameDirEntries(), installDir: GAME_DIR };
+});
+
+ipcMain.handle('remove-game-dir', (_: any, dir: string) => {
+  const success: boolean = removeExtraGameDir(dir);
+  return { success, dirs: getGameDirEntries(), installDir: GAME_DIR };
+});
 
 
 export type VersionIsolationMode = 'off' | 'modded' | 'nonRelease' | 'moddedAndNonRelease' | 'all';
@@ -539,6 +694,9 @@ function syncWindowBackground(event: any): void {
 
 ipcMain.handle('save-settings', (event: any, settings: any) => {
   currentSettings = mergeWithDefaults(settings);
+  if (currentSettings.download?.installDir) {
+    currentSettings.download.installDir = normalizeGameDir(currentSettings.download.installDir);
+  }
   const success: boolean = saveSettings(currentSettings);
   applyInstallDir();
   applyLanguageFromSettings(currentSettings);

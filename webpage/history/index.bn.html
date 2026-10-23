@@ -74,7 +74,7 @@
                     </div>
                 </li>
                 <li class="lang-switch"><select aria-label="ভাষা" onchange="if(this.value)location.href=this.value"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn" selected>বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select></li>
-                <li><a href="../index.bn#download" class="nav-cta">&#9662; v1.9.0 ডাউনলোড</a></li>
+                <li><a href="../index.bn#download" class="nav-cta">&#9662; v1.9.1 ডাউনলোড</a></li>
             </ul>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="মেনু খুলুন" aria-expanded="false">&#9776;</button>
         </div>
@@ -92,6 +92,7 @@
             <p class="cl-intro">1.0.0 থেকে সর্বশেষ রিলিজ পর্যন্ত প্রতিটি ভার্সন — কী বদলেছে, ডাউনলোড করা যায় কি না — এই পেজে আছে।</p>
             <p class="cl-note">1.3.2 ও তার আগের ভার্সনগুলোর ইনস্টলার রাখা হয়নি; পুরনো ভার্সনের অন্তর্নির্মিত আপডেটার আর কাজ না-ও করতে পারে, তাই প্রতিদিনের ব্যবহারে সর্বশেষ রিলিজ ইনস্টল করাই ভালো।</p>
             <div class="cl-index" role="navigation" aria-label="ভার্সন তালিকা">
+                <a href="#v1-9-1">1.9.1</a>
                 <a href="#v1-9-0">1.9.0</a>
                 <a href="#v1-8-0">1.8.0</a>
                 <a href="#v1-7-2">1.7.2</a>
@@ -120,12 +121,39 @@
     <main class="history cl-history">
         <div class="container">
             <div class="timeline">
+                <article class="timeline-item" id="v1-9-1">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.9.1</span>
+                        <span class="version-title">Microsoft অ্যাকাউন্ট, একাধিক গেম ফোল্ডার এবং প্রতিটি সংস্করণের জন্য Java</span>
+                        <span class="latest-chip">সর্বশেষ</span>
+                        <span class="version-date">2026-10-23</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Microsoft সাইন-ইন নতুন করে তৈরি হয়েছে: একাধিক অ্যাকাউন্ট সংরক্ষণ করুন, যেকোনো সময় বদলান বা সরান, এবং লঞ্চার পুনরায় চালু করলেও সাইন-ইন থাকুন</li>
+                        <li>চালুর আগে সাইন-ইন টোকেন স্বয়ংক্রিয়ভাবে নবায়ন হয়; মেয়াদ শেষ হলে সার্ভারে যোগ দেওয়ার সময় ব্যর্থ হওয়ার বদলে এখন আবার সাইন-ইন করতে বলা হয়</li>
+                        <li>সংরক্ষিত অ্যাকাউন্টগুলো আসল Minecraft স্কিনের মাথা দেখায়</li>
+                        <li>একাধিক গেম ফোল্ডার যোগ করুন এবং ফোল্ডার অনুযায়ী সংস্করণ ফিল্টার করুন; PCL2 রুটের মতো উপরের ফোল্ডার বেছে নিলে ভেতরের .minecraft স্বয়ংক্রিয়ভাবে খুঁজে পাওয়া যায়</li>
+                        <li>প্রতিটি সংস্করণ নিজের Java ব্যবহার করতে পারে: স্বয়ংক্রিয়, 8, 16, 17, 21, 25 বা কাস্টম পাথ</li>
+                        <li>ক্র্যাশ বিশ্লেষণ এখন ২৫টি ভাষার সবগুলোতে পাওয়া যায়, এবং ত্রুটি প্রতিবেদনে আপনার টাইম জোন ও স্থানীয় সময় যোগ হয়েছে</li>
+                        <li>ডাউনলোড প্যানেলে এখন লাইভ গতির গ্রাফ, বর্তমান ও সর্বোচ্চ গতি এবং অপেক্ষমাণ কাজ দেখায়; গতি MB/s বা Mbps-এ দেখানো যায়</li>
+                        <li>Java ডাউনলোড এখন ডাউনলোড পেজের আলাদা ট্যাবে</li>
+                        <li>সেটিংস পেজের মেমোরি ব্যবহার এখন লাইভ হালনাগাদ হয়, পেজ খোলার সময়ের পুরোনো সংখ্যা দেখায় না</li>
+                        <li>নির্বাচিত সংস্করণ মুছলে এখন সঙ্গে সঙ্গে সংস্করণ তালিকায় ফিরে যায়, মুছে ফেলা সংস্করণ দেখাতে থাকে না</li>
+                    </ul>
+                    <div class="cl-download">
+                        <a class="cl-dl-btn" href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.1-Setup.exe">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                            v1.9.1 ডাউনলোড
+                        </a>
+                        <span class="cl-file">GPCL-1.9.1-Setup.exe · 94.0 MB · Windows 64-bit</span>
+                    </div>
+                </article>
                 <article class="timeline-item" id="v1-9-0">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
                         <span class="version-number">v1.9.0</span>
                         <span class="version-title">নতুন ডাউনলোড পাতা, মডপ্যাক ও শেডার সহ</span>
-                        <span class="latest-chip">সর্বশেষ</span>
                         <span class="version-date">2026-10-23</span>
                     </div>
                     <ul class="changelog">

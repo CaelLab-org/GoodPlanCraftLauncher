@@ -138,9 +138,9 @@ export function createVersionInstance(options: {
 }
 
 
-export function recordInstanceMods(versionId: string, entries: InstanceModEntry[]): void {
+export function recordInstanceMods(versionId: string, entries: InstanceModEntry[], root: string = GAME_DIR): void {
   if (!versionId || !entries || entries.length === 0) return;
-  const metaPath: string = path.join(GAME_DIR, 'versions', versionId, 'gpcl', 'instance.json');
+  const metaPath: string = path.join(root, 'versions', versionId, 'gpcl', 'instance.json');
   if (!fs.existsSync(metaPath)) return;
   try {
     const meta: any = JSON.parse(fs.readFileSync(metaPath, 'utf8'));

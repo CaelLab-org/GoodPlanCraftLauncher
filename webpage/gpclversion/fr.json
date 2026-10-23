@@ -1,8 +1,32 @@
 {
   "schema": 1,
-  "latest": "1.9.0",
+  "latest": "1.9.1",
   "updated": "2026-10-23",
   "versions": [
+    {
+      "version": "1.9.1",
+      "anchor": "v1-9-1",
+      "date": "2026-10-23",
+      "title": "Comptes Microsoft, plusieurs dossiers de jeu et Java par version",
+      "log": [
+        "La connexion Microsoft a été refaite : enregistrez plusieurs comptes, changez-en ou supprimez-en à tout moment, et restez connecté après un redémarrage du lanceur",
+        "Les jetons de connexion sont renouvelés automatiquement avant le lancement ; s'ils expirent, le lanceur vous demande de vous reconnecter au lieu d'échouer en rejoignant un serveur",
+        "Les comptes enregistrés affichent la vraie tête de skin Minecraft",
+        "Ajoutez plusieurs dossiers de jeu et filtrez les versions par dossier ; en choisissant un dossier parent comme la racine PCL2, le .minecraft qu'il contient est trouvé automatiquement",
+        "Chaque version peut utiliser son propre Java : automatique, 8, 16, 17, 21, 25 ou un chemin personnalisé",
+        "L'analyse des plantages est disponible dans les 25 langues, et les rapports d'erreur incluent votre fuseau horaire et l'heure locale",
+        "Le panneau de téléchargement affiche un graphique de vitesse en direct, la vitesse actuelle et maximale et les tâches en attente ; la vitesse peut être affichée en MB/s ou Mbps",
+        "Le téléchargement de Java se trouve désormais dans son propre onglet de la page de téléchargement",
+        "L'utilisation de la mémoire dans les paramètres se met à jour en direct au lieu d'afficher la valeur du moment où la page a été ouverte",
+        "Supprimer la version sélectionnée revient immédiatement à la liste des versions au lieu d'afficher encore la version supprimée"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.1-Setup.exe",
+        "file": "GPCL-1.9.1-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.9.0",
       "anchor": "v1-9-0",

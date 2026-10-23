@@ -1,8 +1,32 @@
 {
   "schema": 1,
-  "latest": "1.9.0",
+  "latest": "1.9.1",
   "updated": "2026-10-23",
   "versions": [
+    {
+      "version": "1.9.1",
+      "anchor": "v1-9-1",
+      "date": "2026-10-23",
+      "title": "Contas Microsoft, várias pastas de jogo e Java por versão",
+      "log": [
+        "O login da Microsoft foi refeito: salve várias contas, troque ou remova a qualquer momento e continue conectado ao reiniciar o launcher",
+        "Os tokens de login são renovados automaticamente antes de iniciar; se expirarem, agora você é convidado a entrar novamente em vez de falhar ao entrar em um servidor",
+        "As contas salvas mostram a cabeça real da skin do Minecraft",
+        "Adicione várias pastas de jogo e filtre versões por pasta; ao escolher uma pasta superior como a raiz do PCL2, o .minecraft dentro dela é encontrado automaticamente",
+        "Cada versão pode usar seu próprio Java: automático, 8, 16, 17, 21, 25 ou um caminho personalizado",
+        "A análise de travamentos está disponível nos 25 idiomas e os relatórios de erro incluem seu fuso horário e hora local",
+        "O painel de download mostra um gráfico de velocidade ao vivo, velocidade atual e máxima e tarefas na fila; a velocidade pode ser exibida em MB/s ou Mbps",
+        "O download do Java agora fica em uma aba própria na página de download",
+        "O uso de memória nas configurações agora atualiza ao vivo em vez de mostrar o valor de quando a página foi aberta",
+        "Excluir a versão selecionada volta imediatamente à lista de versões em vez de continuar mostrando a versão excluída"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.1-Setup.exe",
+        "file": "GPCL-1.9.1-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.9.0",
       "anchor": "v1-9-0",

@@ -219,56 +219,56 @@ interface Rule {
 
 const RULES: Rule[] = [
   {
-    title: '内存不足',
-    detail: '游戏运行时内存不够用了。可以在「设置 → 游戏 → 内存分配」里调大分配给游戏的内存（不要超过物理内存），同时关掉其他占内存的程序。装了大型 Mod 或光影的话，也可以先移除试试。',
+    title: 'ui.crash_rule_oom_title',
+    detail: 'ui.crash_rule_oom_detail',
     confidence: 'high',
     test: (c) => firstLine(c.all, /OutOfMemoryError|Java heap space|insufficient memory for the Java Runtime Environment|an out of memory error/i)
   },
   {
-    title: 'Java 无法申请到设定的内存',
-    detail: 'JVM 在启动时没能分配到 -Xmx 指定的内存。常见原因是分配值超过可用内存，或者用的是 32 位 Java。请检查「设置 → 游戏 → 内存分配」，以及当前 Java 是否为 64 位。',
+    title: 'ui.crash_rule_heap_reserve_title',
+    detail: 'ui.crash_rule_heap_reserve_detail',
     confidence: 'high',
     test: (c) => firstLine(c.all, /Could not reserve enough space for object heap|Invalid maximum heap size|Error occurred during initialization of VM/i)
   },
   {
-    title: 'Java 版本过高',
-    detail: '游戏或 Mod 是按更老的 Java 写的，当前 Java 太新。请换成该游戏版本要求的 Java：1.16.5 及更早用 Java 8，1.17 用 16，1.18–1.20.4 用 17，1.20.5 及以后用 21。',
+    title: 'ui.crash_rule_java_too_new_title',
+    detail: 'ui.crash_rule_java_too_new_detail',
     confidence: 'high',
     test: (c) => firstLine(c.all, /because module java\.base does not export|NoSuchFieldException: ucp|NashornScriptEngineFactory|java\.lang\.invoke\.LambdaMetafactory|NoSuchMethodError: sun\.security\.util\.ManifestEntryVerifier/i)
   },
   {
-    title: 'Java 版本过低',
-    detail: '日志里的 UnsupportedClassVersionError 表示游戏或 Mod 的字节码版本比当前 Java 新。请换成更高版本的 Java 再启动。',
+    title: 'ui.crash_rule_java_too_old_title',
+    detail: 'ui.crash_rule_java_too_old_detail',
     confidence: 'high',
     test: (c) => firstLine(c.all, /UnsupportedClassVersionError|has been compiled by a more recent version of the Java Runtime|Unsupported class file major version/i)
   },
   {
-    title: '当前的 Java 不适合运行 Minecraft',
-    detail: 'Minecraft 需要常规的 HotSpot JRE/JDK，不支持 OpenJ9；用 JDK 里的某些类也会让 Forge 报错。请改用 GPCL 自动安装的 Java，或在设置里指定普通的 JDK/JRE。',
+    title: 'ui.crash_rule_unsupported_java_title',
+    detail: 'ui.crash_rule_unsupported_java_detail',
     confidence: 'high',
     test: (c) => firstLine(c.all, /OpenJ9 is not supported|J9VMInternals|java\.lang\.ClassCastException: java\.base\/jdk|java\.lang\.ClassCastException: class jdk\./i)
   },
   {
-    title: 'Mod 文件被解压了',
-    detail: 'Mod 的 .jar 不能解压。请删掉解压出来的文件夹，只把 .jar 文件放进 mods 文件夹。',
+    title: 'ui.crash_rule_extracted_mods_title',
+    detail: 'ui.crash_rule_extracted_mods_detail',
     confidence: 'high',
     test: (c) => firstLine(c.all, /Extracted mod jars found|appear to be extracted jar files/i)
   },
   {
-    title: '缺少 MixinBootstrap',
-    detail: '这个版本需要 MixinBootstrap 才能在启动时注入 Mixin。请安装对应版本的 MixinBootstrap，或者重新安装一次 Forge。',
+    title: 'ui.crash_rule_missing_mixinbootstrap_title',
+    detail: 'ui.crash_rule_missing_mixinbootstrap_detail',
     confidence: 'high',
     test: (c) => firstLine(c.all, /ClassNotFoundException: org\.spongepowered\.asm\.launch\.MixinTweaker/i)
   },
   {
-    title: '显卡、驱动或 OpenGL 有问题',
-    detail: '游戏没能创建 OpenGL 环境。请更新显卡驱动；笔记本确认用的是独显；如果还不行，可以换一个 Java 版本（老显卡可以试 Java 8）。',
+    title: 'ui.crash_rule_opengl_title',
+    detail: 'ui.crash_rule_opengl_detail',
     confidence: 'high',
     test: (c) => firstLine(c.all, /The driver does not appear to support OpenGL|Failed to create (?:GLFW )?window|Couldn't set pixel format|GLFW error/i)
   },
   {
-    title: '显卡驱动导致 JVM 崩溃',
-    detail: 'EXCEPTION_ACCESS_VIOLATION 出现在显卡相关模块里，通常是驱动问题。请更新或回退显卡驱动，笔记本确认用独显启动。',
+    title: 'ui.crash_rule_gpu_driver_crash_title',
+    detail: 'ui.crash_rule_gpu_driver_crash_detail',
     confidence: 'high',
     test: (c) => {
       if (!/EXCEPTION_ACCESS_VIOLATION/i.test(c.all)) return null;
@@ -277,38 +277,38 @@ const RULES: Rule[] = [
     }
   },
   {
-    title: '光影或资源包触发了 OpenGL 错误',
-    detail: '先把光影和资源包全部关掉再启动；能启动就是其中一个资源包或光影不兼容，逐个加回来定位。',
+    title: 'ui.crash_rule_shader_opengl_error_title',
+    detail: 'ui.crash_rule_shader_opengl_error_detail',
     confidence: 'high',
     test: (c) => firstLine(c.all, /1282: Invalid operation/i)
   },
   {
-    title: '材质分辨率过高或显存不足',
-    detail: '日志提示资源包分辨率过高（Maybe try a lower resolution resourcepack）。请换回默认材质，或移除高清材质。',
+    title: 'ui.crash_rule_resourcepack_resolution_title',
+    detail: 'ui.crash_rule_resourcepack_resolution_detail',
     confidence: 'high',
     test: (c) => firstLine(c.all, /Maybe try a lower resolution resourcepack/i)
   },
   {
-    title: 'Shaders Mod 与 OptiFine 同时安装',
-    detail: 'OptiFine 已自带光影支持，不需要也不兼容 Shaders Mod。删除 Shaders Mod 即可。',
+    title: 'ui.crash_rule_shadersmod_optifine_title',
+    detail: 'ui.crash_rule_shadersmod_optifine_detail',
     confidence: 'high',
     test: (c) => firstLine(c.all, /Shaders Mod detected\. Please remove it/i)
   },
   {
-    title: 'OptiFine 与 Forge 版本不兼容',
-    detail: '这两者不是任意版本都能搭配。请到 OptiFine 官网确认它支持的 Forge 版本，按对应版本重新安装。',
+    title: 'ui.crash_rule_optifine_forge_mismatch_title',
+    detail: 'ui.crash_rule_optifine_forge_mismatch_detail',
     confidence: 'high',
     test: (c) => firstLine(c.all, /NoSuchMethodError: 'void net\.minecraft\.client\.renderer\.texture\.SpriteContents\.<init>|RenderSystem\.getBackendDescription|NoSuchMethodError: 'void net\.minecraft\.client\.renderer\.block\.model\.BakedQuad\.<init>|ForgeGui\.renderSelectedItemName|DistanceManager|Font\.ellipsize/i)
   },
   {
-    title: '重复安装了同一个 Mod',
-    detail: 'mods 文件夹里同一个 Mod 出现了多份（常见于不同版本共存）。请只保留一份，再启动。',
+    title: 'ui.crash_rule_duplicate_mods_title',
+    detail: 'ui.crash_rule_duplicate_mods_detail',
     confidence: 'high',
     test: (c) => firstLine(c.all, /Duplicate mods|Found duplicate mods|duplicate mod id|Duplicate mod id/i)
   },
   {
-    title: 'Mod 依赖或兼容性检查没通过',
-    detail: '日志里提到缺少前置、版本对不上或 Mod 互相冲突。请按下面列出的依赖关系把前置装齐，并确认 Mod 都支持当前的 Minecraft 版本和加载器。',
+    title: 'ui.crash_rule_missing_dependencies_title',
+    detail: 'ui.crash_rule_missing_dependencies_detail',
     confidence: 'high',
     test: (c) => {
       const hits: string[] = matchingLines(c.all, /(?:requires|Requires)[^\n]{0,140}(?:which is missing|is missing)|Missing or unsupported mandatory dependencies|Incompatible mods found|Incompatible mod set|Mod .{1,80} is missing|requires any version of/i, 4);
@@ -316,68 +316,68 @@ const RULES: Rule[] = [
     }
   },
   {
-    title: '游戏在加载某个方块或实体时崩溃',
-    detail: '这类崩溃通常和某个 Mod 的方块 / 实体有关。可以新建一个世界试试；新世界正常，就说明是原存档里那个方块或实体的问题。',
+    title: 'ui.crash_rule_block_entity_crash_title',
+    detail: 'ui.crash_rule_block_entity_crash_detail',
     confidence: 'high',
     test: (c) => firstLine(c.all, /Exception ticking (?:world|entity)|Ticking (?:block|entity)|Block being ticked|Entity being ticked/i)
   },
   {
-    title: 'Forge 安装不完整',
-    detail: 'Forge 的库文件缺失（常见于手动删过 libraries 或打包过整合包）。请对同一个版本重新安装一次 Forge。',
+    title: 'ui.crash_rule_forge_incomplete_title',
+    detail: 'ui.crash_rule_forge_incomplete_detail',
     confidence: 'high',
     test: (c) => firstLine(c.all, /Cannot find launch target fmlclient|Invalid paths argument, contained no existing paths/i)
   },
   {
-    title: '文件或内容校验失败',
-    detail: '部分文件没有通过签名校验，可能是下载损坏或被改动过。请删掉这个版本重新下载；下载时如果网络不稳定，可以换个镜像源。',
+    title: 'ui.crash_rule_signature_mismatch_title',
+    detail: 'ui.crash_rule_signature_mismatch_detail',
     confidence: 'high',
     test: (c) => firstLine(c.all, /signer information does not match/i)
   },
   {
-    title: 'Night Config 的已知问题',
-    detail: '部分 Forge 版本自带的 Night Config 有问题。可以安装 Night Config Fixes 模组，或把 Forge 更新到修复后的版本。',
+    title: 'ui.crash_rule_night_config_title',
+    detail: 'ui.crash_rule_night_config_detail',
     confidence: 'high',
     test: (c) => firstLine(c.all, /com\.electronwill\.nightconfig\.core\.io\.ParsingException/i)
   },
   {
-    title: 'Mod 的配置文件损坏',
-    detail: '某个 Mod 读不了自己的配置文件。按日志里的路径删掉对应配置文件（一般是 .toml / .json），让游戏重新生成。',
+    title: 'ui.crash_rule_mod_config_corrupt_title',
+    detail: 'ui.crash_rule_mod_config_corrupt_detail',
     confidence: 'high',
     test: (c) => firstLine(c.all, /Failed loading config file .+ for modid/i)
   },
   {
-    title: 'Mod 需要更高的 Java 版本',
-    detail: '日志提示某个 Mod 要求的 Java 版本比当前高。请按提示换成对应版本的 Java。',
+    title: 'ui.crash_rule_mod_needs_java_title',
+    detail: 'ui.crash_rule_mod_needs_java_detail',
     confidence: 'high',
     test: (c) => firstLine(c.all, /requires Java (?:version )?\d+|Java \d+ or (?:later|higher) is required|requires at least Java \d+/i)
   },
   {
-    title: 'JVM 参数无效',
-    detail: '日志里的 Unrecognized option 表示启动参数里有 JVM 不认识的选项。请检查「设置 → 游戏」里的 JVM 参数，先清空恢复默认再试。',
+    title: 'ui.crash_rule_invalid_jvm_args_title',
+    detail: 'ui.crash_rule_invalid_jvm_args_detail',
     confidence: 'high',
     test: (c) => firstLine(c.all, /Unrecognized (?:VM )?option/i)
   },
   {
-    title: '版本文件不完整',
-    detail: 'Java 找不到主类，说明这个版本的 JSON 或 libraries 有缺失。请重新下载这个版本；装过 Forge / Fabric 的话重新安装一次加载器。',
+    title: 'ui.crash_rule_incomplete_version_title',
+    detail: 'ui.crash_rule_incomplete_version_detail',
     confidence: 'high',
     test: (c) => firstLine(c.all, /Could not find or load main class|Error: Could not find or load main class/i)
   },
   {
-    title: 'Java 或游戏文件找不到',
-    detail: '启动器没能拉起 Java，常见于 Java 路径失效或游戏文件被移动。请在设置里重新选择 Java，或让 GPCL 重新自动安装 Java。',
+    title: 'ui.crash_rule_java_not_found_title',
+    detail: 'ui.crash_rule_java_not_found_detail',
     confidence: 'high',
     test: (c) => firstLine(c.launcher, /The system cannot find the file specified|CreateProcess failed|spawn .* ENOENT/i)
   },
   {
-    title: '这是手动触发的调试崩溃',
-    detail: '日志里有 Manually triggered debug crash，说明崩溃是调试快捷键故意触发的，不是游戏本身的问题。',
+    title: 'ui.crash_rule_manual_debug_crash_title',
+    detail: 'ui.crash_rule_manual_debug_crash_detail',
     confidence: 'high',
     test: (c) => firstLine(c.all, /Manually triggered debug crash/i)
   },
   {
-    title: 'Mod 加载器报告了错误',
-    detail: '加载器在日志里给出了具体的错误信息。如果看不懂英文，可以用翻译软件看下面这段，或把错误报告发给别人。',
+    title: 'ui.crash_rule_loader_failure_title',
+    detail: 'ui.crash_rule_loader_failure_detail',
     confidence: 'suspect',
     test: (c) => {
       const hits: string[] = matchingLines(c.crash || c.latest, /^\s*Failure message:/i, 3);
@@ -537,7 +537,7 @@ function formatSize(bytes: number): string {
 
 
 function formatTime(ms: number): string {
-  if (!ms) return '未知';
+  if (!ms) return t('ui.unknown');
   const d: Date = new Date(ms);
   const pad = (n: number): string => String(n).padStart(2, '0');
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
@@ -602,8 +602,8 @@ async function collectJavaInfo(javaPath: string | null): Promise<{ path: string;
     return { path: t('ui.not_recorded'), exists: false, size: t('ui.unknown'), mtime: t('ui.unknown'), version: t('ui.unknown') };
   }
   let exists: boolean = false;
-  let size: string = '未知';
-  let mtime: string = '未知';
+  let size: string = t('ui.unknown');
+  let mtime: string = t('ui.unknown');
   try {
     const stat: fs.Stats = fs.statSync(javaPath);
     exists = stat.isFile();
@@ -629,7 +629,7 @@ async function collectGpuInfo(): Promise<string> {
       app.getGPUInfo('basic'),
       new Promise((resolve) => setTimeout(() => resolve(null), 3000))
     ]);
-    if (!info) return '未知';
+    if (!info) return t('ui.unknown');
     const devices: any[] = Array.isArray(info.gpuDevice) ? info.gpuDevice : [];
     if (!devices.length) return JSON.stringify(info).slice(0, 600);
     return devices.map((device: any, index: number): string => {
@@ -638,7 +638,7 @@ async function collectGpuInfo(): Promise<string> {
       return `#${index + 1} vendor=${vendor} device=${id} driver=${device.driverVersion || '?'} (${device.driverVendor || '?'})`;
     }).join('\n');
   } catch {
-    return '未知';
+    return t('ui.unknown');
   }
 }
 
@@ -688,12 +688,12 @@ async function buildReportText(record: CrashRecord, analysis: CrashAnalysis): Pr
     sections.push(t('ui.gpcl_found_these_clues_in_the_log_and_crash_report'));
     sections.push('');
     analysis.causes.forEach((cause: CrashCause, index: number) => {
-      sections.push(`${index + 1}. ${cause.title}${cause.confidence === 'suspect' ? t('（推测）') : ''}`);
+      sections.push(`${index + 1}. ${cause.title}${cause.confidence === 'suspect' ? t('ui.crash_inferred_suffix') : ''}`);
       for (const line of cause.detail.split('\n')) sections.push(`   ${line}`);
       if (cause.evidence) {
         const evidenceLines: string[] = cause.evidence.split('\n');
         evidenceLines.forEach((line: string, lineIndex: number) => {
-          sections.push(`${lineIndex === 0 ? '   ' + t('证据：') : '         '}${line}`);
+          sections.push(`${lineIndex === 0 ? '   ' + t('ui.crash_evidence_label') : '         '}${line}`);
         });
       }
       sections.push('');
@@ -716,8 +716,18 @@ async function buildReportText(record: CrashRecord, analysis: CrashAnalysis): Pr
   sections.push(t('ui.crash_report_file_2', { file: record.crashReport ? path.basename(record.crashReport) : t('ui.none') }));
   sections.push('');
 
+  const timeZone: string = Intl.DateTimeFormat().resolvedOptions().timeZone || t('ui.unknown');
+  const offsetMinutes: number = -new Date().getTimezoneOffset();
+  const offsetSign: string = offsetMinutes >= 0 ? '+' : '-';
+  const offsetHours: string = String(Math.floor(Math.abs(offsetMinutes) / 60)).padStart(2, '0');
+  const offsetMins: string = String(Math.abs(offsetMinutes) % 60).padStart(2, '0');
+  const utcOffset: string = `UTC${offsetSign}${offsetHours}:${offsetMins}`;
+
   sections.push(t('ui.3_environment'));
   sections.push(t('ui.os_os', { os: `${os.type()} ${os.release()} (${os.arch()})` }));
+  sections.push(t('ui.time_zone_zone', { zone: timeZone }));
+  sections.push(t('ui.utc_offset_offset', { offset: utcOffset }));
+  sections.push(t('ui.local_time_time', { time: formatTime(Date.now()) }));
   sections.push(t('ui.cpu_model_count', { model: cpus[0]?.model || t('ui.unknown'), count: cpus.length }));
   sections.push(t('ui.memory_total_gb_total_free_gb_available', { total: gb(os.totalmem()), free: gb(os.freemem()) }));
   sections.push(t('ui.gpu'));
@@ -731,7 +741,7 @@ async function buildReportText(record: CrashRecord, analysis: CrashAnalysis): Pr
   sections.push(t('ui.path_path', { path: javaInfo.path }));
   sections.push(t('ui.exists_exists_size_modified_mtime', { exists: javaInfo.exists ? t('ui.yes') : t('ui.no'), size: javaInfo.size, mtime: javaInfo.mtime }));
   sections.push(t('ui.allocated_memory_memory', { memory: parseXmx(record.args) }));
-  sections.push('java -version：');
+  sections.push(t('ui.java_version_label'));
   sections.push(javaInfo.version.split('\n').map((line: string) => `  ${line}`).join('\n'));
   sections.push('');
 

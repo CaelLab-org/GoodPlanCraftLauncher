@@ -15,7 +15,7 @@ import https from 'https';
 import http from 'http';
 import zlib from 'zlib';
 
-import { GAME_DIR, getVersionGameDir, getVersionIsolationChoice, isVersionIsolated, loadSettings, markVersionIsolated, writeLog } from './config';
+import { GAME_DIR, getGameDirEntries, getVersionGameDir, getVersionIsolationChoice, isVersionIsolated, loadSettings, markVersionIsolated, writeLog } from './config';
 import { recordInstanceMods } from './instance';
 import { setModDownloadAbortHandler, setShouldCancelDownload, shouldCancelDownload } from './state';
 // __IMPORTS_END__
@@ -136,9 +136,10 @@ function resolveModSource(id: string): ModSourceConfig | null {
 }
 
 
-export function describeVersion(versionId: string): any {
-  const versionDir: string = path.join(GAME_DIR, 'versions', versionId);
-  const gameDir: string = getVersionGameDir(versionId);
+export function describeVersion(versionId: string, root?: string): any {
+  const versionRoot: string = root ? path.resolve(root) : GAME_DIR;
+  const versionDir: string = path.join(versionRoot, 'versions', versionId);
+  const gameDir: string = getVersionGameDir(versionId, versionRoot);
   let data: any = {};
   const jsonPath: string = path.join(versionDir, `${versionId}.json`);
   try {
@@ -168,7 +169,8 @@ export function describeVersion(versionId: string): any {
       hasNeoForge ? 'neoforge' : '',
       hasQuilt ? 'quilt' : ''
     ].filter(Boolean),
-    isolated: isVersionIsolated(versionId),
+    isolated: isVersionIsolated(versionId, versionRoot),
+    root: versionRoot,
     versionDir,
     gameDir,
     modsDir: path.join(gameDir, 'mods'),
@@ -178,10 +180,10 @@ export function describeVersion(versionId: string): any {
 }
 
 
-ipcMain.handle('get-version-info', (_, versionId: string) => {
+ipcMain.handle('get-version-info', (_, versionId: string, root?: string) => {
   try {
     if (!versionId) return { success: false, error: 'Missing version name' };
-    return { success: true, info: describeVersion(versionId) };
+    return { success: true, info: describeVersion(versionId, root) };
   } catch (e: any) {
     return { success: false, error: e.message };
   }
@@ -190,18 +192,26 @@ ipcMain.handle('get-version-info', (_, versionId: string) => {
 
 ipcMain.handle('list-installed-versions', () => {
   try {
-    const versionsDir: string = path.join(GAME_DIR, 'versions');
-    if (!fs.existsSync(versionsDir)) return { success: true, versions: [] };
     const versions: any[] = [];
-    for (const entry of fs.readdirSync(versionsDir, { withFileTypes: true })) {
-      if (!entry.isDirectory()) continue;
-      const dir: string = path.join(versionsDir, entry.name);
-      const hasJson: boolean = fs.existsSync(path.join(dir, `${entry.name}.json`))
-        || fs.readdirSync(dir).some((f: string) => f.endsWith('.json'));
-      if (!hasJson) continue;
-      try {
-        versions.push(describeVersion(entry.name));
-      } catch {}
+    for (const dirEntry of getGameDirEntries()) {
+      const versionsDir: string = path.join(dirEntry.path, 'versions');
+      if (!fs.existsSync(versionsDir)) continue;
+      for (const entry of fs.readdirSync(versionsDir, { withFileTypes: true })) {
+        if (!entry.isDirectory()) continue;
+        const dir: string = path.join(versionsDir, entry.name);
+        let hasJson: boolean = false;
+        try {
+          hasJson = fs.existsSync(path.join(dir, `${entry.name}.json`))
+            || fs.readdirSync(dir).some((f: string) => f.endsWith('.json'));
+        } catch {}
+        if (!hasJson) continue;
+        try {
+          const info: any = describeVersion(entry.name, dirEntry.path);
+          info.dirName = dirEntry.name;
+          info.isDefaultDir = dirEntry.isDefault;
+          versions.push(info);
+        } catch {}
+      }
     }
     versions.sort((a: any, b: any) => b.id.localeCompare(a.id, undefined, { numeric: true }));
     return { success: true, versions };
@@ -1035,6 +1045,7 @@ ipcMain.handle('mods-project-info', async (_, options: any) => {
 ipcMain.handle('mods-install-direct', async (_, options: any) => {
   setShouldCancelDownload(false);
   const targetVersionId: string = String(options?.targetVersionId || '').trim();
+  const versionRoot: string = String(options?.versionRoot || '').trim() || GAME_DIR;
   const targetDir: string = String(options?.targetDir || '').trim();
   const projectType: ResourceProjectType = normalizeProjectType(options?.projectType);
   const url: string = String(options?.url || '');
@@ -1056,11 +1067,11 @@ ipcMain.handle('mods-install-direct', async (_, options: any) => {
   if (targetDir) {
     targetFolder = path.join(path.resolve(targetDir), subdir);
   } else {
-    if (projectType === 'mod' && getVersionIsolationChoice(targetVersionId) === null && !isVersionIsolated(targetVersionId)) {
-      markVersionIsolated(GAME_DIR, targetVersionId);
+    if (projectType === 'mod' && getVersionIsolationChoice(targetVersionId, versionRoot) === null && !isVersionIsolated(targetVersionId, versionRoot)) {
+      markVersionIsolated(versionRoot, targetVersionId);
       writeLog(`[模组] 已为目标版本 ${targetVersionId} 启用版本隔离`);
     }
-    targetFolder = path.join(getVersionGameDir(targetVersionId), subdir);
+    targetFolder = path.join(getVersionGameDir(targetVersionId, versionRoot), subdir);
   }
   const dest: string = path.join(targetFolder, fileName);
 
@@ -1071,7 +1082,7 @@ ipcMain.handle('mods-install-direct', async (_, options: any) => {
     await downloadToFile(url, dest, fileName);
     writeLog(`[模组] 链接安装完成: ${fileName} -> ${targetFolder}`);
     if (targetVersionId && projectType === 'mod') {
-      recordInstanceMods(targetVersionId, [{ file: fileName, source: 'direct' }]);
+      recordInstanceMods(targetVersionId, [{ file: fileName, source: 'direct' }], versionRoot);
     }
     return { success: true, files: [fileName], skipped: [], modsDir: targetFolder, targetVersionId, targetDir, direct: true };
   } catch (e: any) {
@@ -1361,6 +1372,7 @@ ipcMain.handle('mods-install', async (_, options: any) => {
   const projectId: string = String(options?.projectId || '').trim();
   const versionId: string = String(options?.versionId || '').trim();
   const targetVersionId: string = String(options?.targetVersionId || '').trim();
+  const versionRoot: string = String(options?.versionRoot || '').trim() || GAME_DIR;
   const targetDir: string = String(options?.targetDir || '').trim();
   const gameVersion: string = String(options?.gameVersion || '').trim();
   const loader: string = String(options?.loader || '').trim().toLowerCase();
@@ -1376,12 +1388,12 @@ ipcMain.handle('mods-install', async (_, options: any) => {
   if (targetDir) {
     targetFolder = path.join(path.resolve(targetDir), subdir);
   } else {
-    if (projectType === 'mod' && getVersionIsolationChoice(targetVersionId) === null && !isVersionIsolated(targetVersionId)) {
-      markVersionIsolated(GAME_DIR, targetVersionId);
+    if (projectType === 'mod' && getVersionIsolationChoice(targetVersionId, versionRoot) === null && !isVersionIsolated(targetVersionId, versionRoot)) {
+      markVersionIsolated(versionRoot, targetVersionId);
       writeLog(`[模组] 已为目标版本 ${targetVersionId} 启用版本隔离`);
     }
-    targetFolder = path.join(getVersionGameDir(targetVersionId), subdir);
-    const targetInfo: any = describeVersion(targetVersionId);
+    targetFolder = path.join(getVersionGameDir(targetVersionId, versionRoot), subdir);
+    const targetInfo: any = describeVersion(targetVersionId, versionRoot);
     depGameVersion = targetInfo.mcVersion || gameVersion;
     if (projectType === 'mod') {
       depLoader = (targetInfo.loaders || [])[0] || (targetInfo.hasOptiFine ? '' : loader);
@@ -1392,7 +1404,7 @@ ipcMain.handle('mods-install', async (_, options: any) => {
     const result: any = await installProjectTo(source.id, projectType, projectId, versionId, depGameVersion, depLoader, targetFolder);
     writeLog(`[模组] 安装完成: ${result.files.join(', ') || '全部已存在'} -> ${targetFolder}`);
     if (targetVersionId && projectType === 'mod' && Array.isArray(result.files) && result.files.length > 0) {
-      recordInstanceMods(targetVersionId, result.files.map((file: string) => ({ file, source: source.id })));
+      recordInstanceMods(targetVersionId, result.files.map((file: string) => ({ file, source: source.id })), versionRoot);
     }
     return { success: true, files: result.files, skipped: result.skipped, modsDir: targetFolder, targetVersionId, targetDir };
   } catch (e: any) {
@@ -1402,4 +1414,4 @@ ipcMain.handle('mods-install', async (_, options: any) => {
 });
 
 
-ipcMain.handle('get-mods-dir', (_, versionId?: string) => versionId ? path.join(getVersionGameDir(versionId), 'mods') : path.join(GAME_DIR, 'mods'));
+ipcMain.handle('get-mods-dir', (_, versionId?: string, root?: string) => versionId ? path.join(getVersionGameDir(versionId, root || GAME_DIR), 'mods') : path.join(GAME_DIR, 'mods'));

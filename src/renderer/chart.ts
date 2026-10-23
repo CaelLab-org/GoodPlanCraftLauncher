@@ -9,6 +9,7 @@
 
 // __IMPORTS_BEGIN__
 import { t } from '../i18n';
+import { formatSpeed } from './speed';
 // __IMPORTS_END__
 
 declare const Chart: any;
@@ -86,7 +87,7 @@ export function initChart(): void {
           padding: 10,
           callbacks: {
             label: function(context: any): string {
-              return t('ui.speed_speed_mbps', { speed: context.parsed.y.toFixed(2) });
+              return formatSpeed(Number(context.parsed.y) || 0);
             }
           }
         }
@@ -95,7 +96,7 @@ export function initChart(): void {
         x: { display: false },
         y: {
           beginAtZero: true,
-          suggestedMax: 10,
+          suggestedMax: 1024 * 1024,
           grid: { color: 'rgba(255, 255, 255, 0.05)' },
           ticks: { display: false }
         }
@@ -134,8 +135,8 @@ export function resetChart(): void {
   const progressFillEl: HTMLElement | null = document.getElementById('progress-fill');
   const progressTextEl: HTMLElement | null = document.getElementById('progress-text');
 
-  if (currentSpeedEl) currentSpeedEl.textContent = '0.00 Mbps';
-  if (peakSpeedEl) peakSpeedEl.textContent = '0.00 Mbps';
+  if (currentSpeedEl) currentSpeedEl.textContent = formatSpeed(0);
+  if (peakSpeedEl) peakSpeedEl.textContent = formatSpeed(0);
   if (progressFillEl) progressFillEl.style.width = '0%';
   if (progressTextEl) progressTextEl.textContent = '0%';
 }

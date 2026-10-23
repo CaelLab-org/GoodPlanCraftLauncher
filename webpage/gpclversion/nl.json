@@ -1,8 +1,32 @@
 {
   "schema": 1,
-  "latest": "1.9.0",
+  "latest": "1.9.1",
   "updated": "2026-10-23",
   "versions": [
+    {
+      "version": "1.9.1",
+      "anchor": "v1-9-1",
+      "date": "2026-10-23",
+      "title": "Microsoft-accounts, meerdere spellmappen en Java per versie",
+      "log": [
+        "De Microsoft-login is opnieuw gebouwd: sla meerdere accounts op, wissel of verwijder ze wanneer je wilt, en blijf ingelogd na het herstarten van de launcher",
+        "Logintokens worden voor het starten automatisch vernieuwd; als ze verlopen, vraagt de launcher je opnieuw in te loggen in plaats van te falen bij het joinen van een server",
+        "Opgeslagen accounts tonen het echte Minecraft-skinhoofd",
+        "Voeg meerdere spellmappen toe en filter versies per map; kies je een bovenliggende map zoals een PCL2-hoofdmap, dan vindt de launcher de .minecraft daarin automatisch",
+        "Elke versie kan zijn eigen Java gebruiken: automatisch, 8, 16, 17, 21, 25 of een eigen pad",
+        "Crashanalyse is beschikbaar in alle 25 talen en foutrapporten bevatten nu je tijdzone en lokale tijd",
+        "Het downloadpaneel toont een live snelheidsgrafiek, huidige en topsnelheid en wachtende taken; de snelheid kan in MB/s of Mbps worden getoond",
+        "Java-downloads staan nu op een eigen tabblad op de downloadpagina",
+        "Geheugengebruik op de instellingenpagina vernieuwt nu live in plaats van de waarde van het moment dat je de pagina opende",
+        "Na het verwijderen van de geselecteerde versie ga je meteen terug naar de versielijst in plaats van de verwijderde versie te blijven tonen"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.1-Setup.exe",
+        "file": "GPCL-1.9.1-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.9.0",
       "anchor": "v1-9-0",

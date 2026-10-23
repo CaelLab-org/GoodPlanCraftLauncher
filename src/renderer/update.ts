@@ -10,6 +10,7 @@
 // __IMPORTS_BEGIN__
 import { getLocale, t } from '../i18n';
 import { initChart, loadChartJs, resetChart, updateChart } from './chart';
+import { formatSpeed } from './speed';
 import { setStatus, showDialog, showToast } from './dom';
 import { updateSettingsBadge } from './settings';
 import { setUpdateBadgeAvailable, setUpdateBadgeDownloading, setUpdateBadgeFailed, setUpdateBadgeProgress, setUpdateBadgeReady, showUpdateBadge } from './update-badge';
@@ -309,13 +310,13 @@ async function runUpdateDownload(version: string, manual: boolean): Promise<void
             if (timeDiff >= 0.5) {
               const bytesDiff: number = data.bytesDownloaded - lastBytes;
               if (bytesDiff >= 0) {
-                const speedBps: number = Math.max(0, (bytesDiff * 8) / timeDiff / 1000000);
-                if (currentSpeedEl) currentSpeedEl.textContent = speedBps.toFixed(2) + ' Mbps';
-                if (speedBps > peakSpeedInner) {
-                  peakSpeedInner = speedBps;
-                  if (peakSpeedEl) peakSpeedEl.textContent = peakSpeedInner.toFixed(2) + ' Mbps';
+                const speedBytes: number = Math.max(0, bytesDiff / timeDiff);
+                if (currentSpeedEl) currentSpeedEl.textContent = formatSpeed(speedBytes);
+                if (speedBytes > peakSpeedInner) {
+                  peakSpeedInner = speedBytes;
+                  if (peakSpeedEl) peakSpeedEl.textContent = formatSpeed(peakSpeedInner);
                 }
-                updateChart(speedBps);
+                updateChart(speedBytes);
               }
               lastTime = now;
               lastBytes = data.bytesDownloaded;

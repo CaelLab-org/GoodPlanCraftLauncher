@@ -13,7 +13,7 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
-import { CACHE_DIR, GAME_DIR, writeLog } from './config';
+import { CACHE_DIR, GAME_DIR, loadSettings, writeLog } from './config';
 import { fetchText } from './download';
 import { t } from './i18n';
 import { mainWindow } from './shell';
@@ -682,6 +682,41 @@ export function findJavaExecutableInDir(rootDir: string): string | null {
   }
   return null;
 }
+
+
+export async function listInstalledJavaRuntimes(): Promise<{ major: string; path: string; custom?: boolean }[]> {
+  const runtimes: { major: string; path: string; custom?: boolean }[] = [];
+  const seen: Set<string> = new Set();
+  for (const major of ['8', '16', '17', '21', '25']) {
+    try {
+      const result: any = await checkJavaInstalled(major);
+      if (!result.installed || !result.javaPath) continue;
+      const key: string = String(result.javaPath).toLowerCase();
+      if (seen.has(key)) continue;
+      seen.add(key);
+      runtimes.push({ major, path: result.javaPath });
+    } catch {}
+  }
+
+  try {
+    const custom: string = String(loadSettings()?.game?.javaPath || '').trim();
+    if (custom && fs.existsSync(custom)) {
+      const stat: fs.Stats = fs.statSync(custom);
+      const executable: string | null = stat.isDirectory() ? findJavaExecutableInDir(custom) : custom;
+      if (executable) {
+        const key: string = executable.toLowerCase();
+        if (!seen.has(key)) {
+          seen.add(key);
+          runtimes.push({ major: 'custom', path: executable, custom: true });
+        }
+      }
+    }
+  } catch {}
+
+  return runtimes;
+}
+
+ipcMain.handle('list-java-runtimes', async () => listInstalledJavaRuntimes());
 
 
 ipcMain.handle('check-java', async (_, versionOrJavaVersion: string) => {

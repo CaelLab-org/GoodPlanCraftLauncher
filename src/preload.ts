@@ -14,7 +14,11 @@ const initialI18n: GPCLApi['initialI18n'] = ipcRenderer.sendSync('get-i18n-info-
 const gpclApi: GPCLApi = {
   initialI18n,
   getGameDir: () => ipcRenderer.invoke('get-game-dir'),
+  getGameDirs: () => ipcRenderer.invoke('get-game-dirs'),
+  addGameDir: (dir: string) => ipcRenderer.invoke('add-game-dir', dir),
+  removeGameDir: (dir: string) => ipcRenderer.invoke('remove-game-dir', dir),
   scanVersions: (gameDir: string, silent?: boolean) => ipcRenderer.invoke('scan-versions', gameDir, silent),
+  scanVersionEntries: (gameDir?: string, silent?: boolean) => ipcRenderer.invoke('scan-version-entries', gameDir, silent),
   launch: (options) => ipcRenderer.invoke('launch-minecraft', options),
   getVersionManifest: () => ipcRenderer.invoke('get-version-manifest'),
   downloadVersion: (versionId: string, maxConcurrent: number) => ipcRenderer.invoke('download-version', versionId, maxConcurrent),
@@ -59,6 +63,7 @@ const gpclApi: GPCLApi = {
   getJavaDownloadUrl: (javaVersion: string) => ipcRenderer.invoke('get-java-download-url', javaVersion),
   cancelClose: () => ipcRenderer.invoke('cancel-close'),
   checkJava: (versionId: string) => ipcRenderer.invoke('check-java', versionId),
+  listJavaRuntimes: () => ipcRenderer.invoke('list-java-runtimes'),
 
   showJavaInstallDialog: (callback) => {
     ipcRenderer.on('show-java-install-dialog', (_event, data) => callback(data));
@@ -88,9 +93,9 @@ const gpclApi: GPCLApi = {
     ipcRenderer.on('window-state', (_event, state) => callback(state));
   },
   createVersionInstance: (options) => ipcRenderer.invoke('create-version-instance', options),
-  deleteVersion: (versionId: string) => ipcRenderer.invoke('delete-version', versionId),
-  getVersionSettings: (versionId: string) => ipcRenderer.invoke('get-version-settings', versionId),
-  saveVersionSettings: (versionId: string, settings: any) => ipcRenderer.invoke('save-version-settings', versionId, settings),
+  deleteVersion: (versionId: string, root?: string) => ipcRenderer.invoke('delete-version', versionId, root),
+  getVersionSettings: (versionId: string, root?: string) => ipcRenderer.invoke('get-version-settings', versionId, root),
+  saveVersionSettings: (versionId: string, settings: any, root?: string) => ipcRenderer.invoke('save-version-settings', versionId, settings, root),
   selectDirectory: () => ipcRenderer.invoke('select-directory'),
   cancelLaunch: () => ipcRenderer.invoke('cancel-launch'),
   checkForUpdates: (locale?: string) => ipcRenderer.invoke('check-for-updates', locale),
@@ -123,9 +128,9 @@ const gpclApi: GPCLApi = {
   downloadWithModLoader: (versionId: string, loaderType: string, loaderVersion: string, maxConcurrent: number, options?: any) =>
     ipcRenderer.invoke('download-with-modloader', versionId, loaderType, loaderVersion, maxConcurrent, options),
 
-  getVersionConfig: (versionId: string) => ipcRenderer.invoke('get-version-config', versionId),
-  getVersionDisplayName: (versionId: string) => ipcRenderer.invoke('get-version-display-name', versionId),
-  getLaunchDisplayName: (versionId: string) => ipcRenderer.invoke('get-launch-display-name', versionId),
+  getVersionConfig: (versionId: string, root?: string) => ipcRenderer.invoke('get-version-config', versionId, root),
+  getVersionDisplayName: (versionId: string, root?: string) => ipcRenderer.invoke('get-version-display-name', versionId, root),
+  getLaunchDisplayName: (versionId: string, root?: string) => ipcRenderer.invoke('get-launch-display-name', versionId, root),
 
   modsSearch: (options) => ipcRenderer.invoke('mods-search', options),
   getModSources: () => ipcRenderer.invoke('get-mod-sources'),
@@ -135,8 +140,8 @@ const gpclApi: GPCLApi = {
   modsInstallDirect: (options) => ipcRenderer.invoke('mods-install-direct', options),
   modpackInstall: (options) => ipcRenderer.invoke('modpack-install', options),
   curseforgeLookup: (options) => ipcRenderer.invoke('mods-curseforge-lookup', options),
-  getModsDir: (versionId?: string) => ipcRenderer.invoke('get-mods-dir', versionId),
-  getVersionInfo: (versionId: string) => ipcRenderer.invoke('get-version-info', versionId),
+  getModsDir: (versionId?: string, root?: string) => ipcRenderer.invoke('get-mods-dir', versionId, root),
+  getVersionInfo: (versionId: string, root?: string) => ipcRenderer.invoke('get-version-info', versionId, root),
   listInstalledVersions: () => ipcRenderer.invoke('list-installed-versions'),
   onModDownloadProgress: (callback) => {
     ipcRenderer.on('mod-download-progress', (_event, data) => callback(data));
@@ -175,6 +180,16 @@ const gpclApi: GPCLApi = {
   },
 
   startMicrosoftAuth: () => ipcRenderer.invoke('start-microsoft-auth'),
+  cancelMicrosoftAuth: () => ipcRenderer.invoke('cancel-microsoft-auth'),
+  openMicrosoftAuthBrowser: () => ipcRenderer.invoke('open-microsoft-auth-browser'),
+  getMicrosoftAuth: () => ipcRenderer.invoke('get-microsoft-auth'),
+  logoutMicrosoftAuth: () => ipcRenderer.invoke('logout-microsoft-auth'),
+  listMicrosoftAccounts: () => ipcRenderer.invoke('list-microsoft-accounts'),
+  switchMicrosoftAccount: (uuid: string) => ipcRenderer.invoke('switch-microsoft-account', uuid),
+  removeMicrosoftAccount: (uuid: string) => ipcRenderer.invoke('remove-microsoft-account', uuid),
+  getMicrosoftAvatar: (uuid: string, refresh?: boolean) => ipcRenderer.invoke('get-microsoft-avatar', uuid, !!refresh),
+  refreshMicrosoftAuth: () => ipcRenderer.invoke('refresh-microsoft-auth'),
+  validateMicrosoftAuth: () => ipcRenderer.invoke('validate-microsoft-auth'),
   onMicrosoftAuthResult: (callback) => {
     ipcRenderer.on('microsoft-auth-result', (_event, result) => callback(result));
   },

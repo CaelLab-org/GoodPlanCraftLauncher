@@ -85,17 +85,50 @@
   var DATA = window.GPCL_VERSIONS;
   var installed = DATA.installed;
   var selectedVersion = installed[0].id;
+  var versionDirFilter = '';
+  var versionSearchTerm = '';
   var installedTimeLabels = { '2 小时前': '2 hours ago' };
+
+  function visibleInstalled() {
+    var list = versionDirFilter
+      ? installed.filter(function (v) { return v.root === versionDirFilter; })
+      : installed;
+    var query = versionSearchTerm.trim().toLowerCase();
+    return query
+      ? list.filter(function (v) { return v.id.toLowerCase().indexOf(query) !== -1; })
+      : list;
+  }
+
+  /* 和启动器一样：原版 / Forge / Fabric / OptiFine 标签 + 最近启动时间 */
+  function versionSubTags(id) {
+    var match = String(id).match(/^(.*?)-(OptiFine|Fabric|Forge|NeoForge|Quilt)/i);
+    var loader = match ? match[2] : t('Vanilla');
+    return '<span class="version-item-tag">' + loader + '</span>';
+  }
 
   function renderLaunchVersions() {
     var box = $('launch-version-list');
+    var visible = visibleInstalled();
     box.innerHTML = '';
-    installed.forEach(function (v) {
+    if (!visible.length) {
+      var empty = document.createElement('div');
+      empty.className = 'version-list-empty';
+      empty.textContent = versionSearchTerm.trim()
+        ? t('No versions match "{query}"', { query: versionSearchTerm.trim() })
+        : t('No installed versions');
+      box.appendChild(empty);
+    }
+    visible.forEach(function (v) {
       var el = document.createElement('div');
       el.className = 'version-item' + (v.id === selectedVersion ? ' selected' : '');
-      el.innerHTML = '<span class="version-item-icon icon icon-' +
-        (v.recent ? 'star' : 'box') + '"></span>' +
-        '<span class="version-item-id"></span><span class="version-item-time"></span>';
+      el.innerHTML =
+        '<span class="version-item-icon"><span class="icon icon-' + (v.recent ? 'star' : 'box') + '"></span></span>' +
+        '<span class="version-item-main">' +
+          '<span class="version-item-id"></span>' +
+          '<span class="version-item-sub">' + versionSubTags(v.id) +
+            '<span class="version-item-time"></span></span>' +
+        '</span>' +
+        '<span class="version-item-check icon icon-check"></span>';
       el.querySelector('.version-item-id').textContent = v.id;
       el.querySelector('.version-item-time').textContent = t(installedTimeLabels[v.time] || v.time);
       el.addEventListener('click', function () {
@@ -105,7 +138,7 @@
       });
       box.appendChild(el);
     });
-    $('version-count').textContent = t('{n} versions', { n: installed.length });
+    $('version-count').textContent = t('{n} versions', { n: visible.length });
     updateSelectedDisplay();
   }
 
@@ -116,11 +149,190 @@
     $('selected-version-name').textContent = 'Minecraft ' + selectedVersion;
   }
   renderLaunchVersions();
+  $('launch-version-search').addEventListener('input', function () {
+    versionSearchTerm = this.value;
+    renderLaunchVersions();
+  });
   $('version-select-btn').addEventListener('click', function () {
+    $('version-settings-panel').classList.add('hidden');
     var panel = $('version-select-panel');
     var hidden = panel.classList.toggle('hidden');
     panel.style.animation = hidden ? '' : 'slideInRight 0.3s ease-out';
   });
+
+  /* ===== 版本设置（演示） ===== */
+  $('version-settings-btn').addEventListener('click', function () {
+    $('version-select-panel').classList.add('hidden');
+    $('version-settings-panel').classList.remove('hidden');
+    $('version-settings-title').textContent = t('Version settings — {version}', { version: selectedVersion });
+    $('version-server-ip').value = selectedVersion === '1.21.11-Fabric' ? 'mc.caellab.com' : '';
+  });
+  $('version-settings-back-btn').addEventListener('click', function () {
+    $('version-settings-panel').classList.add('hidden');
+    $('version-select-panel').classList.remove('hidden');
+  });
+  ['version-open-folder-btn', 'version-open-mods-btn', 'version-open-shaders-btn'].forEach(function (id) {
+    $(id).addEventListener('click', function () { toast(t('Not available in the demo'), '', 'info'); });
+  });
+
+  /* ===== 正版登录（演示：本地假数据，不联网） ===== */
+  var authMode = 'offline';
+  var msAccounts = [];
+  var msAuth = null;
+  var accountListOpen = false;
+  var signingIn = false;
+  var signInTimer = null;
+  var usernameGroup = document.querySelector('.username-input-group');
+  var skinImage = document.querySelector('.skin-image');
+  var skinHead = $('skin-head');
+  var accountSeq = 0;
+
+  function paintSkinnedHead(el) {
+    if (!el) return;
+    el.style.backgroundImage = "url('skin/Alex.png')";
+    el.style.backgroundSize = 'cover';
+    el.style.backgroundPosition = 'center';
+  }
+
+  function setSkinVisible(signedIn) {
+    if (signedIn) paintSkinnedHead(skinHead);
+    if (skinImage) skinImage.classList.toggle('hidden', signedIn);
+    if (skinHead) skinHead.classList.toggle('hidden', !signedIn);
+  }
+
+  function renderAuthAccounts() {
+    var box = $('auth-account-items');
+    box.innerHTML = '';
+    msAccounts.forEach(function (account) {
+      var current = msAuth && msAuth.uuid === account.uuid;
+      var row = document.createElement('div');
+      row.className = 'auth-account-row' + (current ? ' is-current' : '');
+      var head = document.createElement('div');
+      head.className = 'skin-head auth-account-head';
+      head.style.setProperty('--head-size', '24px');
+      paintSkinnedHead(head);
+      var name = document.createElement('span');
+      name.className = 'auth-account-name';
+      name.textContent = account.name;
+      var remove = document.createElement('button');
+      remove.type = 'button';
+      remove.className = 'auth-account-remove';
+      remove.innerHTML = '&times;';
+      remove.addEventListener('click', function (e) {
+        e.stopPropagation();
+        msAccounts = msAccounts.filter(function (a) { return a.uuid !== account.uuid; });
+        if (msAuth && msAuth.uuid === account.uuid) msAuth = null;
+        setSkinVisible(false);
+        renderAuth();
+      });
+      if (!current) {
+        row.addEventListener('click', function () {
+          msAuth = account;
+          accountListOpen = false;
+          setSkinVisible(true);
+          renderAuth();
+          toast(t('Signed in'), account.name, 'success');
+        });
+      }
+      row.appendChild(head);
+      row.appendChild(name);
+      if (current) {
+        var badge = document.createElement('span');
+        badge.className = 'auth-account-tag';
+        badge.textContent = t('Current');
+        row.appendChild(badge);
+      }
+      row.appendChild(remove);
+      box.appendChild(row);
+    });
+  }
+
+  function renderAuth() {
+    var microsoft = authMode === 'microsoft';
+    var signedIn = Boolean(msAuth);
+    $('auth-microsoft').classList.toggle('auth-tab-active', microsoft);
+    $('auth-offline').classList.toggle('auth-tab-active', !microsoft);
+    var panel = $('auth-ms-panel');
+    if (!microsoft) {
+      panel.classList.add('hidden');
+      if (usernameGroup) usernameGroup.classList.remove('hidden');
+      $('username').disabled = false;
+      $('username-history-btn').classList.remove('hidden');
+      setSkinVisible(false);
+      return;
+    }
+    panel.classList.remove('hidden');
+    if (usernameGroup) usernameGroup.classList.toggle('hidden', !signedIn || signingIn);
+    $('username').disabled = signedIn;
+    if (signedIn) $('username').value = msAuth.name;
+    $('username-history-btn').classList.toggle('hidden', signedIn || signingIn);
+    $('auth-ms-signed-out').classList.toggle('hidden', signedIn || signingIn);
+    $('auth-ms-waiting').classList.toggle('hidden', !signingIn);
+    $('auth-ms-signed-in').classList.toggle('hidden', !signedIn || signingIn);
+    var listVisible = !signingIn && (signedIn ? accountListOpen : msAccounts.length > 0);
+    $('auth-account-list').classList.toggle('hidden', !listVisible);
+    $('auth-account-add').classList.toggle('hidden', !signedIn);
+    $('auth-skin-refresh').classList.toggle('hidden', !signedIn);
+    renderAuthAccounts();
+    setSkinVisible(signedIn);
+  }
+
+  function finishMockSignIn() {
+    clearTimeout(signInTimer);
+    var name = msAccounts.length ? (msAccounts.length === 1 ? 'Steve' : 'Alex') : 'Yunyun';
+    accountSeq += 1;
+    var account = { name: name, uuid: 'demo-' + accountSeq };
+    msAccounts.push(account);
+    msAuth = account;
+    signingIn = false;
+    accountListOpen = false;
+    renderAuth();
+    toast(t('Signed in'), name, 'success');
+  }
+
+  $('auth-microsoft').addEventListener('click', function () {
+    authMode = 'microsoft';
+    renderAuth();
+  });
+  $('auth-offline').addEventListener('click', function () {
+    authMode = 'offline';
+    clearTimeout(signInTimer);
+    signingIn = false;
+    renderAuth();
+  });
+  $('auth-ms-login').addEventListener('click', function () {
+    signingIn = true;
+    renderAuth();
+    clearTimeout(signInTimer);
+    signInTimer = setTimeout(finishMockSignIn, 1500);
+  });
+  $('auth-ms-reopen').addEventListener('click', function () {
+    toast(t('Not available in the demo'), t('This is just a web page window'), 'info');
+  });
+  $('auth-ms-cancel').addEventListener('click', function () {
+    clearTimeout(signInTimer);
+    signingIn = false;
+    renderAuth();
+  });
+  $('auth-ms-switch').addEventListener('click', function () {
+    accountListOpen = true;
+    renderAuth();
+  });
+  $('auth-ms-logout').addEventListener('click', function () {
+    msAuth = null;
+    accountListOpen = false;
+    renderAuth();
+  });
+  $('auth-account-add').addEventListener('click', function () {
+    signingIn = true;
+    renderAuth();
+    clearTimeout(signInTimer);
+    signInTimer = setTimeout(finishMockSignIn, 1500);
+  });
+  $('auth-skin-refresh').addEventListener('click', function () {
+    toast(t('Saved'), t('Refresh skin'), 'success');
+  });
+  renderAuth();
 
   /* ===== 启动页：用户名历史 ===== */
   var history = ['GPCL_Player', 'Yunyun', 'Steve'];
@@ -351,6 +563,7 @@
   }
   var currentRelease = null;
   var pickedLoader = null;
+  var pickedLoaderKey = null;
 
   function releaseOf(row) {
     var loaders = Object.assign({}, LOADERS[row[0]] || {});
@@ -392,6 +605,7 @@
   function openDetail(release) {
     currentRelease = release;
     pickedLoader = null;
+    pickedLoaderKey = null;
     $('detail-version-id').textContent = release.id;
     $('detail-version-type').textContent = releaseTypeLabel(release.type);
     $('detail-type-label').textContent = releaseTypeLabel(release.type);
@@ -404,6 +618,7 @@
       var value = release.loaders[key];
       var card = document.createElement('div');
       card.className = 'detail-option-card';
+      card.dataset.loader = key;
       card.innerHTML =
         '<div class="detail-option-header">' +
           '<div class="detail-option-left">' +
@@ -411,6 +626,7 @@
             '<div class="detail-option-text"><span class="detail-option-name"></span><span class="detail-option-desc"></span></div>' +
           '</div>' +
           '<div class="detail-option-right">' +
+            '<button class="detail-option-clear hidden" type="button">&times;</button>' +
             '<span class="detail-option-badge"></span>' +
             '<span class="detail-option-arrow icon icon-chevron"></span>' +
           '</div>' +
@@ -421,16 +637,22 @@
       var badge = card.querySelector('.detail-option-badge');
       if (!value || !value.length) {
         badge.textContent = t('Not supported');
-        card.style.opacity = '0.55';
+        card.classList.add('not-available');
       } else {
         badge.textContent = t('Available');
         badge.classList.add('available');
         card.querySelector('.detail-option-header').addEventListener('click', function () {
           toggleLoaderCard(key, card, value);
         });
+        var clearBtn = card.querySelector('.detail-option-clear');
+        clearBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          clearLoaderSelection(key);
+        });
       }
       box.appendChild(card);
     });
+    updateLoaderCards();
     updateDetailButton();
 
     $('version-list-section').classList.add('hidden');
@@ -438,6 +660,7 @@
   }
 
   function toggleLoaderCard(key, card, value) {
+    if (pickedLoaderKey && pickedLoaderKey !== key) return;
     var content = card.querySelector('.detail-option-content');
     var arrow = card.querySelector('.detail-option-arrow');
     var opening = content.classList.contains('hidden');
@@ -454,13 +677,70 @@
       item.querySelector('.detail-option-version-name').textContent = loaderMeta[key].name + ' ' + v;
       item.addEventListener('click', function (e) {
         e.stopPropagation();
+        if (pickedLoaderKey === key && item.classList.contains('selected')) {
+          clearLoaderSelection(key);
+          return;
+        }
+        pickedLoaderKey = key;
+        pickedLoader = loaderMeta[key].name + ' ' + v;
         content.querySelectorAll('.detail-option-version-item').forEach(function (i) { i.classList.remove('selected'); });
         item.classList.add('selected');
-        pickedLoader = key + ' ' + v;
+        updateLoaderCards();
         updateDetailButton();
       });
       content.appendChild(item);
     });
+  }
+
+  /* 一次只装一个加载器：选了一个，其余卡片标不兼容并折叠 */
+  function updateLoaderCards() {
+    var box = $('mod-loader-options');
+    if (!box || !currentRelease) return;
+    Array.prototype.forEach.call(box.children, function (card) {
+      var key = card.dataset.loader;
+      var value = currentRelease.loaders[key];
+      var badge = card.querySelector('.detail-option-badge');
+      var content = card.querySelector('.detail-option-content');
+      var arrow = card.querySelector('.detail-option-arrow');
+      var clearBtn = card.querySelector('.detail-option-clear');
+      if (!value || !value.length) {
+        if (clearBtn) clearBtn.classList.add('hidden');
+        return;
+      }
+      var preferred = pickedLoaderKey === key;
+      var incompatible = pickedLoaderKey && pickedLoaderKey !== key;
+      if (clearBtn) clearBtn.classList.toggle('hidden', !preferred);
+      if (incompatible) {
+        badge.className = 'detail-option-badge unavailable';
+        badge.textContent = t('Incompatible with {name}', { name: loaderMeta[pickedLoaderKey].name });
+        card.classList.add('incompatible');
+        content.classList.add('hidden');
+        arrow.classList.remove('expanded');
+      } else {
+        badge.className = 'detail-option-badge available';
+        badge.textContent = preferred ? pickedLoader : t('Available');
+        card.classList.remove('incompatible');
+      }
+    });
+  }
+
+  function clearLoaderSelection(key) {
+    if (pickedLoaderKey !== key) return;
+    pickedLoaderKey = null;
+    pickedLoader = null;
+    var box = $('mod-loader-options');
+    Array.prototype.forEach.call(box.children, function (card) {
+      if (card.classList.contains('not-available')) return;
+      card.querySelectorAll('.detail-option-version-item').forEach(function (i) { i.classList.remove('selected'); });
+      card.querySelector('.detail-option-badge').textContent = t('Available');
+      card.querySelector('.detail-option-badge').className = 'detail-option-badge available';
+      card.classList.remove('incompatible');
+      card.querySelector('.detail-option-clear').classList.add('hidden');
+    });
+    var content = box.querySelector('[data-loader="' + key + '"] .detail-option-content');
+    if (content) content.classList.add('hidden');
+    box.querySelectorAll('.detail-option-arrow').forEach(function (a) { a.classList.remove('expanded'); });
+    updateDetailButton();
   }
 
   function updateDetailButton() {
@@ -480,14 +760,40 @@
   var dockPanel = $('download-dock-panel');
   var dockHideTimer = null;
   var dockTaskRow = null;
-  var dockState = { title: '-', current: '', speed: '', percent: 0, status: 'running' };
+  var dockState = { title: '-', current: '', speed: 0, percent: 0, status: 'running' };
+  var speedUnit = 'mbps';
+  var dockPeak = 0;
+  var dockSamples = [];
+
+  function formatDockSpeed(mb) {
+    var value = Math.max(0, Number(mb) || 0);
+    return speedUnit === 'mbs' ? value.toFixed(1) + ' MB/s' : (value * 8).toFixed(1) + ' Mbps';
+  }
+
+  function updateDockChart(mb) {
+    var svg = $('dock-speed-chart');
+    if (!svg) return;
+    dockSamples.push(Math.max(0, Number(mb) || 0));
+    if (dockSamples.length > 40) dockSamples.shift();
+    var max = Math.max.apply(null, dockSamples.concat([1]));
+    var count = dockSamples.length;
+    var points = dockSamples.map(function (value, index) {
+      var x = count <= 1 ? 240 : index / (count - 1) * 240;
+      var y = 60 - value / max * 54;
+      return x.toFixed(1) + ',' + y.toFixed(1);
+    }).join(' ');
+    svg.innerHTML = '<polyline points="' + points + '" fill="none" stroke="currentColor" stroke-width="2" vector-effect="non-scaling-stroke"/>';
+  }
 
   function renderDock() {
     $('download-dock-title').textContent = dockState.title;
     $('download-dock-current').textContent = dockState.current;
-    $('download-dock-speed').textContent = dockState.speed;
+    $('download-dock-speed').textContent = formatDockSpeed(dockState.speed);
     $('download-dock-percent').textContent = Math.round(dockState.percent) + '%';
     $('download-dock-fill').style.width = Math.max(0, Math.min(100, dockState.percent)) + '%';
+    $('dock-current-speed').textContent = formatDockSpeed(dockState.speed);
+    $('dock-peak-speed').textContent = formatDockSpeed(dockPeak);
+    $('dock-panel-percent').textContent = Math.round(dockState.percent) + '%';
     dockEl.classList.toggle('is-done', dockState.status === 'done');
     dockEl.classList.toggle('is-error', dockState.status === 'error');
   }
@@ -496,9 +802,22 @@
     var list = $('download-task-list');
     var rows = list.querySelectorAll('.download-task');
     var settled = list.querySelectorAll('.download-task[data-status="done"], .download-task[data-status="error"]').length;
+    var running = list.querySelectorAll('.download-task[data-status="running"]').length;
     $('download-dock-count').textContent = rows.length ? settled + ' / ' + rows.length : '';
     $('download-dock-panel-count').textContent = rows.length ? '(' + rows.length + ')' : '';
+    $('dock-panel-queued').textContent = String(Math.max(0, rows.length - running - settled));
+    $('dock-panel-running').textContent = running ? t('{count} running', { count: running }) : '';
+    $('download-dock-panel-subtitle').textContent = rows.length
+      ? t('{running} running · {queued} queued', { running: running, queued: Math.max(0, rows.length - running - settled) })
+      : t('No active downloads');
+    $('download-dock-panel-clear').classList.toggle('hidden', !settled);
   }
+  $('download-dock-panel-clear').addEventListener('click', function () {
+    var list = $('download-task-list');
+    list.querySelectorAll('.download-task[data-status="done"], .download-task[data-status="error"]').forEach(function (row) { row.remove(); });
+    updateDockCount();
+    if (!list.childElementCount) hideDock();
+  });
 
   function showDock() {
     clearTimeout(dockHideTimer);
@@ -566,10 +885,13 @@
     activeVersionTask = versionTask;
     dockState.title = label;
     dockState.current = t('Preparing…');
-    dockState.speed = '';
+    dockState.speed = 0;
     dockState.percent = 0;
     dockState.status = 'running';
+    dockPeak = 0;
+    dockSamples = [];
     renderDock();
+    updateDockChart(0);
     versionTask.set('running', t('Preparing…'), 0);
     toast(t('Download started'), currentRelease.id + (pickedLoader ? ' + ' + pickedLoader : ''), 'info');
 
@@ -584,14 +906,16 @@
         versionTask.set('running', pct.toFixed(0) + '%', pct);
         dockState.current =
           files[Math.floor(Math.random() * files.length)] + '  ·  ' + Math.round(done) + ' / ' + TOTAL_MB + ' MB';
-        dockState.speed = speed.toFixed(1) + ' MB/s';
+        dockState.speed = speed;
+        if (speed > dockPeak) dockPeak = speed;
+        updateDockChart(speed);
         renderDock();
       } else {
         clearInterval(downloadTimer);
         downloadTimer = null;
         versionTask.set('done', t('Done'), 100);
         dockState.current = currentRelease.id + ' · ' + t('Installed — go to the Launch page');
-        dockState.speed = '';
+        dockState.speed = 0;
         dockState.status = 'done';
         renderDock();
         activeVersionTask = null;
@@ -609,7 +933,7 @@
     task.set('error', t('Cancelled'), 0);
     dockState.status = 'error';
     dockState.current = t('Cancelled');
-    dockState.speed = '';
+    dockState.speed = 0;
     renderDock();
     toast(t('Download cancelled'), t('Temporary files cleaned up'), 'info');
     scheduleDockHide(4000);
@@ -797,13 +1121,16 @@
     currentDownloadTab = tab;
     downloadTabs.forEach(function (b) { b.classList.toggle('active', b.dataset.downloadTab === tab); });
     var isVersions = tab === 'versions';
+    var isJava = tab === 'java';
     $('version-list-section').classList.toggle('hidden', !isVersions);
     $('version-detail-page').classList.add('hidden');
-    $('mod-download-section').classList.toggle('hidden', isVersions);
+    $('java-download-section').classList.toggle('hidden', !isJava);
+    $('mod-download-section').classList.toggle('hidden', isVersions || isJava);
     if (isVersions) {
       renderReleaseList();
       return;
     }
+    if (isJava) return;
     currentProjectType = tab;
     currentProject = null;
     $('mod-search-input').value = '';
@@ -816,6 +1143,38 @@
 
   downloadTabs.forEach(function (tab) {
     tab.addEventListener('click', function () { showDownloadTab(tab.dataset.downloadTab); });
+  });
+
+  document.querySelectorAll('.java-install-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var version = btn.dataset.version;
+      var card = btn.closest('.java-version-card');
+      var badge = card.querySelector('.java-version-badge');
+      var status = $('java-install-status');
+      status.classList.remove('hidden');
+      if (card.classList.contains('installed')) {
+        status.textContent = t('Uninstalling Java {version}...', { version: version });
+        setTimeout(function () {
+          card.classList.remove('installed');
+          btn.classList.remove('installed');
+          btn.textContent = t('Install');
+          badge.classList.add('hidden');
+          status.textContent = t('Java {version} uninstalled', { version: version });
+        }, 900);
+        return;
+      }
+      btn.disabled = true;
+      status.textContent = t('Downloading Java {version}', { version: version });
+      setTimeout(function () {
+        btn.disabled = false;
+        card.classList.add('installed');
+        btn.classList.add('installed');
+        btn.textContent = t('Uninstall');
+        badge.classList.remove('hidden');
+        badge.textContent = t('Installed');
+        status.textContent = t('Java {version} is ready', { version: version });
+      }, 1200);
+    });
   });
   $('mod-search-btn').addEventListener('click', renderProjects);
   $('mod-search-input').addEventListener('keydown', function (e) {
@@ -859,11 +1218,14 @@
     dockTaskRow = row;
     dockState.title = name;
     dockState.current = t('Preparing…');
-    dockState.speed = '';
+    dockState.speed = 0;
     dockState.percent = 0;
     dockState.status = 'running';
+    dockPeak = 0;
+    dockSamples = [];
     showDock();
     renderDock();
+    updateDockChart(0);
     updateDockCount();
     return {
       row: row,
@@ -886,24 +1248,72 @@
   var targetVersion = installed[0].id;
   var pendingInstall = null;
 
+  /* 从版本名里拆出游戏版本和加载器：1.21.3-OptiFine_HD_U_J2 → 1.21.3 / optifine */
+  function installedInfo(id) {
+    var m = String(id).match(/^(.+?)-(OptiFine|Fabric|Forge|NeoForge)/i);
+    if (!m) return { mc: id, loaders: [] };
+    return { mc: m[1], loaders: [m[2].toLowerCase()] };
+  }
+
+  function targetCompat(item, info) {
+    if (currentProjectType !== 'mods') return { game: true, loader: true };
+    var game = item.mc.indexOf(info.mc) !== -1;
+    var loader = !item.loaders.length || info.loaders.some(function (l) { return item.loaders.indexOf(l) !== -1; });
+    return { game: game, loader: loader };
+  }
+
+  function updateTargetButton(blocked) {
+    var btn = $('mod-target-install');
+    if (!targetVersion || blocked) {
+      btn.disabled = true;
+      btn.textContent = t('Install');
+      return;
+    }
+    btn.disabled = false;
+    btn.textContent = t('Install to {name}', { name: targetVersion });
+  }
+
   function openTargetDialog(item, mc) {
     pendingInstall = { item: item, mc: mc };
-    targetVersion = installed[0].id;
+    targetVersion = null;
     var list = $('mod-target-list');
     list.innerHTML = '';
     installed.forEach(function (v) {
+      var info = installedInfo(v.id);
+      var compat = targetCompat(item, info);
+      var blocked = !compat.game || !compat.loader;
+      var reasons = [];
+      if (!compat.game) reasons.push(t('Game version mismatch'));
+      if (!compat.loader) reasons.push(t('Loader mismatch'));
       var row = document.createElement('div');
-      row.className = 'mod-target-item' + (v.id === targetVersion ? ' selected' : '');
-      row.innerHTML = '<span class="mod-target-name"></span><span class="mod-target-meta"></span>';
-      row.querySelector('.mod-target-name').textContent = v.id;
-      row.querySelector('.mod-target-meta').textContent = 'Minecraft ' + v.id;
-      row.addEventListener('click', function () {
-        targetVersion = v.id;
-        Array.prototype.forEach.call(list.children, function (c) { c.classList.remove('selected'); });
-        row.classList.add('selected');
-      });
+      row.className = 'mod-target-item' + (blocked ? ' incompatible' : '');
+      row.innerHTML =
+        '<div class="mod-target-name"><span></span></div>' +
+        '<div class="mod-target-meta"></div>';
+      row.querySelector('.mod-target-name span').textContent = v.id;
+      if (reasons.length) {
+        var badge = document.createElement('span');
+        badge.className = 'mod-target-badge';
+        badge.textContent = reasons.join(' · ');
+        row.querySelector('.mod-target-name').appendChild(badge);
+      }
+      row.querySelector('.mod-target-meta').textContent = 'Minecraft ' + info.mc +
+        (info.loaders.length ? ' · ' + loaderLabel(info.loaders[0]) : '');
+      if (!blocked) {
+        row.addEventListener('click', function () {
+          targetVersion = v.id;
+          Array.prototype.forEach.call(list.children, function (c) { c.classList.remove('selected'); });
+          row.classList.add('selected');
+          updateTargetButton(false);
+        });
+        if (!targetVersion) {
+          targetVersion = v.id;
+          row.classList.add('selected');
+        }
+      }
       list.appendChild(row);
     });
+    updateTargetButton(!targetVersion);
     $('mod-target-overlay').classList.remove('hidden');
   }
 
@@ -914,6 +1324,7 @@
     toast(t('Not available in the demo'), '', 'info');
   });
   $('mod-target-install').addEventListener('click', function () {
+    if (!targetVersion) return;
     $('mod-target-overlay').classList.add('hidden');
     if (!pendingInstall) return;
     var item = pendingInstall.item;
@@ -1124,6 +1535,21 @@
       toast(t('Saved'), t('Memory management: {value}', { value: label }), 'success');
     } else if (id === 'log-unit') {
       toast(t('Saved'), t('Log retention: {value}', { value: label }), 'success');
+    } else if (id === 'settings-speed-unit') {
+      speedUnit = value;
+      renderDock();
+      toast(t('Saved'), t('Speed unit'), 'success');
+    } else if (id === 'version-dir-filter') {
+      versionDirFilter = value;
+      renderLaunchVersions();
+    } else if (id === 'settings-version-isolation' || id === 'version-isolation') {
+      toast(t('Saved'), t('Version isolation: {value}', { value: label }), 'success');
+    } else if (id === 'version-java') {
+      toast(t('Saved'), t('Java version'), 'success');
+    } else if (id === 'version-memory') {
+      toast(t('Saved'), t('Maximum game memory'), 'success');
+    } else if (id === 'version-window-mode') {
+      toast(t('Saved'), t('Window Mode'), 'success');
     }
   }
 

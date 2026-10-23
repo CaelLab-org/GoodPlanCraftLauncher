@@ -9,7 +9,7 @@
 
 // __IMPORTS_BEGIN__
 import { t } from '../i18n';
-import { detailBackBtn, detailDownloadBtn, escapeHtml, icon, setStatus, showToast, versionCountLabel, versionDetailPage, versionListContainer, versionListSection, versionSelect } from './dom';
+import { detailBackBtn, detailDownloadBtn, escapeHtml, icon, initCustomSelect, setCustomSelectOptions, setStatus, showToast, versionCountLabel, versionDetailPage, versionListContainer, versionListSection, versionSelect } from './dom';
 import { beginVersionDownload } from './launch';
 // __IMPORTS_END__
 
@@ -157,18 +157,79 @@ export async function recordVersionDownload(versionId: string): Promise<void> {
 
 let versionSearchTerm: string = '';
 let lastVersionListSignature: string = '';
+let versionDirFilter: string = '';
 const versionInfoCache: Map<string, any> = new Map();
 
-async function getVersionInfoCached(versionId: string): Promise<any> {
-  if (versionInfoCache.has(versionId)) return versionInfoCache.get(versionId);
+export interface VersionEntry {
+  id: string;
+  root: string;
+  name: string;
+  isDefault: boolean;
+  isInstall: boolean;
+}
+
+async function fetchVersionEntries(silent: boolean = true): Promise<VersionEntry[]> {
+  if (window.gpcl && typeof window.gpcl.scanVersionEntries === 'function') {
+    try {
+      const entries: any[] = await window.gpcl.scanVersionEntries(undefined, silent);
+      if (Array.isArray(entries)) return entries as VersionEntry[];
+    } catch {}
+  }
+  if (window.gpcl && typeof window.gpcl.scanVersions === 'function') {
+    try {
+      const ids: string[] = await window.gpcl.scanVersions(null, silent);
+      const root: string = await window.gpcl.getGameDir();
+      return (ids || []).map((id: string) => ({ id, root, name: t('ui.default_folder_label'), isDefault: true, isInstall: true }));
+    } catch {}
+  }
+  return [];
+}
+
+async function fetchGameDirEntries(): Promise<any[]> {
+  try {
+    if (window.gpcl && typeof window.gpcl.getGameDirs === 'function') {
+      const result: any = await window.gpcl.getGameDirs();
+      if (Array.isArray(result?.dirs) && result.dirs.length) return result.dirs;
+    }
+  } catch {}
+  return [];
+}
+
+function refreshVersionDirFilter(entries: VersionEntry[], dirs: any[]): void {
+  const roots: string[] = [];
+  const labels: Map<string, string> = new Map();
+  for (const dir of dirs) {
+    const root: string = String(dir.path || '');
+    if (!root || roots.includes(root)) continue;
+    roots.push(root);
+    labels.set(root, String(dir.name || root));
+  }
+  for (const entry of entries) {
+    if (!roots.includes(entry.root)) {
+      roots.push(entry.root);
+      labels.set(entry.root, entry.name);
+    }
+  }
+  const options: Array<{ value: string; label: string }> = [
+    { value: '', label: t('ui.all_folders') },
+    ...roots.map((root: string) => ({ value: root, label: labels.get(root) || root }))
+  ];
+  const selected: string = options.some((option) => option.value === versionDirFilter) ? versionDirFilter : '';
+  if (selected !== versionDirFilter) versionDirFilter = selected;
+  setCustomSelectOptions('version-dir-filter', options, selected);
+}
+
+async function getVersionInfoCached(versionId: string, root: string): Promise<any> {
+  const key: string = `${root}\u0000${versionId}`;
+  if (versionInfoCache.has(key)) return versionInfoCache.get(key);
   let info: any = null;
   try {
     if (window.gpcl && typeof window.gpcl.getVersionInfo === 'function') {
-      const result: any = await window.gpcl.getVersionInfo(versionId);
+      const result: any = await window.gpcl.getVersionInfo(versionId, root);
       if (result?.success) info = result.info;
     }
   } catch {}
-  versionInfoCache.set(versionId, info);
+  versionInfoCache.set(key, info);
   return info;
 }
 
@@ -201,97 +262,108 @@ function formatRelativeTime(lastTime: number): string {
 export async function renderVersionSelectList(): Promise<void> {
   const container: HTMLElement | null = document.getElementById('launch-version-list');
   const countEl: HTMLElement | null = document.getElementById('version-count');
-  
-  if (!container) return;
-  
-  try {
-    let versions: string[] = [];
 
-    if (window.gpcl && typeof window.gpcl.scanVersions === 'function') {
-      try {
-        versions = await window.gpcl.scanVersions(null, true);
-      } catch (e: any) {
-        console.error('调用scanVersions失败:', e);
-      }
-    }
-    
+  if (!container) return;
+
+  try {
+    const entries: VersionEntry[] = await fetchVersionEntries(true);
+    const dirs: any[] = await fetchGameDirEntries();
+    refreshVersionDirFilter(entries, dirs);
     const history = await getVersionHistory();
-    
-    if (!versions || versions.length === 0) {
+
+    if (selectedVersionRoot && !entries.some((entry: VersionEntry) => entry.root === selectedVersionRoot)) {
+      clearVersionSelection();
+    }
+
+    if (!entries || entries.length === 0) {
       container.innerHTML = `<div class="version-list-empty">${t('ui.no_installed_versions')}</div>`;
       if (countEl) countEl.textContent = t('ui.0_versions');
       lastVersionListSignature = '';
       return;
     }
 
-    versions.sort((a: string, b: string) => {
-      const timeA: number = history[a]?.lastLaunch || history[a]?.downloadTime || 0;
-      const timeB: number = history[b]?.lastLaunch || history[b]?.downloadTime || 0;
-      return timeB - timeA;
+    const filtered: VersionEntry[] = versionDirFilter
+      ? entries.filter((entry: VersionEntry) => entry.root === versionDirFilter)
+      : entries;
+
+    filtered.sort((a: VersionEntry, b: VersionEntry) => {
+      const timeA: number = history[a.id]?.lastLaunch || history[a.id]?.downloadTime || 0;
+      const timeB: number = history[b.id]?.lastLaunch || history[b.id]?.downloadTime || 0;
+      return timeB - timeA || a.id.localeCompare(b.id, undefined, { numeric: true });
     });
 
     // 每 2 秒会重新扫描一次；内容没变就别重建 DOM，否则滚动位置会被顶回顶部
     const signature: string = [
-      versions.join('\u0000'),
+      filtered.map((entry: VersionEntry) => `${entry.root}\u0002${entry.id}`).join('\u0000'),
       JSON.stringify(history),
-      versionSearchTerm
+      versionSearchTerm,
+      versionDirFilter
     ].join('\u0001');
     if (signature === lastVersionListSignature) return;
     lastVersionListSignature = signature;
 
     const query: string = versionSearchTerm.trim().toLowerCase();
-    const visible: string[] = query
-      ? versions.filter((versionId: string) => versionId.toLowerCase().includes(query))
-      : versions;
+    const visible: VersionEntry[] = query
+      ? filtered.filter((entry: VersionEntry) => entry.id.toLowerCase().includes(query))
+      : filtered;
 
     container.innerHTML = '';
 
     if (visible.length === 0) {
-      container.innerHTML = `<div class="version-list-empty">${t('ui.no_versions_match_query', { query: escapeHtml(versionSearchTerm.trim()) })}</div>`;
+      container.innerHTML = `<div class="version-list-empty">${query
+        ? t('ui.no_versions_match_query', { query: escapeHtml(versionSearchTerm.trim()) })
+        : t('ui.no_installed_versions')}</div>`;
     }
 
-    const infos: any[] = await Promise.all(visible.map((versionId: string) => getVersionInfoCached(versionId)));
+    const infos: any[] = await Promise.all(visible.map((entry: VersionEntry) => getVersionInfoCached(entry.id, entry.root)));
+    const rootCount: number = new Set(entries.map((entry: VersionEntry) => entry.root)).size;
+    const showFolderTag: boolean = !versionDirFilter && rootCount > 1;
 
-    visible.forEach((versionId: string, index: number) => {
+    visible.forEach((entry: VersionEntry, index: number) => {
       const info: any = infos[index];
       const item: HTMLDivElement = document.createElement('div');
       item.className = 'version-item';
-      item.dataset.versionId = versionId;
+      item.dataset.versionId = entry.id;
+      item.dataset.versionRoot = entry.root;
 
-      const lastTime: number = history[versionId]?.lastLaunch || history[versionId]?.downloadTime;
+      const lastTime: number = history[entry.id]?.lastLaunch || history[entry.id]?.downloadTime;
       const timeText: string = formatRelativeTime(lastTime);
       const itemIcon: string = index === 0 && lastTime ? icon('star') : icon('box');
+      const folderTag: string = showFolderTag
+        ? `<span class="version-item-tag version-item-folder">${escapeHtml(entry.name)}</span>`
+        : '';
 
       item.innerHTML = `
         <span class="version-item-icon">${itemIcon}</span>
         <span class="version-item-main">
           <span class="version-item-id"></span>
-          <span class="version-item-sub">${versionSubTags(info, versionId)}${timeText ? `<span class="version-item-time">${timeText}</span>` : ''}</span>
+          <span class="version-item-sub">${versionSubTags(info, entry.id)}${folderTag}${timeText ? `<span class="version-item-time">${timeText}</span>` : ''}</span>
         </span>
         <span class="version-item-check icon icon-check"></span>
       `;
 
       const idEl: HTMLElement | null = item.querySelector('.version-item-id');
-      if (idEl) idEl.textContent = versionId;
+      if (idEl) idEl.textContent = entry.id;
 
       item.addEventListener('click', () => {
-        selectVersion(versionId);
+        selectVersion(entry.id, entry.root);
       });
-      
+
       container.appendChild(item);
     });
-    
+
     if (countEl) {
       countEl.textContent = query
-        ? t('ui.visible_total_versions', { visible: visible.length, total: versions.length })
-        : t('ui.count_versions', { count: versions.length });
+        ? t('ui.visible_total_versions', { visible: visible.length, total: filtered.length })
+        : t('ui.count_versions', { count: filtered.length });
     }
 
-    if (!selectedVersionId && versions.length > 0) {
-      selectVersion(versions[0]);
+    if (!selectedVersionId && visible.length > 0) {
+      selectVersion(visible[0].id, visible[0].root);
     } else if (selectedVersionId) {
       container.querySelectorAll('.version-item').forEach((item: Element) => {
-        item.classList.toggle('selected', (item as HTMLElement).dataset.versionId === selectedVersionId);
+        const element: HTMLElement = item as HTMLElement;
+        item.classList.toggle('selected', element.dataset.versionId === selectedVersionId && element.dataset.versionRoot === selectedVersionRoot);
       });
     }
   } catch (err: any) {
@@ -300,6 +372,17 @@ export async function renderVersionSelectList(): Promise<void> {
   }
 }
 
+
+initCustomSelect('version-dir-filter', (value: string): void => {
+  versionDirFilter = value || '';
+  lastVersionListSignature = '';
+  void renderVersionSelectList();
+});
+
+window.addEventListener('gpcl-game-dirs-changed', (): void => {
+  lastVersionListSignature = '';
+  void renderVersionSelectList();
+});
 
 const versionSearchInput: HTMLInputElement | null = document.getElementById('launch-version-search') as HTMLInputElement | null;
 if (versionSearchInput) {
@@ -319,12 +402,14 @@ if (versionSearchInput) {
 }
 
 
-export function selectVersion(versionId: string): void {
+export function selectVersion(versionId: string, root: string | null = null): void {
   selectedVersionId = versionId;
+  selectedVersionRoot = root;
 
   const items: NodeListOf<Element> = document.querySelectorAll('#launch-version-list .version-item');
   items.forEach((item: Element) => {
-    item.classList.toggle('selected', (item as HTMLElement).dataset.versionId === versionId);
+    const element: HTMLElement = item as HTMLElement;
+    item.classList.toggle('selected', element.dataset.versionId === versionId && (!root || element.dataset.versionRoot === root));
   });
 
   const infoEl: HTMLElement | null = document.getElementById('selected-version-info');
@@ -348,6 +433,7 @@ export function selectVersion(versionId: string): void {
 
 export function clearVersionSelection(): void {
   selectedVersionId = null;
+  selectedVersionRoot = null;
 
   const infoEl: HTMLElement | null = document.getElementById('selected-version-info');
   const nameEl: HTMLElement | null = document.getElementById('selected-version-name');
@@ -361,9 +447,9 @@ export function clearVersionSelection(): void {
 }
 
 
-export async function isVersionInstalled(versionId: string): Promise<boolean> {
+export async function isVersionInstalled(versionId: string, root?: string | null): Promise<boolean> {
   try {
-    const versions: string[] = await window.gpcl.scanVersions(null, true);
+    const versions: string[] = await window.gpcl.scanVersions(root || null, true);
     return versions.includes(versionId);
   } catch {
     return false;
@@ -374,6 +460,8 @@ export async function isVersionInstalled(versionId: string): Promise<boolean> {
 export let allVersions: any[] = [];
 
 export let selectedVersionId: string | null = null;
+
+export let selectedVersionRoot: string | null = null;
 
 
 export let modLoaderState: any = {

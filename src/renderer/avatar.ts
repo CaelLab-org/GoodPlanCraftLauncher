@@ -6,6 +6,7 @@ const AVATAR_SIZE_MAX: number = 160;
 const AVATAR_SIZE_DEFAULT: number = 50;
 
 const skinImage: HTMLImageElement | null = document.querySelector('.skin-image') as HTMLImageElement | null;
+const skinHead: HTMLElement | null = document.getElementById('skin-head');
 const skinWrapper: HTMLElement | null = document.getElementById('skin-wrapper');
 const sizeSlider: HTMLInputElement | null = document.getElementById('settings-avatar-size') as HTMLInputElement | null;
 const sizeLabel: HTMLElement | null = document.getElementById('settings-avatar-size-value');
@@ -51,10 +52,14 @@ function setAvatarEditable(editable: boolean): void {
   }
 }
 
+// 正版账号的皮肤显示在 skinHead 上；这期间本地头像的刷新不能把它覆盖掉
+let accountSkinActive: boolean = false;
+
 async function refreshAvatar(): Promise<void> {
-  if (!skinImage) return;
+  if (accountSkinActive || !skinImage) return;
   try {
     const result: any = window.gpcl && window.gpcl.getAvatar ? await window.gpcl.getAvatar() : null;
+    if (accountSkinActive) return;
     if (result?.url) {
       skinImage.src = result.url;
       skinImage.classList.add('custom-avatar');
@@ -65,10 +70,46 @@ async function refreshAvatar(): Promise<void> {
       setAvatarEditable(true);
     }
   } catch {
+    if (accountSkinActive) return;
     skinImage.src = 'skin/Alex.png';
     skinImage.classList.remove('custom-avatar');
     setAvatarEditable(true);
   }
+}
+
+/** 64x64 皮肤带帽子层（40,8），老式 64x32 没有，只能画脸（8,8） */
+export function paintSkinHead(element: HTMLElement, dataUrl: string, width: number = 64, height: number = 64): void {
+  const w: number = Number(width) || 64;
+  const h: number = Number(height) || 64;
+  const modern: boolean = w >= 64 && h >= 64;
+  // 头部在皮肤图上是固定的 8x8 区域；整图缩放按实际宽高比，64x32 不能拉成正方形
+  element.style.backgroundSize = `calc(var(--head-size) * ${w / 8}) calc(var(--head-size) * ${h / 8})`;
+  if (modern) {
+    element.style.backgroundImage = `url("${dataUrl}"), url("${dataUrl}")`;
+    element.style.backgroundPosition =
+      'calc(var(--head-size) * -5) calc(var(--head-size) * -1), calc(var(--head-size) * -1) calc(var(--head-size) * -1)';
+  } else {
+    element.style.backgroundImage = `url("${dataUrl}")`;
+    element.style.backgroundPosition = 'calc(var(--head-size) * -1) calc(var(--head-size) * -1)';
+  }
+}
+
+/** 正版登录后用皮肤头替换本地头像；传 null 恢复成离线头像 */
+export function showAccountSkin(dataUrl: string | null, width: number = 64, height: number = 64): void {
+  if (!skinHead || !skinImage) return;
+  if (dataUrl) {
+    accountSkinActive = true;
+    paintSkinHead(skinHead, dataUrl, width, height);
+    skinHead.classList.remove('hidden');
+    skinImage.classList.add('hidden');
+    setAvatarEditable(false);
+    return;
+  }
+  accountSkinActive = false;
+  skinHead.classList.add('hidden');
+  skinHead.style.backgroundImage = '';
+  skinImage.classList.remove('hidden');
+  void refreshAvatar();
 }
 
 async function pickAvatar(): Promise<void> {

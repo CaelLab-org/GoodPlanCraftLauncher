@@ -1,8 +1,32 @@
 {
   "schema": 1,
-  "latest": "1.9.0",
+  "latest": "1.9.1",
   "updated": "2026-10-23",
   "versions": [
+    {
+      "version": "1.9.1",
+      "anchor": "v1-9-1",
+      "date": "2026-10-23",
+      "title": "Tài khoản Microsoft, nhiều thư mục game và Java riêng cho từng phiên bản",
+      "log": [
+        "Đăng nhập Microsoft đã được làm lại: lưu nhiều tài khoản, chuyển đổi hoặc xoá bất cứ lúc nào, và vẫn đăng nhập sau khi khởi động lại trình khởi chạy",
+        "Mã đăng nhập được tự động gia hạn trước khi khởi chạy; nếu hết hạn, trình khởi chạy sẽ yêu cầu đăng nhập lại thay vì báo lỗi khi vào máy chủ",
+        "Các tài khoản đã lưu hiển thị đầu skin Minecraft thật",
+        "Thêm nhiều thư mục game và lọc phiên bản theo thư mục; chọn thư mục cha như thư mục gốc PCL2 sẽ tự động tìm .minecraft bên trong",
+        "Mỗi phiên bản có thể dùng Java riêng: tự động, 8, 16, 17, 21, 25 hoặc đường dẫn tuỳ chỉnh",
+        "Phân tích lỗi hỏng có đủ 25 ngôn ngữ, và báo cáo lỗi giờ có thêm múi giờ và giờ địa phương",
+        "Bảng tải xuống hiển thị đồ thị tốc độ trực tiếp, tốc độ hiện tại và cao nhất cùng các tác vụ đang chờ; có thể chọn đơn vị MB/s hoặc Mbps",
+        "Tải Java đã chuyển sang tab riêng trên trang tải xuống",
+        "Mức sử dụng bộ nhớ trong trang cài đặt giờ cập nhật trực tiếp thay vì hiển thị con số cũ lúc mở trang",
+        "Xoá phiên bản đang chọn sẽ quay lại danh sách phiên bản ngay, không còn hiển thị phiên bản đã xoá"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.1-Setup.exe",
+        "file": "GPCL-1.9.1-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.9.0",
       "anchor": "v1-9-0",

@@ -12,7 +12,7 @@ import { BrowserWindow, dialog, ipcMain, net } from 'electron';
 import fs from 'fs';
 import path from 'path';
 
-import { APP_VERSION, CACHE_DIR, GAME_DIR, applyInitialVersionIsolation, formatTimestamp, loadSettings, setVersionIsolationChoice, writeLog } from './config';
+import { APP_VERSION, CACHE_DIR, GAME_DIR, applyInitialVersionIsolation, formatTimestamp, getAllGameDirs, getGameDirEntries, loadSettings, setVersionIsolationChoice, writeLog } from './config';
 import { t } from './i18n';
 import { installVersionWithModLoader } from './modloader';
 import { mainWindow } from './shell';
@@ -997,65 +997,87 @@ export function updateVersionLastPlayed(versionId: string, targetDir?: string): 
 }
 
 
-ipcMain.handle('scan-versions', async (_, gameDir?: string, silent: boolean = false) => {
-  const targetDir: string = gameDir ? path.resolve(gameDir) : GAME_DIR;
+function scanVersionsInDir(targetDir: string, silent: boolean = false): string[] {
   const versionsDir: string = path.join(targetDir, 'versions');
   if (!fs.existsSync(versionsDir)) {
-    if (!silent) writeLog('扫描本地版本：未找到versions目录');
+    if (!silent) writeLog(`扫描本地版本：${targetDir} 下未找到 versions 目录`);
     return [];
   }
   const entries = fs.readdirSync(versionsDir, { withFileTypes: true });
   const versions: string[] = [];
   const skippedVersions: string[] = [];
-  
+
   for (const entry of entries) {
-    if (entry.isDirectory()) {
-      const versionDir: string = path.join(versionsDir, entry.name);
-      try {
-        const files: string[] = fs.readdirSync(versionDir);
+    if (!entry.isDirectory()) continue;
+    const versionDir: string = path.join(versionsDir, entry.name);
+    try {
+      const files: string[] = fs.readdirSync(versionDir);
 
-        if (files.length === 1 && files[0] === 'CancelDownload.txt') {
-          skippedVersions.push(entry.name);
-          if (!silent) writeLog(`扫描本地版本：跳过空目录 "${entry.name}"（仅包含 CancelDownload.txt）`);
-          continue;
-        }
-
-        const jsonFiles: string[] = files.filter((f: string) => f.endsWith('.json'));
-
-        if (jsonFiles.length === 0) {
-          skippedVersions.push(entry.name);
-          if (!silent) writeLog(`扫描本地版本：跳过 "${entry.name}"（无 .json 文件）`);
-          continue;
-        }
-
-
-        
-        const baseVersionId: string = entry.name; 
-        const mcVersion: string = baseVersionId; 
-
-        if (jsonFiles.includes(`${baseVersionId}.json`)) {
-          versions.push(baseVersionId);
-        }
-
-        for (const jsonFile of jsonFiles) {
-          const jsonVersionId: string = jsonFile.replace('.json', '');
-          
-          if (jsonVersionId !== baseVersionId && !versions.includes(jsonVersionId)) {
-            versions.push(jsonVersionId);
-          }
-        }
-        
-      } catch (e: any) {
-        writeLog(`扫描本地版本：读取目录 "${entry.name}" 失败 - ${e.message}`);
+      if (files.length === 1 && files[0] === 'CancelDownload.txt') {
+        skippedVersions.push(entry.name);
+        if (!silent) writeLog(`扫描本地版本：跳过空目录 "${entry.name}"（仅包含 CancelDownload.txt）`);
+        continue;
       }
+
+      const jsonFiles: string[] = files.filter((f: string) => f.endsWith('.json'));
+      if (jsonFiles.length === 0) {
+        skippedVersions.push(entry.name);
+        if (!silent) writeLog(`扫描本地版本：跳过 "${entry.name}"（无 .json 文件）`);
+        continue;
+      }
+
+      const baseVersionId: string = entry.name;
+      if (jsonFiles.includes(`${baseVersionId}.json`)) versions.push(baseVersionId);
+      for (const jsonFile of jsonFiles) {
+        const jsonVersionId: string = jsonFile.replace('.json', '');
+        if (jsonVersionId !== baseVersionId && !versions.includes(jsonVersionId)) {
+          versions.push(jsonVersionId);
+        }
+      }
+    } catch (e: any) {
+      writeLog(`扫描本地版本：读取目录 "${entry.name}" 失败 - ${e.message}`);
     }
   }
-  
+
   if (skippedVersions.length > 0 && !silent) {
-    writeLog(`扫描本地版本：跳过 ${skippedVersions.length} 个无效目录 - [${skippedVersions.join(', ')}]`);
+    writeLog(`扫描本地版本：${targetDir} 跳过 ${skippedVersions.length} 个无效目录 - [${skippedVersions.join(', ')}]`);
   }
-  if (!silent) writeLog(`扫描本地版本：共 ${versions.length} 个版本 - [${versions.join(', ')}]`);
   return versions;
+}
+
+ipcMain.handle('scan-versions', async (_, gameDir?: string, silent: boolean = false) => {
+  if (gameDir) return scanVersionsInDir(path.resolve(gameDir), silent);
+
+  const seen: Set<string> = new Set();
+  const versions: string[] = [];
+  for (const dir of getAllGameDirs()) {
+    for (const versionId of scanVersionsInDir(dir, silent)) {
+      if (seen.has(versionId)) continue;
+      seen.add(versionId);
+      versions.push(versionId);
+    }
+  }
+  if (!silent) writeLog(`扫描本地版本：共 ${versions.length} 个版本（${getAllGameDirs().length} 个目录）`);
+  return versions;
+});
+
+ipcMain.handle('scan-version-entries', async (_, gameDir?: string, silent: boolean = false) => {
+  const dirs: { path: string; name: string; isDefault: boolean; isInstall: boolean }[] = gameDir
+    ? [{ path: path.resolve(gameDir), name: path.basename(path.resolve(gameDir)), isDefault: false, isInstall: false }]
+    : getGameDirEntries();
+  const entries: any[] = [];
+  for (const dir of dirs) {
+    for (const id of scanVersionsInDir(dir.path, silent)) {
+      entries.push({
+        id,
+        root: dir.path,
+        name: dir.name,
+        isDefault: dir.isDefault,
+        isInstall: dir.isInstall
+      });
+    }
+  }
+  return entries;
 });
 
 
@@ -1273,16 +1295,17 @@ ipcMain.handle('download-with-modloader', (event: any, versionId: string, loader
   installVersionWithModLoader(versionId, loaderType, loaderVersion, maxConcurrent, options));
 
 
-ipcMain.handle('get-version-config', (event: any, versionId: string) => readVersionConfig(versionId));
+ipcMain.handle('get-version-config', (event: any, versionId: string, root?: string) => readVersionConfig(versionId, root));
 
-ipcMain.handle('get-version-display-name', (event: any, versionId: string) => generateVersionDisplayName(versionId));
+ipcMain.handle('get-version-display-name', (event: any, versionId: string, root?: string) => generateVersionDisplayName(versionId, root));
 
-ipcMain.handle('get-launch-display-name', (event: any, versionId: string) => generateLaunchDisplayName(versionId));
+ipcMain.handle('get-launch-display-name', (event: any, versionId: string, root?: string) => generateLaunchDisplayName(versionId, root));
 
 
-ipcMain.handle('delete-version', async (_, versionId: string) => {
+ipcMain.handle('delete-version', async (_, versionId: string, root?: string) => {
   try {
-    const versionDir: string = path.join(GAME_DIR, 'versions', versionId);
+    const versionRoot: string = root ? path.resolve(root) : GAME_DIR;
+    const versionDir: string = path.join(versionRoot, 'versions', versionId);
     
     if (!fs.existsSync(versionDir)) {
       return { success: false, error: 'Version does not exist' };
@@ -1302,9 +1325,10 @@ ipcMain.handle('delete-version', async (_, versionId: string) => {
 });
 
 
-ipcMain.handle('get-version-settings', async (_, versionId: string) => {
+ipcMain.handle('get-version-settings', async (_, versionId: string, root?: string) => {
   try {
-    const versionDir: string = path.join(GAME_DIR, 'versions', versionId);
+    const versionRoot: string = root ? path.resolve(root) : GAME_DIR;
+    const versionDir: string = path.join(versionRoot, 'versions', versionId);
     const gpclDir: string = path.join(versionDir, 'gpcl');
     const configPath: string = path.join(gpclDir, 'config.json');
     
@@ -1323,9 +1347,10 @@ ipcMain.handle('get-version-settings', async (_, versionId: string) => {
 });
 
 
-ipcMain.handle('save-version-settings', async (_, versionId: string, settings: any) => {
+ipcMain.handle('save-version-settings', async (_, versionId: string, settings: any, root?: string) => {
   try {
-    const versionDir: string = path.join(GAME_DIR, 'versions', versionId);
+    const versionRoot: string = root ? path.resolve(root) : GAME_DIR;
+    const versionDir: string = path.join(versionRoot, 'versions', versionId);
     const gpclDir: string = path.join(versionDir, 'gpcl');
     
     if (!fs.existsSync(gpclDir)) {
@@ -1336,7 +1361,7 @@ ipcMain.handle('save-version-settings', async (_, versionId: string, settings: a
 
     fs.writeFileSync(configPath, JSON.stringify(settings, null, 2), 'utf8');
     if (typeof settings?.isolation === 'boolean') {
-      setVersionIsolationChoice(GAME_DIR, versionId, settings.isolation);
+      setVersionIsolationChoice(versionRoot, versionId, settings.isolation);
     }
     
     writeLog(`[版本设置] 版本 ${versionId} 设置已保存`);
@@ -1349,8 +1374,9 @@ ipcMain.handle('save-version-settings', async (_, versionId: string, settings: a
 });
 
 
-export function readVersionConfig(versionId: string): any {
-  const versionDir: string = path.join(GAME_DIR, 'versions', versionId);
+export function readVersionConfig(versionId: string, root?: string): any {
+  const versionRoot: string = root ? path.resolve(root) : GAME_DIR;
+  const versionDir: string = path.join(versionRoot, 'versions', versionId);
   const configPath: string = path.join(versionDir, 'gpcl', 'config.ini');
   
   if (!fs.existsSync(configPath)) {
@@ -1395,8 +1421,8 @@ export function readVersionConfig(versionId: string): any {
 }
 
 
-export function generateVersionDisplayName(versionId: string): string {
-  const config: any = readVersionConfig(versionId);
+export function generateVersionDisplayName(versionId: string, root?: string): string {
+  const config: any = readVersionConfig(versionId, root);
   
   if (!config) {
     return versionId;
@@ -1413,8 +1439,8 @@ export function generateVersionDisplayName(versionId: string): string {
 }
 
 
-export function generateLaunchDisplayName(versionId: string): string {
-  const config: any = readVersionConfig(versionId);
+export function generateLaunchDisplayName(versionId: string, root?: string): string {
+  const config: any = readVersionConfig(versionId, root);
   
   if (!config) {
     return versionId;

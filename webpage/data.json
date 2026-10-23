@@ -2,6 +2,26 @@
     "Launcher": [
         {
             "name": "version",
+            "key": "1.9.1"
+        },
+        {
+            "name": "versiontitle",
+            "key": "正版登录重做，支持多个游戏目录"
+        },
+        {
+            "name": "versiontitle_en",
+            "key": "Microsoft accounts, multiple game folders, per-version Java"
+        },
+        {
+            "name": "versionlog",
+            "key": "正版登录重新做了：可以保存多个微软账号，随时切换或移除；登录信息加密保存，重启启动器不用重新登录<br>启动前会自动续期登录凭据；凭据过期时会提示重新登录，不会再出现「登录了却进不了服务器」<br>账号列表会显示真实的 Minecraft 皮肤头像<br>可以添加多个游戏目录，并按目录筛选版本；选到 PCL2 根目录这类上层文件夹时会自动识别里面的 .minecraft<br>每个版本可以单独选择 Java 版本（自动 / 8 / 16 / 17 / 21 / 25 / 自定义路径）<br>崩溃分析支持全部 25 种语言，错误报告里补充了时区和本地时间<br>下载面板现在有实时速度曲线、当前与峰值速度、排队任务；速度单位可选 MB/s 或 Mbps<br>Java 运行时下载移到了下载页的独立标签页<br>设置页的内存占用改为实时刷新，不再是打开页面那一刻的旧数字<br>删除当前版本后会立刻回到版本选择，不再继续显示已经删掉的版本"
+        },
+        {
+            "name": "versionlog_en",
+            "key": "Microsoft sign-in has been rebuilt: save several accounts, switch or remove them at any time, and stay signed in after restarting the launcher<br>Sign-in tokens refresh automatically before launch; if a token expires, the launcher now asks you to sign in again instead of failing when joining a server<br>Saved accounts show their real Minecraft skin head<br>Add several game folders and filter versions by folder; choosing a parent folder such as a PCL2 root automatically finds the .minecraft inside it<br>Each version can use its own Java runtime: automatic, 8, 16, 17, 21, 25 or a custom path<br>Crash analysis now speaks all 25 languages, and error reports include your time zone and local time<br>The download panel shows a live speed graph, current and peak speed and queued tasks; speed can be displayed in MB/s or Mbps<br>Java runtime downloads moved to their own tab on the download page<br>Memory usage on the settings page now refreshes live instead of showing the value from when the page was opened<br>Deleting the selected version returns to the version list immediately instead of still showing the deleted version"
+        },
+        {
+            "name": "version",
             "key": "1.9.0"
         },
         {

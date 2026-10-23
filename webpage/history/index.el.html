@@ -74,7 +74,7 @@
                     </div>
                 </li>
                 <li class="lang-switch"><select aria-label="Γλώσσα" onchange="if(this.value)location.href=this.value"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el" selected>Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select></li>
-                <li><a href="../index.el#download" class="nav-cta">&#9662; Λήψη v1.9.0</a></li>
+                <li><a href="../index.el#download" class="nav-cta">&#9662; Λήψη v1.9.1</a></li>
             </ul>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Άνοιγμα μενού" aria-expanded="false">&#9776;</button>
         </div>
@@ -92,6 +92,7 @@
             <p class="cl-intro">Από την 1.0.0 έως την τελευταία έκδοση, κάθε έκδοση — τι άλλαξε και αν μπορεί να ληφθεί — βρίσκεται σε αυτή τη σελίδα.</p>
             <p class="cl-note">Οι εγκαταστάτες για την 1.3.2 και παλαιότερες δεν διατηρήθηκαν· ο ενσωματωμένος ενημερωτής σε παλιές εκδόσεις μπορεί να μην λειτουργεί πλέον, οπότε συνιστάται η εγκατάσταση της τελευταίας έκδοσης για καθημερινή χρήση.</p>
             <div class="cl-index" role="navigation" aria-label="Ευρετήριο εκδόσεων">
+                <a href="#v1-9-1">1.9.1</a>
                 <a href="#v1-9-0">1.9.0</a>
                 <a href="#v1-8-0">1.8.0</a>
                 <a href="#v1-7-2">1.7.2</a>
@@ -120,12 +121,39 @@
     <main class="history cl-history">
         <div class="container">
             <div class="timeline">
+                <article class="timeline-item" id="v1-9-1">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.9.1</span>
+                        <span class="version-title">Λογαριασμοί Microsoft, πολλοί φάκελοι παιχνιδιού και Java ανά έκδοση</span>
+                        <span class="latest-chip">Τελευταία</span>
+                        <span class="version-date">2026-10-23</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Η σύνδεση Microsoft ξαναφτιάχτηκε: αποθηκεύστε πολλούς λογαριασμούς, αλλάξτε ή αφαιρέστε τους οποιαδήποτε στιγμή και μείνετε συνδεδεμένοι μετά την επανεκκίνηση του launcher</li>
+                        <li>Τα διαπιστευτήρια σύνδεσης ανανεώνονται αυτόματα πριν την εκκίνηση· αν λήξουν, ο launcher σας ζητά να συνδεθείτε ξανά αντί να αποτυγχάνει κατά την είσοδο σε διακομιστή</li>
+                        <li>Οι αποθηκευμένοι λογαριασμοί εμφανίζουν το πραγματικό κεφάλι skin του Minecraft</li>
+                        <li>Προσθέστε πολλούς φακέλους παιχνιδιού και φιλτράρετε εκδόσεις ανά φάκελο· επιλέγοντας έναν γονικό φάκελο όπως τη ρίζα του PCL2, το .minecraft μέσα του βρίσκεται αυτόματα</li>
+                        <li>Κάθε έκδοση μπορεί να χρησιμοποιεί δική της Java: αυτόματα, 8, 16, 17, 21, 25 ή προσαρμοσμένη διαδρομή</li>
+                        <li>Η ανάλυση σφαλμάτων είναι διαθέσιμη σε όλες τις 25 γλώσσες και οι αναφορές σφαλμάτων περιλαμβάνουν πλέον ζώνη ώρας και τοπική ώρα</li>
+                        <li>Το πάνελ λήψεων δείχνει ζωντανό γράφημα ταχύτητας, τρέχουσα και μέγιστη ταχύτητα και εργασίες σε αναμονή· η ταχύτητα μπορεί να εμφανίζεται σε MB/s ή Mbps</li>
+                        <li>Οι λήψεις Java μετακινήθηκαν σε δική τους καρτέλα στη σελίδα λήψεων</li>
+                        <li>Η χρήση μνήμης στις ρυθμίσεις ενημερώνεται πλέον ζωντανά αντί να δείχνει την τιμή όταν άνοιξε η σελίδα</li>
+                        <li>Η διαγραφή της επιλεγμένης έκδοσης επιστρέφει αμέσως στη λίστα εκδόσεων αντί να συνεχίζει να δείχνει τη διαγραμμένη έκδοση</li>
+                    </ul>
+                    <div class="cl-download">
+                        <a class="cl-dl-btn" href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.1-Setup.exe">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                            Λήψη v1.9.1
+                        </a>
+                        <span class="cl-file">GPCL-1.9.1-Setup.exe · 94.0 MB · Windows 64-bit</span>
+                    </div>
+                </article>
                 <article class="timeline-item" id="v1-9-0">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
                         <span class="version-number">v1.9.0</span>
                         <span class="version-title">Νέα σελίδα λήψης με modpacks και shaders</span>
-                        <span class="latest-chip">Τελευταία</span>
                         <span class="version-date">2026-10-23</span>
                     </div>
                     <ul class="changelog">

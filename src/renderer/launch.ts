@@ -10,13 +10,13 @@
 // __IMPORTS_BEGIN__
 import { t } from '../i18n';
 import { beginDownloadDockCancel, finishDownloadDock, hideDownloadDock, scheduleDownloadDockHide, setDownloadDockClearHandler, setDownloadDockPanelCount, setDownloadDockQueue, setDownloadDockStage, showDownloadDock, updateDownloadDock } from './download-dock';
-import { gameMonitor, gameMonitorMemory, gameMonitorPid, launchBtn, setStatus, showDialog, showNamePrompt, showToast, usernameInput } from './dom';
+import { gameMonitor, gameMonitorMemory, gameMonitorPid, icon, launchBtn, setStatus, showDialog, showNamePrompt, showToast, usernameInput } from './dom';
 import { crashReported, gameRunning, handleGameLog, hideGameMonitor, lastGameStatusAt, monitorStartedAt, refreshGameMonitor, setCrashReported, setLastGameStatusAt, setMonitorStartedAt, setMonitorState, setMonitorVersion, showCrashDialog, showGameMonitor } from './monitor';
 import { showPage } from './nav';
 import { playerHistory, setPlayerHistory } from './player';
-import { initGameDir, msAuthData } from './session';
+import { authMode, initGameDir, msAuthData, setMsAuthData } from './session';
 import { getMaxConcurrentFromSettings, loadSettings } from './settings';
-import { getLoaderDisplayName, hideVersionDetail, isVersionInstalled, loadVersions, modLoaderState, recordVersionDownload, recordVersionLaunch, renderVersionSelectList, selectedVersionId } from './versions';
+import { getLoaderDisplayName, hideVersionDetail, isVersionInstalled, loadVersions, modLoaderState, recordVersionDownload, recordVersionLaunch, renderVersionSelectList, selectedVersionId, selectedVersionRoot } from './versions';
 // __IMPORTS_END__
 
 export async function launchGame(): Promise<void> {
@@ -31,6 +31,11 @@ export async function launchGame(): Promise<void> {
     return;
   }
 
+  if (authMode === 'microsoft' && !msAuthData) {
+    showToast('ui.microsoft_sign_in', t('ui.sign_in_required'), 'warning');
+    return;
+  }
+
   setStatus('[动画] launchGame 函数被调用了');
   const username: string = (usernameInput?.value || '').trim() || 'GPCL_Player';
 
@@ -39,6 +44,30 @@ export async function launchGame(): Promise<void> {
   if (!versionId) {
     setStatus('请先选择已安装的版本', 'error');
     return;
+  }
+
+  // 正版登录的 accessToken 会过期；启动前校验一次，过期就先用 refresh_token 续上，
+  // 续不上才让玩家重新登录。否则进服务器会被 sessionserver 403 挡回来。
+  if (msAuthData && window.gpcl.validateMicrosoftAuth) {
+    setStatus(t('ui.auth_checking'));
+    try {
+      const auth: any = await window.gpcl.validateMicrosoftAuth();
+      if (auth?.valid) {
+        if (auth.accessToken) {
+          setMsAuthData({
+            uuid: auth.uuid || msAuthData.uuid,
+            username: auth.username || msAuthData.username,
+            accessToken: auth.accessToken,
+            expiresAt: Number(auth.expiresAt) || msAuthData.expiresAt
+          });
+        }
+      } else if (auth?.relogin) {
+        window.dispatchEvent(new CustomEvent('gpcl-auth-expired'));
+        showToast('ui.auth_expired', t('ui.auth_login_required'), 'error', 'auth-expired');
+        setStatus(t('ui.auth_expired'), 'error');
+        return;
+      }
+    } catch {}
   }
 
   await recordVersionLaunch(versionId);
@@ -54,7 +83,7 @@ export async function launchGame(): Promise<void> {
 
   try {
     
-    const gameDir = await initGameDir();
+    const gameDir: string | null = selectedVersionRoot || await initGameDir();
     setStatus('[动画] 开始启动游戏');
 
     const settings = await loadSettings();
@@ -293,8 +322,8 @@ export function setupGameWindowListener(): void {
     window.gpcl.onConfirmCloseWhileDownloading(async (): Promise<void> => {
       const result: boolean = await showDialog({
         type: 'confirm',
-        title: '确认关闭',
-        message: '当前正在下载中，关闭会停止下载并清理已下载的文件。确定要关闭吗？如有不完整的"libraries"需自行清理。'
+        title: t('ui.confirm_close'),
+        message: t('ui.close_while_downloading_message')
       });
 
       if (result) {
@@ -493,7 +522,8 @@ function renderDownloadTasks(): void {
   const list = taskListEl();
   if (!list) return;
   const hasCompleted: boolean = downloadTasks.some((task: DownloadTask) => task.status === 'done' || task.status === 'error');
-  setDownloadDockPanelCount(downloadTasks.length, hasCompleted);
+  const runningCount: number = downloadTasks.filter((task: DownloadTask) => task.status === 'running').length;
+  setDownloadDockPanelCount(downloadTasks.length, hasCompleted, runningCount);
   if (downloadTasks.length === 0) {
     list.classList.add('hidden');
     list.innerHTML = '';
@@ -517,6 +547,10 @@ function renderDownloadTasks(): void {
     const head: HTMLDivElement = document.createElement('div');
     head.className = 'download-task-head';
 
+    const taskIcon: HTMLSpanElement = document.createElement('span');
+    taskIcon.className = 'download-task-icon';
+    taskIcon.innerHTML = icon(task.status === 'done' ? 'check' : task.status === 'error' ? 'x-circle' : task.status === 'queued' ? 'loader' : 'download');
+
     const name: HTMLSpanElement = document.createElement('span');
     name.className = 'download-task-name';
     name.textContent = task.displayName;
@@ -525,6 +559,7 @@ function renderDownloadTasks(): void {
     state.className = 'download-task-state';
     state.textContent = taskStateText(task);
 
+    head.appendChild(taskIcon);
     head.appendChild(name);
     head.appendChild(state);
 

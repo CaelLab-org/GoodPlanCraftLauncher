@@ -75,7 +75,7 @@
                     </div>
                 </li>
                 <li class="lang-switch"><select aria-label="Lingua" onchange="if(this.value)location.href=this.value"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it" selected>Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select></li>
-                <li><a href="#download" class="nav-cta">&#9662; Scarica v1.9.0</a></li>
+                <li><a href="#download" class="nav-cta">&#9662; Scarica v1.9.1</a></li>
             </ul>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Apri menu" aria-expanded="false">&#9776;</button>
         </div>
@@ -113,7 +113,7 @@
                 </a>
             </div>
             <div class="hero-meta">
-                <span>Versione <b>v1.9.0</b></span>
+                <span>Versione <b>v1.9.1</b></span>
                 <span class="sep">/</span>
                 <span>Aggiornato <b>2026-10-23</b></span>
                 <span class="sep">/</span>
@@ -123,7 +123,7 @@
 
         <div class="window-stage" id="heroWindow">
             <div class="window">
-                <iframe src="./demo/index.html?fit=1&v=q8m3x2vd&lang=it" title="Interfaccia di GoodPlanCraftLauncher" loading="eager"></iframe>
+                <iframe src="./demo/index.html?fit=1&v=h6p4r8w2&lang=it" title="Interfaccia di GoodPlanCraftLauncher" loading="eager"></iframe>
             </div>
         </div>
         <p class="window-note">La finestra qui sopra è <b>cliccabile</b>: è l'interfaccia del launcher stessa, in esecuzione dentro la pagina web.</p>
@@ -264,8 +264,8 @@
                 <span class="dl-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
                 </span>
-                <div class="download-file">GPCL-1.9.0-Setup.exe</div>
-                <a href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.0-Setup.exe" class="download-btn">
+                <div class="download-file">GPCL-1.9.1-Setup.exe</div>
+                <a href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.1-Setup.exe" class="download-btn">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
                     Lancia il mondo a blocchi!
                 </a>
@@ -381,9 +381,29 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                 <div class="timeline-item reveal">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
+                        <span class="version-number">v1.9.1</span>
+                        <span class="version-title">Account Microsoft, più cartelle di gioco e Java per versione</span>
+                        <span class="latest-chip">Ultima</span>
+                        <span class="version-date">2026-10-23</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>L'accesso Microsoft è stato rifatto: salva più account, cambiali o rimuovili quando vuoi e resta connesso dopo il riavvio del launcher</li>
+                        <li>I token di accesso si rinnovano automaticamente prima dell'avvio; se scadono, ora ti viene chiesto di accedere di nuovo invece di fallire entrando in un server</li>
+                        <li>Gli account salvati mostrano la vera testa della skin di Minecraft</li>
+                        <li>Aggiungi più cartelle di gioco e filtra le versioni per cartella; scegliendo una cartella superiore come la radice di PCL2, il .minecraft al suo interno viene trovato automaticamente</li>
+                        <li>Ogni versione può usare il proprio Java: automatico, 8, 16, 17, 21, 25 o un percorso personalizzato</li>
+                        <li>L'analisi dei crash è disponibile in tutte le 25 lingue e i rapporti di errore includono fuso orario e ora locale</li>
+                        <li>Il pannello di download mostra un grafico della velocità in tempo reale, la velocità attuale e massima e le attività in coda; la velocità può essere mostrata in MB/s o Mbps</li>
+                        <li>Il download di Java è passato a una scheda dedicata nella pagina di download</li>
+                        <li>L'uso della memoria nelle impostazioni ora si aggiorna in tempo reale invece di mostrare il valore di quando hai aperto la pagina</li>
+                        <li>Eliminando la versione selezionata si torna subito all'elenco delle versioni invece di continuare a mostrare quella eliminata</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
                         <span class="version-number">v1.9.0</span>
                         <span class="version-title">Pagina di download rifatta, con modpack e shader</span>
-                        <span class="latest-chip">Ultima</span>
                         <span class="version-date">2026-10-23</span>
                     </div>
                     <ul class="changelog">
@@ -508,6 +528,8 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                         <li>Corretti: l'impostazione del numero di thread ignorata, le pagine 404 salvate come file e i file parziali rimasti dopo download falliti</li>
                     </ul>
                 </div>
+                <details class="older-versions">
+                    <summary>Mostra 14 versioni precedenti</summary>
                 <div class="timeline-item reveal">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
@@ -525,8 +547,6 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                         <li>Animazione di avvio e transizioni tra pagine più fluide</li>
                     </ul>
                 </div>
-                <details class="older-versions">
-                    <summary>Mostra 13 versioni precedenti</summary>
                 <div class="timeline-item reveal">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
@@ -692,7 +712,7 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                 </div>
                 </details>
                 <div class="history-more">
-                    <a href="./history/index.it">Vedi il changelog completo (tutte le 21 versioni e gli installer) →</a>
+                    <a href="./history/index.it">Vedi il changelog completo (tutte le 22 versioni e gli installer) →</a>
                 </div>
             </div>
         </div>

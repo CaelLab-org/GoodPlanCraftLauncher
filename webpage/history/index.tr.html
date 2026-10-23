@@ -74,7 +74,7 @@
                     </div>
                 </li>
                 <li class="lang-switch"><select aria-label="Dil" onchange="if(this.value)location.href=this.value"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr" selected>Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select></li>
-                <li><a href="../index.tr#download" class="nav-cta">&#9662; v1.9.0 indir</a></li>
+                <li><a href="../index.tr#download" class="nav-cta">&#9662; v1.9.1 indir</a></li>
             </ul>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menüyü aç" aria-expanded="false">&#9776;</button>
         </div>
@@ -92,6 +92,7 @@
             <p class="cl-intro">1.0.0'dan en son sürüme kadar her sürüm — neyin değiştiği ve indirilebilir olup olmadığı — bu sayfada.</p>
             <p class="cl-note">1.3.2 ve öncesi için kurulum dosyaları saklanmadı; eski sürümlerdeki yerleşik güncelleyici artık çalışmayabilir, bu yüzden günlük kullanım için en son sürümü kurmanız önerilir.</p>
             <div class="cl-index" role="navigation" aria-label="Sürüm dizini">
+                <a href="#v1-9-1">1.9.1</a>
                 <a href="#v1-9-0">1.9.0</a>
                 <a href="#v1-8-0">1.8.0</a>
                 <a href="#v1-7-2">1.7.2</a>
@@ -120,12 +121,39 @@
     <main class="history cl-history">
         <div class="container">
             <div class="timeline">
+                <article class="timeline-item" id="v1-9-1">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.9.1</span>
+                        <span class="version-title">Microsoft hesapları, birden fazla oyun klasörü ve sürüm başına Java</span>
+                        <span class="latest-chip">En son</span>
+                        <span class="version-date">2026-10-23</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Microsoft girişi yeniden yapıldı: birden fazla hesap kaydedin, istediğiniz zaman değiştirin veya kaldırın ve başlatıcıyı yeniden başlattığınızda oturumunuz açık kalsın</li>
+                        <li>Giriş jetonları başlatmadan önce otomatik yenilenir; süresi dolarsa başlatıcı artık sunucuya katılırken hata vermek yerine yeniden giriş yapmanızı ister</li>
+                        <li>Kayıtlı hesaplar gerçek Minecraft skin kafasını gösterir</li>
+                        <li>Birden fazla oyun klasörü ekleyin ve sürümleri klasöre göre filtreleyin; PCL2 kökü gibi bir üst klasör seçtiğinizde içindeki .minecraft otomatik bulunur</li>
+                        <li>Her sürüm kendi Java çalışma zamanını kullanabilir: otomatik, 8, 16, 17, 21, 25 veya özel bir yol</li>
+                        <li>Çökme analizi 25 dilin tamamında kullanılabilir ve hata raporları artık saat diliminizi ve yerel saati içerir</li>
+                        <li>İndirme paneli canlı hız grafiği, anlık ve tepe hız ile sıradaki görevleri gösterir; hız MB/s veya Mbps olarak gösterilebilir</li>
+                        <li>Java indirmeleri indirme sayfasındaki ayrı bir sekmeye taşındı</li>
+                        <li>Ayarlar sayfasındaki bellek kullanımı artık sayfayı açtığınız andaki değeri değil, canlı veriyi gösterir</li>
+                        <li>Seçili sürümü silmek artık silinen sürümü göstermeye devam etmek yerine hemen sürüm listesine döner</li>
+                    </ul>
+                    <div class="cl-download">
+                        <a class="cl-dl-btn" href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.1-Setup.exe">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                            v1.9.1 indir
+                        </a>
+                        <span class="cl-file">GPCL-1.9.1-Setup.exe · 94.0 MB · Windows 64-bit</span>
+                    </div>
+                </article>
                 <article class="timeline-item" id="v1-9-0">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
                         <span class="version-number">v1.9.0</span>
                         <span class="version-title">Yenilenen indirme sayfası, mod paketleri ve shader desteğiyle</span>
-                        <span class="latest-chip">En son</span>
                         <span class="version-date">2026-10-23</span>
                     </div>
                     <ul class="changelog">

@@ -1,8 +1,32 @@
 {
   "schema": 1,
-  "latest": "1.9.0",
+  "latest": "1.9.1",
   "updated": "2026-10-23",
   "versions": [
+    {
+      "version": "1.9.1",
+      "anchor": "v1-9-1",
+      "date": "2026-10-23",
+      "title": "Akaun Microsoft, berbilang folder permainan dan Java setiap versi",
+      "log": [
+        "Log masuk Microsoft dibina semula: simpan beberapa akaun, tukar atau buang bila-bila masa, dan kekal log masuk selepas pelancar dimulakan semula",
+        "Token log masuk diperbaharui secara automatik sebelum pelancaran; jika tamat tempoh, pelancar kini meminta anda log masuk semula dan bukannya gagal semasa menyertai pelayan",
+        "Akaun tersimpan memaparkan kepala skin Minecraft yang sebenar",
+        "Tambah berbilang folder permainan dan tapis versi mengikut folder; memilih folder induk seperti akar PCL2 akan mencari .minecraft di dalamnya secara automatik",
+        "Setiap versi boleh menggunakan Java sendiri: automatik, 8, 16, 17, 21, 25 atau laluan tersuai",
+        "Analisis ranap tersedia dalam semua 25 bahasa, dan laporan ralat kini menyertakan zon waktu dan waktu tempatan anda",
+        "Panel muat turun memaparkan graf kelajuan langsung, kelajuan semasa dan puncak serta tugasan dalam baris gilir; kelajuan boleh dipaparkan dalam MB/s atau Mbps",
+        "Muat turun Java dipindahkan ke tab sendiri pada halaman muat turun",
+        "Penggunaan memori pada halaman tetapan kini dikemas kini secara langsung dan bukan nilai lama semasa halaman dibuka",
+        "Memadam versi yang dipilih kini terus kembali ke senarai versi dan tidak lagi memaparkan versi yang telah dipadam"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.1-Setup.exe",
+        "file": "GPCL-1.9.1-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.9.0",
       "anchor": "v1-9-0",

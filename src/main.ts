@@ -27,8 +27,6 @@ import './mods';
 import './player';
 // __IMPORTS_END__
 
-process.env.TZ = 'Asia/Shanghai';
-
 process.stdout.setDefaultEncoding('utf8');
 process.stderr.setDefaultEncoding('utf8');
 

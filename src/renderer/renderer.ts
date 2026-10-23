@@ -20,21 +20,21 @@ declare global {
 
 // __IMPORTS_BEGIN__
 import { applyI18n, docsUrl, observeI18n, setLocale, setSystemLocale, t } from '../i18n';
-import { cancelDownloadBtn, detailDownloadBtn, downloadPanel, getCustomSelectValue, initCustomSelect, launchBtn, menuLaunch, setCustomSelectValue, setStatus, showDialog, showToast, usernameHistoryBtn, usernameInput } from './dom';
+import { cancelDownloadBtn, detailDownloadBtn, downloadPanel, getCustomSelectValue, initCustomSelect, launchBtn, menuLaunch, setCustomSelectOptions, setCustomSelectValue, setStatus, showDialog, showToast, usernameInput } from './dom';
 import { bindJavaInstallButtons, initJavaVersionStatus, saveJavaMirrorSettings, updateJavaInstallStatus } from './java-panel';
 import { initBootSplash } from './boot-splash';
 import { hasQueuedDownloads, hideLaunchAnimation, launchGame, launchTipFrequency, setLaunchTipFrequency } from './launch';
 import { initLanguagePicker } from './language';
 import { refreshGameMonitor } from './monitor';
 import { currentPage, showPage, switchSettingsTab } from './nav';
-import { closeUsernameHistory, playerHistory, setPlayerHistory } from './player';
-import { msAuthData, setMsAuthData } from './session';
+import { playerHistory, setPlayerHistory } from './player';
 import { applyScale, applyStyle, applyTheme, initScale, initTheme, loadSettings, updateSettingsBadge } from './settings';
 import { allNewerVersions, autoDownloadUpdate, checkForUpdates, installReadyUpdate, isUpdateDownloadActive, renderUpdateVersionCards, showUpdateStartupNotice, startUpdateDownload, updateAvailable } from './update';
 import { initUpdateBadge } from './update-badge';
-import { bindModLoaderEvents, clearVersionSelection, loadRemoteVersions, loadVersions, renderVersionSelectList, selectedVersionId } from './versions';
+import { bindModLoaderEvents, clearVersionSelection, loadRemoteVersions, loadVersions, renderVersionSelectList, selectedVersionId, selectedVersionRoot } from './versions';
 import { initWelcome } from './welcome';
 
+import './auth-panel';
 import './chart';
 import './dom';
 import './java-panel';
@@ -647,6 +647,7 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
   });
 
   let currentVersionForSettings: string | null = null;
+  let currentVersionRoot: string | null = null;
   let currentVersionInfo: any = null;
   let versionListWasOpen: boolean = false;
   
@@ -661,10 +662,10 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
   const versionSelectPanel: HTMLElement | null = document.getElementById('version-select-panel');
   const statusElement: HTMLElement | null = document.getElementById('status');
   
-  async function getVersionSettings(versionId: string): Promise<any> {
+  async function getVersionSettings(versionId: string, root?: string | null): Promise<any> {
     try {
       if (window.gpcl && window.gpcl.getVersionSettings) {
-        const result = await window.gpcl.getVersionSettings(versionId);
+        const result = await window.gpcl.getVersionSettings(versionId, root || undefined);
         if (result.success && result.settings) {
           return result.settings;
         }
@@ -675,10 +676,10 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
     return {};
   }
   
-  async function saveVersionSettings(versionId: string, settings: any): Promise<boolean> {
+  async function saveVersionSettings(versionId: string, settings: any, root?: string | null): Promise<boolean> {
     try {
       if (window.gpcl && window.gpcl.saveVersionSettings) {
-        const result = await window.gpcl.saveVersionSettings(versionId, settings);
+        const result = await window.gpcl.saveVersionSettings(versionId, settings, root || undefined);
         return result.success;
       }
     } catch (e: any) {
@@ -697,7 +698,7 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
   }
   
   async function loadVersionSettingsToUI(versionId: string): Promise<void> {
-    const settings = await getVersionSettings(versionId);
+    const settings = await getVersionSettings(versionId, currentVersionRoot);
     
     if (versionDeleteEnable) versionDeleteEnable.checked = false;
     setCustomSelectValue('version-memory', settings.memory || 'global');
@@ -708,6 +709,22 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
       : currentVersionInfo?.isolated !== false;
     setCustomSelectValue('version-isolation', isolated ? 'on' : 'off');
     if (versionServerIpInput) versionServerIpInput.value = settings.serverIp || '';
+
+    const runtimes: any[] = await window.gpcl.listJavaRuntimes().catch(() => []);
+    const options: Array<{ value: string; label: string }> = [
+      { value: 'auto', label: t('ui.java_auto') },
+      ...runtimes.map((runtime: any) => ({
+        value: String(runtime.major),
+        label: runtime.custom
+          ? t('ui.java_custom_option')
+          : t('ui.java_version_option', { version: runtime.major })
+      }))
+    ];
+    const selectedJava: string = String(settings.javaVersion || (settings.javaPath ? 'custom' : 'auto'));
+    setCustomSelectOptions('version-java', options, options.some((option) => option.value === selectedJava) ? selectedJava : 'auto');
+    if (settings.javaPath && selectedJava === 'auto') {
+      setCustomSelectOptions('version-java', [...options, { value: 'custom', label: t('ui.java_custom_option') }], 'custom');
+    }
     
     updateServerIpVisibility();
   }
@@ -718,13 +735,14 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
       windowMode: getCustomSelectValue('version-window-mode') || 'global',
       startupMode: getCustomSelectValue('version-startup-mode') || 'default',
       serverIp: versionServerIpInput?.value || '',
-      isolation: getCustomSelectValue('version-isolation') !== 'off'
+      isolation: getCustomSelectValue('version-isolation') !== 'off',
+      javaVersion: getCustomSelectValue('version-java') || 'auto'
     };
   }
 
   async function saveVersionSettingsNow(): Promise<boolean> {
     if (!currentVersionForSettings) return false;
-    return saveVersionSettings(currentVersionForSettings, collectVersionSettings());
+    return saveVersionSettings(currentVersionForSettings, collectVersionSettings(), currentVersionRoot);
   }
   
   let saveTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -743,7 +761,7 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
   async function refreshCurrentVersionInfo(): Promise<void> {
     if (!currentVersionForSettings) return;
     try {
-      const infoResult: any = await window.gpcl.getVersionInfo(currentVersionForSettings);
+      const infoResult: any = await window.gpcl.getVersionInfo(currentVersionForSettings, currentVersionRoot || undefined);
       if (infoResult?.success) currentVersionInfo = infoResult.info;
     } catch {}
     const modFolderItem: HTMLElement | null = document.getElementById('version-mod-folder-item');
@@ -760,6 +778,7 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
     if (!versionSettingsPanel) return;
     
     currentVersionForSettings = versionId;
+    currentVersionRoot = selectedVersionRoot;
     currentVersionInfo = null;
     if (versionSettingsTitle) versionSettingsTitle.textContent = t('ui.version_settings_version', { version: versionId });
 
@@ -791,6 +810,7 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
       setVersionListOpen(options?.showVersionList ?? versionListWasOpen);
       if (statusElement) statusElement.style.display = '';
       currentVersionForSettings = null;
+      currentVersionRoot = null;
       currentVersionInfo = null;
     }, 300);
   }
@@ -829,7 +849,7 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
         if (confirmed) {
           if (window.gpcl && window.gpcl.deleteVersion) {
             try {
-              const result = await window.gpcl.deleteVersion(deletedVersion);
+              const result = await window.gpcl.deleteVersion(deletedVersion, currentVersionRoot || undefined);
               if (result.success) {
                 showToast('ui.deleted', t('ui.version_name_deleted', { name: deletedVersion }), 'success');
 
@@ -880,6 +900,10 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
   initCustomSelect('version-window-mode', () => {
     saveCurrentVersionSettings();
   });
+
+  initCustomSelect('version-java', () => {
+    saveCurrentVersionSettings();
+  });
   
   initCustomSelect('version-startup-mode', () => {
     const joinMode: boolean = getCustomSelectValue('version-startup-mode') === 'join';
@@ -911,83 +935,6 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
       const willOpen: boolean = !versionSelectPanel || versionSelectPanel.classList.contains('hidden');
       setVersionListOpen(willOpen);
       if (willOpen) void renderVersionSelectList();
-    });
-  }
-
-  const authMicrosoftBtn: HTMLElement | null = document.getElementById('auth-microsoft');
-  const authOfflineBtn: HTMLElement | null = document.getElementById('auth-offline');
-
-  // 全局监听微软认证结果（只注册一次）
-  if (window.gpcl && window.gpcl.onMicrosoftAuthResult) {
-    window.gpcl.onMicrosoftAuthResult((result: any) => {
-      if (result.status === 'success') {
-        setMsAuthData({
-          uuid: result.uuid,
-          username: result.username,
-          accessToken: result.accessToken
-        });
-        authMicrosoftBtn?.classList.add('auth-tab-active');
-        authOfflineBtn?.classList.remove('auth-tab-active');
-        if (usernameInput) {
-          usernameInput.value = result.username;
-          usernameInput.disabled = true;
-        }
-        /* 正版登录时名字由账号决定，收起离线名字列表 */
-        closeUsernameHistory();
-        if (usernameHistoryBtn) usernameHistoryBtn.classList.add('hidden');
-        showToast('ui.signed_in', t('ui.welcome_back_name', { name: result.username }), 'success');
-      } else if (result.status === 'timeout') {
-        showToast('ui.sign_in_timed_out', '登录超时，请重试', 'error');
-      } else if (result.status === 'error') {
-        showToast('ui.sign_in_failed', result.message || '微软登录失败', 'error');
-      }
-    });
-  }
-
-  if (authMicrosoftBtn) {
-    // 启用正版按钮
-    authMicrosoftBtn.removeAttribute('disabled');
-    authMicrosoftBtn.classList.remove('auth-tab-disabled');
-
-    authMicrosoftBtn.addEventListener('click', async () => {
-      if (msAuthData) {
-        // 已登录 -> 登出
-        setMsAuthData(null);
-        authMicrosoftBtn.classList.remove('auth-tab-active');
-        authOfflineBtn?.classList.add('auth-tab-active');
-        if (usernameInput) {
-          const savedName: string = await window.gpcl.getPlayerName();
-          usernameInput.value = savedName || 'GPCL_Player';
-          usernameInput.disabled = false;
-        }
-        if (usernameHistoryBtn) usernameHistoryBtn.classList.remove('hidden');
-        showToast('ui.signed_out', '已切换到离线模式', 'info');
-        return;
-      }
-
-      showToast('ui.microsoft_sign_in', '正在打开浏览器进行微软登录...', 'info');
-
-      // 启动认证
-      if (window.gpcl && window.gpcl.startMicrosoftAuth) {
-        await window.gpcl.startMicrosoftAuth();
-      }
-    });
-  }
-
-  if (authOfflineBtn) {
-    authOfflineBtn.addEventListener('click', () => {
-      if (msAuthData) {
-        showToast('ui.notice', '请先点击正版按钮登出', 'warning');
-        return;
-      }
-      authOfflineBtn.classList.add('auth-tab-active');
-      authMicrosoftBtn?.classList.remove('auth-tab-active');
-      if (usernameInput) {
-        usernameInput.disabled = false;
-        window.gpcl.getPlayerName().then((name: string) => {
-          usernameInput.value = name || 'GPCL_Player';
-        });
-      }
     });
   }
 

@@ -11,7 +11,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GoodPlanCraftLauncher</title>
-  <link rel="stylesheet" href="app.css?v=r4k8m2w7">
+  <link rel="stylesheet" href="product.css?v=a1b2c3d4">
+  <link rel="stylesheet" href="product-native.css?v=e5f6g7h8">
+  <link rel="stylesheet" href="demo-shell.css?v=s7d3k9f2">
   <script>
     (function () {
       var q = new URLSearchParams(location.search);
@@ -23,7 +25,7 @@
       if (!known[slug]) slug = 'en-us';
       window.DEMO_SLUG = slug;
       if (slug !== 'en-us') {
-        document.write('<script src="./locales/' + slug + '.js?v=c5j7r3x9"><\/script>');
+        document.write('<script src="./locales/' + slug + '.js?v=r2x7k5m3"><\/script>');
       }
     })();
   </script>
@@ -56,19 +58,59 @@
               <div class="launch-panel">
                 <div class="launch-sidebar">
                   <div class="auth-tabs">
-                    <button class="auth-tab auth-tab-disabled" type="button" disabled>
-                      <span class="auth-label" data-i18n="Premium"><span class="icon icon-diamond"></span> Premium</span>
+                    <button id="auth-microsoft" class="auth-tab" type="button">
+                      <span class="auth-label"><span class="icon icon-diamond"></span> <span data-i18n="Microsoft">Microsoft</span></span>
                     </button>
-                    <button class="auth-tab auth-tab-active" type="button">
-                      <span class="auth-label" data-i18n="Offline"><span class="icon icon-user"></span> Offline</span>
+                    <button id="auth-offline" class="auth-tab auth-tab-active" type="button">
+                      <span class="auth-label"><span class="icon icon-user"></span> <span data-i18n="Offline">Offline</span></span>
                     </button>
                   </div>
 
                   <div class="skin-container">
-                    <div class="skin-wrapper">
+                    <div class="skin-wrapper" id="skin-wrapper" role="button" tabindex="0">
                       <img src="skin/Alex.png" alt="Skin" data-i18n-alt="Skin" class="skin-image">
+                      <div id="skin-head" class="skin-head hidden" aria-hidden="true"></div>
                     </div>
                     <div class="skin-reflection"></div>
+                  </div>
+
+                  <div id="auth-ms-panel" class="auth-ms-panel hidden">
+                    <div id="auth-ms-signed-out" class="auth-ms-state">
+                      <div class="auth-ms-title" data-i18n="Sign in with a Microsoft account">Sign in with a Microsoft account</div>
+                      <div class="auth-ms-note" data-i18n="Your browser opens for a secure sign-in; this window continues automatically.">Your browser opens for a secure sign-in; this window continues automatically.</div>
+                      <button id="auth-ms-login" class="auth-ms-primary" type="button">
+                        <span class="icon icon-diamond"></span>
+                        <span data-i18n="Microsoft sign-in">Microsoft sign-in</span>
+                      </button>
+                      <div id="auth-ms-error" class="auth-ms-error hidden"></div>
+                    </div>
+
+                    <div id="auth-ms-waiting" class="auth-ms-state hidden">
+                      <div class="auth-ms-spinner"></div>
+                      <div class="auth-ms-title" data-i18n="Waiting for sign-in…">Waiting for sign-in…</div>
+                      <div class="auth-ms-note" data-i18n="Finish signing in in your browser; this window will continue automatically.">Finish signing in in your browser; this window will continue automatically.</div>
+                      <div class="auth-ms-actions">
+                        <button id="auth-ms-reopen" class="auth-ms-secondary" type="button" data-i18n="Open sign-in page">Open sign-in page</button>
+                        <button id="auth-ms-cancel" class="auth-ms-secondary" type="button" data-i18n="Cancel">Cancel</button>
+                      </div>
+                    </div>
+
+                    <div id="auth-ms-signed-in" class="auth-ms-state hidden">
+                      <div class="auth-ms-actions">
+                        <button id="auth-ms-switch" class="auth-ms-secondary" type="button" data-i18n="Switch account">Switch account</button>
+                        <button id="auth-ms-logout" class="auth-ms-secondary" type="button" data-i18n="Sign out">Sign out</button>
+                      </div>
+                    </div>
+
+                    <div id="auth-account-list" class="auth-account-list hidden">
+                      <div class="auth-account-list-title" data-i18n="Saved accounts">Saved accounts</div>
+                      <div id="auth-account-items"></div>
+                      <button id="auth-account-add" class="auth-account-add" type="button">
+                        <span class="icon icon-plus"></span>
+                        <span data-i18n="Add account">Add account</span>
+                      </button>
+                      <button id="auth-skin-refresh" class="auth-account-link hidden" type="button" data-i18n="Refresh skin">Refresh skin</button>
+                    </div>
                   </div>
 
                   <div class="username-input-group">
@@ -89,15 +131,152 @@
                   </div>
 
                   <div class="launch-footer">
+                    <button id="version-settings-btn" class="footer-btn" type="button"><span data-i18n="Version settings">Version settings</span></button>
                     <button id="version-select-btn" class="footer-btn" type="button"><span data-i18n="Select Version">Select Version</span></button>
                   </div>
                 </div>
 
                 <div class="launch-content">
+                  <div id="version-settings-panel" class="version-settings-panel hidden">
+                    <div class="version-settings-header">
+                      <button class="version-settings-back" id="version-settings-back-btn" type="button"><span class="icon icon-arrow-left"></span></button>
+                      <h3 class="version-settings-title" id="version-settings-title" data-i18n="Version settings">Version settings</h3>
+                    </div>
+                    <div class="version-settings-body">
+                      <div class="version-settings-section">
+                        <h4 class="section-title" data-i18n="Version actions">Version actions</h4>
+                        <div class="setting-item">
+                          <div class="setting-info">
+                            <div class="setting-label" data-i18n="Version folder">Version folder</div>
+                            <div class="setting-desc" data-i18n="Open this version's folder">Open this version's folder</div>
+                          </div>
+                          <button class="setting-btn" id="version-open-folder-btn" type="button" data-i18n="Open">Open</button>
+                        </div>
+                        <div class="setting-item">
+                          <div class="setting-info">
+                            <div class="setting-label" data-i18n="Mods folder">Mods folder</div>
+                            <div class="setting-desc" data-i18n="Open the mods folder this version actually uses">Open the mods folder this version actually uses</div>
+                          </div>
+                          <button class="setting-btn" id="version-open-mods-btn" type="button" data-i18n="Open">Open</button>
+                        </div>
+                        <div class="setting-item">
+                          <div class="setting-info">
+                            <div class="setting-label" data-i18n="Shader packs folder">Shader packs folder</div>
+                            <div class="setting-desc" data-i18n="Open the shaderpacks folder this version actually uses">Open the shaderpacks folder this version actually uses</div>
+                          </div>
+                          <button class="setting-btn" id="version-open-shaders-btn" type="button" data-i18n="Open">Open</button>
+                        </div>
+                        <div class="setting-item">
+                          <div class="setting-info">
+                            <div class="setting-label" data-i18n="Delete version">Delete version</div>
+                            <div class="setting-desc" data-i18n="Delete all files for this version">Delete all files for this version</div>
+                          </div>
+                          <label class="switch"><input type="checkbox" id="version-delete-enable"><span class="slider"></span></label>
+                        </div>
+                      </div>
+
+                      <div class="version-settings-section">
+                        <h4 class="section-title" data-i18n="Game Settings">Game Settings</h4>
+                        <p class="section-desc" data-i18n="Use global setting follows the value in Settings">Use global setting follows the value in Settings</p>
+
+                        <div class="setting-item">
+                          <div class="setting-info">
+                            <div class="setting-label" data-i18n="Version isolation">Version isolation</div>
+                            <div class="setting-desc" data-i18n="Isolated versions keep their own saves, mods and resource packs">Isolated versions keep their own saves, mods and resource packs</div>
+                          </div>
+                          <div class="custom-select" data-select-id="version-isolation">
+                            <div class="custom-select-trigger"><span class="custom-select-value" data-i18n="Enabled">Enabled</span><span class="custom-select-arrow icon icon-chevron"></span></div>
+                            <div class="custom-select-dropdown">
+                              <div class="custom-select-option selected" data-value="on" data-i18n="Enabled">Enabled</div>
+                              <div class="custom-select-option" data-value="off" data-i18n="Disabled">Disabled</div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="setting-item">
+                          <div class="setting-info">
+                            <div class="setting-label" data-i18n="Java version">Java version</div>
+                            <div class="setting-desc" data-i18n="Auto uses the Java version Minecraft recommends. Choose another installed runtime if needed.">Auto uses the Java version Minecraft recommends. Choose another installed runtime if needed.</div>
+                          </div>
+                          <div class="custom-select" data-select-id="version-java">
+                            <div class="custom-select-trigger"><span class="custom-select-value" data-i18n="Automatic">Automatic</span><span class="custom-select-arrow icon icon-chevron"></span></div>
+                            <div class="custom-select-dropdown">
+                              <div class="custom-select-option selected" data-value="auto" data-i18n="Automatic">Automatic</div>
+                              <div class="custom-select-option" data-value="17">Java 17</div>
+                              <div class="custom-select-option" data-value="21">Java 21</div>
+                              <div class="custom-select-option" data-value="25">Java 25</div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="setting-item">
+                          <div class="setting-info">
+                            <div class="setting-label" data-i18n="Maximum game memory">Maximum game memory</div>
+                            <div class="setting-desc" data-i18n="Maximum memory for the game (GB)">Maximum memory for the game (GB)</div>
+                          </div>
+                          <div class="custom-select" data-select-id="version-memory">
+                            <div class="custom-select-trigger"><span class="custom-select-value" data-i18n="Use global setting">Use global setting</span><span class="custom-select-arrow icon icon-chevron"></span></div>
+                            <div class="custom-select-dropdown">
+                              <div class="custom-select-option selected" data-value="global" data-i18n="Use global setting">Use global setting</div>
+                              <div class="custom-select-option" data-value="2">2 GB</div>
+                              <div class="custom-select-option" data-value="4">4 GB</div>
+                              <div class="custom-select-option" data-value="6">6 GB</div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="setting-item">
+                          <div class="setting-info">
+                            <div class="setting-label" data-i18n="Window Mode">Window Mode</div>
+                            <div class="setting-desc" data-i18n="Window mode used when the game starts">Window mode used when the game starts</div>
+                          </div>
+                          <div class="custom-select" data-select-id="version-window-mode">
+                            <div class="custom-select-trigger"><span class="custom-select-value" data-i18n="Use global setting">Use global setting</span><span class="custom-select-arrow icon icon-chevron"></span></div>
+                            <div class="custom-select-dropdown">
+                              <div class="custom-select-option selected" data-value="global" data-i18n="Use global setting">Use global setting</div>
+                              <div class="custom-select-option" data-value="fullscreen" data-i18n="Fullscreen">Fullscreen</div>
+                              <div class="custom-select-option" data-value="windowed" data-i18n="Windowed">Windowed</div>
+                              <div class="custom-select-option" data-value="borderless" data-i18n="Borderless">Borderless</div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="setting-item">
+                          <div class="setting-info">
+                            <div class="setting-label" data-i18n="Server address">Server address</div>
+                            <div class="setting-desc" data-i18n="Server to join, e.g. mc.caellab.com (required)">Server to join, e.g. mc.caellab.com (required)</div>
+                          </div>
+                          <input type="text" id="version-server-ip" class="setting-input" placeholder="play.example.com" spellcheck="false">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                   <div id="version-select-panel" class="version-select-panel">
                     <div class="version-panel-header">
-                      <h3 class="version-panel-title" data-i18n="Version Selection">Version Selection</h3>
-                      <div id="version-count" class="version-count" data-i18n="Installed versions">Installed versions</div>
+                      <div class="version-panel-heading">
+                        <h3 class="version-panel-title" data-i18n="Versions">Versions</h3>
+                        <div id="version-count" class="version-count" data-i18n="Installed versions">Installed versions</div>
+                      </div>
+                      <button id="local-install-btn" class="version-import-btn" type="button">
+                        <span class="icon icon-plus"></span>
+                        <span data-i18n="Import">Import</span>
+                      </button>
+                    </div>
+                    <div class="version-search-row">
+                      <span class="icon icon-search"></span>
+                      <input id="launch-version-search" class="version-search-input" type="text" data-i18n-placeholder="Search installed versions" placeholder="Search installed versions" autocomplete="off" spellcheck="false">
+                    </div>
+                    <div class="version-dir-row">
+                      <span class="version-dir-icon icon icon-box"></span>
+                      <div class="custom-select version-dir-select" data-select-id="version-dir-filter">
+                        <div class="custom-select-trigger"><span class="custom-select-value" data-i18n="All folders">All folders</span><span class="custom-select-arrow icon icon-chevron"></span></div>
+                        <div class="custom-select-dropdown">
+                          <div class="custom-select-option selected" data-value="" data-i18n="All folders">All folders</div>
+                          <div class="custom-select-option" data-value="default" data-i18n=".minecraft">.minecraft</div>
+                          <div class="custom-select-option" data-value="pcl" data-i18n="PCL">PCL</div>
+                        </div>
+                      </div>
                     </div>
                     <div id="launch-version-list" class="version-list-container"></div>
                     <div id="selected-version-info" class="selected-version-info">
@@ -127,19 +306,19 @@
             </div>
 
             <div id="download-page" class="page download-page hidden">
-              <div class="download-header">
-                <h3 data-i18n="Download">Download</h3>
-                <div class="download-header-actions">
-                  <button id="local-install-btn" class="local-install-btn" type="button" data-i18n="Local install">Local install</button>
+              <div class="download-top">
+                <div class="download-header">
+                  <h3 data-i18n="Download">Download</h3>
                 </div>
-              </div>
 
-              <div class="download-tabs">
-                <button class="download-tab active" type="button" data-download-tab="versions" data-i18n="Game version">Game version</button>
-                <button class="download-tab" type="button" data-download-tab="mods" data-i18n="Mods">Mods</button>
-                <button class="download-tab" type="button" data-download-tab="shaders" data-i18n="Shaders">Shaders</button>
-                <button class="download-tab" type="button" data-download-tab="resourcepacks" data-i18n="Resource packs">Resource packs</button>
-                <button class="download-tab" type="button" data-download-tab="modpacks" data-i18n="Modpacks">Modpacks</button>
+                <div class="download-tabs">
+                  <button class="download-tab active" type="button" data-download-tab="versions" data-i18n="Game version">Game version</button>
+                  <button class="download-tab" type="button" data-download-tab="mods" data-i18n="Mods">Mods</button>
+                  <button class="download-tab" type="button" data-download-tab="shaders" data-i18n="Shaders">Shaders</button>
+                  <button class="download-tab" type="button" data-download-tab="resourcepacks" data-i18n="Resource packs">Resource packs</button>
+                  <button class="download-tab" type="button" data-download-tab="modpacks" data-i18n="Modpacks">Modpacks</button>
+                  <button class="download-tab" type="button" data-download-tab="java" data-i18n="Java runtime">Java runtime</button>
+                </div>
               </div>
 
               <div id="mod-download-section" class="mod-download-section hidden">
@@ -168,6 +347,36 @@
                   <button id="mod-detail-back" class="detail-back-btn" type="button"><span class="icon icon-arrow-left"></span><span data-i18n="Back to search results">Back to search results</span></button>
                   <div id="mod-detail-head"></div>
                   <div id="mod-detail-versions"></div>
+                </div>
+              </div>
+
+              <div id="java-download-section" class="java-download-section hidden">
+                <h4 class="section-title" data-i18n="Java runtime">Java runtime</h4>
+                <p class="section-desc" data-i18n="Download and install the Java runtime Minecraft needs">Download and install the Java runtime Minecraft needs</p>
+                <div id="java-install-status" class="java-install-status hidden"></div>
+                <div class="java-version-selector">
+                  <div class="java-version-grid">
+                    <div class="java-version-card" data-version="8">
+                      <div class="java-version-header"><span class="java-version-num">Java 8</span><span class="java-version-badge hidden"></span></div>
+                      <div class="java-version-info"><div class="java-info-row"><span class="info-label" data-i18n="For versions:">For versions:</span><span class="info-value">Minecraft 1.7.10 - 1.16.5</span></div></div>
+                      <button class="java-install-btn" data-version="8" type="button" data-i18n="Install">Install</button>
+                    </div>
+                    <div class="java-version-card" data-version="17">
+                      <div class="java-version-header"><span class="java-version-num">Java 17</span><span class="java-version-badge" data-i18n="Recommended">Recommended</span></div>
+                      <div class="java-version-info"><div class="java-info-row"><span class="info-label" data-i18n="For versions:">For versions:</span><span class="info-value">Minecraft 1.17 - 1.20.4</span></div></div>
+                      <button class="java-install-btn" data-version="17" type="button" data-i18n="Install">Install</button>
+                    </div>
+                    <div class="java-version-card installed" data-version="21">
+                      <div class="java-version-header"><span class="java-version-num">Java 21</span><span class="java-version-badge" data-i18n="Installed">Installed</span></div>
+                      <div class="java-version-info"><div class="java-info-row"><span class="info-label" data-i18n="For versions:">For versions:</span><span class="info-value">Minecraft 1.20.5 - 1.21+</span></div></div>
+                      <button class="java-install-btn installed" data-version="21" type="button" data-i18n="Uninstall">Uninstall</button>
+                    </div>
+                    <div class="java-version-card" data-version="25">
+                      <div class="java-version-header"><span class="java-version-num">Java 25</span><span class="java-version-badge hidden"></span></div>
+                      <div class="java-version-info"><div class="java-info-row"><span class="info-label" data-i18n="For versions:">For versions:</span><span class="info-value" data-i18n="Minecraft 1.21+ (latest)">Minecraft 1.21+ (latest)</span></div></div>
+                      <button class="java-install-btn" data-version="25" type="button" data-i18n="Install">Install</button>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -327,6 +536,34 @@
                           <div class="segmented">
                             <label><input type="radio" name="demo-visibility" value="keep" checked><span data-i18n="Keep">Keep</span></label>
                             <label><input type="radio" name="demo-visibility" value="minimize"><span data-i18n="Minimize">Minimize</span></label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="setting-card setting-card--group">
+                      <div class="setting-card-head">
+                        <span class="setting-card-icon"><span class="icon icon-box"></span></span>
+                        <div>
+                          <div class="setting-card-title" data-i18n="Version isolation">Version isolation</div>
+                          <div class="setting-card-desc" data-i18n="Applies to versions installed from now on. Existing versions can be changed in their own version settings.">Applies to versions installed from now on. Existing versions can be changed in their own version settings.</div>
+                        </div>
+                      </div>
+                      <div class="setting-row">
+                        <div class="setting-left">
+                          <div class="setting-label" data-i18n="Default version isolation">Default version isolation</div>
+                          <div class="setting-desc" data-i18n="Isolated versions keep their own saves, mods and resource packs">Isolated versions keep their own saves, mods and resource packs</div>
+                        </div>
+                        <div class="setting-control setting-control-wide">
+                          <div class="custom-select" data-select-id="settings-version-isolation">
+                            <div class="custom-select-trigger"><span class="custom-select-value" data-i18n="Isolate all versions">Isolate all versions</span><span class="custom-select-arrow icon icon-chevron"></span></div>
+                            <div class="custom-select-dropdown">
+                              <div class="custom-select-option" data-value="off" data-i18n="Off (shared saves and mods)">Off (shared saves and mods)</div>
+                              <div class="custom-select-option" data-value="modded" data-i18n="Isolate mod-capable versions">Isolate mod-capable versions</div>
+                              <div class="custom-select-option" data-value="nonRelease" data-i18n="Isolate non-release versions">Isolate non-release versions</div>
+                              <div class="custom-select-option" data-value="moddedAndNonRelease" data-i18n="Isolate mod-capable and non-release versions">Isolate mod-capable and non-release versions</div>
+                              <div class="custom-select-option selected" data-value="all" data-i18n="Isolate all versions">Isolate all versions</div>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -570,19 +807,32 @@
                         <span class="setting-card-icon"><span class="icon icon-save"></span></span>
                         <div>
                           <div class="setting-card-title" data-i18n="Game directory">Game directory</div>
-                          <div class="setting-card-desc" data-i18n="Versions, libraries, assets and mods go here; existing files are not moved when you switch">Versions, libraries, assets and mods go here; existing files are not moved when you switch</div>
+                          <div class="setting-card-desc" data-i18n="New downloads go to the download target; added folders appear in the version picker">New downloads go to the download target; added folders appear in the version picker</div>
                         </div>
                       </div>
-                      <div class="setting-row">
+                      <div class="setting-row setting-row-column">
                         <div class="setting-left">
-                          <div class="setting-label" data-i18n="Install location">Install location</div>
-                          <div class="setting-desc install-dir-path">C:\Users\Yunyun\AppData\Roaming\gpcl\.minecraft</div>
+                          <div class="setting-label" data-i18n="Game directories">Game directories</div>
+                          <div class="setting-desc" data-i18n="Every folder here appears in the version picker. New downloads go to the folder marked as the download target.">Every folder here appears in the version picker. New downloads go to the folder marked as the download target.</div>
                         </div>
                         <div class="setting-control setting-control-column">
-                          <div class="install-dir-actions">
-                            <button class="settings-action-btn" type="button" data-i18n="Change folder">Change folder</button>
-                            <button class="settings-action-btn settings-action-btn-secondary" type="button" data-i18n="Reset">Reset</button>
+                          <div id="settings-game-dir-list" class="settings-dir-list">
+                            <div class="settings-dir-row">
+                              <div class="settings-dir-main">
+                                <div class="settings-dir-name">.minecraft</div>
+                                <div class="settings-dir-path">C:\Users\Yunyun\AppData\Roaming\gpcl\.minecraft</div>
+                              </div>
+                              <div class="settings-dir-badges"><span class="settings-dir-badge" data-i18n="Download target">Download target</span><span class="settings-dir-badge muted" data-i18n="Default">Default</span></div>
+                            </div>
+                            <div class="settings-dir-row">
+                              <div class="settings-dir-main">
+                                <div class="settings-dir-name">PCL</div>
+                                <div class="settings-dir-path">C:\Users\Yunyun\Desktop\PCL\.minecraft</div>
+                              </div>
+                              <div class="settings-dir-actions"><button class="settings-action-btn settings-action-btn-secondary" type="button" data-i18n="Download here">Download here</button></div>
+                            </div>
                           </div>
+                          <button id="settings-add-game-dir" class="settings-action-btn" type="button" data-i18n="Add folder">Add folder</button>
                         </div>
                       </div>
                     </div>
@@ -632,6 +882,21 @@
                         <div class="setting-control setting-control-slider">
                           <input type="range" id="demo-speed" class="range-input" min="0" max="20" step="1" value="0">
                           <span class="range-value" id="demo-speed-value" data-i18n="Unlimited">Unlimited</span>
+                        </div>
+                      </div>
+                      <div class="setting-row">
+                        <div class="setting-left">
+                          <div class="setting-label" data-i18n="Speed unit">Speed unit</div>
+                          <div class="setting-desc" data-i18n="Mbps is the network standard; MB/s is the file size unit.">Mbps is the network standard; MB/s is the file size unit.</div>
+                        </div>
+                        <div class="setting-control">
+                          <div class="custom-select" data-select-id="speed-unit">
+                            <div class="custom-select-trigger"><span class="custom-select-value" data-i18n="Mbps (recommended)">Mbps (recommended)</span><span class="custom-select-arrow icon icon-chevron"></span></div>
+                            <div class="custom-select-dropdown">
+                              <div class="custom-select-option selected" data-value="mbps" data-i18n="Mbps (recommended)">Mbps (recommended)</div>
+                              <div class="custom-select-option" data-value="mbs" data-i18n="MB/s">MB/s</div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                       <div class="setting-row">
@@ -750,7 +1015,7 @@
                         <img src="../icon.png" alt="Icon" data-i18n-alt="Icon" class="about-icon">
                         <div class="about-info">
                           <div class="about-title">GoodPlanCraftLauncher</div>
-                          <div class="about-version"><span data-i18n="Version:">Version:</span> 1.7.2</div>
+                          <div class="about-version"><span data-i18n="Version:">Version:</span> 1.9.1</div>
                           <div class="about-byline">CaelLab</div>
                         </div>
                       </div>
@@ -814,10 +1079,9 @@
                     <div class="setting-card about-section">
                       <h3 class="about-section-title" data-i18n="Runtime">Runtime</h3>
                       <div class="runtime-grid">
-                        <div class="runtime-item"><span data-i18n="Launcher">Launcher</span><b>1.7.2</b></div>
-                        <div class="runtime-item"><span>Electron</span><b>38.2.2</b></div>
-                        <div class="runtime-item"><span>Chromium</span><b>140.0.7339.133</b></div>
-                        <div class="runtime-item"><span>Node</span><b>22.19.0</b></div>
+                        <div class="runtime-item"><span data-i18n="Launcher">Launcher</span><b>1.9.1</b></div>
+                        <div class="runtime-item"><span>Electron</span><b>42.1.0</b></div>
+                        <div class="runtime-item"><span>Chromium</span><b>148.0.7778.97</b></div>
                         <div class="runtime-item runtime-item-wide"><span data-i18n="System">System</span><b>Windows 11 (10.0.26100)</b></div>
                       </div>
                     </div>
@@ -833,9 +1097,25 @@
       <div id="download-dock" class="download-dock hidden" aria-live="polite">
         <div class="download-dock-panel hidden" id="download-dock-panel">
           <div class="download-dock-panel-head">
-            <span class="download-dock-panel-title" data-i18n="Downloads">Downloads</span>
+            <div class="download-dock-panel-heading">
+              <span class="download-dock-panel-title" data-i18n="Downloads">Downloads</span>
+              <span id="download-dock-panel-subtitle" class="download-dock-panel-subtitle"></span>
+            </div>
             <span id="download-dock-panel-count" class="download-dock-panel-count"></span>
+            <button id="download-dock-panel-clear" class="download-dock-panel-action hidden" type="button" data-i18n="Clear completed">Clear completed</button>
           </div>
+          <div class="download-dock-stats">
+            <div class="download-dock-chart">
+              <svg id="dock-speed-chart" viewBox="0 0 240 64" preserveAspectRatio="none"></svg>
+            </div>
+            <div class="download-dock-stat-grid">
+              <div class="download-dock-stat"><span class="download-dock-stat-label" data-i18n="Current">Current</span><strong id="dock-current-speed" class="download-dock-stat-value">0.0 Mbps</strong></div>
+              <div class="download-dock-stat"><span class="download-dock-stat-label" data-i18n="Peak">Peak</span><strong id="dock-peak-speed" class="download-dock-stat-value">0.0 Mbps</strong></div>
+              <div class="download-dock-stat"><span class="download-dock-stat-label" data-i18n="Progress">Progress</span><strong id="dock-panel-percent" class="download-dock-stat-value">0%</strong></div>
+              <div class="download-dock-stat"><span class="download-dock-stat-label" data-i18n="Queued">Queued</span><strong id="dock-panel-queued" class="download-dock-stat-value">0</strong></div>
+            </div>
+          </div>
+          <div class="download-dock-section-head"><span data-i18n="Download queue">Download queue</span><span id="dock-panel-running" class="download-dock-section-running"></span></div>
           <div id="download-task-list" class="download-task-list"></div>
         </div>
         <div class="download-dock-track"><div id="download-dock-fill" class="download-dock-fill"></div></div>
@@ -938,8 +1218,8 @@
       </div>
     </div>
   </div>
-  <script src="versions.js?v=y7p3q9d5"></script>
+  <script src="versions.js?v=n4c8s3b7"></script>
   <script src="i18n.js?v=t4r9k3m8"></script>
-  <script src="app.js?v=q9t3v6n2"></script>
+  <script src="app.js?v=w4m8q2t6"></script>
 </body>
 </html>

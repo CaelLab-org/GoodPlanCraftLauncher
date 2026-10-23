@@ -377,7 +377,7 @@ export function initCustomSelect(selectId: string, onChangeCallback?: (value: st
     currentValue = value || null;
     closeAllCustomSelects();
     const callback = customSelectCallbacks.get(selectId);
-    if (callback && value) callback(value);
+    if (callback) callback(value);
   };
 
   if (selectContainer.dataset.initialized !== '1') {

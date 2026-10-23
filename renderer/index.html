@@ -112,22 +112,62 @@
         <div id="launch-panel" class="launch-panel">
           <div class="launch-sidebar">
             <div class="auth-tabs">
-              <button id="auth-microsoft" class="auth-tab auth-tab-disabled" disabled>
-                <span class="auth-label"><span class="icon icon-diamond" ></span> Microsoft</span>
+              <button id="auth-microsoft" class="auth-tab" type="button">
+                <span class="auth-label"><span class="icon icon-diamond"></span> <span data-i18n="ui.microsoft">Microsoft</span></span>
               </button>
-              <button id="auth-offline" class="auth-tab auth-tab-active">
-                <span class="auth-label"><span class="icon icon-user" ></span> Offline</span>
+              <button id="auth-offline" class="auth-tab auth-tab-active" type="button">
+                <span class="auth-label"><span class="icon icon-user"></span> <span data-i18n="ui.offline">Offline</span></span>
               </button>
             </div>
             
             <div class="skin-container">
               <div class="skin-wrapper" id="skin-wrapper" role="button" tabindex="0" data-i18n-title="ui.click_to_change_avatar" title="Click to change avatar">
                 <img src="skin/Alex.png" alt="Skin" class="skin-image">
+                <div id="skin-head" class="skin-head hidden" aria-hidden="true"></div>
               </div>
               <div class="skin-reflection"></div>
             </div>
+
+            <div id="auth-ms-panel" class="auth-ms-panel hidden">
+              <div id="auth-ms-signed-out" class="auth-ms-state">
+                <div class="auth-ms-title" data-i18n="ui.microsoft_sign_in_prompt">Sign in with a Microsoft account</div>
+                <div class="auth-ms-note" data-i18n="ui.microsoft_sign_in_note">Your browser opens for a secure sign-in; this window continues automatically.</div>
+                <button id="auth-ms-login" class="auth-ms-primary" type="button">
+                  <span class="icon icon-diamond"></span>
+                  <span data-i18n="ui.microsoft_sign_in">Sign in</span>
+                </button>
+                <div id="auth-ms-error" class="auth-ms-error hidden"></div>
+              </div>
+
+              <div id="auth-ms-waiting" class="auth-ms-state hidden">
+                <div class="auth-ms-spinner"></div>
+                <div class="auth-ms-title" data-i18n="ui.waiting_for_sign_in">Waiting for sign-in…</div>
+                <div class="auth-ms-note" data-i18n="ui.signing_in_browser">Finish signing in in your browser; this window will continue automatically.</div>
+                <div class="auth-ms-actions">
+                  <button id="auth-ms-reopen" class="auth-ms-secondary" type="button" data-i18n="ui.reopen_browser">Open browser again</button>
+                  <button id="auth-ms-cancel" class="auth-ms-secondary" type="button" data-i18n="ui.cancel">Cancel</button>
+                </div>
+              </div>
+
+              <div id="auth-ms-signed-in" class="auth-ms-state hidden">
+                <div class="auth-ms-actions">
+                  <button id="auth-ms-switch" class="auth-ms-secondary" type="button" data-i18n="ui.switch_account">Switch account</button>
+                  <button id="auth-ms-logout" class="auth-ms-secondary" type="button" data-i18n="ui.sign_out">Sign out</button>
+                </div>
+              </div>
+
+              <div id="auth-account-list" class="auth-account-list hidden">
+                <div class="auth-account-list-title" data-i18n="ui.saved_accounts">Saved accounts</div>
+                <div id="auth-account-items"></div>
+                <button id="auth-account-add" class="auth-account-add" type="button">
+                  <span class="icon icon-plus"></span>
+                  <span data-i18n="ui.add_account">Add account</span>
+                </button>
+                <button id="auth-skin-refresh" class="auth-account-link hidden" type="button" data-i18n="ui.refresh_skin">Refresh skin</button>
+              </div>
+            </div>
             
-            <div class="username-input-group">
+            <div class="username-input-group" id="username-input-group">
               <label for="username" class="username-label"></label>
               <div class="username-field">
                 <input type="text" id="username" data-i18n-placeholder="ui.enter_username" placeholder="Enter username" value="GPCL_Player" class="username-input" autocomplete="off">
@@ -224,6 +264,22 @@
                       </div>
                     </div>
                   </div>
+
+                  <div class="setting-item">
+                    <div class="setting-info">
+                      <div class="setting-label" data-i18n="ui.java_version">Java version</div>
+                      <div class="setting-desc" data-i18n="ui.java_version_desc">Auto uses the Java version Minecraft recommends; choose another installed runtime if needed</div>
+                    </div>
+                    <div class="custom-select" data-select-id="version-java">
+                      <div class="custom-select-trigger">
+                        <span class="custom-select-value" data-i18n="ui.java_auto">Automatic (recommended)</span>
+                        <span class="custom-select-arrow icon icon-chevron"></span>
+                      </div>
+                      <div class="custom-select-dropdown">
+                        <div class="custom-select-option selected" data-value="auto" data-i18n="ui.java_auto">Automatic (recommended)</div>
+                      </div>
+                    </div>
+                  </div>
                   
                   <div class="setting-item">
                     <div class="setting-info">
@@ -311,6 +367,18 @@
                 <span class="icon icon-search"></span>
                 <input id="launch-version-search" class="version-search-input" type="text" data-i18n-placeholder="ui.search_installed_versions" placeholder="Search installed versions" autocomplete="off" spellcheck="false">
               </div>
+              <div class="version-dir-row">
+                <span class="version-dir-icon icon icon-box"></span>
+                <div class="custom-select version-dir-select" data-select-id="version-dir-filter">
+                  <div class="custom-select-trigger">
+                    <span class="custom-select-value" data-i18n="ui.all_folders">All folders</span>
+                    <span class="custom-select-arrow icon icon-chevron"></span>
+                  </div>
+                  <div class="custom-select-dropdown">
+                    <div class="custom-select-option selected" data-value="" data-i18n="ui.all_folders">All folders</div>
+                  </div>
+                </div>
+              </div>
               <div id="launch-version-list" class="version-list-container">
                 <div class="version-list-loading" data-i18n="ui.scanning_local_versions">Scanning local versions...</div>
               </div>
@@ -364,6 +432,7 @@
               <button id="download-tab-shaders" class="download-tab" type="button" data-i18n="ui.shaders">Shaders</button>
               <button id="download-tab-resourcepacks" class="download-tab" type="button" data-i18n="ui.resource_packs">Resource packs</button>
               <button id="download-tab-modpacks" class="download-tab" type="button" data-i18n="ui.modpacks">Modpacks</button>
+              <button id="download-tab-java" class="download-tab" type="button" data-i18n="ui.java_runtime">Java runtime</button>
             </div>
           </div>
 
@@ -578,7 +647,7 @@
             </div>
           </div>
 
-          <div id="java-download-section" class="java-download-section">
+          <div id="java-download-section" class="java-download-section hidden">
             <h4 class="section-title" data-i18n="ui.java_runtime">Java runtime</h4>
             <p class="section-desc" data-i18n="ui.download_and_install_the_java_runtime_minecraft_needs">Download and install the Java runtime Minecraft needs</p>
             <div id="java-install-status" class="java-install-status"></div>
@@ -722,7 +791,7 @@
                     <div class="memory-usage">
                       <div class="memory-usage-head"><span data-i18n="ui.system_memory_used_total">System memory (used / total)</span><span id="memory-usage-label">-- / --</span></div>
                       <div class="memory-usage-track"><div class="memory-usage-used" id="memory-usage-used"></div></div>
-                      <div class="memory-usage-foot"><span>Available now <b id="memory-free-label">--</b></span><span>GPCL will allocate <b id="memory-alloc-label">--</b></span></div>
+                      <div class="memory-usage-foot"><span><span data-i18n="ui.available_now">Available now</span> <b id="memory-free-label">--</b></span><span><span data-i18n="ui.gpcl_will_allocate">GPCL will allocate</span> <b id="memory-alloc-label">--</b></span></div>
                     </div>
                     <div class="setting-hint memory-warning hidden" id="memory-warning" data-i18n="ui.available_memory_is_low_so_the_automatic_value_was_reduced_consider_clos_3a1baa">Available memory is low, so the automatic value was reduced. Consider closing some programs before launching.</div>
 
@@ -1246,14 +1315,14 @@
                     <div class="setting-card-head">
                       <span class="setting-card-icon"><span class="icon icon-save"></span></span>
                       <div>
-                        <div class="setting-card-title" data-i18n="ui.game_directory">Game directory</div>
-                        <div class="setting-card-desc" data-i18n="ui.versions_libraries_assets_and_mods_go_here_existing_files_are_not_moved_549759">Versions, libraries, assets and mods go here; existing files are not moved when you switch</div>
+                        <div class="setting-card-title" data-i18n="ui.game_directories">Game directories</div>
+                        <div class="setting-card-desc" data-i18n="ui.game_directory_card_desc">New downloads go to the download target; added folders appear in the version picker</div>
                       </div>
                     </div>
 
                     <div class="setting-row">
                       <div class="setting-left">
-                        <div class="setting-label" data-i18n="ui.install_location">Install location</div>
+                        <div class="setting-label" data-i18n="ui.download_folder">Download folder</div>
                         <div class="setting-desc" id="settings-install-dir-label">--</div>
                       </div>
                       <div class="setting-control setting-control-column">
@@ -1261,6 +1330,17 @@
                           <button id="settings-install-dir-change" class="settings-action-btn" type="button" data-i18n="ui.change_folder">Change folder</button>
                           <button id="settings-install-dir-reset" class="settings-action-btn settings-action-btn-secondary" type="button" data-i18n="ui.reset">Reset</button>
                         </div>
+                      </div>
+                    </div>
+
+                    <div class="setting-row setting-row--stack">
+                      <div class="setting-left">
+                        <div class="setting-label" data-i18n="ui.game_directories">Game directories</div>
+                        <div class="setting-desc" data-i18n="ui.game_directories_desc">Every folder here appears in the version picker. New downloads go to the folder marked as the download target.</div>
+                      </div>
+                      <div class="setting-control setting-control-column">
+                        <div id="settings-game-dir-list" class="settings-dir-list"></div>
+                        <button id="settings-add-game-dir" class="settings-action-btn" type="button" data-i18n="ui.add_folder">Add folder</button>
                       </div>
                     </div>
                   </div>
@@ -1388,6 +1468,25 @@
                       <div class="setting-control setting-control-slider">
                         <input type="range" id="settings-speed-limit" class="range-input" min="0" max="20" step="1" value="0">
                         <span class="range-value" id="settings-speed-limit-value" data-i18n="ui.unlimited">Unlimited</span>
+                      </div>
+                    </div>
+
+                    <div class="setting-row">
+                      <div class="setting-left">
+                        <div class="setting-label" data-i18n="ui.speed_unit">Speed unit</div>
+                        <div class="setting-desc" data-i18n="ui.speed_unit_desc">Mbps is the network standard (megabits); MB/s is the file size unit</div>
+                      </div>
+                      <div class="setting-control">
+                        <div class="custom-select" data-select-id="settings-speed-unit">
+                          <div class="custom-select-trigger">
+                            <span class="custom-select-value" data-i18n="ui.speed_unit_mbps">Mbps (recommended)</span>
+                            <span class="custom-select-arrow icon icon-chevron"></span>
+                          </div>
+                          <div class="custom-select-dropdown">
+                            <div class="custom-select-option selected" data-value="mbps" data-i18n="ui.speed_unit_mbps">Mbps (recommended)</div>
+                            <div class="custom-select-option" data-value="mbs" data-i18n="ui.speed_unit_mbs">MB/s</div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1667,7 +1766,6 @@
                       <div class="runtime-item"><span data-i18n="ui.launcher">Launcher</span><b id="runtime-app">-</b></div>
                       <div class="runtime-item"><span>Electron</span><b id="runtime-electron">-</b></div>
                       <div class="runtime-item"><span>Chromium</span><b id="runtime-chrome">-</b></div>
-                      <div class="runtime-item"><span>Node</span><b id="runtime-node">-</b></div>
                       <div class="runtime-item runtime-item-wide"><span data-i18n="ui.system">System</span><b id="runtime-platform">-</b></div>
                     </div>
                   </div>
@@ -1774,9 +1872,39 @@
   <div id="download-dock" class="download-dock hidden" aria-live="polite">
     <div class="download-dock-panel hidden" id="download-dock-panel">
       <div class="download-dock-panel-head">
-        <span class="download-dock-panel-title" data-i18n="ui.download_process">Downloads</span>
+        <div class="download-dock-panel-heading">
+          <span class="download-dock-panel-title" data-i18n="ui.download_process">Downloads</span>
+          <span id="download-dock-panel-subtitle" class="download-dock-panel-subtitle"></span>
+        </div>
         <span id="download-dock-panel-count" class="download-dock-panel-count"></span>
         <button id="download-dock-panel-clear" class="download-dock-panel-action hidden" type="button" data-i18n="ui.clear_completed">Clear completed</button>
+      </div>
+      <div class="download-dock-stats">
+        <div class="download-dock-chart">
+          <canvas id="dock-speed-chart"></canvas>
+        </div>
+        <div class="download-dock-stat-grid">
+          <div class="download-dock-stat">
+            <span class="download-dock-stat-label" data-i18n="ui.current">Current</span>
+            <strong id="dock-current-speed" class="download-dock-stat-value">0.0 Mbps</strong>
+          </div>
+          <div class="download-dock-stat">
+            <span class="download-dock-stat-label" data-i18n="ui.peak">Peak</span>
+            <strong id="dock-peak-speed" class="download-dock-stat-value">0.0 Mbps</strong>
+          </div>
+          <div class="download-dock-stat">
+            <span class="download-dock-stat-label" data-i18n="ui.progress">Progress</span>
+            <strong id="dock-panel-percent" class="download-dock-stat-value">0%</strong>
+          </div>
+          <div class="download-dock-stat">
+            <span class="download-dock-stat-label" data-i18n="ui.queued">Queued</span>
+            <strong id="dock-panel-queued" class="download-dock-stat-value">0</strong>
+          </div>
+        </div>
+      </div>
+      <div class="download-dock-section-head">
+        <span data-i18n="ui.download_queue">Download queue</span>
+        <span id="dock-panel-running" class="download-dock-section-running"></span>
       </div>
       <div id="download-task-list" class="download-task-list hidden"></div>
     </div>
@@ -1791,7 +1919,7 @@
     <div class="download-dock-meta">
       <span id="download-dock-queued" class="download-dock-queued hidden"></span>
       <span id="download-dock-count" class="download-dock-count"></span>
-      <span id="download-dock-speed" class="download-dock-speed"></span>
+      <span id="download-dock-speed" class="download-dock-speed">0.0 Mbps</span>
       <span id="download-dock-percent" class="download-dock-percent">0%</span>
     </div>
     <button id="download-dock-toggle" class="download-dock-toggle" type="button" aria-expanded="false">

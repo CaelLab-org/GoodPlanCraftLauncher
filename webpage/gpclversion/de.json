@@ -1,8 +1,32 @@
 {
   "schema": 1,
-  "latest": "1.9.0",
+  "latest": "1.9.1",
   "updated": "2026-10-23",
   "versions": [
+    {
+      "version": "1.9.1",
+      "anchor": "v1-9-1",
+      "date": "2026-10-23",
+      "title": "Microsoft-Konten, mehrere Spielordner und Java pro Version",
+      "log": [
+        "Die Microsoft-Anmeldung wurde neu gebaut: mehrere Konten speichern, jederzeit wechseln oder entfernen, und nach einem Neustart des Launchers angemeldet bleiben",
+        "Anmelde-Token werden vor dem Start automatisch erneuert; läuft ein Token ab, wirst du jetzt zum erneuten Anmelden aufgefordert, statt beim Beitreten auf einen Server zu scheitern",
+        "Gespeicherte Konten zeigen den echten Minecraft-Skin-Kopf",
+        "Mehrere Spielordner hinzufügen und Versionen nach Ordner filtern; wählst du einen übergeordneten Ordner wie ein PCL2-Stammverzeichnis, wird das .minecraft darin automatisch gefunden",
+        "Jede Version kann ihre eigene Java-Laufzeit nutzen: automatisch, 8, 16, 17, 21, 25 oder ein eigener Pfad",
+        "Die Absturzanalyse gibt es jetzt in allen 25 Sprachen, und Fehlerberichte enthalten deine Zeitzone und lokale Zeit",
+        "Das Download-Panel zeigt einen Live-Geschwindigkeitsgraphen, aktuelle und Spitzengeschwindigkeit sowie wartende Aufgaben; die Geschwindigkeit lässt sich in MB/s oder Mbps anzeigen",
+        "Java-Laufzeit-Downloads sind jetzt ein eigener Tab auf der Download-Seite",
+        "Der Speicherverbrauch auf der Einstellungsseite aktualisiert sich live, statt den Wert vom Öffnen der Seite anzuzeigen",
+        "Beim Löschen der ausgewählten Version kehrst du sofort zur Versionsliste zurück, statt weiter die gelöschte Version anzuzeigen"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.1-Setup.exe",
+        "file": "GPCL-1.9.1-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.9.0",
       "anchor": "v1-9-0",

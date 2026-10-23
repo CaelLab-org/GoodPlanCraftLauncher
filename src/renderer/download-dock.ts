@@ -1,14 +1,7 @@
-/*
- * Copyright (c) 2026 Yunyun(云云) By 虚舟实验室(CaelLab) / CaelLabGameTS
- * Licensed under the CaelLab BY-SA Code License, Version 3
- * or any later version. https://www.caellab.com/license/cbs-v3.txt
- * Source: https://github.com/CaelLab-org/GoodPlanCraftLauncher
- * Project: https://gamets.caellab.com/gpcl/
- */
-
-
 // __IMPORTS_BEGIN__
 import { t } from '../i18n';
+import { ensureDockChart, resetDockChart, updateDockChart } from './dock-chart';
+import { formatSpeed } from './speed';
 // __IMPORTS_END__
 
 const dock: HTMLElement | null = document.getElementById('download-dock');
@@ -25,6 +18,12 @@ const toggleLabel: HTMLElement | null = document.getElementById('download-dock-t
 const panel: HTMLElement | null = document.getElementById('download-dock-panel');
 const panelCount: HTMLElement | null = document.getElementById('download-dock-panel-count');
 const panelClear: HTMLElement | null = document.getElementById('download-dock-panel-clear');
+const panelSubtitle: HTMLElement | null = document.getElementById('download-dock-panel-subtitle');
+const panelCurrentSpeed: HTMLElement | null = document.getElementById('dock-current-speed');
+const panelPeakSpeed: HTMLElement | null = document.getElementById('dock-peak-speed');
+const panelPercent: HTMLElement | null = document.getElementById('dock-panel-percent');
+const panelQueued: HTMLElement | null = document.getElementById('dock-panel-queued');
+const panelRunning: HTMLElement | null = document.getElementById('dock-panel-running');
 
 let clearHandler: (() => void) | null = null;
 
@@ -35,6 +34,8 @@ export function setDownloadDockClearHandler(handler: (() => void) | null): void 
 let cancelling: boolean = false;
 let autoHideTimer: ReturnType<typeof setTimeout> | null = null;
 let dockIdle: boolean = false;
+let peakBytes: number = 0;
+let lastSpeedBytes: number = 0;
 let lastTitle: string = '';
 let lastLabel: string = '';
 let lastPercent: string = '';
@@ -54,16 +55,25 @@ function setText(el: HTMLElement | null, value: string, previous: string): strin
   return value;
 }
 
-export function formatSpeed(bytesPerSecond: number): string {
-  if (!Number.isFinite(bytesPerSecond) || bytesPerSecond <= 0) return t('ui.speed_mbps', { speed: '0.0' });
-  const megabytes: number = bytesPerSecond / (1024 * 1024);
-  if (megabytes >= 1) return t('ui.speed_mbps', { speed: megabytes.toFixed(1) });
-  return t('ui.speed_kbps', { speed: Math.max(1, Math.round(bytesPerSecond / 1024)).toString() });
+function setSpeedText(bytesPerSecond: number): void {
+  lastSpeedBytes = Math.max(0, Number(bytesPerSecond) || 0);
+  const text: string = formatSpeed(lastSpeedBytes);
+  lastSpeed = setText(speedEl, text, lastSpeed);
+  setText(panelCurrentSpeed, text, panelCurrentSpeed?.textContent || '');
+}
+
+function updatePeak(bytesPerSecond: number): void {
+  if (Number(bytesPerSecond) > peakBytes) {
+    peakBytes = Math.max(0, Number(bytesPerSecond) || 0);
+    setText(panelPeakSpeed, formatSpeed(peakBytes), panelPeakSpeed?.textContent || '');
+  }
 }
 
 export function showDownloadDock(name: string): void {
   if (!dock) return;
   cancelling = false;
+  peakBytes = 0;
+  lastSpeedBytes = 0;
   clearAutoHide();
   dockIdle = false;
   dock.classList.remove('hidden', 'is-done', 'is-error', 'is-stage');
@@ -73,6 +83,11 @@ export function showDownloadDock(name: string): void {
   lastSpeed = setText(speedEl, formatSpeed(0), lastSpeed);
   lastCount = setText(countEl, '', lastCount);
   if (fill) fill.style.width = '0%';
+  setText(panelPeakSpeed, formatSpeed(0), panelPeakSpeed?.textContent || '');
+  setText(panelCurrentSpeed, formatSpeed(0), panelCurrentSpeed?.textContent || '');
+  setText(panelPercent, '0%', panelPercent?.textContent || '');
+  resetDockChart();
+  void ensureDockChart();
   document.body.classList.add('download-dock-open');
   void dock.offsetHeight;
   dock.classList.add('show');
@@ -92,6 +107,7 @@ export function updateDownloadDock(progress: {
   const percentText: string = `${Math.floor(percent)}%`;
   if (fill) fill.style.width = `${percent}%`;
   lastPercent = setText(percentEl, percentText, lastPercent);
+  setText(panelPercent, percentText, panelPercent?.textContent || '');
 
   if (progress.label) {
     lastLabel = setText(currentEl, progress.label, lastLabel);
@@ -99,7 +115,10 @@ export function updateDownloadDock(progress: {
     lastLabel = setText(currentEl, t('ui.downloading'), lastLabel);
   }
 
-  lastSpeed = setText(speedEl, formatSpeed(Number(progress.speed) || 0), lastSpeed);
+  const speedBytes: number = Math.max(0, Number(progress.speed) || 0);
+  setSpeedText(speedBytes);
+  updatePeak(speedBytes);
+  updateDockChart(speedBytes);
 
   const total: number = Number(progress.total) || 0;
   const done: number = Math.min(Number(progress.current) || 0, total || Number.MAX_SAFE_INTEGER);
@@ -116,13 +135,15 @@ export function setDownloadDockStage(message: string): void {
 }
 
 export function setDownloadDockQueue(count: number): void {
-  if (!queuedEl) return;
-  if (count > 0) {
-    queuedEl.classList.remove('hidden');
-    lastQueued = setText(queuedEl, t('ui.queued_count_more', { count }), lastQueued);
-  } else {
-    queuedEl.classList.add('hidden');
+  if (queuedEl) {
+    if (count > 0) {
+      queuedEl.classList.remove('hidden');
+      lastQueued = setText(queuedEl, t('ui.queued_count_more', { count }), lastQueued);
+    } else {
+      queuedEl.classList.add('hidden');
+    }
   }
+  setText(panelQueued, String(Math.max(0, count)), panelQueued?.textContent || '');
 }
 
 export function finishDownloadDock(message: string, kind: 'done' | 'error' = 'done'): void {
@@ -134,15 +155,26 @@ export function finishDownloadDock(message: string, kind: 'done' | 'error' = 'do
   if (kind === 'done') {
     if (fill) fill.style.width = '100%';
     lastPercent = setText(percentEl, '100%', lastPercent);
+    setText(panelPercent, '100%', panelPercent?.textContent || '');
   }
   lastLabel = setText(currentEl, message, lastLabel);
   lastSpeed = setText(speedEl, '', lastSpeed);
   lastCount = setText(countEl, '', lastCount);
+  lastSpeedBytes = 0;
+  setText(panelCurrentSpeed, formatSpeed(0), panelCurrentSpeed?.textContent || '');
 }
 
-export function setDownloadDockPanelCount(count: number, hasCompleted: boolean): void {
+export function setDownloadDockPanelCount(count: number, hasCompleted: boolean, runningCount: number = 0): void {
   if (panelCount) panelCount.textContent = count > 0 ? t('ui.task_count', { count }) : '';
   if (panelClear) panelClear.classList.toggle('hidden', !hasCompleted);
+  if (panelSubtitle) {
+    panelSubtitle.textContent = runningCount > 0
+      ? t('ui.dock_running_and_queued', { running: runningCount, queued: Math.max(0, count - runningCount) })
+      : count > 0 ? t('ui.dock_finished_count', { count }) : t('ui.dock_no_active_task');
+  }
+  if (panelRunning) {
+    panelRunning.textContent = runningCount > 0 ? t('ui.dock_running_count', { count: runningCount }) : '';
+  }
 }
 
 /** 队列跑完后调用：隔一会儿把底栏收下去；用户正展开任务面板时等他关掉再收 */
@@ -171,8 +203,12 @@ export function setDownloadDockPanelOpen(open: boolean): void {
     const label: string = open ? t('ui.collapse_panel') : t('ui.expand_panel');
     if (toggleLabel.textContent !== label) toggleLabel.textContent = label;
   }
-  if (open) clearAutoHide();
-  else if (dockIdle) scheduleDownloadDockHide();
+  if (open) {
+    clearAutoHide();
+    void ensureDockChart();
+  } else if (dockIdle) {
+    scheduleDownloadDockHide();
+  }
 }
 
 /** 取消当前任务：由下载进程面板里“运行中”任务行的取消按钮调用 */
@@ -202,6 +238,12 @@ export function hideDownloadDock(): void {
     }
   }, 320);
 }
+
+window.addEventListener('gpcl-speed-unit-changed', (): void => {
+  lastSpeed = '';
+  setSpeedText(lastSpeedBytes);
+  setText(panelPeakSpeed, formatSpeed(peakBytes), panelPeakSpeed?.textContent || '');
+});
 
 if (openBtn) {
   openBtn.addEventListener('click', () => setDownloadDockPanelOpen(!isDownloadDockPanelOpen()));
