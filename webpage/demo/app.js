@@ -573,6 +573,7 @@
 
   /* 900 多个版本，一次性拼好塞进去；第一次打开下载页才渲染 */
   var listRendered = false;
+  var categoryIcons = { '正式版': 'cat-release', '快照': 'cat-snapshot', '旧版': 'cat-old_beta' };
   function renderReleaseList() {
     if (listRendered) return;
     listRendered = true;
@@ -580,24 +581,54 @@
     VERSIONS.forEach(function (row) {
       (byType[row[1]] = byType[row[1]] || []).push(row);
     });
-    var html = '';
+    var box = $('version-list-container');
+    box.innerHTML = '';
     ['正式版', '快照', '旧版'].forEach(function (type) {
       if (!byType[type]) return;
-      html += '<div class="release-group">' +
-        '<span class="release-group-dot' + (type === '正式版' ? ' on' : '') + '"></span>' +
-        '<span class="release-group-name">' + releaseTypeLabel(type) + '</span>' +
-        '<span class="release-group-count">' + t('{n} versions', { n: byType[type].length }) + '</span></div>';
+      var expanded = type === '正式版';
+      var category = document.createElement('div');
+      category.className = 'version-category';
+
+      var header = document.createElement('div');
+      header.className = 'version-category-header';
+      header.innerHTML =
+        '<span class="version-category-arrow icon icon-chevron' + (expanded ? '' : ' collapsed') + '"></span>' +
+        '<span class="version-category-icon"><span class="icon icon-dot ' + (categoryIcons[type] || '') + '"></span></span>' +
+        '<span class="version-category-name"></span>' +
+        '<span class="version-category-count"></span>';
+      header.querySelector('.version-category-name').textContent = releaseTypeLabel(type);
+      header.querySelector('.version-category-count').textContent = t('{n} versions', { n: byType[type].length });
+
+      var body = document.createElement('div');
+      body.className = 'version-category-items' + (expanded ? '' : ' collapsed');
+
       byType[type].forEach(function (row) {
-        html += '<div class="release-row" data-id="' + row[0] + '">' +
-          '<span class="release-id">' + row[0] + '</span>' +
-          '<span class="release-date">' + row[2] + '</span></div>';
+        var item = document.createElement('div');
+        item.className = 'version-item';
+        item.dataset.id = row[0];
+        var idEl = document.createElement('span');
+        idEl.className = 'version-item-id';
+        idEl.textContent = row[0];
+        var timeEl = document.createElement('span');
+        timeEl.className = 'version-item-time';
+        timeEl.textContent = row[2];
+        item.appendChild(idEl);
+        item.appendChild(timeEl);
+        body.appendChild(item);
       });
+
+      header.addEventListener('click', function () {
+        var collapsed = body.classList.toggle('collapsed');
+        header.querySelector('.version-category-arrow').classList.toggle('collapsed', collapsed);
+      });
+
+      category.appendChild(header);
+      category.appendChild(body);
+      box.appendChild(category);
     });
-    var box = $('version-list');
-    box.innerHTML = html;
     box.addEventListener('click', function (e) {
-      var row = e.target.closest('.release-row');
-      if (row) openDetail(releaseOf(releaseIndex[row.dataset.id]));
+      var item = e.target.closest('.version-item');
+      if (item) openDetail(releaseOf(releaseIndex[item.dataset.id]));
     });
     $('version-count-label').textContent = t('Total {n} versions', { n: VERSIONS.length });
   }
