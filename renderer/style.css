@@ -1227,6 +1227,61 @@ body.light-mode .custom-select-dropdown {
   color: var(--accent-primary);
 }
 
+.auth-mc-bind-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.auth-mc-bind-row input {
+  flex: 1;
+  min-width: 0;
+  padding: 6px 8px;
+  border: 1px solid var(--border-medium);
+  border-radius: 7px;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-size: 13px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.auth-mc-bind-row input:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+}
+
+.auth-mc-bind-btn {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 7px;
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.auth-mc-bind-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.auth-mc-bind-cancel {
+  padding: 6px 10px;
+  border: 1px solid var(--border-medium);
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.auth-mc-bind-cancel:hover {
+  color: var(--text-primary);
+}
+
 .skin-container {
   width: 100%;
   flex: 1;

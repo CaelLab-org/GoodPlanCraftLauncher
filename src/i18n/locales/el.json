@@ -1179,5 +1179,18 @@
   "ui.skin_refreshed": "Skin updated",
   "ui.skin_unavailable": "Could not load this account's skin.",
   "ui.current_account": "Current",
-  "ui.sign_in_required": "Sign in with a Microsoft account first, or switch to Offline."
+  "ui.sign_in_required": "Sign in with a Microsoft account first, or switch to Offline.",
+  "ui.open_download_page": "Open download page",
+  "ui.mc_bind_link": "Σύνδεση CaelLabMinecraft",
+  "ui.mc_bind_code_placeholder": "Κωδικός 6 χαρακτήρων",
+  "ui.mc_bind_confirm": "Σύνδεση",
+  "ui.mc_bind_ok": "Συνδέθηκε",
+  "ui.mc_bind_ok_message": "Συνδέθηκε με {name}",
+  "ui.mc_bind_failed": "Αποτυχία σύνδεσης",
+  "ui.mc_bind_error_invalid_code": "Μη έγκυρος ή ληγμένος κωδικός",
+  "ui.mc_bind_error_token_invalid": "Η συνεδσία σας έληξε. Συνδεθείτε ξανά με Microsoft",
+  "ui.mc_bind_error_mojang_failed": "Δεν ήταν δυνατή η επαλήθευση του προφίλ. Δοκιμάστε αργότερα",
+  "ui.mc_bind_error_uuid_taken": "Αυτός ο λογαριασμός Microsoft είναι ήδη συνδεδεμένος με άλλο παίκτη",
+  "ui.mc_bind_error_network": "Σφάλμα δικτύου. Δοκιμάστε αργότερα",
+  "ui.mc_bind_error_failed": "Αποτυχία σύνδεσης. Δοκιμάστε αργότερα"
 }

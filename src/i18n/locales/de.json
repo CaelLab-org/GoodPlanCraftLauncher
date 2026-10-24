@@ -1179,5 +1179,18 @@
   "ui.skin_refreshed": "Skin updated",
   "ui.skin_unavailable": "Could not load this account's skin.",
   "ui.current_account": "Current",
-  "ui.sign_in_required": "Sign in with a Microsoft account first, or switch to Offline."
+  "ui.sign_in_required": "Sign in with a Microsoft account first, or switch to Offline.",
+  "ui.open_download_page": "Open download page",
+  "ui.mc_bind_link": "CaelLabMinecraft verknüpfen",
+  "ui.mc_bind_code_placeholder": "6-stelliger Code",
+  "ui.mc_bind_confirm": "Verknüpfen",
+  "ui.mc_bind_ok": "Verknüpft",
+  "ui.mc_bind_ok_message": "Mit {name} verknüpft",
+  "ui.mc_bind_failed": "Verknüpfen fehlgeschlagen",
+  "ui.mc_bind_error_invalid_code": "Code ungültig oder abgelaufen",
+  "ui.mc_bind_error_token_invalid": "Deine Anmeldung ist abgelaufen. Melde dich erneut mit Microsoft an",
+  "ui.mc_bind_error_mojang_failed": "Profil konnte nicht geprüft werden. Versuche es später erneut",
+  "ui.mc_bind_error_uuid_taken": "Dieses Microsoft-Konto ist bereits mit einem anderen Spieler verknüpft",
+  "ui.mc_bind_error_network": "Netzwerkfehler. Versuche es später erneut",
+  "ui.mc_bind_error_failed": "Verknüpfen fehlgeschlagen. Versuche es später erneut"
 }

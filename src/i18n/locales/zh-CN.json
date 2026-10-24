@@ -1179,5 +1179,18 @@
   "ui.skin_refreshed": "皮肤已刷新",
   "ui.skin_unavailable": "没能加载这个账号的皮肤。",
   "ui.current_account": "当前",
-  "ui.sign_in_required": "请先登录微软账号，或切换到离线模式。"
+  "ui.sign_in_required": "请先登录微软账号，或切换到离线模式。",
+  "ui.open_download_page": "打开下载页",
+  "ui.mc_bind_link": "绑定 CaelLabMinecraft",
+  "ui.mc_bind_code_placeholder": "6 位绑定码",
+  "ui.mc_bind_confirm": "绑定",
+  "ui.mc_bind_ok": "绑定成功",
+  "ui.mc_bind_ok_message": "已绑定到 {name}",
+  "ui.mc_bind_failed": "绑定失败",
+  "ui.mc_bind_error_invalid_code": "绑定码无效或已过期",
+  "ui.mc_bind_error_token_invalid": "登录凭据已过期，请重新登录微软账号",
+  "ui.mc_bind_error_mojang_failed": "无法验证正版身份，请稍后再试",
+  "ui.mc_bind_error_uuid_taken": "这个正版账号已绑定到其他玩家",
+  "ui.mc_bind_error_network": "网络错误，请稍后再试",
+  "ui.mc_bind_error_failed": "绑定失败，请稍后再试"
 }

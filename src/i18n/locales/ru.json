@@ -1179,5 +1179,18 @@
   "ui.skin_refreshed": "Skin updated",
   "ui.skin_unavailable": "Could not load this account's skin.",
   "ui.current_account": "Current",
-  "ui.sign_in_required": "Sign in with a Microsoft account first, or switch to Offline."
+  "ui.sign_in_required": "Sign in with a Microsoft account first, or switch to Offline.",
+  "ui.open_download_page": "Open download page",
+  "ui.mc_bind_link": "Привязать CaelLabMinecraft",
+  "ui.mc_bind_code_placeholder": "6-значный код",
+  "ui.mc_bind_confirm": "Привязать",
+  "ui.mc_bind_ok": "Готово",
+  "ui.mc_bind_ok_message": "Привязано к {name}",
+  "ui.mc_bind_failed": "Не удалось привязать",
+  "ui.mc_bind_error_invalid_code": "Код недействителен или истёк",
+  "ui.mc_bind_error_token_invalid": "Сессия истекла. Войдите заново через аккаунт Microsoft",
+  "ui.mc_bind_error_mojang_failed": "Не удалось проверить профиль. Попробуйте позже",
+  "ui.mc_bind_error_uuid_taken": "Этот аккаунт Microsoft уже привязан к другому игроку",
+  "ui.mc_bind_error_network": "Ошибка сети. Попробуйте позже",
+  "ui.mc_bind_error_failed": "Не удалось привязать. Попробуйте позже"
 }

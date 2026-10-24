@@ -1179,5 +1179,18 @@
   "ui.skin_refreshed": "Skin updated",
   "ui.skin_unavailable": "Could not load this account's skin.",
   "ui.current_account": "Current",
-  "ui.sign_in_required": "Sign in with a Microsoft account first, or switch to Offline."
+  "ui.sign_in_required": "Sign in with a Microsoft account first, or switch to Offline.",
+  "ui.open_download_page": "Open download page",
+  "ui.mc_bind_link": "Tautkan CaelLabMinecraft",
+  "ui.mc_bind_code_placeholder": "Kode 6 karakter",
+  "ui.mc_bind_confirm": "Tautkan",
+  "ui.mc_bind_ok": "Terhubung",
+  "ui.mc_bind_ok_message": "Terhubung ke {name}",
+  "ui.mc_bind_failed": "Gagal menautkan",
+  "ui.mc_bind_error_invalid_code": "Kode tidak valid atau kedaluwarsa",
+  "ui.mc_bind_error_token_invalid": "Sesi kamu telah kedaluwarsa. Masuk lagi dengan Microsoft",
+  "ui.mc_bind_error_mojang_failed": "Profil tidak dapat diverifikasi. Coba lagi nanti",
+  "ui.mc_bind_error_uuid_taken": "Akun Microsoft ini sudah terhubung ke pemain lain",
+  "ui.mc_bind_error_network": "Kesalahan jaringan. Coba lagi nanti",
+  "ui.mc_bind_error_failed": "Gagal menautkan. Coba lagi nanti"
 }

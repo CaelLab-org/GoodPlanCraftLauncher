@@ -1179,5 +1179,18 @@
   "ui.skin_refreshed": "Skin updated",
   "ui.skin_unavailable": "Could not load this account's skin.",
   "ui.current_account": "Current",
-  "ui.sign_in_required": "Sign in with a Microsoft account first, or switch to Offline."
+  "ui.sign_in_required": "Sign in with a Microsoft account first, or switch to Offline.",
+  "ui.open_download_page": "Open download page",
+  "ui.mc_bind_link": "اتصال CaelLabMinecraft",
+  "ui.mc_bind_code_placeholder": "کد ۶ کاراکتری",
+  "ui.mc_bind_confirm": "اتصال",
+  "ui.mc_bind_ok": "متصل شد",
+  "ui.mc_bind_ok_message": "به {name} متصل شد",
+  "ui.mc_bind_failed": "اتصال ناموفق بود",
+  "ui.mc_bind_error_invalid_code": "کد نامعتبر یا منقضی شده است",
+  "ui.mc_bind_error_token_invalid": "نشست شما منقضی شده است. دوباره با حساب Microsoft وارد شوید",
+  "ui.mc_bind_error_mojang_failed": "تأیید نمایه ممکن نشد. بعداً دوباره تلاش کنید",
+  "ui.mc_bind_error_uuid_taken": "این حساب Microsoft از قبل به بازیکن دیگری متصل است",
+  "ui.mc_bind_error_network": "خطای شبکه. بعداً دوباره تلاش کنید",
+  "ui.mc_bind_error_failed": "اتصال ناموفق بود. بعداً دوباره تلاش کنید"
 }

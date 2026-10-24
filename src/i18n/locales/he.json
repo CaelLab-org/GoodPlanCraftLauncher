@@ -1179,5 +1179,18 @@
   "ui.skin_refreshed": "Skin updated",
   "ui.skin_unavailable": "Could not load this account's skin.",
   "ui.current_account": "Current",
-  "ui.sign_in_required": "Sign in with a Microsoft account first, or switch to Offline."
+  "ui.sign_in_required": "Sign in with a Microsoft account first, or switch to Offline.",
+  "ui.open_download_page": "Open download page",
+  "ui.mc_bind_link": "קישור CaelLabMinecraft",
+  "ui.mc_bind_code_placeholder": "קוד בן 6 תווים",
+  "ui.mc_bind_confirm": "קישור",
+  "ui.mc_bind_ok": "קושר",
+  "ui.mc_bind_ok_message": "קושר ל-{name}",
+  "ui.mc_bind_failed": "הקישור נכשל",
+  "ui.mc_bind_error_invalid_code": "הקוד שגוי או פג תוקף",
+  "ui.mc_bind_error_token_invalid": "פג תוקף ההפעלה. היכנס שוב באמצעות Microsoft",
+  "ui.mc_bind_error_mojang_failed": "לא ניתן לאמת את הפרופיל. נסה שוב מאוחר יותר",
+  "ui.mc_bind_error_uuid_taken": "חשבון Microsoft זה כבר מקושר לשחקן אחר",
+  "ui.mc_bind_error_network": "שגיאת רשת. נסה שוב מאוחר יותר",
+  "ui.mc_bind_error_failed": "הקישור נכשל. נסה שוב מאוחר יותר"
 }

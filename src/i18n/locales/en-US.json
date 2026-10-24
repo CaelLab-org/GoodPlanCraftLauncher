@@ -1179,5 +1179,18 @@
   "ui.skin_refreshed": "Skin updated",
   "ui.skin_unavailable": "Could not load this account's skin.",
   "ui.current_account": "Current",
-  "ui.sign_in_required": "Sign in with a Microsoft account first, or switch to Offline."
+  "ui.sign_in_required": "Sign in with a Microsoft account first, or switch to Offline.",
+  "ui.open_download_page": "Open download page",
+  "ui.mc_bind_link": "Link CaelLabMinecraft",
+  "ui.mc_bind_code_placeholder": "6-character code",
+  "ui.mc_bind_confirm": "Link",
+  "ui.mc_bind_ok": "Linked",
+  "ui.mc_bind_ok_message": "Linked to {name}",
+  "ui.mc_bind_failed": "Linking failed",
+  "ui.mc_bind_error_invalid_code": "Invalid or expired code",
+  "ui.mc_bind_error_token_invalid": "Your sign-in expired. Sign in with Microsoft again.",
+  "ui.mc_bind_error_mojang_failed": "Could not verify your profile. Try again later.",
+  "ui.mc_bind_error_uuid_taken": "This Microsoft account is already linked to another player",
+  "ui.mc_bind_error_network": "Network error. Try again later.",
+  "ui.mc_bind_error_failed": "Linking failed. Try again later."
 }

@@ -1179,5 +1179,18 @@
   "ui.skin_refreshed": "Skin updated",
   "ui.skin_unavailable": "Could not load this account's skin.",
   "ui.current_account": "Current",
-  "ui.sign_in_required": "Sign in with a Microsoft account first, or switch to Offline."
+  "ui.sign_in_required": "Sign in with a Microsoft account first, or switch to Offline.",
+  "ui.open_download_page": "Open download page",
+  "ui.mc_bind_link": "ربط CaelLabMinecraft",
+  "ui.mc_bind_code_placeholder": "رمز من 6 خانات",
+  "ui.mc_bind_confirm": "ربط",
+  "ui.mc_bind_ok": "تم الربط",
+  "ui.mc_bind_ok_message": "تم الربط بـ {name}",
+  "ui.mc_bind_failed": "فشل الربط",
+  "ui.mc_bind_error_invalid_code": "الرمز غير صالح أو منتهي الصلاحية",
+  "ui.mc_bind_error_token_invalid": "انتهت صلاحية جلستك. سجّل الدخول مجددًا بحساب Microsoft",
+  "ui.mc_bind_error_mojang_failed": "تعذّر التحقق من الملف الشخصي. حاول لاحقًا",
+  "ui.mc_bind_error_uuid_taken": "حساب Microsoft هذا مرتبط بالفعل بلاعب آخر",
+  "ui.mc_bind_error_network": "خطأ في الشبكة. حاول لاحقًا",
+  "ui.mc_bind_error_failed": "فشل الربط. حاول لاحقًا"
 }

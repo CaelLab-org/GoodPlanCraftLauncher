@@ -1179,5 +1179,18 @@
   "ui.skin_refreshed": "Skin updated",
   "ui.skin_unavailable": "Could not load this account's skin.",
   "ui.current_account": "Current",
-  "ui.sign_in_required": "Sign in with a Microsoft account first, or switch to Offline."
+  "ui.sign_in_required": "Sign in with a Microsoft account first, or switch to Offline.",
+  "ui.open_download_page": "Open download page",
+  "ui.mc_bind_link": "เชื่อมต่อ CaelLabMinecraft",
+  "ui.mc_bind_code_placeholder": "รหัส 6 ตัวอักษร",
+  "ui.mc_bind_confirm": "เชื่อมต่อ",
+  "ui.mc_bind_ok": "เชื่อมต่อแล้ว",
+  "ui.mc_bind_ok_message": "เชื่อมต่อกับ {name} แล้ว",
+  "ui.mc_bind_failed": "เชื่อมต่อไม่สำเร็จ",
+  "ui.mc_bind_error_invalid_code": "รหัสไม่ถูกต้องหรือหมดอายุ",
+  "ui.mc_bind_error_token_invalid": "เซสชันของคุณหมดอายุ กรุณาลงชื่อเข้าใช้ด้วย Microsoft อีกครั้ง",
+  "ui.mc_bind_error_mojang_failed": "ตรวจสอบโปรไฟล์ไม่สำเร็จ ลองอีกครั้งภายหลัง",
+  "ui.mc_bind_error_uuid_taken": "บัญชี Microsoft นี้ถูกเชื่อมต่อกับผู้เล่นอื่นแล้ว",
+  "ui.mc_bind_error_network": "ข้อผิดพลาดเครือข่าย ลองอีกครั้งภายหลัง",
+  "ui.mc_bind_error_failed": "เชื่อมต่อไม่สำเร็จ ลองอีกครั้งภายหลัง"
 }

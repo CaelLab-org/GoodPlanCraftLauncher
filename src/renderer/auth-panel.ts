@@ -44,10 +44,17 @@ const accountList: HTMLElement | null = document.getElementById('auth-account-li
 const accountItems: HTMLElement | null = document.getElementById('auth-account-items');
 const addAccountBtn: HTMLButtonElement | null = document.getElementById('auth-account-add') as HTMLButtonElement | null;
 const skinRefreshBtn: HTMLButtonElement | null = document.getElementById('auth-skin-refresh') as HTMLButtonElement | null;
+const mcBindBtn: HTMLButtonElement | null = document.getElementById('auth-mc-bind') as HTMLButtonElement | null;
+const mcBindRow: HTMLElement | null = document.getElementById('auth-mc-bind-row');
+const mcBindInput: HTMLInputElement | null = document.getElementById('auth-mc-bind-code') as HTMLInputElement | null;
+const mcBindConfirmBtn: HTMLButtonElement | null = document.getElementById('auth-mc-bind-confirm') as HTMLButtonElement | null;
+const mcBindCancelBtn: HTMLButtonElement | null = document.getElementById('auth-mc-bind-cancel') as HTMLButtonElement | null;
 
 let signingIn: boolean = false;
 let switchingUuid: string | null = null;
 let accountListOpen: boolean = false;
+let mcBindRowOpen: boolean = false;
+let mcBinding: boolean = false;
 let accounts: AccountInfo[] = [];
 const headCache: Map<string, SkinInfo> = new Map();
 
@@ -176,6 +183,9 @@ function render(): void {
   accountList?.classList.toggle('hidden', !listVisible);
   addAccountBtn?.classList.toggle('hidden', !signedIn);
   skinRefreshBtn?.classList.toggle('hidden', !signedIn);
+  mcBindBtn?.classList.toggle('hidden', !signedIn);
+  mcBindRow?.classList.toggle('hidden', !(listVisible && mcBindRowOpen));
+  if (!listVisible) mcBindRowOpen = false;
   renderAccountItems(listVisible);
 }
 
@@ -258,6 +268,7 @@ async function restoreOfflineName(): Promise<void> {
 function signOut(notify: boolean): void {
   setMsAuthData(null);
   signingIn = false;
+  mcBindRowOpen = false;
   setError('');
   showAccountSkin(null);
   closeUsernameHistory();
@@ -357,6 +368,57 @@ async function refreshSkin(): Promise<void> {
   else showToast('ui.skin_unavailable', '', 'warning');
 }
 
+function mcBindErrorMessage(result: any): string {
+  const code: string = String(result?.code || '');
+  if (code === 'relogin_required') return t('ui.auth_login_required');
+  if (code) {
+    const key: string = `ui.mc_bind_error_${code}`;
+    const translated: string = t(key);
+    if (translated !== key) return translated;
+  }
+  return String(result?.message || t('ui.mc_bind_error_failed'));
+}
+
+function openMcBindRow(): void {
+  mcBindRowOpen = true;
+  render();
+  if (mcBindInput) {
+    mcBindInput.value = '';
+    mcBindInput.focus();
+  }
+}
+
+function closeMcBindRow(): void {
+  mcBindRowOpen = false;
+  render();
+}
+
+async function submitMcBind(): Promise<void> {
+  if (mcBinding || !msAuthData) return;
+  const code: string = (mcBindInput?.value || '').trim().toUpperCase();
+  if (!/^[A-Z0-9]{6}$/.test(code)) {
+    showToast('ui.mc_bind_error_invalid_code', '', 'warning');
+    return;
+  }
+  mcBinding = true;
+  if (mcBindConfirmBtn) mcBindConfirmBtn.disabled = true;
+  try {
+    const result: any = await window.gpcl.mcServerBind(code);
+    if (result?.success) {
+      mcBindRowOpen = false;
+      showToast('ui.mc_bind_ok', t('ui.mc_bind_ok_message', { name: String(result.offlineName || '') }), 'success');
+      render();
+    } else {
+      showToast('ui.mc_bind_failed', mcBindErrorMessage(result), 'error');
+    }
+  } catch (e: any) {
+    showToast('ui.mc_bind_failed', e?.message || t('ui.mc_bind_error_network'), 'error');
+  } finally {
+    mcBinding = false;
+    if (mcBindConfirmBtn) mcBindConfirmBtn.disabled = false;
+  }
+}
+
 function goOffline(): void {
   if (signingIn) {
     signingIn = false;
@@ -397,6 +459,15 @@ switchBtn?.addEventListener('click', () => {
 logoutBtn?.addEventListener('click', () => signOut(true));
 addAccountBtn?.addEventListener('click', () => void startSignIn());
 skinRefreshBtn?.addEventListener('click', () => void refreshSkin());
+mcBindBtn?.addEventListener('click', openMcBindRow);
+mcBindCancelBtn?.addEventListener('click', closeMcBindRow);
+mcBindConfirmBtn?.addEventListener('click', () => void submitMcBind());
+mcBindInput?.addEventListener('keydown', (event: KeyboardEvent) => {
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    void submitMcBind();
+  }
+});
 
 // 启动前校验发现 refresh_token 也失效了：回到未登录卡片，别继续显示「已登录」
 window.addEventListener('gpcl-auth-expired', () => {

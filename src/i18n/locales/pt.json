@@ -1179,5 +1179,18 @@
   "ui.skin_refreshed": "Skin updated",
   "ui.skin_unavailable": "Could not load this account's skin.",
   "ui.current_account": "Current",
-  "ui.sign_in_required": "Sign in with a Microsoft account first, or switch to Offline."
+  "ui.sign_in_required": "Sign in with a Microsoft account first, or switch to Offline.",
+  "ui.open_download_page": "Open download page",
+  "ui.mc_bind_link": "Vincular CaelLabMinecraft",
+  "ui.mc_bind_code_placeholder": "Código de 6 caracteres",
+  "ui.mc_bind_confirm": "Vincular",
+  "ui.mc_bind_ok": "Vinculado",
+  "ui.mc_bind_ok_message": "Vinculado a {name}",
+  "ui.mc_bind_failed": "Falha ao vincular",
+  "ui.mc_bind_error_invalid_code": "Código inválido ou expirado",
+  "ui.mc_bind_error_token_invalid": "A sua sessão expirou. Inicie sessão novamente com a Microsoft",
+  "ui.mc_bind_error_mojang_failed": "Não foi possível verificar o perfil. Tente novamente mais tarde",
+  "ui.mc_bind_error_uuid_taken": "Esta conta Microsoft já está vinculada a outro jogador",
+  "ui.mc_bind_error_network": "Erro de rede. Tente novamente mais tarde",
+  "ui.mc_bind_error_failed": "Falha ao vincular. Tente novamente mais tarde"
 }

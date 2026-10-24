@@ -190,6 +190,7 @@ const gpclApi: GPCLApi = {
   getMicrosoftAvatar: (uuid: string, refresh?: boolean) => ipcRenderer.invoke('get-microsoft-avatar', uuid, !!refresh),
   refreshMicrosoftAuth: () => ipcRenderer.invoke('refresh-microsoft-auth'),
   validateMicrosoftAuth: () => ipcRenderer.invoke('validate-microsoft-auth'),
+  mcServerBind: (code: string) => ipcRenderer.invoke('mc-server-bind', code),
   onMicrosoftAuthResult: (callback) => {
     ipcRenderer.on('microsoft-auth-result', (_event, result) => callback(result));
   },

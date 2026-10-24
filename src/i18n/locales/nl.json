@@ -1179,5 +1179,18 @@
   "ui.skin_refreshed": "Skin updated",
   "ui.skin_unavailable": "Could not load this account's skin.",
   "ui.current_account": "Current",
-  "ui.sign_in_required": "Sign in with a Microsoft account first, or switch to Offline."
+  "ui.sign_in_required": "Sign in with a Microsoft account first, or switch to Offline.",
+  "ui.open_download_page": "Open download page",
+  "ui.mc_bind_link": "CaelLabMinecraft koppelen",
+  "ui.mc_bind_code_placeholder": "6-tekencode",
+  "ui.mc_bind_confirm": "Koppelen",
+  "ui.mc_bind_ok": "Gekoppeld",
+  "ui.mc_bind_ok_message": "Gekoppeld aan {name}",
+  "ui.mc_bind_failed": "Koppelen mislukt",
+  "ui.mc_bind_error_invalid_code": "Code ongeldig of verlopen",
+  "ui.mc_bind_error_token_invalid": "Je sessie is verlopen. Meld je opnieuw aan met Microsoft",
+  "ui.mc_bind_error_mojang_failed": "Profiel kon niet worden gecontroleerd. Probeer het later opnieuw",
+  "ui.mc_bind_error_uuid_taken": "Dit Microsoft-account is al gekoppeld aan een andere speler",
+  "ui.mc_bind_error_network": "Netwerkfout. Probeer het later opnieuw",
+  "ui.mc_bind_error_failed": "Koppelen mislukt. Probeer het later opnieuw"
 }

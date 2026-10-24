@@ -1179,5 +1179,18 @@
   "ui.skin_refreshed": "Skin updated",
   "ui.skin_unavailable": "Could not load this account's skin.",
   "ui.current_account": "Current",
-  "ui.sign_in_required": "Sign in with a Microsoft account first, or switch to Offline."
+  "ui.sign_in_required": "Sign in with a Microsoft account first, or switch to Offline.",
+  "ui.open_download_page": "Open download page",
+  "ui.mc_bind_link": "Liên kết CaelLabMinecraft",
+  "ui.mc_bind_code_placeholder": "Mã 6 ký tự",
+  "ui.mc_bind_confirm": "Liên kết",
+  "ui.mc_bind_ok": "Đã liên kết",
+  "ui.mc_bind_ok_message": "Đã liên kết với {name}",
+  "ui.mc_bind_failed": "Liên kết thất bại",
+  "ui.mc_bind_error_invalid_code": "Mã không hợp lệ hoặc đã hết hạn",
+  "ui.mc_bind_error_token_invalid": "Phiên đăng nhập đã hết hạn. Hãy đăng nhập lại bằng Microsoft",
+  "ui.mc_bind_error_mojang_failed": "Không thể xác minh hồ sơ. Thử lại sau",
+  "ui.mc_bind_error_uuid_taken": "Tài khoản Microsoft này đã được liên kết với người chơi khác",
+  "ui.mc_bind_error_network": "Lỗi mạng. Thử lại sau",
+  "ui.mc_bind_error_failed": "Liên kết thất bại. Thử lại sau"
 }

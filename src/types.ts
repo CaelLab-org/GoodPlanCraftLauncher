@@ -6,7 +6,7 @@
 // ========== IPC 通道类型 ==========
 
 export interface GPCLApi {
-  initialI18n: { locale: string; dir: string; systemLocale: string; firstRun: boolean; theme: string; style: string; scale: string; skipSplash: boolean };
+  initialI18n: { locale: string; dir: string; systemLocale: string; firstRun: boolean; theme: string; style: string; scale: string; skipSplash: boolean; platform: string };
   getGameDir(): Promise<string>;
   getGameDirs(): Promise<{ success: boolean; dirs: GameDirEntry[]; installDir: string }>;
   addGameDir(dir: string): Promise<{ success: boolean; path: string; dirs: GameDirEntry[]; installDir: string }>;
@@ -127,6 +127,7 @@ export interface GPCLApi {
   getMicrosoftAvatar(uuid: string, refresh?: boolean): Promise<{ dataUrl: string | null; width: number; height: number }>;
   refreshMicrosoftAuth(): Promise<MicrosoftAuthResult>;
   validateMicrosoftAuth(): Promise<{ valid: boolean; relogin?: boolean; unchecked?: boolean; uuid?: string; username?: string; accessToken?: string; expiresAt?: number; code?: string; message?: string }>;
+  mcServerBind(code: string): Promise<{ success: boolean; code?: string; offlineName?: string; premiumName?: string; message?: string }>;
   onMicrosoftAuthResult(callback: (result: MicrosoftAuthResult) => void): void;
 }
 

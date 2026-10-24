@@ -1179,5 +1179,18 @@
   "ui.skin_refreshed": "Skin updated",
   "ui.skin_unavailable": "Could not load this account's skin.",
   "ui.current_account": "Current",
-  "ui.sign_in_required": "Sign in with a Microsoft account first, or switch to Offline."
+  "ui.sign_in_required": "Sign in with a Microsoft account first, or switch to Offline.",
+  "ui.open_download_page": "Open download page",
+  "ui.mc_bind_link": "CaelLabMinecraft を連携",
+  "ui.mc_bind_code_placeholder": "6桁のコード",
+  "ui.mc_bind_confirm": "連携",
+  "ui.mc_bind_ok": "連携しました",
+  "ui.mc_bind_ok_message": "{name} に連携しました",
+  "ui.mc_bind_failed": "連携できませんでした",
+  "ui.mc_bind_error_invalid_code": "コードが無効か期限切れです",
+  "ui.mc_bind_error_token_invalid": "サインインの有効期限が切れました。Microsoft アカウントで再サインインしてください",
+  "ui.mc_bind_error_mojang_failed": "プロフィールを検証できませんでした。後でもう一度お試しください",
+  "ui.mc_bind_error_uuid_taken": "この Microsoft アカウントは既に別のプレイヤーに連携されています",
+  "ui.mc_bind_error_network": "ネットワークエラーです。後でもう一度お試しください",
+  "ui.mc_bind_error_failed": "連携できませんでした。後でもう一度お試しください"
 }

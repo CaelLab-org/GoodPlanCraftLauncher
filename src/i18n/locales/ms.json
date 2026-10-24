@@ -1179,5 +1179,18 @@
   "ui.skin_refreshed": "Skin updated",
   "ui.skin_unavailable": "Could not load this account's skin.",
   "ui.current_account": "Current",
-  "ui.sign_in_required": "Sign in with a Microsoft account first, or switch to Offline."
+  "ui.sign_in_required": "Sign in with a Microsoft account first, or switch to Offline.",
+  "ui.open_download_page": "Open download page",
+  "ui.mc_bind_link": "Pautkan CaelLabMinecraft",
+  "ui.mc_bind_code_placeholder": "Kod 6 aksara",
+  "ui.mc_bind_confirm": "Pautkan",
+  "ui.mc_bind_ok": "Dipautkan",
+  "ui.mc_bind_ok_message": "Dipautkan kepada {name}",
+  "ui.mc_bind_failed": "Gagal memautkan",
+  "ui.mc_bind_error_invalid_code": "Kod tidak sah atau telah tamat tempoh",
+  "ui.mc_bind_error_token_invalid": "Sesi anda telah tamat tempoh. Log masuk semula dengan Microsoft",
+  "ui.mc_bind_error_mojang_failed": "Profil tidak dapat disahkan. Cuba lagi kemudian",
+  "ui.mc_bind_error_uuid_taken": "Akaun Microsoft ini telah dipautkan kepada pemain lain",
+  "ui.mc_bind_error_network": "Ralat rangkaian. Cuba lagi kemudian",
+  "ui.mc_bind_error_failed": "Gagal memautkan. Cuba lagi kemudian"
 }

@@ -585,3 +585,39 @@ ipcMain.handle('get-microsoft-avatar', async (_event, uuid: string, refresh: boo
 ipcMain.handle('refresh-microsoft-auth', async () => refreshMicrosoftSession());
 
 ipcMain.handle('validate-microsoft-auth', async () => validateMicrosoftSession());
+
+/**
+ * 把当前登录的正版账号绑定到 CaelLabMinecraft 网站账号：
+ * 网站先生成 6 位绑定码，这里拿验证过的 MC 访问令牌 + 绑定码去换绑定。
+ */
+ipcMain.handle('mc-server-bind', async (_event, code: string) => {
+  const bindCode: string = String(code || '').trim().toUpperCase();
+  if (!/^[A-Z0-9]{6}$/.test(bindCode)) {
+    return { success: false, code: 'invalid_code', message: t('ui.mc_bind_error_invalid_code') };
+  }
+
+  const session: any = await validateMicrosoftSession();
+  if (!session?.valid || !session.accessToken) {
+    return { success: false, code: 'relogin_required', message: session?.message || t('ui.auth_login_required') };
+  }
+
+  try {
+    const response = await requestJson('https://minecraft.caellab.com/api/auth.php?action=premium-bind', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `code=${encodeURIComponent(bindCode)}&token=${encodeURIComponent(session.accessToken)}`,
+      timeout: 20000
+    });
+    const result: any = response.json;
+    if (result?.success) {
+      writeLog(`[MC绑定] ${session.username} 已绑定到 ${result.offline_name}`);
+      return { success: true, offlineName: result.offline_name, premiumName: result.premium_name };
+    }
+    const codeKey: string = String(result?.code || 'failed');
+    writeLog(`[MC绑定] 失败: ${codeKey} ${result?.message || response.status}`);
+    return { success: false, code: codeKey, message: String(result?.message || t('ui.mc_bind_error_failed')) };
+  } catch (e: any) {
+    writeLog(`[MC绑定] 请求失败: ${e.message}`);
+    return { success: false, code: 'network', message: t('ui.mc_bind_error_network') };
+  }
+});

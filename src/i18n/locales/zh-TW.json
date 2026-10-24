@@ -1179,5 +1179,18 @@
   "ui.skin_refreshed": "皮膚已重新整理",
   "ui.skin_unavailable": "沒能載入這個帳號的皮膚。",
   "ui.current_account": "目前",
-  "ui.sign_in_required": "請先登入微軟帳號，或切換到離線模式。"
+  "ui.sign_in_required": "請先登入微軟帳號，或切換到離線模式。",
+  "ui.open_download_page": "開啟下載頁",
+  "ui.mc_bind_link": "綁定 CaelLabMinecraft",
+  "ui.mc_bind_code_placeholder": "6 位綁定碼",
+  "ui.mc_bind_confirm": "綁定",
+  "ui.mc_bind_ok": "綁定成功",
+  "ui.mc_bind_ok_message": "已綁定到 {name}",
+  "ui.mc_bind_failed": "綁定失敗",
+  "ui.mc_bind_error_invalid_code": "綁定碼無效或已過期",
+  "ui.mc_bind_error_token_invalid": "登入憑證已過期，請重新登入 Microsoft 帳號",
+  "ui.mc_bind_error_mojang_failed": "無法驗證正版身分，請稍後再試",
+  "ui.mc_bind_error_uuid_taken": "這個正版帳號已綁定到其他玩家",
+  "ui.mc_bind_error_network": "網路錯誤，請稍後再試",
+  "ui.mc_bind_error_failed": "綁定失敗，請稍後再試"
 }

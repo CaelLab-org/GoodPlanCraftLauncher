@@ -1179,5 +1179,18 @@
   "ui.skin_refreshed": "Skin updated",
   "ui.skin_unavailable": "Could not load this account's skin.",
   "ui.current_account": "Current",
-  "ui.sign_in_required": "Sign in with a Microsoft account first, or switch to Offline."
+  "ui.sign_in_required": "Sign in with a Microsoft account first, or switch to Offline.",
+  "ui.open_download_page": "Open download page",
+  "ui.mc_bind_link": "CaelLabMinecraft लिंक करें",
+  "ui.mc_bind_code_placeholder": "6 अक्षरों का कोड",
+  "ui.mc_bind_confirm": "लिंक करें",
+  "ui.mc_bind_ok": "लिंक हो गया",
+  "ui.mc_bind_ok_message": "{name} से लिंक हो गया",
+  "ui.mc_bind_failed": "लिंक नहीं हो सका",
+  "ui.mc_bind_error_invalid_code": "कोड अमान्य या समाप्त हो गया है",
+  "ui.mc_bind_error_token_invalid": "आपका सेशन समाप्त हो गया है। Microsoft से फिर से साइन इन करें",
+  "ui.mc_bind_error_mojang_failed": "प्रोफ़ाइल सत्यापित नहीं हो सकी। बाद में पुनः प्रयास करें",
+  "ui.mc_bind_error_uuid_taken": "यह Microsoft खाता पहले से ही किसी अन्य खिलाड़ी से लिंक है",
+  "ui.mc_bind_error_network": "नेटवर्क त्रुटि। बाद में पुनः प्रयास करें",
+  "ui.mc_bind_error_failed": "लिंक नहीं हो सका। बाद में पुनः प्रयास करें"
 }
