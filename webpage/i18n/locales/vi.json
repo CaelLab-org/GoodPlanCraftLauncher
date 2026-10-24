@@ -31,7 +31,7 @@
     "versionLabel": "Phiên bản",
     "updatedLabel": "Cập nhật",
     "platformLabel": "Nền tảng",
-    "platform": "Windows 10+",
+    "platform": "Windows / Linux",
     "iframeTitle": "Giao diện GoodPlanCraftLauncher",
     "windowNote": "Cửa sổ phía trên <b>có thể bấm</b> — đó chính là giao diện trình khởi chạy, chạy ngay trong trang web.",
     "iconAlt": "Biểu tượng GoodPlanCraftLauncher"
@@ -122,9 +122,11 @@
     "updatedLabel": "Cập nhật",
     "platformLabel": "Nền tảng",
     "licenseLabel": "Giấy phép",
-    "platform": "Windows 10 64-bit",
+    "platform": "Windows / Linux",
     "license": "Mã nguồn mở, miễn phí",
-    "github": "Xem trên GitHub"
+    "github": "Xem trên GitHub",
+    "linuxCard": "Tải bản Linux",
+    "moreLink": "Tất cả lựa chọn tải xuống"
   },
   "requirements": {
     "tag": "Hệ thống",
@@ -197,10 +199,34 @@
     "license": "Giấy phép",
     "copyright": "&copy; 2026 GameTS bởi <a href=\"https://www.caellab.com/\" target=\"_blank\" class=\"footer-inline-link\">CaelLab</a>. Bảo lưu mọi quyền. Trang dự án: <a href=\"https://gamets.caellab.com/gpcl/\" class=\"footer-inline-link\">gamets.caellab.com/gpcl</a>",
     "disclaimer": "GoodPlanCraftLauncher là công cụ mã nguồn mở của bên thứ ba và không có liên kết chính thức với <a href=\"https://www.minecraft.net/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Mojang Studios</a>, <a href=\"https://www.microsoft.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Microsoft</a>, <a href=\"https://www.xbox.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Xbox</a>. Minecraft là thương hiệu của Mojang Studios; dùng trình khởi chạy này cần giấy phép Minecraft hợp lệ.",
-    "licenseLine": "Giấy phép mã nguồn mở: <a href=\"https://www.caellab.com/license/cbs-v3\" target=\"_blank\" class=\"footer-inline-link\">CaelLab BY-SA Code License v3</a> | Mã nguồn mở trên <a href=\"https://github.com/CaelLab-org/GoodPlanCraftLauncher\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">GitHub</a>"
+    "licenseLine": "Giấy phép mã nguồn mở: <a href=\"https://www.caellab.com/license/cbs-v3\" target=\"_blank\" class=\"footer-inline-link\">CaelLab BY-SA Code License v3</a> | Mã nguồn mở trên <a href=\"https://github.com/CaelLab-org/GoodPlanCraftLauncher\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">GitHub</a>",
+    "download": "Tải xuống"
   },
   "labels": {
     "platform": "Windows 64-bit",
     "github": "GitHub"
+  },
+  "downloadPage": {
+    "tag": "Tải xuống",
+    "heading": "Tải GoodPlanCraftLauncher",
+    "intro": "Phiên bản mới nhất v{version}, cập nhật {date}. Chọn nền tảng của bạn.",
+    "winTitle": "Windows",
+    "winNote": "Dành cho Windows 10 / 11 (64 bit). Tải về và chạy trình cài đặt.",
+    "winButton": "Tải trình cài đặt",
+    "linuxTitle": "Linux",
+    "linuxBadge": "Thử nghiệm",
+    "linuxNote": "Dành cho Linux x64. Giải nén rồi chạy ./gpcl; Java cần thiết sẽ tự động được tải.",
+    "linuxUpdateNote": "Cập nhật trong ứng dụng chưa có trên Linux — khi có phiên bản mới hãy quay lại trang này.",
+    "linuxButton": "tar.gz",
+    "sizeLabel": "Dung lượng",
+    "hashLabel": "Tệp kiểm tra",
+    "historyLink": "Các phiên bản cũ & nhật ký thay đổi đầy đủ",
+    "githubLink": "GitHub Releases"
+  },
+  "downloadMeta": {
+    "title": "Tải xuống - GoodPlanCraftLauncher - CaelLabGameTS",
+    "description": "Tải GoodPlanCraftLauncher cho Windows và Linux: trình cài đặt mới nhất, tệp kiểm tra và tất cả các phiên bản cũ.",
+    "ogTitle": "Tải GoodPlanCraftLauncher",
+    "ogDescription": "Trình cài đặt mới nhất cho Windows và Linux (thử nghiệm), kèm tệp kiểm tra và phiên bản cũ."
   }
 }

@@ -1,0 +1,112 @@
+/*
+ * Copyright (c) 2026 Yunyun(云云) By 虚舟实验室(CaelLab) / CaelLabGameTS
+ * Licensed under the CaelLab BY-SA Code License, Version 3
+ * or any later version. https://www.caellab.com/license/cbs-v3.txt
+ */
+
+/* ===== 下载页 ===== */
+.dlp-page { background: var(--bg); }
+
+.dlp-hero {
+    padding: calc(var(--nav-h) + 56px) 0 8px;
+    background: linear-gradient(180deg, #e6f3fd 0%, #f1f8fd 46%, var(--bg) 100%);
+    text-align: center;
+}
+.dlp-hero .container { max-width: 780px; }
+.dlp-hero .cl-back {
+    display: inline-block;
+    margin-bottom: 22px;
+    color: var(--text-2);
+    font-size: 0.86rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+.dlp-hero .cl-back:hover { color: var(--accent); }
+.dlp-hero h1 {
+    font-size: clamp(1.8rem, 3.8vw, 2.4rem);
+    font-weight: 800;
+    letter-spacing: -0.6px;
+    margin-bottom: 12px;
+}
+.dlp-intro { color: var(--text-2); font-size: 1.02rem; }
+
+.dlp-main { padding-top: 40px; padding-bottom: 72px; }
+
+.dlp-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+    max-width: 980px;
+    margin: 0 auto;
+    align-items: stretch;
+}
+.dlp-card {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    max-width: none;
+    margin: 0;
+}
+.dlp-card .download-btn { margin-top: 4px; }
+.dlp-card .update-info { margin-top: 20px; justify-content: flex-start; text-align: left; }
+.dlp-card .update-info a { color: var(--accent); }
+.dlp-card .download-file { align-self: flex-start; }
+
+.dlp-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 20px;
+}
+.dlp-head-text h3 {
+    font-size: 1.15rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.dlp-head-text p {
+    margin-top: 5px;
+    color: var(--text-2);
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+.dlp-badge {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+}
+
+.dlp-note {
+    margin-top: 14px;
+    color: var(--text-3);
+    font-size: 0.82rem;
+    line-height: 1.65;
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+}
+.dlp-note-icon { flex-shrink: 0; margin-top: 2px; width: 14px; height: 14px; }
+
+.dlp-links {
+    margin-top: 34px;
+    text-align: center;
+    color: var(--text-3);
+    font-size: 0.92rem;
+}
+.dlp-links a { color: var(--accent); text-decoration: none; }
+.dlp-links a:hover { text-decoration: underline; }
+.dlp-links-sep { margin: 0 10px; }
+
+@media (max-width: 720px) {
+    .dlp-hero { padding-top: calc(var(--nav-h) + 36px); }
+    .dlp-grid { grid-template-columns: 1fr; }
+}

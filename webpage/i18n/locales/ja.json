@@ -31,7 +31,7 @@
     "versionLabel": "バージョン",
     "updatedLabel": "更新日",
     "platformLabel": "対応環境",
-    "platform": "Windows 10 以降",
+    "platform": "Windows / Linux",
     "iframeTitle": "GoodPlanCraftLauncher の画面",
     "windowNote": "上のウィンドウは<b>クリックできます</b> — ページの中で動いているランチャーの画面そのものです。",
     "iconAlt": "GoodPlanCraftLauncher のアイコン"
@@ -122,9 +122,11 @@
     "updatedLabel": "更新日",
     "platformLabel": "対応環境",
     "licenseLabel": "ライセンス",
-    "platform": "Windows 10 64 ビット",
+    "platform": "Windows / Linux",
     "license": "オープンソース・無料",
-    "github": "GitHub で見る"
+    "github": "GitHub で見る",
+    "linuxCard": "Linux 版をダウンロード",
+    "moreLink": "ダウンロードの選択肢"
   },
   "requirements": {
     "tag": "動作環境",
@@ -197,10 +199,34 @@
     "license": "ライセンス",
     "copyright": "&copy; 2026 GameTS by <a href=\"https://www.caellab.com/\" target=\"_blank\" class=\"footer-inline-link\">CaelLab</a>. All rights reserved. プロジェクトページ: <a href=\"https://gamets.caellab.com/gpcl/\" class=\"footer-inline-link\">gamets.caellab.com/gpcl</a>",
     "disclaimer": "GoodPlanCraftLauncher はサードパーティのオープンソースツールであり、<a href=\"https://www.minecraft.net/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Mojang Studios</a>、<a href=\"https://www.microsoft.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Microsoft</a>、<a href=\"https://www.xbox.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Xbox</a> とは公式な関係はありません。Minecraft は Mojang Studios の商標です。本ランチャーの利用には正規の Minecraft ライセンスが必要です。",
-    "licenseLine": "オープンソースライセンス: <a href=\"https://www.caellab.com/license/cbs-v3\" target=\"_blank\" class=\"footer-inline-link\">CaelLab BY-SA Code License v3</a> | <a href=\"https://github.com/CaelLab-org/GoodPlanCraftLauncher\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">GitHub</a> でオープンソース公開中"
+    "licenseLine": "オープンソースライセンス: <a href=\"https://www.caellab.com/license/cbs-v3\" target=\"_blank\" class=\"footer-inline-link\">CaelLab BY-SA Code License v3</a> | <a href=\"https://github.com/CaelLab-org/GoodPlanCraftLauncher\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">GitHub</a> でオープンソース公開中",
+    "download": "ダウンロード"
   },
   "labels": {
     "platform": "Windows 64 ビット",
     "github": "GitHub"
+  },
+  "downloadPage": {
+    "tag": "ダウンロード",
+    "heading": "GoodPlanCraftLauncher をダウンロード",
+    "intro": "最新版 v{version}（{date} 更新）。プラットフォームを選んでください。",
+    "winTitle": "Windows",
+    "winNote": "Windows 10 / 11（64 ビット）用。ダウンロードしてインストーラーを実行。",
+    "winButton": "インストーラーをダウンロード",
+    "linuxTitle": "Linux",
+    "linuxBadge": "実験的",
+    "linuxNote": "Linux x64 用。アーカイブを展開して ./gpcl を実行。必要な Java は自動でダウンロードされます。",
+    "linuxUpdateNote": "Linux ではアプリ内アップデートに未対応です。新バージョンの際はこのページから再ダウンロードしてください。",
+    "linuxButton": "tar.gz",
+    "sizeLabel": "サイズ",
+    "hashLabel": "チェックサム",
+    "historyLink": "過去のバージョンと更新履歴",
+    "githubLink": "GitHub Releases"
+  },
+  "downloadMeta": {
+    "title": "ダウンロード - GoodPlanCraftLauncher - CaelLabGameTS",
+    "description": "Windows / Linux 向け GoodPlanCraftLauncher のダウンロード：最新インストーラー、チェックサム、過去の全バージョン。",
+    "ogTitle": "GoodPlanCraftLauncher をダウンロード",
+    "ogDescription": "Windows / Linux（実験的）の最新インストーラー。チェックサムと過去バージョンも。"
   }
 }

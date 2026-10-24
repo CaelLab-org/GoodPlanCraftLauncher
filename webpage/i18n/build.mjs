@@ -155,6 +155,71 @@ function renderDownloadInfo(site, versionData) {
                     <span>${e(site.download.licenseLabel)} <b>${e(site.download.license)}</b></span>`;
 }
 
+const WIN_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 9h20"/><path d="M9 9v11"/></svg>';
+const LINUX_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2c-2.8 0-4 2.2-4 4.6 0 1.6-.4 2.9-1.2 4.1C5.6 12.5 4.6 14.4 4.6 16c0 3.3 3.3 6 7.4 6s7.4-2.7 7.4-6c0-1.6-1-3.5-2.2-5.3-.8-1.2-1.2-2.5-1.2-4.1C16 4.2 14.8 2 12 2Z"/><path d="M10 9.5h.01"/><path d="M14 9.5h.01"/></svg>';
+const FILE_ICON = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg>';
+
+function renderDownloadCards(versionData, site, locale) {
+  const latest = versionData.versions[0];
+  const d = site.downloadPage;
+  const dlRoot = 'https://dl.caellab.com/file/games/gpcl/';
+  const cards = [];
+
+  const winFile = latest.download ? latest.download.file : `GPCL-${versionData.latest}-Setup.exe`;
+  cards.push(`                <div class="download-card dlp-card">
+                    <div class="dlp-head">
+                        <span class="dl-icon">${WIN_ICON}</span>
+                        <div class="dlp-head-text">
+                            <h3>${e(d.winTitle)}</h3>
+                            <p>${e(d.winNote)}</p>
+                        </div>
+                    </div>
+                    <div class="download-file">${e(winFile)}</div>
+                    <a href="${dlRoot}${e(winFile)}" class="download-btn">
+                        ${ARROW_SVG}
+                        ${e(d.winButton)}
+                    </a>
+                    <div class="update-info">
+                        <span>${e(d.sizeLabel)} <b>${e(latest.download ? latest.download.size : '')}</b></span>
+                        <span>${e(d.hashLabel)} <b><a href="${dlRoot}GPCL.sha1">SHA1</a></b></span>
+                    </div>
+                </div>`);
+
+  if (latest.linux) {
+    const linuxFile = latest.linux.split('/').pop();
+    cards.push(`                <div class="download-card dlp-card">
+                    <div class="dlp-head">
+                        <span class="dl-icon">${LINUX_ICON}</span>
+                        <div class="dlp-head-text">
+                            <h3>${e(d.linuxTitle)} <span class="dlp-badge">${e(d.linuxBadge)}</span></h3>
+                            <p>${e(d.linuxNote)}</p>
+                        </div>
+                    </div>
+                    <div class="download-file">${e(linuxFile)}</div>
+                    <a href="${e(latest.linux)}" class="download-btn">
+                        ${ARROW_SVG}
+                        ${e(d.linuxButton)}
+                    </a>
+                    <div class="update-info">
+                        <span>${e(d.sizeLabel)} <b>${e(latest.linuxSize || '')}</b></span>
+                        <span>${e(d.hashLabel)} <b><a href="${e(latest.linux)}.sha256">SHA256</a></b></span>
+                    </div>
+                    <p class="dlp-note">${FILE_ICON.replace('<svg ', '<svg class="dlp-note-icon" ')} ${e(d.linuxUpdateNote)}</p>
+                </div>`);
+  }
+
+  return cards.join('\n');
+}
+
+function renderHomeLinuxExtra(versionData, site) {
+  const latest = versionData.versions[0];
+  if (!latest.linux) return '';
+  return `                    <a href="${e(latest.linux)}" class="hero-btn ghost">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2c-2.8 0-4 2.2-4 4.6 0 1.6-.4 2.9-1.2 4.1C5.6 12.5 4.6 14.4 4.6 16c0 3.3 3.3 6 7.4 6s7.4-2.7 7.4-6c0-1.6-1-3.5-2.2-5.3-.8-1.2-1.2-2.5-1.2-4.1C16 4.2 14.8 2 12 2Z"/><path d="M10 9.5h.01"/><path d="M14 9.5h.01"/></svg>
+                        ${e(site.download.linuxCard)}
+                    </a>`;
+}
+
 function renderHeroMeta(site, versionData) {
   return `                <span>${e(site.hero.versionLabel)} <b>v${e(versionData.latest)}</b></span>
                 <span class="sep">/</span>
@@ -198,16 +263,18 @@ function renderMobilePanel(locale, site) {
         <select aria-label="${e(site.nav.language)}" onchange="if(this.value)location.href=this.value" style="width:100%;margin-top:8px;padding:10px;background:var(--surface);border:1px solid var(--line);border-radius:8px;color:var(--text-2);font:inherit;font-size:0.95rem;">${options}</select>`;
 }
 
-function renderHreflang(locale, isHistory) {
-  const base = `https://gamets.caellab.com/gpcl/${isHistory ? 'history/' : ''}`;
+function renderHreflang(locale, sub) {
+  const base = `https://gamets.caellab.com/gpcl/${sub}`;
   const lines = LOCALES.map(item => `    <link rel="alternate" hreflang="${item.code}" href="${base}index.${item.slug}">`);
   lines.push(`    <link rel="alternate" hreflang="x-default" href="${base}index.en-us">`);
   return lines.join('\n');
 }
 
-function renderFooter(locale, site, isHistory) {
-  const homeHref = isHistory ? `../index.${locale.slug}` : `./index.${locale.slug}`;
-  const historyHref = isHistory ? `./index.${locale.slug}` : `./history/index.${locale.slug}`;
+function renderFooter(locale, site, sub) {
+  const homeHref = sub ? `../index.${locale.slug}` : `./index.${locale.slug}`;
+  const historyHref = sub === 'history/' ? `./index.${locale.slug}` : `./history/index.${locale.slug}`;
+  const downloadHref = sub === 'download/' ? `./index.${locale.slug}`
+    : sub === 'history/' ? `../download/index.${locale.slug}` : `./download/index.${locale.slug}`;
   return `<footer>
         <div class="footer-content">
             <div class="footer-brand">
@@ -220,6 +287,7 @@ function renderFooter(locale, site, isHistory) {
                 <h4>${e(site.footer.projects)}</h4>
                 <ul>
                     <li><a href="${homeHref}">GoodPlanCraftLauncher</a></li>
+                    <li><a href="${downloadHref}">${e(site.footer.download)}</a></li>
                     <li><a href="${docsUrl(locale)}">${e(site.footer.help)}</a></li>
                     <li><a href="${historyHref}">${e(site.footer.changelog)}</a></li>
                     <li><a href="/areyouok/">Are You OK?</a></li>
@@ -330,7 +398,7 @@ function fill(template, values) {
   });
 }
 
-function buildLocale(locale, templateHome, templateHistory) {
+function buildLocale(locale, templateHome, templateHistory, templateDownload) {
   const siteFile = path.join(here, 'locales', `${locale.slug}.json`);
   const versionFile = path.join(versionsRoot, `${locale.slug}.json`);
   if (!fs.existsSync(siteFile)) throw new Error(`Missing ${siteFile}`);
@@ -345,15 +413,17 @@ function buildLocale(locale, templateHome, templateHistory) {
     SLUG: locale.slug,
     HTML_LANG: locale.code,
     HTML_DIR: locale.dir,
-    HREFLANG_HOME: renderHreflang(locale, false),
-    HREFLANG_HISTORY: renderHreflang(locale, true),
+    HREFLANG_HOME: renderHreflang(locale, ''),
+    HREFLANG_HISTORY: renderHreflang(locale, 'history/'),
+    HREFLANG_DOWNLOAD: renderHreflang(locale, 'download/'),
     NAV_SOURCE: e(site.nav.source),
     NAV_OPEN_MENU: e(site.nav.openMenu),
     NAV_DOWNLOAD: e(site.nav.download.replace(/\{version\}/g, versionData.latest)),
     LANG_SELECT: renderLangSelect(locale, site),
     MOBILE_PANEL: renderMobilePanel(locale, site),
-    FOOTER_HOME: renderFooter(locale, site, false),
-    FOOTER_HISTORY: renderFooter(locale, site, true)
+    FOOTER_HOME: renderFooter(locale, site, ''),
+    FOOTER_HISTORY: renderFooter(locale, site, 'history/'),
+    FOOTER_DOWNLOAD: renderFooter(locale, site, 'download/')
   };
 
   const homeValues = {
@@ -389,6 +459,8 @@ function buildLocale(locale, templateHome, templateHistory) {
     INSTALLER_FILE: e(installerFile),
     DOWNLOAD_BUTTON: e(site.download.button),
     DOWNLOAD_INFO: renderDownloadInfo(site, versionData),
+    DOWNLOAD_LINUX_BTN: renderHomeLinuxExtra(versionData, site),
+    DOWNLOAD_MORE: e(site.download.moreLink),
     DOWNLOAD_GITHUB: e(site.download.github),
     REQ_TAG: e(site.requirements.tag),
     REQ_TITLE: e(site.requirements.title),
@@ -427,20 +499,44 @@ function buildLocale(locale, templateHome, templateHistory) {
     FOOTER: common.FOOTER_HISTORY
   };
 
+  const downloadValues = {
+    ...common,
+    HREFLANG: common.HREFLANG_DOWNLOAD,
+    META_TITLE: e(site.downloadMeta.title),
+    META_DESC: e(site.downloadMeta.description),
+    META_KEYWORDS: e(site.meta.keywords),
+    OG_TITLE: e(site.downloadMeta.ogTitle),
+    OG_DESC: e(site.downloadMeta.ogDescription),
+    OG_URL: 'https://gamets.caellab.com/gpcl/download/',
+    HOME_ANCHOR: `../index.${locale.slug}#`,
+    DLP_BACK: e(site.history.page.back),
+    DLP_TAG: e(site.downloadPage.tag),
+    DLP_HEADING: e(site.downloadPage.heading),
+    DLP_INTRO: e(site.downloadPage.intro
+      .replace(/\{version\}/g, versionData.latest)
+      .replace(/\{date\}/g, versionData.updated)),
+    DLP_CARDS: renderDownloadCards(versionData, site, locale),
+    DLP_HISTORY: e(site.downloadPage.historyLink),
+    DLP_GITHUB: e(site.downloadPage.githubLink),
+    FOOTER: common.FOOTER_DOWNLOAD
+  };
+
   const homeHtml = fill(templateHome, homeValues);
   const historyHtml = fill(templateHistory, historyValues);
+  const downloadHtml = fill(templateDownload, downloadValues);
 
-  for (const [name, html] of [['home', homeHtml], ['history', historyHtml]]) {
+  for (const [name, html] of [['home', homeHtml], ['history', historyHtml], ['download', downloadHtml]]) {
     const leftover = html.match(/\{\{[A-Z0-9_]+\}\}/);
     if (leftover) throw new Error(`${locale.slug} ${name}: unresolved ${leftover[0]}`);
   }
 
   fs.writeFileSync(path.join(siteRoot, `index.${locale.slug}.html`), homeHtml, 'utf8');
   fs.writeFileSync(path.join(siteRoot, 'history', `index.${locale.slug}.html`), historyHtml, 'utf8');
+  fs.writeFileSync(path.join(siteRoot, 'download', `index.${locale.slug}.html`), downloadHtml, 'utf8');
 }
 
-function renderEntry(isHistory) {
-  const base = `https://gamets.caellab.com/gpcl/${isHistory ? 'history/' : ''}`;
+function renderEntry(sub) {
+  const base = `https://gamets.caellab.com/gpcl/${sub}`;
   const hreflang = LOCALES.map(item => `    <link rel="alternate" hreflang="${item.code}" href="${base}index.${item.slug}">`).join('\n');
   const map = LOCALES.map(item => `'${item.slug}':'${item.slug}'`).join(',');
   return `<!DOCTYPE html>
@@ -477,6 +573,7 @@ ${hreflang}
 function main() {
   const templateHome = fs.readFileSync(path.join(here, 'home.template.html'), 'utf8');
   const templateHistory = fs.readFileSync(path.join(here, 'history.template.html'), 'utf8');
+  const templateDownload = fs.readFileSync(path.join(here, 'download.template.html'), 'utf8');
   const baseSite = readJson(path.join(here, 'locales', 'en-us.json'));
   const baseVersions = readJson(path.join(versionsRoot, 'en-us.json'));
   const problems = [];
@@ -511,10 +608,11 @@ function main() {
     return;
   }
 
-  for (const locale of targets) buildLocale(locale, templateHome, templateHistory);
-  fs.writeFileSync(path.join(siteRoot, 'index.html'), renderEntry(false), 'utf8');
-  fs.writeFileSync(path.join(siteRoot, 'history', 'index.html'), renderEntry(true), 'utf8');
-  console.log(`Built ${targets.length} locales x 2 pages`);
+  for (const locale of targets) buildLocale(locale, templateHome, templateHistory, templateDownload);
+  fs.writeFileSync(path.join(siteRoot, 'index.html'), renderEntry(''), 'utf8');
+  fs.writeFileSync(path.join(siteRoot, 'history', 'index.html'), renderEntry('history/'), 'utf8');
+  fs.writeFileSync(path.join(siteRoot, 'download', 'index.html'), renderEntry('download/'), 'utf8');
+  console.log(`Built ${targets.length} locales x 3 pages`);
 }
 
 main();

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="refresh" content="1; url=./index.en-us">
+<title>GoodPlanCraftLauncher</title>
+    <link rel="alternate" hreflang="en-US" href="https://gamets.caellab.com/gpcl/download/index.en-us">
+    <link rel="alternate" hreflang="zh-CN" href="https://gamets.caellab.com/gpcl/download/index.zh-cn">
+    <link rel="alternate" hreflang="zh-TW" href="https://gamets.caellab.com/gpcl/download/index.zh-tw">
+    <link rel="alternate" hreflang="ar" href="https://gamets.caellab.com/gpcl/download/index.ar">
+    <link rel="alternate" hreflang="bn" href="https://gamets.caellab.com/gpcl/download/index.bn">
+    <link rel="alternate" hreflang="de" href="https://gamets.caellab.com/gpcl/download/index.de">
+    <link rel="alternate" hreflang="el" href="https://gamets.caellab.com/gpcl/download/index.el">
+    <link rel="alternate" hreflang="es" href="https://gamets.caellab.com/gpcl/download/index.es">
+    <link rel="alternate" hreflang="fa" href="https://gamets.caellab.com/gpcl/download/index.fa">
+    <link rel="alternate" hreflang="fr" href="https://gamets.caellab.com/gpcl/download/index.fr">
+    <link rel="alternate" hreflang="he" href="https://gamets.caellab.com/gpcl/download/index.he">
+    <link rel="alternate" hreflang="hi" href="https://gamets.caellab.com/gpcl/download/index.hi">
+    <link rel="alternate" hreflang="id" href="https://gamets.caellab.com/gpcl/download/index.id">
+    <link rel="alternate" hreflang="it" href="https://gamets.caellab.com/gpcl/download/index.it">
+    <link rel="alternate" hreflang="ja" href="https://gamets.caellab.com/gpcl/download/index.ja">
+    <link rel="alternate" hreflang="ko" href="https://gamets.caellab.com/gpcl/download/index.ko">
+    <link rel="alternate" hreflang="ms" href="https://gamets.caellab.com/gpcl/download/index.ms">
+    <link rel="alternate" hreflang="nl" href="https://gamets.caellab.com/gpcl/download/index.nl">
+    <link rel="alternate" hreflang="pl" href="https://gamets.caellab.com/gpcl/download/index.pl">
+    <link rel="alternate" hreflang="pt" href="https://gamets.caellab.com/gpcl/download/index.pt">
+    <link rel="alternate" hreflang="ru" href="https://gamets.caellab.com/gpcl/download/index.ru">
+    <link rel="alternate" hreflang="th" href="https://gamets.caellab.com/gpcl/download/index.th">
+    <link rel="alternate" hreflang="tr" href="https://gamets.caellab.com/gpcl/download/index.tr">
+    <link rel="alternate" hreflang="uk" href="https://gamets.caellab.com/gpcl/download/index.uk">
+    <link rel="alternate" hreflang="vi" href="https://gamets.caellab.com/gpcl/download/index.vi">
+    <link rel="alternate" hreflang="x-default" href="https://gamets.caellab.com/gpcl/download/index.en-us">
+<script>
+(function () {
+  var tags = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || navigator.userLanguage || 'en'];
+  var supported = {'en-us':'en-us','zh-cn':'zh-cn','zh-tw':'zh-tw','ar':'ar','bn':'bn','de':'de','el':'el','es':'es','fa':'fa','fr':'fr','he':'he','hi':'hi','id':'id','it':'it','ja':'ja','ko':'ko','ms':'ms','nl':'nl','pl':'pl','pt':'pt','ru':'ru','th':'th','tr':'tr','uk':'uk','vi':'vi'};
+  function pick(tag) {
+    var t = String(tag || '').toLowerCase();
+    if (t.indexOf('zh') === 0) return /hant|tw|hk|mo/.test(t) ? 'zh-tw' : 'zh-cn';
+    var base = t.split('-')[0];
+    return supported[base] || supported[t] || '';
+  }
+  var slug = '';
+  for (var i = 0; i < tags.length && !slug; i++) slug = pick(tags[i]);
+  location.replace('./index.' + (slug || 'en-us') + location.search + location.hash);
+})();
+</script>
+</head>
+<body>
+</body>
+</html>

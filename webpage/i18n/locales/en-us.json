@@ -31,7 +31,7 @@
     "versionLabel": "Version",
     "updatedLabel": "Updated",
     "platformLabel": "Platform",
-    "platform": "Windows 10+",
+    "platform": "Windows / Linux",
     "iframeTitle": "GoodPlanCraftLauncher interface",
     "windowNote": "The window above is <b>clickable</b> — it is the launcher interface itself, running inside the web page.",
     "iconAlt": "GoodPlanCraftLauncher icon"
@@ -122,9 +122,11 @@
     "updatedLabel": "Updated",
     "platformLabel": "Platform",
     "licenseLabel": "License",
-    "platform": "Windows 10 64-bit",
+    "platform": "Windows / Linux",
     "license": "Open source, free",
-    "github": "View on GitHub"
+    "github": "View on GitHub",
+    "linuxCard": "Download Linux build",
+    "moreLink": "All download options"
   },
   "requirements": {
     "tag": "System",
@@ -197,10 +199,34 @@
     "license": "License",
     "copyright": "&copy; 2026 GameTS by <a href=\"https://www.caellab.com/\" target=\"_blank\" class=\"footer-inline-link\">CaelLab</a>. All rights reserved. Project home: <a href=\"https://gamets.caellab.com/gpcl/\" class=\"footer-inline-link\">gamets.caellab.com/gpcl</a>",
     "disclaimer": "GoodPlanCraftLauncher is a third-party open source tool and has no official affiliation with <a href=\"https://www.minecraft.net/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Mojang Studios</a>, <a href=\"https://www.microsoft.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Microsoft</a>, <a href=\"https://www.xbox.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Xbox</a>. Minecraft is a trademark of Mojang Studios; using this launcher requires a valid Minecraft license.",
-    "licenseLine": "Open source license: <a href=\"https://www.caellab.com/license/cbs-v3\" target=\"_blank\" class=\"footer-inline-link\">CaelLab BY-SA Code License v3</a> | Open Source on <a href=\"https://github.com/CaelLab-org/GoodPlanCraftLauncher\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">GitHub</a>"
+    "licenseLine": "Open source license: <a href=\"https://www.caellab.com/license/cbs-v3\" target=\"_blank\" class=\"footer-inline-link\">CaelLab BY-SA Code License v3</a> | Open Source on <a href=\"https://github.com/CaelLab-org/GoodPlanCraftLauncher\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">GitHub</a>",
+    "download": "Download"
   },
   "labels": {
     "platform": "Windows 64-bit",
     "github": "GitHub"
+  },
+  "downloadPage": {
+    "tag": "Download",
+    "heading": "Download GoodPlanCraftLauncher",
+    "intro": "Latest version v{version}, updated {date}. Pick your platform.",
+    "winTitle": "Windows",
+    "winNote": "For Windows 10 / 11 (64-bit). Download and run the installer.",
+    "winButton": "Download installer",
+    "linuxTitle": "Linux",
+    "linuxBadge": "Experimental",
+    "linuxNote": "For Linux x64. Extract the archive and run ./gpcl; the launcher downloads the Java runtime it needs.",
+    "linuxUpdateNote": "In-app updates are unavailable on Linux for now — come back to this page for new versions.",
+    "linuxButton": "tar.gz",
+    "sizeLabel": "Size",
+    "hashLabel": "Checksum",
+    "historyLink": "Older versions & full changelog",
+    "githubLink": "GitHub Releases"
+  },
+  "downloadMeta": {
+    "title": "Download - GoodPlanCraftLauncher - CaelLabGameTS",
+    "description": "Download GoodPlanCraftLauncher for Windows and Linux: latest installers, checksums, and all previous versions.",
+    "ogTitle": "Download GoodPlanCraftLauncher",
+    "ogDescription": "Latest installers for Windows and Linux (experimental), with checksums and older versions."
   }
 }

@@ -31,7 +31,7 @@
     "versionLabel": "Versi",
     "updatedLabel": "Dikemas kini",
     "platformLabel": "Platform",
-    "platform": "Windows 10+",
+    "platform": "Windows / Linux",
     "iframeTitle": "Antara muka GoodPlanCraftLauncher",
     "windowNote": "Tetingkap di atas boleh <b>diklik</b> — ia ialah antara muka pelancar itu sendiri, yang berjalan di dalam halaman web.",
     "iconAlt": "Ikon GoodPlanCraftLauncher"
@@ -122,9 +122,11 @@
     "updatedLabel": "Dikemas kini",
     "platformLabel": "Platform",
     "licenseLabel": "Lesen",
-    "platform": "Windows 10 64-bit",
+    "platform": "Windows / Linux",
     "license": "Sumber terbuka, percuma",
-    "github": "Lihat di GitHub"
+    "github": "Lihat di GitHub",
+    "linuxCard": "Muat turun versi Linux",
+    "moreLink": "Semua pilihan muat turun"
   },
   "requirements": {
     "tag": "Sistem",
@@ -197,10 +199,34 @@
     "license": "Lesen",
     "copyright": "&copy; 2026 GameTS oleh <a href=\"https://www.caellab.com/\" target=\"_blank\" class=\"footer-inline-link\">CaelLab</a>. Hak cipta terpelihara. Halaman projek: <a href=\"https://gamets.caellab.com/gpcl/\" class=\"footer-inline-link\">gamets.caellab.com/gpcl</a>",
     "disclaimer": "GoodPlanCraftLauncher ialah alat sumber terbuka pihak ketiga dan tidak mempunyai kaitan rasmi dengan <a href=\"https://www.minecraft.net/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Mojang Studios</a>, <a href=\"https://www.microsoft.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Microsoft</a>, <a href=\"https://www.xbox.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Xbox</a>. Minecraft ialah tanda dagangan Mojang Studios; penggunaan pelancar ini memerlukan lesen Minecraft yang sah.",
-    "licenseLine": "Lesen sumber terbuka: <a href=\"https://www.caellab.com/license/cbs-v3\" target=\"_blank\" class=\"footer-inline-link\">CaelLab BY-SA Code License v3</a> | Sumber Terbuka di <a href=\"https://github.com/CaelLab-org/GoodPlanCraftLauncher\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">GitHub</a>"
+    "licenseLine": "Lesen sumber terbuka: <a href=\"https://www.caellab.com/license/cbs-v3\" target=\"_blank\" class=\"footer-inline-link\">CaelLab BY-SA Code License v3</a> | Sumber Terbuka di <a href=\"https://github.com/CaelLab-org/GoodPlanCraftLauncher\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">GitHub</a>",
+    "download": "Muat turun"
   },
   "labels": {
     "platform": "Windows 64-bit",
     "github": "GitHub"
+  },
+  "downloadPage": {
+    "tag": "Muat turun",
+    "heading": "Muat turun GoodPlanCraftLauncher",
+    "intro": "Versi terkini v{version}, dikemas kini {date}. Pilih platform anda.",
+    "winTitle": "Windows",
+    "winNote": "Untuk Windows 10 / 11 (64-bit). Muat turun dan jalankan pemasangnya.",
+    "winButton": "Muat turun pemasang",
+    "linuxTitle": "Linux",
+    "linuxBadge": "Eksperimen",
+    "linuxNote": "Untuk Linux x64. Nyaharkib arkib dan jalankan ./gpcl; Java yang diperlukan dimuat turun secara automatik.",
+    "linuxUpdateNote": "Kemas kini dalam aplikasi belum tersedia di Linux — kembali ke halaman ini untuk versi baharu.",
+    "linuxButton": "tar.gz",
+    "sizeLabel": "Saiz",
+    "hashLabel": "Fail checksum",
+    "historyLink": "Versi lama & log perubahan penuh",
+    "githubLink": "GitHub Releases"
+  },
+  "downloadMeta": {
+    "title": "Muat turun - GoodPlanCraftLauncher - CaelLabGameTS",
+    "description": "Muat turun GoodPlanCraftLauncher untuk Windows dan Linux: pemasang terkini, checksum dan semua versi lama.",
+    "ogTitle": "Muat turun GoodPlanCraftLauncher",
+    "ogDescription": "Pemasang terkini untuk Windows dan Linux (eksperimen), dengan checksum dan versi lama."
   }
 }

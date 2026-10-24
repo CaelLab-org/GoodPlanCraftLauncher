@@ -31,7 +31,7 @@
     "versionLabel": "نسخه",
     "updatedLabel": "به‌روزرسانی",
     "platformLabel": "پلتفرم",
-    "platform": "Windows 10+",
+    "platform": "Windows / Linux",
     "iframeTitle": "رابط GoodPlanCraftLauncher",
     "windowNote": "پنجره بالا <b>قابل کلیک</b> است — این خود رابط لانچر است که داخل صفحه وب اجرا می‌شود.",
     "iconAlt": "آیکون GoodPlanCraftLauncher"
@@ -122,9 +122,11 @@
     "updatedLabel": "به‌روزرسانی",
     "platformLabel": "پلتفرم",
     "licenseLabel": "مجوز",
-    "platform": "Windows 10 64-bit",
+    "platform": "Windows / Linux",
     "license": "متن‌باز، رایگان",
-    "github": "مشاهده در GitHub"
+    "github": "مشاهده در GitHub",
+    "linuxCard": "دانلود نسخه لینوکس",
+    "moreLink": "همه گزینه‌های دانلود"
   },
   "requirements": {
     "tag": "سیستم",
@@ -197,10 +199,34 @@
     "license": "مجوز",
     "copyright": "&copy; 2026 GameTS by <a href=\"https://www.caellab.com/\" target=\"_blank\" class=\"footer-inline-link\">CaelLab</a>. کلیه حقوق محفوظ است. صفحه پروژه: <a href=\"https://gamets.caellab.com/gpcl/\" class=\"footer-inline-link\">gamets.caellab.com/gpcl</a>",
     "disclaimer": "GoodPlanCraftLauncher یک ابزار متن‌باز شخص ثالث است و هیچ وابستگی رسمی به <a href=\"https://www.minecraft.net/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Mojang Studios</a>، <a href=\"https://www.microsoft.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Microsoft</a>، <a href=\"https://www.xbox.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Xbox</a> ندارد. Minecraft علامت تجاری Mojang Studios است؛ استفاده از این لانچر به مجوز معتبر Minecraft نیاز دارد.",
-    "licenseLine": "مجوز متن‌باز: <a href=\"https://www.caellab.com/license/cbs-v3\" target=\"_blank\" class=\"footer-inline-link\">CaelLab BY-SA Code License v3</a> | متن‌باز در <a href=\"https://github.com/CaelLab-org/GoodPlanCraftLauncher\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">GitHub</a>"
+    "licenseLine": "مجوز متن‌باز: <a href=\"https://www.caellab.com/license/cbs-v3\" target=\"_blank\" class=\"footer-inline-link\">CaelLab BY-SA Code License v3</a> | متن‌باز در <a href=\"https://github.com/CaelLab-org/GoodPlanCraftLauncher\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">GitHub</a>",
+    "download": "دانلود"
   },
   "labels": {
     "platform": "Windows 64-bit",
     "github": "GitHub"
+  },
+  "downloadPage": {
+    "tag": "دانلود",
+    "heading": "دانلود GoodPlanCraftLauncher",
+    "intro": "آخرین نسخه v{version}، به‌روزشده در {date}. پلتفرم خود را انتخاب کنید.",
+    "winTitle": "ویندوز",
+    "winNote": "برای Windows 10 / 11 (۶۴ بیتی). دانلود و اجرای نصب‌کننده.",
+    "winButton": "دانلود نصب‌کننده",
+    "linuxTitle": "لینوکس",
+    "linuxBadge": "آزمایشی",
+    "linuxNote": "برای لینوکس x64. بسته را از حالت فشرده خارج کنید و ./gpcl را اجرا کنید؛ Java لازم را خود لانچر می‌گیرد.",
+    "linuxUpdateNote": "به‌روزرسانی درون‌برنامه‌ای روی لینوکس فعلاً در دسترس نیست — برای نسخه‌های جدید به همین صفحه برگردید.",
+    "linuxButton": "tar.gz",
+    "sizeLabel": "حجم",
+    "hashLabel": "فایل بررسی",
+    "historyLink": "نسخه‌های قدیمی و ثبت تغییرات کامل",
+    "githubLink": "انتشارات GitHub"
+  },
+  "downloadMeta": {
+    "title": "دانلود - GoodPlanCraftLauncher - CaelLabGameTS",
+    "description": "دانلود GoodPlanCraftLauncher برای ویندوز و لینوکس: جدیدترین نصب‌کننده‌ها، فایل‌های بررسی و همه نسخه‌های قدیمی.",
+    "ogTitle": "دانلود GoodPlanCraftLauncher",
+    "ogDescription": "جدیدترین نصب‌کننده‌ها برای ویندوز و لینوکس (آزمایشی) با فایل بررسی و نسخه‌های قدیمی."
   }
 }

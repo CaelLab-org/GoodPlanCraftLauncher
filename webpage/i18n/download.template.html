@@ -1,0 +1,123 @@
+<!--
+ Copyright (c) 2026 Yunyun(云云) By 虚舟实验室(CaelLab) / CaelLabGameTS
+ Licensed under the CaelLab BY-SA Code License, Version 3
+ or any later version. https://www.caellab.com/license/cbs-v3.txt
+ Source: https://github.com/CaelLab-org/GoodPlanCraftLauncher
+ Project: https://gamets.caellab.com/gpcl/
+-->
+<!DOCTYPE html>
+<html lang="{{HTML_LANG}}" dir="{{HTML_DIR}}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{META_TITLE}}</title>
+    <meta name="description" content="{{META_DESC}}">
+    <meta name="author" content="CaelLabGameTS">
+    <meta name="theme-color" content="#f6fafd">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{OG_TITLE}}">
+    <meta property="og:description" content="{{OG_DESC}}">
+    <meta property="og:url" content="{{OG_URL}}">
+    <meta property="og:site_name" content="CaelLabGameTS">
+    {{HREFLANG}}
+    <link rel="icon" type="image/png" href="../icon.png">
+    <link rel="stylesheet" href="../style.css?v=k7w2n9x4">
+    <link rel="stylesheet" href="./download.css?v=r4m8t3q9">
+</head>
+<body class="dlp-page">
+
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="https://gamets.caellab.com" class="logo">
+                <img src="/logo.png" alt="GameTS">
+            </a>
+            <ul class="nav-links">
+                <li>
+                    <div class="dropdown" id="sourceDropdown">
+                        <button class="dropdown-toggle" onclick="toggleDropdown('sourceDropdown')">
+                            <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                            {{NAV_SOURCE}}
+                            <span class="arrow">&#9662;</span>
+                        </button>
+                        <div class="dropdown-menu">
+                            <div class="menu-label">GitHub</div>
+                            <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher" target="_blank" rel="noopener">
+                                <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                                GoodPlanCraftLauncher
+                            </a>
+                        </div>
+                    </div>
+                </li>
+                <li class="lang-switch">{{LANG_SELECT}}</li>
+                <li><a href="{{HOME_ANCHOR}}download" class="nav-cta">&#9662; {{NAV_DOWNLOAD}}</a></li>
+            </ul>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="{{NAV_OPEN_MENU}}" aria-expanded="false">&#9776;</button>
+        </div>
+    </nav>
+    <div class="mobile-panel" id="mobilePanel">
+{{MOBILE_PANEL}}
+    </div>
+
+    <header class="dlp-hero">
+        <div class="container">
+            <a href="../index.{{SLUG}}" class="cl-back">{{DLP_BACK}}</a>
+            <div class="section-tag">{{DLP_TAG}}</div>
+            <h1>{{DLP_HEADING}}</h1>
+            <p class="dlp-intro">{{DLP_INTRO}}</p>
+        </div>
+    </header>
+
+    <section class="download dlp-main">
+        <div class="container">
+            <div class="dlp-grid">
+{{DLP_CARDS}}
+            </div>
+            <div class="dlp-links">
+                <a href="../history/index.{{SLUG}}">{{DLP_HISTORY}}</a>
+                <span class="dlp-links-sep">·</span>
+                <a href="https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases" target="_blank" rel="noopener">{{DLP_GITHUB}}</a>
+            </div>
+        </div>
+    </section>
+
+    {{FOOTER}}
+
+    <script>
+        var navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', function() {
+            navbar.classList.toggle('scrolled', window.scrollY > 40);
+        }, { passive: true });
+
+        var mobileBtn = document.getElementById('mobileMenuBtn');
+        var mobilePanel = document.getElementById('mobilePanel');
+        mobileBtn.addEventListener('click', function() {
+            var open = mobilePanel.classList.toggle('open');
+            mobileBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+        mobilePanel.querySelectorAll('a').forEach(function(a) {
+            a.addEventListener('click', function() {
+                mobilePanel.classList.remove('open');
+                mobileBtn.setAttribute('aria-expanded', 'false');
+            });
+        });
+
+        function toggleDropdown(id) {
+            var dropdown = document.getElementById(id);
+            var isActive = dropdown.classList.contains('active');
+            document.querySelectorAll('.dropdown').forEach(function(d) {
+                d.classList.remove('active');
+            });
+            if (!isActive) {
+                dropdown.classList.add('active');
+            }
+        }
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown').forEach(function(d) {
+                    d.classList.remove('active');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

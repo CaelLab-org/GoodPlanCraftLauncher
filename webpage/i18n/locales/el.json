@@ -31,7 +31,7 @@
     "versionLabel": "Έκδοση",
     "updatedLabel": "Ενημερώθηκε",
     "platformLabel": "Πλατφόρμα",
-    "platform": "Windows 10+",
+    "platform": "Windows / Linux",
     "iframeTitle": "Διεπαφή GoodPlanCraftLauncher",
     "windowNote": "Το παράθυρο παραπάνω είναι <b>διαδραστικό</b> — είναι η ίδια η διεπαφή του εκκινητή, που τρέχει μέσα στην ιστοσελίδα.",
     "iconAlt": "Εικονίδιο GoodPlanCraftLauncher"
@@ -122,9 +122,11 @@
     "updatedLabel": "Ενημερώθηκε",
     "platformLabel": "Πλατφόρμα",
     "licenseLabel": "Άδεια",
-    "platform": "Windows 10 64-bit",
+    "platform": "Windows / Linux",
     "license": "Ανοιχτός κώδικας, δωρεάν",
-    "github": "Δες στο GitHub"
+    "github": "Δες στο GitHub",
+    "linuxCard": "Λήψη έκδοσης Linux",
+    "moreLink": "Όλες οι επιλογές λήψης"
   },
   "requirements": {
     "tag": "Σύστημα",
@@ -197,10 +199,34 @@
     "license": "Άδεια",
     "copyright": "&copy; 2026 GameTS από <a href=\"https://www.caellab.com/\" target=\"_blank\" class=\"footer-inline-link\">CaelLab</a>. Με την επιφύλαξη παντός δικαιώματος. Αρχική σελίδα έργου: <a href=\"https://gamets.caellab.com/gpcl/\" class=\"footer-inline-link\">gamets.caellab.com/gpcl</a>",
     "disclaimer": "Το GoodPlanCraftLauncher είναι τρίτο εργαλείο ανοιχτού κώδικα και δεν έχει επίσημη σχέση με <a href=\"https://www.minecraft.net/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Mojang Studios</a>, <a href=\"https://www.microsoft.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Microsoft</a>, <a href=\"https://www.xbox.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Xbox</a>. Το Minecraft είναι εμπορικό σήμα της Mojang Studios· η χρήση αυτού του εκκινητή απαιτεί έγκυρη άδεια Minecraft.",
-    "licenseLine": "Άδεια ανοιχτού κώδικα: <a href=\"https://www.caellab.com/license/cbs-v3\" target=\"_blank\" class=\"footer-inline-link\">CaelLab BY-SA Code License v3</a> | Ανοιχτός κώδικας στο <a href=\"https://github.com/CaelLab-org/GoodPlanCraftLauncher\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">GitHub</a>"
+    "licenseLine": "Άδεια ανοιχτού κώδικα: <a href=\"https://www.caellab.com/license/cbs-v3\" target=\"_blank\" class=\"footer-inline-link\">CaelLab BY-SA Code License v3</a> | Ανοιχτός κώδικας στο <a href=\"https://github.com/CaelLab-org/GoodPlanCraftLauncher\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">GitHub</a>",
+    "download": "Λήψη"
   },
   "labels": {
     "platform": "Windows 64-bit",
     "github": "GitHub"
+  },
+  "downloadPage": {
+    "tag": "Λήψη",
+    "heading": "Λήψη GoodPlanCraftLauncher",
+    "intro": "Τελευταία έκδοση v{version}, ενημερώθηκε στις {date}. Επιλέξτε πλατφόρμα.",
+    "winTitle": "Windows",
+    "winNote": "Για Windows 10 / 11 (64-bit). Κατεβάστε και εκτελέστε το πρόγραμμα εγκατάστασης.",
+    "winButton": "Λήψη εγκαταστάτη",
+    "linuxTitle": "Linux",
+    "linuxBadge": "Πειραματική",
+    "linuxNote": "Για Linux x64. Αποσυμπιέστε το αρχείο και εκτελέστε ./gpcl· η Java κατεβαίνει αυτόματα.",
+    "linuxUpdateNote": "Η ενημέρωση εντός εφαρμογής δεν είναι ακόμη διαθέσιμη σε Linux — για νέες εκδόσεις επιστρέψτε σε αυτή τη σελίδα.",
+    "linuxButton": "tar.gz",
+    "sizeLabel": "Μέγεθος",
+    "hashLabel": "Αρχείο ελέγχου",
+    "historyLink": "Παλαιότερες εκδόσεις & πλήρες ιστορικό",
+    "githubLink": "GitHub Releases"
+  },
+  "downloadMeta": {
+    "title": "Λήψη - GoodPlanCraftLauncher - CaelLabGameTS",
+    "description": "Λήψη GoodPlanCraftLauncher για Windows και Linux: τελευταίοι εγκαταστάτες, αρχεία ελέγχου και όλες οι παλαιότερες εκδόσεις.",
+    "ogTitle": "Λήψη GoodPlanCraftLauncher",
+    "ogDescription": "Τελευταίοι εγκαταστάτες για Windows και Linux (πειραματικά), με αρχεία ελέγχου και παλαιότερες εκδόσεις."
   }
 }

@@ -31,7 +31,7 @@
     "versionLabel": "גרסה",
     "updatedLabel": "עודכן",
     "platformLabel": "פלטפורמה",
-    "platform": "Windows 10+",
+    "platform": "Windows / Linux",
     "iframeTitle": "ממשק GoodPlanCraftLauncher",
     "windowNote": "החלון שלמעלה הוא <b>לחיץ</b> — זהו ממשק המשגר עצמו, שרץ בתוך דף האינטרנט.",
     "iconAlt": "סמל GoodPlanCraftLauncher"
@@ -122,9 +122,11 @@
     "updatedLabel": "עודכן",
     "platformLabel": "פלטפורמה",
     "licenseLabel": "רישיון",
-    "platform": "Windows 10 64-bit",
+    "platform": "Windows / Linux",
     "license": "קוד פתוח, חינמי",
-    "github": "צפייה ב-GitHub"
+    "github": "צפייה ב-GitHub",
+    "linuxCard": "הורדת גרסת לינוקס",
+    "moreLink": "כל אפשרויות ההורדה"
   },
   "requirements": {
     "tag": "מערכת",
@@ -197,10 +199,34 @@
     "license": "רישיון",
     "copyright": "&copy; 2026 GameTS מאת <a href=\"https://www.caellab.com/\" target=\"_blank\" class=\"footer-inline-link\">CaelLab</a>. כל הזכויות שמורות. בית הפרויקט: <a href=\"https://gamets.caellab.com/gpcl/\" class=\"footer-inline-link\">gamets.caellab.com/gpcl</a>",
     "disclaimer": "GoodPlanCraftLauncher הוא כלי צד שלישי בקוד פתוח ואינו קשור רשמית ל-<a href=\"https://www.minecraft.net/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Mojang Studios</a>, <a href=\"https://www.microsoft.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Microsoft</a>, <a href=\"https://www.xbox.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Xbox</a>. Minecraft הוא סימן מסחרי של Mojang Studios; שימוש במשגר זה מחייב רישיון Minecraft תקף.",
-    "licenseLine": "רישיון קוד פתוח: <a href=\"https://www.caellab.com/license/cbs-v3\" target=\"_blank\" class=\"footer-inline-link\">CaelLab BY-SA Code License v3</a> | קוד פתוח ב-<a href=\"https://github.com/CaelLab-org/GoodPlanCraftLauncher\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">GitHub</a>"
+    "licenseLine": "רישיון קוד פתוח: <a href=\"https://www.caellab.com/license/cbs-v3\" target=\"_blank\" class=\"footer-inline-link\">CaelLab BY-SA Code License v3</a> | קוד פתוח ב-<a href=\"https://github.com/CaelLab-org/GoodPlanCraftLauncher\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">GitHub</a>",
+    "download": "הורדה"
   },
   "labels": {
     "platform": "Windows 64-bit",
     "github": "GitHub"
+  },
+  "downloadPage": {
+    "tag": "הורדה",
+    "heading": "הורדת GoodPlanCraftLauncher",
+    "intro": "הגרסה האחרונה v{version}, עודכנה ב־{date}. בחרו פלטפורמה.",
+    "winTitle": "Windows",
+    "winNote": "עבור Windows 10 / 11 (64 סיביות). מורידים ומריצים את תוכנת ההתקנה.",
+    "winButton": "הורדת תוכנת ההתקנה",
+    "linuxTitle": "Linux",
+    "linuxBadge": "ניסיוני",
+    "linuxNote": "עבור לינוקס x64. חולצים את הארכיון ומריצים ‎./gpcl‎; ה-Java הדרושה מורדת אוטומטית.",
+    "linuxUpdateNote": "עדכון בתוך האפליקציה אינו זמין בלינוקס כרגע — לגרסאות חדשות חוזרים לעמוד הזה.",
+    "linuxButton": "tar.gz",
+    "sizeLabel": "גודל",
+    "hashLabel": "קובץ בדיקה",
+    "historyLink": "גרסאות קודמות ויומן השינויים המלא",
+    "githubLink": "מהדורות GitHub"
+  },
+  "downloadMeta": {
+    "title": "הורדה - GoodPlanCraftLauncher - CaelLabGameTS",
+    "description": "הורדת GoodPlanCraftLauncher לווינדוס וללינוקס: תוכנות ההתקנה העדכניות, קבצי בדיקה וכל הגרסאות הקודמות.",
+    "ogTitle": "הורדת GoodPlanCraftLauncher",
+    "ogDescription": "תוכנות ההתקנה העדכניות לווינדוס וללינוקס (ניסיוני), עם קבצי בדיקה וגרסאות קודמות."
   }
 }

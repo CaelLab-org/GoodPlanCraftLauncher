@@ -31,7 +31,7 @@
     "versionLabel": "버전",
     "updatedLabel": "업데이트",
     "platformLabel": "플랫폼",
-    "platform": "Windows 10 이상",
+    "platform": "Windows / Linux",
     "iframeTitle": "GoodPlanCraftLauncher 인터페이스",
     "windowNote": "위 창은 <b>클릭할 수 있습니다</b> — 웹 페이지 안에서 실행되는 런처 인터페이스 자체입니다.",
     "iconAlt": "GoodPlanCraftLauncher 아이콘"
@@ -122,9 +122,11 @@
     "updatedLabel": "업데이트",
     "platformLabel": "플랫폼",
     "licenseLabel": "라이선스",
-    "platform": "Windows 10 64비트",
+    "platform": "Windows / Linux",
     "license": "오픈소스, 무료",
-    "github": "GitHub에서 보기"
+    "github": "GitHub에서 보기",
+    "linuxCard": "리눅스 버전 다운로드",
+    "moreLink": "모든 다운로드 옵션"
   },
   "requirements": {
     "tag": "시스템",
@@ -197,10 +199,34 @@
     "license": "라이선스",
     "copyright": "&copy; 2026 GameTS by <a href=\"https://www.caellab.com/\" target=\"_blank\" class=\"footer-inline-link\">CaelLab</a>. All rights reserved. 프로젝트 홈: <a href=\"https://gamets.caellab.com/gpcl/\" class=\"footer-inline-link\">gamets.caellab.com/gpcl</a>",
     "disclaimer": "GoodPlanCraftLauncher는 서드파티 오픈소스 도구이며 <a href=\"https://www.minecraft.net/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Mojang Studios</a>, <a href=\"https://www.microsoft.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Microsoft</a>, <a href=\"https://www.xbox.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Xbox</a>와 공식적인 제휴 관계가 없습니다. Minecraft는 Mojang Studios의 상표입니다. 이 런처를 사용하려면 정품 Minecraft 라이선스가 필요합니다.",
-    "licenseLine": "오픈소스 라이선스: <a href=\"https://www.caellab.com/license/cbs-v3\" target=\"_blank\" class=\"footer-inline-link\">CaelLab BY-SA Code License v3</a> | <a href=\"https://github.com/CaelLab-org/GoodPlanCraftLauncher\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">GitHub</a>에서 오픈소스로 공개"
+    "licenseLine": "오픈소스 라이선스: <a href=\"https://www.caellab.com/license/cbs-v3\" target=\"_blank\" class=\"footer-inline-link\">CaelLab BY-SA Code License v3</a> | <a href=\"https://github.com/CaelLab-org/GoodPlanCraftLauncher\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">GitHub</a>에서 오픈소스로 공개",
+    "download": "다운로드"
   },
   "labels": {
     "platform": "Windows 64비트",
     "github": "GitHub"
+  },
+  "downloadPage": {
+    "tag": "다운로드",
+    "heading": "GoodPlanCraftLauncher 다운로드",
+    "intro": "최신 버전 v{version}({date} 업데이트). 플랫폼을 선택하세요.",
+    "winTitle": "윈도우",
+    "winNote": "Windows 10 / 11(64비트)용. 다운로드 후 설치 프로그램을 실행하세요.",
+    "winButton": "설치 프로그램 다운로드",
+    "linuxTitle": "Linux",
+    "linuxBadge": "실험적",
+    "linuxNote": "리눅스 x64용. 압축을 풀고 ./gpcl을 실행하세요. 필요한 Java는 자동으로 다운로드됩니다.",
+    "linuxUpdateNote": "리눅스는 앱 내 업데이트를 아직 지원하지 않습니다. 새 버전은 이 페이지에서 다시 받아 주세요.",
+    "linuxButton": "tar.gz",
+    "sizeLabel": "크기",
+    "hashLabel": "체크섬 파일",
+    "historyLink": "이전 버전과 전체 변경 기록",
+    "githubLink": "GitHub Releases"
+  },
+  "downloadMeta": {
+    "title": "다운로드 - GoodPlanCraftLauncher - CaelLabGameTS",
+    "description": "Windows / Linux용 GoodPlanCraftLauncher 다운로드: 최신 설치 프로그램, 체크섬, 모든 이전 버전.",
+    "ogTitle": "GoodPlanCraftLauncher 다운로드",
+    "ogDescription": "Windows / Linux(실험적) 최신 설치 프로그램, 체크섬과 이전 버전 포함."
   }
 }

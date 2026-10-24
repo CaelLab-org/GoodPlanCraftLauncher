@@ -31,7 +31,7 @@
     "versionLabel": "ভার্সন",
     "updatedLabel": "আপডেট",
     "platformLabel": "প্ল্যাটফর্ম",
-    "platform": "Windows 10+",
+    "platform": "Windows / Linux",
     "iframeTitle": "GoodPlanCraftLauncher ইন্টারফেস",
     "windowNote": "উপরের উইন্ডোটি <b>ক্লিকযোগ্য</b> — এটাই লঞ্চারের ইন্টারফেস, যা ওয়েব পেজের ভেতরে চলছে।",
     "iconAlt": "GoodPlanCraftLauncher আইকন"
@@ -122,9 +122,11 @@
     "updatedLabel": "আপডেট",
     "platformLabel": "প্ল্যাটফর্ম",
     "licenseLabel": "লাইসেন্স",
-    "platform": "Windows 10 64-bit",
+    "platform": "Windows / Linux",
     "license": "ওপেন সোর্স, বিনামূল্যে",
-    "github": "GitHub-এ দেখুন"
+    "github": "GitHub-এ দেখুন",
+    "linuxCard": "লিনাক্স সংস্করণ ডাউনলোড করুন",
+    "moreLink": "সব ডাউনলোড অপশন"
   },
   "requirements": {
     "tag": "সিস্টেম",
@@ -197,10 +199,34 @@
     "license": "লাইসেন্স",
     "copyright": "&copy; 2026 GameTS, <a href=\"https://www.caellab.com/\" target=\"_blank\" class=\"footer-inline-link\">CaelLab</a>। সর্বস্বত্ব সংরক্ষিত। প্রজেক্ট হোম: <a href=\"https://gamets.caellab.com/gpcl/\" class=\"footer-inline-link\">gamets.caellab.com/gpcl</a>",
     "disclaimer": "GoodPlanCraftLauncher একটি তৃতীয় পক্ষের ওপেন সোর্স টুল, এর সঙ্গে <a href=\"https://www.minecraft.net/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Mojang Studios</a>, <a href=\"https://www.microsoft.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Microsoft</a>, <a href=\"https://www.xbox.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Xbox</a>-এর কোনো সরকারি সম্পর্ক নেই। Minecraft হলো Mojang Studios-এর ট্রেডমার্ক; এই লঞ্চার ব্যবহার করতে বৈধ Minecraft লাইসেন্স প্রয়োজন।",
-    "licenseLine": "ওপেন সোর্স লাইসেন্স: <a href=\"https://www.caellab.com/license/cbs-v3\" target=\"_blank\" class=\"footer-inline-link\">CaelLab BY-SA Code License v3</a> | <a href=\"https://github.com/CaelLab-org/GoodPlanCraftLauncher\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">GitHub</a>-এ ওপেন সোর্স"
+    "licenseLine": "ওপেন সোর্স লাইসেন্স: <a href=\"https://www.caellab.com/license/cbs-v3\" target=\"_blank\" class=\"footer-inline-link\">CaelLab BY-SA Code License v3</a> | <a href=\"https://github.com/CaelLab-org/GoodPlanCraftLauncher\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">GitHub</a>-এ ওপেন সোর্স",
+    "download": "ডাউনলোড"
   },
   "labels": {
     "platform": "Windows 64-bit",
     "github": "GitHub"
+  },
+  "downloadPage": {
+    "tag": "ডাউনলোড",
+    "heading": "GoodPlanCraftLauncher ডাউনলোড করুন",
+    "intro": "সর্বশেষ সংস্করণ v{version}, আপডেট {date}। আপনার প্ল্যাটফর্ম বেছে নিন।",
+    "winTitle": "উইন্ডোজ",
+    "winNote": "উইন্ডোজ 10 / 11 (64-বিট)-এর জন্য। ডাউনলোড করে ইনস্টলার চালান।",
+    "winButton": "ইনস্টলার ডাউনলোড করুন",
+    "linuxTitle": "Linux",
+    "linuxBadge": "পরীক্ষামূলক",
+    "linuxNote": "লিনাক্স x64-এর জন্য। আর্কাইভ আনজিপ করে ./gpcl চালান; দরকারি Java নিজেই নামিয়ে নেবে।",
+    "linuxUpdateNote": "লিনাক্সে অ্যাপের ভেতরে আপডেট এখনও নেই — নতুন সংস্করণের জন্য এই পেজেই ফিরে আসুন।",
+    "linuxButton": "tar.gz",
+    "sizeLabel": "আকার",
+    "hashLabel": "চেকসাম ফাইল",
+    "historyLink": "পুরোনো সংস্করণ ও সম্পূর্ণ পরিবর্তনসূচি",
+    "githubLink": "GitHub Releases"
+  },
+  "downloadMeta": {
+    "title": "ডাউনলোড - GoodPlanCraftLauncher - CaelLabGameTS",
+    "description": "উইন্ডোজ ও লিনাক্সের জন্য GoodPlanCraftLauncher ডাউনলোড করুন: সর্বশেষ ইনস্টলার, চেকসাম ও সব পুরোনো সংস্করণ।",
+    "ogTitle": "GoodPlanCraftLauncher ডাউনলোড করুন",
+    "ogDescription": "উইন্ডোজ ও লিনাক্স (পরীক্ষামূলক)-এর সর্বশেষ ইনস্টলার, চেকসাম ও পুরোনো সংস্করণসহ।"
   }
 }

@@ -591,6 +591,16 @@ nav.scrolled {
 .update-info span b { color: var(--text-2); font-weight: 700; }
 .download-extra { margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--line); }
 .download-extra .hero-btn { padding: 11px 22px; font-size: 0.9rem; }
+.download-extra .hero-btn + .hero-btn { margin-left: 10px; }
+.dl-more {
+    display: inline-block;
+    margin-top: 18px;
+    color: var(--accent);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+.dl-more:hover { text-decoration: underline; }
 
 /* ===== 系统要求 ===== */
 .requirements { background: var(--bg); }

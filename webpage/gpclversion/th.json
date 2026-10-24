@@ -24,7 +24,8 @@
         "github": false
       },
       "linux": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.2-linux-x64.tar.gz",
-      "linuxSha256": "9151ddf7732c9b6cf703229343c4440cab36dc2c4898c6ceffd8e916e486c8fd"
+      "linuxSha256": "9151ddf7732c9b6cf703229343c4440cab36dc2c4898c6ceffd8e916e486c8fd",
+      "linuxSize": "104.3 MB"
     },
     {
       "version": "1.9.1",

@@ -31,7 +31,7 @@
     "versionLabel": "Sürüm",
     "updatedLabel": "Güncellendi",
     "platformLabel": "Platform",
-    "platform": "Windows 10+",
+    "platform": "Windows / Linux",
     "iframeTitle": "GoodPlanCraftLauncher arayüzü",
     "windowNote": "Yukarıdaki pencere <b>tıklanabilir</b> — bu, web sayfası içinde çalışan başlatıcı arayüzünün kendisi.",
     "iconAlt": "GoodPlanCraftLauncher simgesi"
@@ -122,9 +122,11 @@
     "updatedLabel": "Güncellendi",
     "platformLabel": "Platform",
     "licenseLabel": "Lisans",
-    "platform": "Windows 10 64-bit",
+    "platform": "Windows / Linux",
     "license": "Açık kaynak, ücretsiz",
-    "github": "GitHub'da görüntüle"
+    "github": "GitHub'da görüntüle",
+    "linuxCard": "Linux sürümünü indir",
+    "moreLink": "Tüm indirme seçenekleri"
   },
   "requirements": {
     "tag": "Sistem",
@@ -197,10 +199,34 @@
     "license": "Lisans",
     "copyright": "&copy; 2026 GameTS by <a href=\"https://www.caellab.com/\" target=\"_blank\" class=\"footer-inline-link\">CaelLab</a>. Tüm hakları saklıdır. Proje ana sayfası: <a href=\"https://gamets.caellab.com/gpcl/\" class=\"footer-inline-link\">gamets.caellab.com/gpcl</a>",
     "disclaimer": "GoodPlanCraftLauncher üçüncü taraf bir açık kaynak araçtır ve <a href=\"https://www.minecraft.net/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Mojang Studios</a>, <a href=\"https://www.microsoft.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Microsoft</a>, <a href=\"https://www.xbox.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Xbox</a> ile resmi bir bağlantısı yoktur. Minecraft, Mojang Studios'un ticari markasıdır; bu başlatıcıyı kullanmak geçerli bir Minecraft lisansı gerektirir.",
-    "licenseLine": "Açık kaynak lisansı: <a href=\"https://www.caellab.com/license/cbs-v3\" target=\"_blank\" class=\"footer-inline-link\">CaelLab BY-SA Code License v3</a> | Açık kaynak: <a href=\"https://github.com/CaelLab-org/GoodPlanCraftLauncher\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">GitHub</a>"
+    "licenseLine": "Açık kaynak lisansı: <a href=\"https://www.caellab.com/license/cbs-v3\" target=\"_blank\" class=\"footer-inline-link\">CaelLab BY-SA Code License v3</a> | Açık kaynak: <a href=\"https://github.com/CaelLab-org/GoodPlanCraftLauncher\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">GitHub</a>",
+    "download": "İndir"
   },
   "labels": {
     "platform": "Windows 64-bit",
     "github": "GitHub"
+  },
+  "downloadPage": {
+    "tag": "İndir",
+    "heading": "GoodPlanCraftLauncher indir",
+    "intro": "En son sürüm v{version}, {date} tarihinde güncellendi. Platformunu seç.",
+    "winTitle": "Windows",
+    "winNote": "Windows 10 / 11 (64 bit) için. İndir ve kurulum programını çalıştır.",
+    "winButton": "Kurulum programını indir",
+    "linuxTitle": "Linux",
+    "linuxBadge": "Deneysel",
+    "linuxNote": "Linux x64 için. Arşivi çıkarıp ./gpcl'yi çalıştır; gerekli Java otomatik indirilir.",
+    "linuxUpdateNote": "Uygulama içi güncelleme Linux'te henüz yok — yeni sürümler için bu sayfaya geri gel.",
+    "linuxButton": "tar.gz",
+    "sizeLabel": "Boyut",
+    "hashLabel": "Doğrulama dosyası",
+    "historyLink": "Eski sürümler & tüm değişiklik listesi",
+    "githubLink": "GitHub Releases"
+  },
+  "downloadMeta": {
+    "title": "İndir - GoodPlanCraftLauncher - CaelLabGameTS",
+    "description": "Windows ve Linux için GoodPlanCraftLauncher indir: en son kurulum programları, doğrulama dosyaları ve tüm eski sürümler.",
+    "ogTitle": "GoodPlanCraftLauncher indir",
+    "ogDescription": "Windows ve Linux (deneysel) için en son kurulum programları, doğrulama dosyaları ve eski sürümlerle."
   }
 }

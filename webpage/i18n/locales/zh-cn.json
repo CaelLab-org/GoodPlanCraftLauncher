@@ -31,7 +31,7 @@
     "versionLabel": "版本",
     "updatedLabel": "更新",
     "platformLabel": "平台",
-    "platform": "Windows 10+",
+    "platform": "Windows / Linux",
     "iframeTitle": "GoodPlanCraftLauncher 界面",
     "windowNote": "上面这个窗口是<b>能点的</b>——它就是启动器的界面，在网页里跑了一遍。",
     "iconAlt": "GoodPlanCraftLauncher 图标"
@@ -122,9 +122,11 @@
     "updatedLabel": "更新日期",
     "platformLabel": "平台",
     "licenseLabel": "许可证",
-    "platform": "Windows 10 64 位",
+    "platform": "Windows / Linux",
     "license": "开源免费",
-    "github": "前往 GitHub 查看"
+    "github": "前往 GitHub 查看",
+    "linuxCard": "下载 Linux 版",
+    "moreLink": "所有下载选项"
   },
   "requirements": {
     "tag": "System",
@@ -197,10 +199,34 @@
     "license": "许可证",
     "copyright": "&copy; 2026 GameTS by <a href=\"https://www.caellab.com/\" target=\"_blank\" class=\"footer-inline-link\">CaelLab（虚舟实验室）</a>. All rights reserved. 项目主页：<a href=\"https://gamets.caellab.com/gpcl/\" class=\"footer-inline-link\">gamets.caellab.com/gpcl</a>",
     "disclaimer": "GoodPlanCraftLauncher 为第三方开源工具，与 <a href=\"https://www.minecraft.net/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Mojang Studios</a>、<a href=\"https://www.microsoft.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Microsoft</a>、<a href=\"https://www.xbox.com/\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">Xbox</a> 无任何官方关联。Minecraft 为 Mojang Studios 注册商标，使用本启动器需持有有效的 Minecraft 正版授权。",
-    "licenseLine": "开源许可证：<a href=\"https://www.caellab.com/license/cbs-v3\" target=\"_blank\" class=\"footer-inline-link\">CaelLab BY-SA Code License v3</a> | Open Source on <a href=\"https://github.com/CaelLab-org/GoodPlanCraftLauncher\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">GitHub</a>"
+    "licenseLine": "开源许可证：<a href=\"https://www.caellab.com/license/cbs-v3\" target=\"_blank\" class=\"footer-inline-link\">CaelLab BY-SA Code License v3</a> | Open Source on <a href=\"https://github.com/CaelLab-org/GoodPlanCraftLauncher\" target=\"_blank\" rel=\"noopener\" class=\"footer-inline-link\">GitHub</a>",
+    "download": "下载页"
   },
   "labels": {
     "platform": "Windows 64 位",
     "github": "GitHub"
+  },
+  "downloadPage": {
+    "tag": "下载",
+    "heading": "下载 GoodPlanCraftLauncher",
+    "intro": "最新版本 v{version}，更新于 {date}。选择你的平台。",
+    "winTitle": "Windows",
+    "winNote": "适用于 Windows 10 / 11（64 位），下载后双击安装。",
+    "winButton": "下载安装包",
+    "linuxTitle": "Linux",
+    "linuxBadge": "实验性",
+    "linuxNote": "适用于 Linux x64。解压后运行 ./gpcl；启动器会自动下载所需的 Java。",
+    "linuxUpdateNote": "Linux 暂不支持应用内更新，有新版本时请回到本页重新下载。",
+    "linuxButton": "tar.gz",
+    "sizeLabel": "大小",
+    "hashLabel": "校验文件",
+    "historyLink": "历史版本与完整更新日志",
+    "githubLink": "GitHub Releases"
+  },
+  "downloadMeta": {
+    "title": "下载 - GoodPlanCraftLauncher - CaelLabGameTS",
+    "description": "下载 GoodPlanCraftLauncher：Windows 与 Linux（实验性）最新安装包、校验文件与全部历史版本。",
+    "ogTitle": "下载 GoodPlanCraftLauncher",
+    "ogDescription": "Windows 与 Linux（实验性）最新安装包，附校验文件与历史版本。"
   }
 }
