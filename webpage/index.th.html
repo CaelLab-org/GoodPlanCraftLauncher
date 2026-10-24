@@ -75,7 +75,7 @@
                     </div>
                 </li>
                 <li class="lang-switch"><select aria-label="ภาษา" onchange="if(this.value)location.href=this.value"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th" selected>ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select></li>
-                <li><a href="#download" class="nav-cta">&#9662; ดาวน์โหลด v1.9.1</a></li>
+                <li><a href="#download" class="nav-cta">&#9662; ดาวน์โหลด v1.9.2</a></li>
             </ul>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="เปิดเมนู" aria-expanded="false">&#9776;</button>
         </div>
@@ -109,9 +109,9 @@
                 </a>
             </div>
             <div class="hero-meta">
-                <span>เวอร์ชัน <b>v1.9.1</b></span>
+                <span>เวอร์ชัน <b>v1.9.2</b></span>
                 <span class="sep">/</span>
-                <span>อัปเดตเมื่อ <b>2026-10-23</b></span>
+                <span>อัปเดตเมื่อ <b>2026-10-24</b></span>
                 <span class="sep">/</span>
                 <span>แพลตฟอร์ม <b>Windows 10 ขึ้นไป</b></span>
             </div>
@@ -260,13 +260,13 @@
                 <span class="dl-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
                 </span>
-                <div class="download-file">GPCL-1.9.1-Setup.exe</div>
-                <a href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.1-Setup.exe" class="download-btn">
+                <div class="download-file">GPCL-1.9.2-Setup.exe</div>
+                <a href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.2-Setup.exe" class="download-btn">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
                     ออกสู่โลกบล็อก!
                 </a>
                 <div class="update-info">
-                    <span>อัปเดตเมื่อ <b>2026-10-23</b></span>
+                    <span>อัปเดตเมื่อ <b>2026-10-24</b></span>
                     <span>แพลตฟอร์ม <b>Windows 10 64 บิต</b></span>
                     <span>สัญญาอนุญาต <b>โอเพนซอร์ส ฟรี</b></span>
                 </div>
@@ -377,9 +377,26 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                 <div class="timeline-item reveal">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
+                        <span class="version-number">v1.9.2</span>
+                        <span class="version-title">เวอร์ชัน Linux แรก (ทดลอง) และการเชื่อม CaelLabMinecraft</span>
+                        <span class="latest-chip">ล่าสุด</span>
+                        <span class="version-date">2026-10-24</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>เวอร์ชันแรกสำหรับ Linux (ทดลอง): แพ็กเกจ tar.gz แบบ x64 สำหรับดาวน์โหลดเกมและติดตั้ง Forge / Fabric / มอด; การอัปเดตในแอปยังไม่รองรับ เมื่อมีเวอร์ชันใหม่จะพาไปที่หน้าดาวน์โหลด</li>
+                        <li>การเชื่อม CaelLabMinecraft แบบใหม่: เปิดในการตั้งค่าแล้วเชื่อมบัญชี Microsoft ด้วยรหัสเชื่อม</li>
+                        <li>ตรวจหา Java ที่ติดตั้งอยู่ในเครื่องอัตโนมัติ (Program Files, JAVA_HOME ฯลฯ) และเลือกใช้แยกตามเวอร์ชันได้ ไม่ต้องดาวน์โหลดซ้ำ</li>
+                        <li>ดาวน์โหลด Java เสถียรขึ้น: ถ้ามิเรอร์ยังไม่มีบิลด์ล่าสุดจะใช้บิลด์เก่ากว่าจากมิเรอร์ตัวเดิม ถ้า API ใช้ไม่ได้จะใช้รายการไฟล์ของมิเรอร์แทน</li>
+                        <li>แก้ไขไอคอนหน้าต่างหลักที่ว่างเปล่า ตอนนี้แสดงไอคอนของตัวเกมเมอร์อย่างถูกต้อง</li>
+                        <li>แก้ไขปัญหาการตรวจสอบอัปเดตล้มเหลวเมื่อหมายเลขเวอร์ชันมีตัวอักษรต่อท้าย</li>
+                        <li>บน Windows การดาวน์โหลดเกมจะข้ามไลบรารีที่ไม่จำเป็นบนแพลตฟอร์มนี้</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
                         <span class="version-number">v1.9.1</span>
                         <span class="version-title">บัญชี Microsoft โฟลเดอร์เกมหลายโฟลเดอร์ และ Java แยกตามเวอร์ชัน</span>
-                        <span class="latest-chip">ล่าสุด</span>
                         <span class="version-date">2026-10-23</span>
                     </div>
                     <ul class="changelog">
@@ -507,6 +524,8 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                         <li>แก้การดาวน์โหลด 0 ไบต์ที่นับว่าสำเร็จ การเปลี่ยนเส้นทางด้วยที่อยู่สัมพัทธ์ และการดาวน์โหลดครั้งที่สองที่ไม่แสดงความคืบหน้า</li>
                     </ul>
                 </div>
+                <details class="older-versions">
+                    <summary>แสดงเวอร์ชันเก่า 15 รายการ</summary>
                 <div class="timeline-item reveal">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
@@ -524,8 +543,6 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                         <li>แก้: การตั้งค่าจำนวนเธรดที่ถูกเพิกเฉย หน้า 404 ที่ถูกบันทึกเป็นไฟล์ และไฟล์บางส่วนที่ค้างหลังดาวน์โหลดล้มเหลว</li>
                     </ul>
                 </div>
-                <details class="older-versions">
-                    <summary>แสดงเวอร์ชันเก่า 14 รายการ</summary>
                 <div class="timeline-item reveal">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
@@ -708,7 +725,7 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                 </div>
                 </details>
                 <div class="history-more">
-                    <a href="./history/index.th">ดูบันทึกการเปลี่ยนแปลงทั้งหมด (ทั้ง 22 เวอร์ชันและตัวติดตั้ง) →</a>
+                    <a href="./history/index.th">ดูบันทึกการเปลี่ยนแปลงทั้งหมด (ทั้ง 23 เวอร์ชันและตัวติดตั้ง) →</a>
                 </div>
             </div>
         </div>

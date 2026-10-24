@@ -21,6 +21,13 @@ export interface UpdateBadgeHandlers {
 let handlers: UpdateBadgeHandlers = { onDownload: () => {}, onInstall: () => {} };
 let mode: BadgeMode = 'available';
 let currentVersion: string = '';
+// 非 Windows 平台没有应用内更新：按钮变成「打开下载页」
+let manualMode: boolean = false;
+
+
+export function setUpdateBadgeManualMode(value: boolean): void {
+  manualMode = value;
+}
 
 const widget: HTMLElement | null = document.getElementById('update-widget');
 const widgetBtn: HTMLElement | null = document.getElementById('update-widget-btn');
@@ -65,7 +72,9 @@ function applyMode(next: BadgeMode): void {
         ? t('ui.restart_to_update')
         : next === 'failed'
           ? t('ui.retry_download')
-          : t('ui.download_now');
+          : manualMode
+            ? t('ui.open_download_page')
+            : t('ui.download_now');
   }
 }
 

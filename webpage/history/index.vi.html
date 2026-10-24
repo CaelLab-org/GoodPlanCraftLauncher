@@ -74,7 +74,7 @@
                     </div>
                 </li>
                 <li class="lang-switch"><select aria-label="Ngôn ngữ" onchange="if(this.value)location.href=this.value"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi" selected>Tiếng Việt</option></select></li>
-                <li><a href="../index.vi#download" class="nav-cta">&#9662; Tải v1.9.1</a></li>
+                <li><a href="../index.vi#download" class="nav-cta">&#9662; Tải v1.9.2</a></li>
             </ul>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Mở menu" aria-expanded="false">&#9776;</button>
         </div>
@@ -92,6 +92,7 @@
             <p class="cl-intro">Từ 1.0.0 đến bản mới nhất, mọi phiên bản — thay đổi gì và có tải được không — đều có trên trang này.</p>
             <p class="cl-note">Các bản 1.3.2 trở về trước không giữ bộ cài; trình cập nhật tích hợp trong bản cũ có thể không còn hoạt động, nên dùng bản mới nhất cho việc hằng ngày.</p>
             <div class="cl-index" role="navigation" aria-label="Mục lục phiên bản">
+                <a href="#v1-9-2">1.9.2</a>
                 <a href="#v1-9-1">1.9.1</a>
                 <a href="#v1-9-0">1.9.0</a>
                 <a href="#v1-8-0">1.8.0</a>
@@ -121,12 +122,36 @@
     <main class="history cl-history">
         <div class="container">
             <div class="timeline">
+                <article class="timeline-item" id="v1-9-2">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.9.2</span>
+                        <span class="version-title">Bản Linux đầu tiên (thử nghiệm), liên kết CaelLabMinecraft</span>
+                        <span class="latest-chip">Mới nhất</span>
+                        <span class="version-date">2026-10-24</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Bản đầu tiên cho Linux (thử nghiệm): gói tar.gz x64 để tải game và cài Forge / Fabric / mod; cập nhật trong ứng dụng chưa có, khi có phiên bản mới bạn sẽ được đưa đến trang tải</li>
+                        <li>Liên kết CaelLabMinecraft mới: bật trong cài đặt rồi kết nối tài khoản Microsoft bằng mã liên kết</li>
+                        <li>Java đã cài sẵn trong hệ thống (Program Files, JAVA_HOME v.v.) được tự động nhận diện và có thể chọn riêng cho từng phiên bản, không còn tải trùng</li>
+                        <li>Tải Java ổn định hơn: nếu mirror chưa đồng bộ bản build mới nhất thì dùng bản cũ hơn trên chính mirror đó; nếu API không kết nối được thì dùng danh sách tệp của mirror</li>
+                        <li>Đã sửa lỗi icon cửa sổ chính bị trống — giờ icon của launcher hiển thị đúng</li>
+                        <li>Đã sửa lỗi kiểm tra cập nhật bị hỏng khi số phiên bản có chữ cái ở cuối</li>
+                        <li>Trên Windows, tải game bỏ qua các thư viện không cần thiết trên nền tảng này</li>
+                    </ul>
+                    <div class="cl-download">
+                        <a class="cl-dl-btn" href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.2-Setup.exe">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                            Tải v1.9.2
+                        </a>
+                        <span class="cl-file">GPCL-1.9.2-Setup.exe · 94.0 MB · Windows 64-bit</span>
+                    </div>
+                </article>
                 <article class="timeline-item" id="v1-9-1">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
                         <span class="version-number">v1.9.1</span>
                         <span class="version-title">Tài khoản Microsoft, nhiều thư mục game và Java riêng cho từng phiên bản</span>
-                        <span class="latest-chip">Mới nhất</span>
                         <span class="version-date">2026-10-23</span>
                     </div>
                     <ul class="changelog">

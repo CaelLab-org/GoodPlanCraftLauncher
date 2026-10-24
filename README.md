@@ -1,8 +1,8 @@
 # GoodPlanCraftLauncher
 
-轻量、开源的 Minecraft 启动器，Windows 桌面端，基于 Electron + TypeScript。
+轻量、开源的 Minecraft 启动器，跨平台桌面端（Windows / Linux），基于 Electron + TypeScript。
 
-[![Version](https://img.shields.io/badge/version-1.5.1-blue.svg)](https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases)
+[![Version](https://img.shields.io/badge/version-1.9.2-blue.svg)](https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases)
 [![License](https://img.shields.io/badge/license-CaelLab%20BY--SA%203-green.svg)](LICENSE)
 
 官网：<https://gamets.caellab.com/gpcl/>
@@ -21,22 +21,24 @@
 
 到 [Releases](https://github.com/CaelLab-org/GoodPlanCraftLauncher/releases) 下载 `GPCL-<版本>-Setup.exe`，或从官网下载。
 
-- 最新版本：**v1.5.1**（2026-10-16）
-- 系统要求：Windows 10 64 位及以上
+- 最新版本：**v1.9.2**（2026-10-24）
+- 系统要求：Windows 10 / 11 64 位；Linux x64（实验性，Releases 里提供 tar.gz）
 - 磁盘占用：安装后约 360 MB（不含 Minecraft 游戏本体与各版本文件）
 - Java 运行时：启动器会按游戏版本自动补齐对应版本，无需手动装
 
-安装包可直接覆盖旧版升级，游戏与设置在 `%APPDATA%\gpcl`，升级和卸载都不会动它。
+安装包可直接覆盖旧版升级。Windows 的游戏与设置在 `%APPDATA%\gpcl`，Linux 在 `~/.config/gpcl`，升级和卸载都不会动它。
 
 ## 从源码构建
 
-需要 Node.js 18+；打安装包还需要 [Inno Setup 6.5+](https://jrsoftware.org/isdl.php)。
+需要 Node.js 18+；打 Windows 安装包还需要 [Inno Setup 6.5+](https://jrsoftware.org/isdl.php)。
 
 ```bash
 npm install
 npm run build-ts     # 编译 TS + 复制静态资源到 dist/
-npm start            # 开发态启动
-npm run build-prod   # 出安装包 → release/GPCL-<版本>-Setup.exe 与 GPCL.sha1
+npm start            # Windows 开发态启动（带 chcp）
+npm start:linux      # Linux 开发态启动
+npm run build-prod   # Windows 安装包 → release/GPCL-<版本>-Setup.exe 与 GPCL.sha1
+npm run build-linux  # Linux 包 → release/GPCL-<版本>-linux-x64.tar.gz（AppImage 需在 Linux 上出）
 ```
 
 发版时 `package.json`、`package-lock.json`、`version.txt`、`webpage/index.html`、`webpage/data.json` 都要同步版本号。
@@ -78,7 +80,7 @@ Copyright (c) 2026 Yunyun(云云) By 虚舟实验室(CaelLab) / CaelLabGameTS
 A：启动器会按版本自动补全。若失败，检查网络或在「设置 → 下载」里换个 Java 镜像源。
 
 **Q：支持非 Windows 平台吗？**
-A：目前只有 Windows 10 / 11 64 位。是否支持 macOS 或 Linux 要看后续需求和精力。
+A：Linux x64 已经适配（下载、启动、Forge / Fabric / NeoForge / OptiFine、模组与整合包），目前标为实验性：自动更新只支持 Windows，Linux 包需要手动下载新版；macOS 暂不支持。
 
 **Q：怎么切换离线模式和正版模式？**
 A：在启动界面直接切换，不用重启启动器。

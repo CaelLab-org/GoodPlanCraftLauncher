@@ -9,6 +9,7 @@
 
 // __IMPORTS_BEGIN__
 import { BrowserWindow, ipcMain } from 'electron';
+import { spawnSync } from 'child_process';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
@@ -16,6 +17,7 @@ import path from 'path';
 import { CACHE_DIR, GAME_DIR, loadSettings, writeLog } from './config';
 import { fetchText } from './download';
 import { t } from './i18n';
+import { ADOPTIUM_ARCH, ADOPTIUM_OS, IS_WINDOWS, JAVA_BIN_NAME, JAVA_UI_BIN_NAME } from './platform';
 import { mainWindow } from './shell';
 import { completedDownloadFiles, isJavaDownloading, javaDownloadResolve, setCurrentDownloadPath, setCurrentDownloadType, setCurrentDownloadVersion, setIsJavaDownloading, setJavaDownloadReject, setJavaDownloadResolve, setShouldCancelDownload, shouldCancelDownload, totalDownloadFiles } from './state';
 // __IMPORTS_END__
@@ -37,12 +39,15 @@ export const JAVA_VERSIONS_AVAILABLE: string[] = ["8", "17", "21", "25"];
 
 export function getJavaRuntimeDir(javaVersion: string): string {
   const runtimeName = JAVA_RUNTIME_MAP[javaVersion] || `jre${javaVersion}`;
-  return path.join(os.homedir(), 'AppData', 'Roaming', '.minecraft', 'runtime', runtimeName);
+  const minecraftHome: string = IS_WINDOWS
+    ? path.join(os.homedir(), 'AppData', 'Roaming', '.minecraft')
+    : path.join(os.homedir(), '.minecraft');
+  return path.join(minecraftHome, 'runtime', runtimeName);
 }
 
 
 export function findJavaExecutable(runtimeDir: string): string | null {
-  const javaPath = path.join(runtimeDir, 'bin', 'java.exe');
+  const javaPath = path.join(runtimeDir, 'bin', JAVA_BIN_NAME);
   if (fs.existsSync(javaPath)) {
     try {
       fs.accessSync(javaPath, fs.constants.R_OK);
@@ -53,12 +58,98 @@ export function findJavaExecutable(runtimeDir: string): string | null {
 }
 
 
+const javaMajorCache: Map<string, number | null> = new Map();
+
+
+export function detectJavaMajorVersion(javaPath: string): number | null {
+  if (javaMajorCache.has(javaPath)) return javaMajorCache.get(javaPath)!;
+  let major: number | null = null;
+  try {
+    const result: any = spawnSync(javaPath, ['-version'], { encoding: 'utf8', timeout: 5000, windowsHide: true });
+    const output: string = `${result.stderr || ''}\n${result.stdout || ''}`;
+    const match: RegExpMatchArray | null = output.match(/version "(\d+)(?:\.(\d+))?/);
+    if (match) {
+      const first: number = parseInt(match[1], 10);
+      major = first === 1 ? parseInt(match[2] || '0', 10) : first;
+    }
+  } catch {}
+  javaMajorCache.set(javaPath, major);
+  return major;
+}
+
+
+// 系统里已安装的 Java：JAVA_HOME、常见 JDK 目录、PATH（Linux 用户通常只有这一份）
+export function listSystemJavaCandidates(): string[] {
+  const candidates: string[] = [];
+  const seenReal: Set<string> = new Set();
+
+  const push = (candidate: string | null): void => {
+    if (!candidate) return;
+    const normalized: string = path.normalize(candidate);
+    if (candidates.includes(normalized)) return;
+    if (IS_WINDOWS && /[\\/]WindowsApps[\\/]/i.test(normalized)) return;
+    try {
+      const real: string = fs.realpathSync(normalized);
+      if (seenReal.has(real)) return;
+      seenReal.add(real);
+    } catch {}
+    candidates.push(normalized);
+  };
+
+  if (process.env.JAVA_HOME) push(path.join(process.env.JAVA_HOME, 'bin', JAVA_BIN_NAME));
+
+  const scan = (dir: string): void => {
+    try {
+      if (!fs.existsSync(dir)) return;
+      for (const entry of fs.readdirSync(dir)) push(path.join(dir, entry, 'bin', JAVA_BIN_NAME));
+    } catch {}
+  };
+
+  if (IS_WINDOWS) {
+    for (const root of [process.env.ProgramFiles || 'C:\\Program Files', process.env['ProgramFiles(x86)'] || 'C:\\Program Files (x86)']) {
+      for (const vendor of ['Java', 'Eclipse Adoptium', 'Amazon Corretto', 'Microsoft', 'Zulu']) {
+        scan(path.join(root, vendor));
+      }
+    }
+  } else {
+    push('/usr/bin/java');
+    push('/usr/local/bin/java');
+    push('/opt/java/openjdk/bin/java');
+    push('/usr/lib/jvm/default-java/bin/java');
+    scan('/usr/lib/jvm');
+    scan(path.join(os.homedir(), '.jdks'));
+    scan(path.join(os.homedir(), '.sdkman/candidates/java'));
+  }
+
+  for (const dir of String(process.env.PATH || '').split(path.delimiter)) {
+    if (dir) push(path.join(dir, JAVA_BIN_NAME));
+  }
+
+  return candidates;
+}
+
+
+export function findSystemJava(requiredVersion: string | number): string | null {
+  const required: number = parseInt(String(requiredVersion), 10);
+  if (!required || Number.isNaN(required)) return null;
+  for (const candidate of listSystemJavaCandidates()) {
+    try {
+      if (!fs.existsSync(candidate) || !fs.statSync(candidate).isFile()) continue;
+    } catch { continue; }
+    if (detectJavaMajorVersion(candidate) === required) return candidate;
+  }
+  return null;
+}
+
+
 export async function checkJavaInstalled(javaVersion: string): Promise<{ installed: boolean; javaPath: string | null }> {
   const runtimeDir = getJavaRuntimeDir(javaVersion);
   if (fs.existsSync(runtimeDir)) {
     const exe = findJavaExecutable(runtimeDir);
     if (exe) return { installed: true, javaPath: exe };
   }
+  const systemJava: string | null = findSystemJava(javaVersion);
+  if (systemJava) return { installed: true, javaPath: systemJava };
   return { installed: false, javaPath: null };
 }
 
@@ -102,6 +193,11 @@ export async function ensureJavaRuntime(version: string): Promise<string | null>
   if (fs.existsSync(runtimeDir)) {
     const exe = findJavaExecutable(runtimeDir);
     if (exe) { writeLog(`[Java] 找到 Java ${javaVersion}: ${exe}`); return exe; }
+  }
+  const systemJava: string | null = findSystemJava(javaVersion);
+  if (systemJava) {
+    writeLog(`[Java] 使用系统已安装的 Java ${javaVersion}: ${systemJava}`);
+    return systemJava;
   }
   writeLog(`[Java] 未找到 Java ${javaVersion} 运行时`);
   return null;
@@ -158,7 +254,7 @@ ipcMain.handle('get-java-download-url', async (_: any, javaVersion: string) => {
 export async function fetchJavaDownloadUrlFromAPI(javaVersion: string): Promise<string | null> {
   try {
     writeLog(`[Java] 通过 Adoptium API 获取 Java ${javaVersion} 下载地址...`);
-    const apiUrl = `https://api.adoptium.net/v3/assets/latest/${javaVersion}/hotspot?image_type=jre&architecture=x64&os=windows`;
+    const apiUrl = `https://api.adoptium.net/v3/assets/latest/${javaVersion}/hotspot?image_type=jre&architecture=${ADOPTIUM_ARCH}&os=${ADOPTIUM_OS}`;
     const data = await fetchText(apiUrl);
     const json = JSON.parse(data);
     if (json && json.length > 0 && json[0].binary?.package?.link) {
@@ -179,16 +275,16 @@ export const javaSourceCache: Record<string, { filename: string; origin: string 
 
 
 export function javaVersionToken(filename: string): string | null {
-  const m = filename.match(/hotspot_([^/\\]+?)\.zip$/i);
+  const m = filename.match(/hotspot_([^/\\]+?)\.(?:zip|tar\.gz|tgz)$/i);
   return m ? m[1] : null;
 }
 
-// 国内镜像站，布局一致：adoptium/<大版本>/jre/x64/windows/<文件名>
+// 国内镜像站，布局一致：adoptium/<大版本>/jre/<架构>/<系统>/<文件名>
 
 export const JAVA_MIRRORS: { id: string; name: string; build: (v: string, fn: string) => string }[] = [
-  { id: 'tsinghua', name: '清华大学镜像', build: (v, fn) => `https://mirrors.tuna.tsinghua.edu.cn/Adoptium/${v}/jre/x64/windows/${fn}` },
-  { id: 'nju', name: '南京大学镜像', build: (v, fn) => `https://mirror.nju.edu.cn/adoptium/${v}/jre/x64/windows/${fn}` },
-  { id: 'huawei', name: '华为云镜像', build: (v, fn) => `https://mirrors.huaweicloud.com/adoptium/${v}/jre/x64/windows/${fn}` }
+  { id: 'tsinghua', name: '清华大学镜像', build: (v, fn) => `https://mirrors.tuna.tsinghua.edu.cn/Adoptium/${v}/jre/${ADOPTIUM_ARCH}/${ADOPTIUM_OS}/${fn}` },
+  { id: 'nju', name: '南京大学镜像', build: (v, fn) => `https://mirror.nju.edu.cn/adoptium/${v}/jre/${ADOPTIUM_ARCH}/${ADOPTIUM_OS}/${fn}` },
+  { id: 'huawei', name: '华为云镜像', build: (v, fn) => `https://mirrors.huaweicloud.com/adoptium/${v}/jre/${ADOPTIUM_ARCH}/${ADOPTIUM_OS}/${fn}` }
 ];
 
 
@@ -197,19 +293,48 @@ export const JAVA_OFFICIAL_SOURCE = 'adoptium';
 // 从 Adoptium API 拿当前文件名；文件名是唯一的版本真相来源，
 // 不再写死具体版本号（写死的会在镜像同步后集体 404）。
 
+// Adoptium API 在国内经常连不上：退回清华镜像的目录列表拿当前文件名
+// （列表里可能有多个版本，取不含 preview/ea 的最后一个）
+
+export async function fetchJavaFilenameFromTuna(javaVersion: string): Promise<string | null> {
+  const listUrl: string = `https://mirrors.tuna.tsinghua.edu.cn/Adoptium/${javaVersion}/jre/${ADOPTIUM_ARCH}/${ADOPTIUM_OS}/`;
+  try {
+    writeLog(`[Java] Adoptium API 失败，尝试清华镜像目录列表: ${listUrl}`);
+    const html: string = await fetchText(listUrl);
+    const matches: RegExpMatchArray | null = String(html).match(/href="([^"]+\.(?:tar\.gz|tgz|zip))"/gi);
+    if (!matches || matches.length === 0) return null;
+    const names: string[] = matches
+      .map((m: string) => m.replace(/^href="/i, '').replace(/"$/, ''))
+      .filter((n: string) => !/preview|ea|nightly/i.test(n));
+    const filename: string | undefined = names[names.length - 1];
+    if (filename) writeLog(`[Java] 清华镜像目录列表返回: ${filename}`);
+    return filename || null;
+  } catch (e: any) {
+    writeLog(`[Java] 清华镜像目录列表读取失败: ${e.message}`);
+    return null;
+  }
+}
+
+
 export async function resolveJavaSources(javaVersion: string): Promise<{ filename: string; origin: string } | null> {
   if (javaSourceCache[javaVersion]) return javaSourceCache[javaVersion];
 
   const origin: string | null = await fetchJavaDownloadUrlFromAPI(javaVersion);
-  if (!origin) {
-    writeLog(`[Java] 未能获取 Java ${javaVersion} 的下载文件名，无可用下载源`);
-    return null;
+  let filename: string = origin ? decodeURIComponent(origin.split('/').pop() || '') : '';
+  let originUrl: string = origin || '';
+
+  if (!filename) {
+    filename = (await fetchJavaFilenameFromTuna(javaVersion)) || '';
+    if (!filename) {
+      writeLog(`[Java] 未能获取 Java ${javaVersion} 的下载文件名，无可用下载源`);
+      return null;
+    }
+    originUrl = `https://mirrors.tuna.tsinghua.edu.cn/Adoptium/${javaVersion}/jre/${ADOPTIUM_ARCH}/${ADOPTIUM_OS}/${filename}`;
   }
 
-  const filename: string = decodeURIComponent(origin.split('/').pop() || '');
   if (!filename) return null;
 
-  const sources: { filename: string; origin: string } = { filename, origin };
+  const sources: { filename: string; origin: string } = { filename, origin: originUrl };
   javaSourceCache[javaVersion] = sources;
   writeLog(`[Java] Java ${javaVersion} 文件名: ${filename}`);
   return sources;
@@ -376,6 +501,18 @@ export async function downloadAndInstallJava(javaVersion: string): Promise<any> 
       writeLog(`[Java] 下载源「${src.name}」失败: ${result.error}`);
     }
 
+    // API 给的是最新 build，国内镜像同步会滞后一两个版本；全部 404 时
+    // 改用清华目录列表里实际存在的版本再试一轮（旧几个 build 不影响 MC 运行）
+    if (!result.success && !(result.error && result.error.includes('取消'))) {
+      const fallbackName: string | null = await fetchJavaFilenameFromTuna(javaVersion);
+      const currentName: string | null = sources.length > 0 ? (sources[sources.length - 1].url.split('/').pop() || null) : null;
+      if (fallbackName && fallbackName !== currentName) {
+        writeLog(`[Java] 最新版在镜像上不可用，改用镜像已有版本: ${fallbackName}`);
+        const fallbackUrl: string = `https://mirrors.tuna.tsinghua.edu.cn/Adoptium/${javaVersion}/jre/${ADOPTIUM_ARCH}/${ADOPTIUM_OS}/${fallbackName}`;
+        result = await downloadJavaWithWebContents(javaVersion, fallbackUrl);
+      }
+    }
+
     return result;
     
   } catch (e: any) {
@@ -396,7 +533,8 @@ export async function downloadJavaWithWebContents(javaVersion: string, downloadU
   const runtimeName: string = JAVA_RUNTIME_MAP[javaVersion];
   const runtimeDir: string = getJavaRuntimeDir(javaVersion);
   const tempDir: string = path.join(CACHE_DIR, 'java_temp');
-  const tempFile: string = path.join(tempDir, `java-${javaVersion}.zip`);
+  const archiveIsTar: boolean = /\.(tar\.gz|tgz)$/i.test((downloadUrl.split('?')[0] || '').toLowerCase());
+  const tempFile: string = path.join(tempDir, `java-${javaVersion}.${archiveIsTar ? 'tar.gz' : 'zip'}`);
 
   if (!fs.existsSync(tempDir)) {
     fs.mkdirSync(tempDir, { recursive: true });
@@ -484,7 +622,7 @@ setCurrentDownloadPath(null);
             try {
               const content = fs.readFileSync(tempFile, 'utf8').slice(0, 200);
               if (content.includes('<html') || content.includes('<!DOCTYPE')) {
-                hint = '（下载到了网页而非ZIP文件，镜像源可能不可用）';
+                hint = '（下载到了网页而非压缩包，镜像源可能不可用）';
               }
             } catch (e) {}
             reject(new Error(`下载失败：文件太小 (${fileSize} bytes)${hint}`));
@@ -496,7 +634,10 @@ setCurrentDownloadPath(null);
           fs.readSync(fd, header, 0, 4, 0);
           fs.closeSync(fd);
           
-          if (header.toString('hex') !== '504b0304') {
+          const validArchive: boolean = archiveIsTar
+            ? (header[0] === 0x1f && header[1] === 0x8b)
+            : header.toString('hex') === '504b0304';
+          if (!validArchive) {
             let hint = '';
             try {
               const content = fs.readFileSync(tempFile, 'utf8').slice(0, 500);
@@ -506,7 +647,7 @@ setCurrentDownloadPath(null);
                 hint = `（文件头: ${header.toString('hex')}，内容: ${content.slice(0, 100)}）`;
               }
             } catch (e) {}
-            reject(new Error(`下载失败：文件不是有效的ZIP格式${hint}`));
+            reject(new Error(`下载失败：文件不是有效的压缩包${hint}`));
             return;
           }
           
@@ -516,15 +657,27 @@ setCurrentDownloadPath(null);
           if (!fs.existsSync(parentDir)) {
             fs.mkdirSync(parentDir, { recursive: true });
           }
-          
+
+          // 记下解压前已有的目录：runtime 下通常还躺着别的 Java 版本，不能随便挑一个改名
+          const beforeEntries: Set<string> = new Set(fs.readdirSync(parentDir));
+
           if (fs.existsSync(runtimeDir)) {
             fs.rmSync(runtimeDir, { recursive: true, force: true });
           }
           
           try {
-            const AdmZip: any = require('adm-zip');
-            const zip: any = new AdmZip(tempFile);
-            zip.extractAllTo(parentDir, false);
+            if (archiveIsTar) {
+              // Linux / macOS 的 Adoptium 只发 tar.gz，用系统 tar 解压才能保留 bin/java 的可执行位
+              const result: any = spawnSync('tar', ['-xzf', tempFile, '-C', parentDir], { encoding: 'utf8' });
+              if (result.error) throw new Error(result.error.message);
+              if (result.status !== 0) {
+                throw new Error((result.stderr || '').trim() || `tar exited with ${result.status}`);
+              }
+            } else {
+              const AdmZip: any = require('adm-zip');
+              const zip: any = new AdmZip(tempFile);
+              zip.extractAllTo(parentDir, false);
+            }
             writeLog(`[Java] 解压完成`);
           } catch (zipError: any) {
             reject(new Error(`解压失败: ${zipError.message}`));
@@ -534,15 +687,14 @@ setCurrentDownloadPath(null);
           const entries: string[] = fs.readdirSync(parentDir);
           let extractedDir: string | null = null;
           for (const entry of entries) {
+            if (beforeEntries.has(entry)) continue;
             const entryPath: string = path.join(parentDir, entry);
             if (fs.statSync(entryPath).isDirectory()) {
-              if (entry.includes('jdk') || entry.includes('jre')) {
-                const binPath: string = path.join(entryPath, 'bin', 'java.exe');
-                if (fs.existsSync(binPath)) {
-                  extractedDir = entryPath;
-                  writeLog(`[Java] 找到目录: ${entry}`);
-                  break;
-                }
+              const binPath: string = path.join(entryPath, 'bin', JAVA_BIN_NAME);
+              if (fs.existsSync(binPath)) {
+                extractedDir = entryPath;
+                writeLog(`[Java] 找到目录: ${entry}`);
+                break;
               }
             }
           }
@@ -561,7 +713,9 @@ setCurrentDownloadPath(null);
 
           const javaPath: string | null = findJavaExecutable(runtimeDir);
           if (!javaPath) {
-            reject(new Error('Java installation failed: java.exe was not found'));
+            reject(new Error(IS_WINDOWS
+              ? t('ui.java_installation_failed_java_exe_was_not_found')
+              : `Java installation failed: ${JAVA_BIN_NAME} was not found`));
             return;
           }
           
@@ -669,8 +823,8 @@ export function findJavaExecutableInDir(rootDir: string): string | null {
   while (stack.length > 0) {
     const current: string = stack.pop()!;
     if (!fs.existsSync(current)) continue;
-    const javaw: string = path.join(current, 'bin', 'javaw.exe');
-    const java: string = path.join(current, 'bin', 'java.exe');
+    const javaw: string = path.join(current, 'bin', JAVA_UI_BIN_NAME);
+    const java: string = path.join(current, 'bin', JAVA_BIN_NAME);
     if (fs.existsSync(javaw)) return javaw;
     if (fs.existsSync(java)) return java;
     try {
@@ -696,6 +850,21 @@ export async function listInstalledJavaRuntimes(): Promise<{ major: string; path
       seen.add(key);
       runtimes.push({ major, path: result.javaPath });
     } catch {}
+  }
+
+  // 系统里其他大版本的 Java 也列出来，方便用户直接选
+  for (const candidate of listSystemJavaCandidates()) {
+    try {
+      if (!fs.existsSync(candidate) || !fs.statSync(candidate).isFile()) continue;
+    } catch { continue; }
+    const major: number | null = detectJavaMajorVersion(candidate);
+    if (!major) continue;
+    const majorKey: string = String(major);
+    if (runtimes.some((runtime) => runtime.major === majorKey)) continue;
+    const pathKey: string = candidate.toLowerCase();
+    if (seen.has(pathKey)) continue;
+    seen.add(pathKey);
+    runtimes.push({ major: majorKey, path: candidate });
   }
 
   try {

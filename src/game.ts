@@ -10,7 +10,7 @@
 // __IMPORTS_BEGIN__
 import { app, dialog, ipcMain, shell } from 'electron';
 import fs from 'fs';
-import os from 'os';
+import https from 'https';
 import path from 'path';
 import { spawn, spawnSync } from 'child_process';
 
@@ -18,7 +18,8 @@ import { APP_VERSION, DEFAULT_SETTINGS, GAME_DIR, computeAutoMemoryMB, getVersio
 import { CrashRecord, buildErrorReport, analyzeCrash, listCrashArtifacts } from './crash-report';
 import { generateLaunchDisplayName } from './download';
 import { t } from './i18n';
-import { downloadAndInstallJava, ensureJavaRuntime, findJavaExecutableInDir, getJavaVersionFromVersionData } from './java';
+import { downloadAndInstallJava, ensureJavaRuntime, findJavaExecutableInDir, findSystemJava, getJavaVersionFromVersionData } from './java';
+import { CLASSPATH_SEPARATOR, IS_WINDOWS, JAVA_BIN_NAME, JAVA_UI_BIN_NAME, matchesLibraryRules as checkLibraryRules, nativesClassifier } from './platform';
 import { mainWindow, trimWorkingSets } from './shell';
 // __IMPORTS_END__
 
@@ -56,7 +57,8 @@ function resolveJavaExecutable(value: string): string | null {
     if (!fs.existsSync(target)) return null;
     const stat: fs.Stats = fs.statSync(target);
     if (stat.isDirectory()) return findJavaExecutableInDir(target);
-    if (stat.isFile() && /^(java|javaw)\.exe$/i.test(path.basename(target))) return target;
+    const base: string = path.basename(target).toLowerCase();
+    if (stat.isFile() && (base === 'java' || base === 'javaw' || base === JAVA_BIN_NAME.toLowerCase() || base === JAVA_UI_BIN_NAME.toLowerCase())) return target;
   } catch {}
   return null;
 }
@@ -104,6 +106,23 @@ export const GAME_LOG_KEEP_BYTES: number = 256 * 1024;
 
 
 export function killGameProcessTree(pid: number): boolean {
+  if (!IS_WINDOWS) {
+    // 游戏是 detached 启动的，负 PID 能一次带走整个进程组（含子进程）
+    try {
+      process.kill(-pid, 'SIGKILL');
+      writeLog(`[启动] 已终止进程组 PID: ${pid}`);
+      return true;
+    } catch {
+      try {
+        process.kill(pid, 'SIGKILL');
+        writeLog(`[启动] 已终止进程 PID: ${pid}`);
+        return true;
+      } catch (e: any) {
+        writeLog(`[启动] 终止进程失败: ${e.message}`);
+        return false;
+      }
+    }
+  }
   try {
     const result = spawnSync('taskkill', ['/pid', String(pid), '/T', '/F'], { windowsHide: true, timeout: 5000 });
     if (result.status === 0) { writeLog(`[启动] 已终止进程树 PID: ${pid}`); return true; }
@@ -114,6 +133,28 @@ export function killGameProcessTree(pid: number): boolean {
 
 
 export function findAndKillMinecraftJavaProcesses(): boolean {
+  if (!IS_WINDOWS) {
+    const killed: number[] = [];
+    try {
+      for (const entry of fs.readdirSync('/proc')) {
+        if (!/^\d+$/.test(entry)) continue;
+        const pid: number = Number(entry);
+        if (pid === process.pid) continue;
+        let cmdline: string = '';
+        try {
+          cmdline = fs.readFileSync(`/proc/${pid}/cmdline`, 'utf8').replace(/\0/g, ' ').toLowerCase();
+        } catch { continue; }
+        if (!/(^|[\s/])(java|javaw)\s/.test(cmdline)) continue;
+        if (!/net\.minecraft|minecraft|forge|fabric|optifine/.test(cmdline)) continue;
+        try { process.kill(pid, 'SIGKILL'); killed.push(pid); } catch {}
+      }
+    } catch (e: any) { writeLog(`[启动] 查找Minecraft进程失败: ${e.message}`); }
+    if (killed.length > 0) {
+      writeLog(`[启动] 已终止 ${killed.length} 个Minecraft Java进程: ${killed.join(', ')}`);
+      return true;
+    }
+    return false;
+  }
   try {
     const script = `
       $javaProcs = Get-Process -Name "java","javaw" -ErrorAction SilentlyContinue
@@ -209,11 +250,16 @@ export function resetGameState(): void {
 
 
 export function readGameProcessProbe(pid: number): Promise<{ ok: boolean; alive: boolean; memoryMB: number | null }> {
-  return new Promise((resolve) => {
-    if (process.platform !== 'win32') {
-      resolve({ ok: false, alive: false, memoryMB: null });
-      return;
+  if (!IS_WINDOWS) {
+    try {
+      const status: string = fs.readFileSync(`/proc/${pid}/status`, 'utf8');
+      const match: RegExpMatchArray | null = status.match(/VmRSS:\s+(\d+)\s+kB/);
+      return Promise.resolve({ ok: true, alive: true, memoryMB: match ? Math.round(Number(match[1]) / 1024) : null });
+    } catch {
+      return Promise.resolve({ ok: true, alive: false, memoryMB: null });
     }
+  }
+  return new Promise((resolve) => {
     // 只取内存：窗口相关的事都交给常驻的标题进程（MainWindowHandle 对这个 java 进程不可靠）
     const script: string =
       `$p = Get-Process -Id ${pid} -ErrorAction SilentlyContinue; ` +
@@ -399,7 +445,14 @@ export function stopGameTitlePowerShell(): void {
 
 
 export function applyProcessPriority(pid: number, priority: string): void {
-  if (process.platform !== 'win32') return;
+  if (!IS_WINDOWS) {
+    const nice: number = priority === 'low' ? 10 : priority === 'high' ? -5 : 0;
+    if (nice === 0) return;
+    const result: any = spawnSync('renice', ['-n', String(nice), '-p', String(pid)], { encoding: 'utf8' });
+    if (result.status === 0) writeLog(`[启动] 进程优先级已调整为 nice ${nice}`);
+    else writeLog(`[启动] 设置进程优先级失败: ${(result.stderr || result.error?.message || '').toString().trim() || result.status}`);
+    return;
+  }
   const priorityClass: string = priority === 'low' ? 'BelowNormal' : priority === 'high' ? 'High' : '';
   if (!priorityClass) return;
 
@@ -545,25 +598,6 @@ export function splitArgs(str: string): string[] {
 }
 
 
-export function checkLibraryRules(rules: any[]): boolean {
-  if (!rules || rules.length === 0) return true;
-  let allowed: boolean = false;
-  for (const rule of rules) {
-    let match: boolean = true;
-    if (rule.os) {
-      const platform: string = os.platform();
-      if (rule.os.name === 'windows' && platform !== 'win32') match = false;
-      if (rule.os.name === 'linux' && platform !== 'linux') match = false;
-      if (rule.os.name === 'osx' && platform !== 'darwin') match = false;
-    }
-    if (match) {
-      allowed = (rule.action === 'allow');
-    }
-  }
-  return allowed;
-}
-
-
 export function resolveInheritsFrom(vd: any, gameDir: string): any {
   if (!vd.inheritsFrom) return vd;
   const parentJsonPath: string = path.join(gameDir, 'versions', vd.inheritsFrom, `${vd.inheritsFrom}.json`);
@@ -638,6 +672,29 @@ function supportsQuickPlay(vd: any): boolean {
 }
 
 
+/**
+ * 向 CaelLabMinecraft 报备一次正版启动：网站记下「这个 IP 刚完成正版验证」，
+ * 玩家 3 分钟内进服免输密钥（单次有效）。失败只记日志，绝不影响启动。
+ */
+function reportPremiumEntry(accessToken: string): void {
+  try {
+    const req = https.request('https://minecraft.caellab.com/api/auth.php?action=premium-enter', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      timeout: 6000
+    }, (resp) => {
+      resp.resume();
+      resp.on('end', () => writeLog(`[MC免密钥] 报备完成: HTTP ${resp.statusCode}`));
+    });
+    req.on('error', (e: Error) => writeLog(`[MC免密钥] 报备失败: ${e.message}`));
+    req.on('timeout', () => req.destroy(new Error('timeout')));
+    req.write(`token=${encodeURIComponent(accessToken)}`);
+    req.end();
+  } catch (e: any) {
+    writeLog(`[MC免密钥] 报备异常: ${e.message}`);
+  }
+}
+
 export function buildLaunchArgs(vd: any, rootDir: string, gameDir: string, versionId: string, username: string, windowMode: string, memoryMB: number | null, serverIp: string | null, authInfo?: { uuid: string; accessToken: string; userType: string }, launchOptions?: { jvmArgsRaw?: string; gcPreset?: string; windowSize?: string; windowWidth?: number; windowHeight?: number }): any {
   const cp: string[] = [];
   
@@ -651,6 +708,7 @@ export function buildLaunchArgs(vd: any, rootDir: string, gameDir: string, versi
   }
   
   let missingLibs: number = 0;
+  const nativeClassifier: string = nativesClassifier();
   for (const lib of vd.libraries || []) {
     if (!checkLibraryRules(lib.rules)) continue;
     
@@ -664,13 +722,13 @@ export function buildLaunchArgs(vd: any, rootDir: string, gameDir: string, versi
       }
     }
     
-    if (lib.downloads?.classifiers?.['natives-windows']?.path) {
-      const nativePath: string = path.join(rootDir, 'libraries', lib.downloads.classifiers['natives-windows'].path);
+    if (lib.downloads?.classifiers?.[nativeClassifier]?.path) {
+      const nativePath: string = path.join(rootDir, 'libraries', lib.downloads.classifiers[nativeClassifier].path);
       if (fs.existsSync(nativePath)) {
         cp.push(nativePath);
       } else {
         missingLibs++;
-        writeLog(`[启动] Native库缺失: ${lib.downloads.classifiers['natives-windows'].path}`);
+        writeLog(`[启动] Native库缺失: ${lib.downloads.classifiers[nativeClassifier].path}`);
       }
     }
   }
@@ -699,7 +757,7 @@ export function buildLaunchArgs(vd: any, rootDir: string, gameDir: string, versi
     writeLog('[启动] 已启用 G1GC 调优参数');
   }
 
-  jvmArgs.push(`-Djava.library.path=${nativesDir}`, '-cp', cp.join(';'));
+  jvmArgs.push(`-Djava.library.path=${nativesDir}`, '-cp', cp.join(CLASSPATH_SEPARATOR));
 
   const extraJvmArgs: string[] = splitArgs(launchOptions?.jvmArgsRaw || '');
   if (extraJvmArgs.length > 0) {
@@ -719,7 +777,7 @@ export function buildLaunchArgs(vd: any, rootDir: string, gameDir: string, versi
     user_type: authInfo?.userType || 'legacy',
     user_properties: '{}',
     version_type: 'GPCL',
-    classpath_separator: ';',
+    classpath_separator: CLASSPATH_SEPARATOR,
     library_directory: path.join(rootDir, 'libraries'),
     natives_directory: nativesDir,
     launcher_name: 'GPCL',
@@ -994,6 +1052,14 @@ ipcMain.handle('launch-minecraft', async (_, opt: any) => {
       java = await ensureJavaRuntime(javaVersionToUse);
     }
 
+    if (!java) {
+      const systemJava: string | null = findSystemJava(javaVersionToUse);
+      if (systemJava) {
+        java = systemJava;
+        writeLog(`[Java] 使用系统已安装的 Java ${javaVersionToUse}: ${systemJava}`);
+      }
+    }
+
     if (launchCancelFlag) {
       writeLog('[启动] 用户已取消启动');
       return { success: false, error: 'Launch cancelled', cancelled: true };
@@ -1043,6 +1109,11 @@ ipcMain.handle('launch-minecraft', async (_, opt: any) => {
     const authInfo: any = opt.authUuid && opt.authAccessToken
       ? { uuid: opt.authUuid, accessToken: opt.authAccessToken, userType: opt.authUserType || 'msa' }
       : undefined;
+    // 正版启动前向 CaelLabMinecraft 报备一次：进服时 3 分钟内免密钥直接放行（报备用的是已验证的令牌）
+    // 只在设置里开了 CaelLabMinecraft 集成才发，默认完全不和它通信
+    if (authInfo?.userType === 'msa' && authInfo.accessToken && settings.game?.caellabIntegration === true) {
+      reportPremiumEntry(authInfo.accessToken);
+    }
     const { jvmArgs, gameArgs, mainClass } = buildLaunchArgs(vd, rootDir, gameDir, versionId, username, actualWindowMode, memoryMB, serverIp, authInfo, {
       jvmArgsRaw: settings.game?.jvmArgs,
       gcPreset: settings.game?.gcPreset,
@@ -1271,6 +1342,15 @@ ipcMain.handle('launch-minecraft', async (_, opt: any) => {
 
 export async function detectGameWindow(pid: number): Promise<void> {
   writeLog(`[启动] 开始检测游戏窗口，PID: ${pid}`);
+
+  if (!IS_WINDOWS) {
+    // Linux 没有按 PID 找窗口的可靠办法；启动日志里出现 LWJGL/OpenGL 时另有事件，这里只等一小会儿
+    await new Promise<void>((resolve) => setTimeout(resolve, 1500));
+    if (mainWindow && !launchCancelFlag && gameSessions.has(pid)) {
+      mainWindow.webContents.send('game-window-created', { pid, windowDetected: false });
+    }
+    return;
+  }
 
   return new Promise<void>((resolve) => {
     let resolved: boolean = false;

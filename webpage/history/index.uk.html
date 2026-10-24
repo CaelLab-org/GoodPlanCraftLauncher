@@ -74,7 +74,7 @@
                     </div>
                 </li>
                 <li class="lang-switch"><select aria-label="Мова" onchange="if(this.value)location.href=this.value"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk" selected>Українська</option><option value="./index.vi">Tiếng Việt</option></select></li>
-                <li><a href="../index.uk#download" class="nav-cta">&#9662; Завантажити v1.9.1</a></li>
+                <li><a href="../index.uk#download" class="nav-cta">&#9662; Завантажити v1.9.2</a></li>
             </ul>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Відкрити меню" aria-expanded="false">&#9776;</button>
         </div>
@@ -92,6 +92,7 @@
             <p class="cl-intro">Від 1.0.0 до останнього випуску — кожна версія, що в ній змінилося й чи можна її завантажити — на цій сторінці.</p>
             <p class="cl-note">Для 1.3.2 і старіших установчі файли не збережено; вбудоване оновлення в старих версіях може більше не працювати, тож для щоденного використання рекомендується встановити останній випуск.</p>
             <div class="cl-index" role="navigation" aria-label="Покажчик версій">
+                <a href="#v1-9-2">1.9.2</a>
                 <a href="#v1-9-1">1.9.1</a>
                 <a href="#v1-9-0">1.9.0</a>
                 <a href="#v1-8-0">1.8.0</a>
@@ -121,12 +122,36 @@
     <main class="history cl-history">
         <div class="container">
             <div class="timeline">
+                <article class="timeline-item" id="v1-9-2">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.9.2</span>
+                        <span class="version-title">Перша версія для Linux (експериментальна), прив'язка CaelLabMinecraft</span>
+                        <span class="latest-chip">Остання</span>
+                        <span class="version-date">2026-10-24</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Перша версія для Linux (експериментальна): пакунок tar.gz x64 для завантаження гри та встановлення Forge / Fabric / модів; оновлення всередині застосунку поки недоступні — з новою версією відкриється сторінка завантаження</li>
+                        <li>Нова прив'язка CaelLabMinecraft: увімкніть її в налаштуваннях і під'єднайте обліковий запис Microsoft за кодом прив'язки</li>
+                        <li>Java, уже встановлені в системі (Program Files, JAVA_HOME тощо), знаходяться автоматично, і їх можна вибирати для кожної версії — без повторних завантажень</li>
+                        <li>Завантаження Java стало надійнішим: якщо на дзеркалі ще немає останньої збірки, береться старіша з того самого дзеркала; якщо API недоступний, виручає список файлів дзеркала</li>
+                        <li>Виправлено порожню піктограму головного вікна — тепер коректно показується піктограма лаунчера</li>
+                        <li>Виправлено перевірку оновлень, що ламалася на номерах версій із буквеним суфіксом</li>
+                        <li>Під час завантаження гри на Windows пропускаються бібліотеки, непотрібні на цій платформі</li>
+                    </ul>
+                    <div class="cl-download">
+                        <a class="cl-dl-btn" href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.2-Setup.exe">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                            Завантажити v1.9.2
+                        </a>
+                        <span class="cl-file">GPCL-1.9.2-Setup.exe · 94.0 MB · Windows 64-біт</span>
+                    </div>
+                </article>
                 <article class="timeline-item" id="v1-9-1">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
                         <span class="version-number">v1.9.1</span>
                         <span class="version-title">Акаунти Microsoft, кілька ігрових тек та Java для кожної версії</span>
-                        <span class="latest-chip">Остання</span>
                         <span class="version-date">2026-10-23</span>
                     </div>
                     <ul class="changelog">

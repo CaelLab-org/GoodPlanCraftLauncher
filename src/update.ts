@@ -18,8 +18,12 @@ import { spawn } from 'child_process';
 
 import { UPDATA_DIR, loadSettings, writeLog } from './config';
 import { t } from './i18n';
+import { IS_WINDOWS } from './platform';
 import { mainWindow } from './shell';
 // __IMPORTS_END__
+
+// 自动更新只实现了 Windows 的静默安装（Inno Setup）；其他平台请手动下载新版本
+export const IN_APP_UPDATE_SUPPORTED: boolean = IS_WINDOWS;
 
 export const UPDATE_BASE_URL = 'https://dl.caellab.com/file/games/gpcl';
 
@@ -67,12 +71,19 @@ function removeFile(filePath: string): void {
 }
 
 
+function parseVersionPart(part: string): number {
+  // "2-alpha-linux" 这类带后缀的段取前导数字，否则 alpha 版会算成 NaN、永远检测不到更新
+  const match: RegExpMatchArray | null = part.match(/^(\d+)/);
+  return match ? parseInt(match[1], 10) : 0;
+}
+
+
 function compareVersions(a: string, b: string): number {
-  const aParts: number[] = a.split('.').map(Number);
-  const bParts: number[] = b.split('.').map(Number);
+  const aParts: string[] = String(a).split('.');
+  const bParts: string[] = String(b).split('.');
   for (let i = 0; i < Math.max(aParts.length, bParts.length); i++) {
-    const av: number = aParts[i] || 0;
-    const bv: number = bParts[i] || 0;
+    const av: number = parseVersionPart(aParts[i] || '0');
+    const bv: number = parseVersionPart(bParts[i] || '0');
     if (bv > av) return 1;
     if (av > bv) return -1;
   }
@@ -130,6 +141,11 @@ export function initUpdateState(): void {
   justUpdatedTo = null;
   readyVersion = null;
   quitInstaller = null;
+
+  if (!IN_APP_UPDATE_SUPPORTED) {
+    cleanupUpdateDir(null);
+    return;
+  }
 
   const state = readUpdateState();
   if (!state) {
@@ -212,11 +228,47 @@ ipcMain.handle('check-for-updates', async (_: any, locale: string = 'en-US') => 
   const legacyUrl = 'https://gamets.caellab.com/gpcl/data.json';
 
   writeLog(`[更新] 开始检查更新（${slug}）...`);
+
+  // 非 Windows 平台不能装 Windows 的 Setup.exe：
+  // 版本 JSON 里每个版本可以带 "linux": "<tar.gz 地址>"（data.json 里是 name=linuxurl 的条目），
+  // 有就原样交给渲染层引导手动下载，没有就退回官网下载页。
+  const buildResult = (data: any, source: string) => {
+    let linuxDownloadUrl: string | null = null;
+    let linuxSha256: string | null = null;
+    try {
+      if (data && Array.isArray(data.versions)) {
+        for (const entry of data.versions) {
+          if (entry && typeof entry.linux === 'string' && entry.linux) { linuxDownloadUrl = entry.linux; }
+          if (entry && typeof entry.linuxSha256 === 'string' && entry.linuxSha256) { linuxSha256 = entry.linuxSha256; }
+        }
+      } else if (data && Array.isArray(data.Launcher)) {
+        let haveVersion: boolean = false;
+        for (const item of data.Launcher) {
+          if (item?.name === 'version' && item.key) haveVersion = true;
+          if (haveVersion && item?.name === 'linuxurl' && item.key) linuxDownloadUrl = item.key;
+          if (haveVersion && item?.name === 'linuxsha256' && item.key) linuxSha256 = item.key;
+        }
+      }
+    } catch (e: any) {
+      writeLog(`[更新] 解析 Linux 下载信息失败: ${e.message}`);
+    }
+    if (linuxDownloadUrl) writeLog(`[更新] Linux 下载地址: ${linuxDownloadUrl}`);
+    return {
+      success: true as const,
+      data,
+      source,
+      updatesSupported: IN_APP_UPDATE_SUPPORTED,
+      platform: process.platform,
+      linuxDownloadUrl,
+      linuxSha256
+    };
+  };
+
   try {
     const data = await fetchJsonUrl(localizedUrl);
     if (data && Array.isArray(data.versions)) {
       writeLog('[更新] 检查更新完成（按语言）');
-      return { success: true, data };
+      return buildResult(data, 'localized');
     }
   } catch (e: any) {
     writeLog(`[更新] 按语言检查失败，回退 data.json: ${e.message}`);
@@ -225,7 +277,7 @@ ipcMain.handle('check-for-updates', async (_: any, locale: string = 'en-US') => 
   try {
     const data = await fetchJsonUrl(legacyUrl);
     writeLog('[更新] 检查更新完成（data.json）');
-    return { success: true, data };
+    return buildResult(data, 'legacy');
   } catch (e: any) {
     writeLog(`[更新] 请求失败: ${e.message}`);
     return { success: false, error: e.message };
@@ -284,6 +336,7 @@ async function verifyInstaller(filePath: string): Promise<{ ok: boolean; error?:
 
 
 ipcMain.handle('download-update', async (_: any, version: string, manual: boolean = false) => {
+  if (!IN_APP_UPDATE_SUPPORTED) return { success: false, error: t('ui.updates_are_unavailable') };
   if (isUpdateDownloading) return { success: false, error: 'An update download is already in progress' };
   if (typeof version !== 'string' || !/^\d+(\.\d+)*$/.test(version)) {
     return { success: false, error: 'Invalid version' };
@@ -417,6 +470,7 @@ function installerArgs(relaunch: boolean): string[] {
 
 
 function launchInstaller(installerPath: string, relaunch: boolean): { success: boolean; error?: string } {
+  if (!IN_APP_UPDATE_SUPPORTED) return { success: false, error: t('ui.updates_are_unavailable') };
   if (!fs.existsSync(installerPath)) {
     writeLog(`[更新] 安装程序不存在: ${installerPath}`);
     return { success: false, error: 'The installer does not exist' };
@@ -458,6 +512,7 @@ ipcMain.handle('install-update', (_: any, installerPath: string, relaunch: boole
 
 
 ipcMain.handle('set-update-shutdown-hook', (_: any, installerPath: string, relaunch: boolean = false) => {
+  if (!IN_APP_UPDATE_SUPPORTED) return { success: false, error: t('ui.updates_are_unavailable') };
   if (!fs.existsSync(installerPath)) return { success: false, error: 'The installer does not exist' };
   quitInstaller = { installerPath, relaunch: !!relaunch };
   writeLog(`[更新] 已设置关闭钩子: ${installerPath} (重启=${relaunch})`);

@@ -1,8 +1,31 @@
 {
   "schema": 1,
-  "latest": "1.9.1",
-  "updated": "2026-10-23",
+  "latest": "1.9.2",
+  "updated": "2026-10-24",
   "versions": [
+    {
+      "version": "1.9.2",
+      "anchor": "v1-9-2",
+      "date": "2026-10-24",
+      "title": "Première version Linux (expérimentale), liaison CaelLabMinecraft",
+      "log": [
+        "Première version pour Linux (expérimentale) : paquet tar.gz x64 pour télécharger le jeu et installer Forge / Fabric / mods ; les mises à jour intégrées ne sont pas encore disponibles, une nouvelle version renvoie vers la page de téléchargement",
+        "Nouvelle liaison CaelLabMinecraft : activez-la dans les paramètres et connectez votre compte Microsoft avec un code de liaison",
+        "Les Java déjà installés sur le système (Program Files, JAVA_HOME, etc.) sont détectés automatiquement et peuvent être choisis par version, sans téléchargement en double",
+        "Téléchargements de Java plus robustes : si le miroir n'a pas encore la dernière version, une version plus ancienne du même miroir est utilisée ; si l'API est injoignable, la liste des fichiers du miroir prend le relais",
+        "Correction de l'icône vide de la fenêtre principale : l'icône du lanceur s'affiche désormais correctement",
+        "Correction de l'échec de la vérification de mises à jour quand le numéro de version se termine par des lettres",
+        "Sous Windows, les téléchargements du jeu ignorent les bibliothèques inutiles sur cette plateforme"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.2-Setup.exe",
+        "file": "GPCL-1.9.2-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      },
+      "linux": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.2-linux-x64.tar.gz",
+      "linuxSha256": "9151ddf7732c9b6cf703229343c4440cab36dc2c4898c6ceffd8e916e486c8fd"
+    },
     {
       "version": "1.9.1",
       "anchor": "v1-9-1",

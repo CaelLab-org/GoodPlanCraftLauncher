@@ -1,8 +1,31 @@
 {
   "schema": 1,
-  "latest": "1.9.1",
-  "updated": "2026-10-23",
+  "latest": "1.9.2",
+  "updated": "2026-10-24",
   "versions": [
+    {
+      "version": "1.9.2",
+      "anchor": "v1-9-2",
+      "date": "2026-10-24",
+      "title": "İlk Linux sürümü (deneysel), CaelLabMinecraft bağlama",
+      "log": [
+        "Linux için ilk sürüm (deneysel): oyunu indirmek ve Forge / Fabric / mod kurmak için x64 tar.gz paketi; uygulama içi güncelleme henüz yok, yeni sürüm çıktığında indirme sayfasına yönlendirilirsiniz",
+        "Yeni CaelLabMinecraft bağlama: ayarlardan açın ve Microsoft hesabınızı bağlama koduyla bağlayın",
+        "Sisteminizde kurulu olan Java'lar (Program Files, JAVA_HOME vb.) otomatik bulunur ve her sürüm için ayrı seçilebilir, artık gereksiz indirme yok",
+        "Java indirmeleri daha sağlam: yansıda en son derleme henüz yoksa aynı yansıdaki eski bir derleme kullanılır; API'ye ulaşılamazsa yansının dosya listesi devreye girer",
+        "Ana pencere simgesinin boş görünmesi sorunu giderildi, başlatıcı simgesi artık doğru görünüyor",
+        "Sonda harf bulunan sürüm numaralarında güncelleme denetiminin bozulması sorunu giderildi",
+        "Windows'ta oyun indirmeleri bu platformda gerekmeyen kitaplıkları atlar"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.2-Setup.exe",
+        "file": "GPCL-1.9.2-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      },
+      "linux": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.2-linux-x64.tar.gz",
+      "linuxSha256": "9151ddf7732c9b6cf703229343c4440cab36dc2c4898c6ceffd8e916e486c8fd"
+    },
     {
       "version": "1.9.1",
       "anchor": "v1-9-1",

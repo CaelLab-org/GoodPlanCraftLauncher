@@ -2,6 +2,34 @@
     "Launcher": [
         {
             "name": "version",
+            "key": "1.9.2"
+        },
+        {
+            "name": "versiontitle",
+            "key": "Linux 实验版首发，支持 CaelLabMinecraft 正版绑定"
+        },
+        {
+            "name": "versiontitle_en",
+            "key": "First Linux build (experimental), CaelLabMinecraft linking"
+        },
+        {
+            "name": "versionlog",
+            "key": "新增 Linux 版（实验性）：提供 x64 的 tar.gz 包，可以下载游戏、安装 Forge / Fabric / 模组；应用内更新暂不可用，有新版本时会引导到官网下载<br>新增 CaelLabMinecraft 正版绑定：在设置里开启后，用绑定码即可接入 CaelLabMinecraft 服务器<br>会自动扫描系统里已安装的 Java（Program Files、JAVA_HOME 等），版本设置里可以直接选用，不再重复下载<br>Java 运行时下载更稳：镜像还没同步最新版时自动改用镜像里已有的版本，API 不可用时从镜像目录列表兜底<br>修复主窗口图标一直空白的问题，现在正确显示启动器图标<br>修复带字母后缀的版本号导致更新检测异常的问题<br>Windows 下载游戏时会跳过当前平台用不到的依赖库，少下一些文件"
+        },
+        {
+            "name": "versionlog_en",
+            "key": "First Linux build (experimental): an x64 tar.gz package that can download the game and install Forge / Fabric / mods; in-app updates are not available yet, so the launcher opens the download page instead<br>New CaelLabMinecraft linking: turn it on in settings and connect your Microsoft account with a link code<br>Java runtimes already installed on your system (Program Files, JAVA_HOME, etc.) are detected automatically and can be picked per version, so no more duplicate downloads<br>Java downloads are more resilient: if a mirror has not synced the latest build yet, an older build from that mirror is used, and the mirror's file listing serves as a fallback when the API is unreachable<br>Fixed the main window icon, which used to be blank<br>Fixed update checks breaking on version numbers with letter suffixes<br>Game downloads on Windows skip libraries that are not needed on this platform"
+        },
+        {
+            "name": "linuxurl",
+            "key": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.2-linux-x64.tar.gz"
+        },
+        {
+            "name": "linuxsha256",
+            "key": "9151ddf7732c9b6cf703229343c4440cab36dc2c4898c6ceffd8e916e486c8fd"
+        },
+        {
+            "name": "version",
             "key": "1.9.1"
         },
         {

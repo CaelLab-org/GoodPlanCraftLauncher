@@ -17,6 +17,7 @@ import { pathToFileURL } from 'url';
 
 import { APP_VERSION, BASE_DIR, CONFIG_DIR, getSystemMemoryInfo, loadSettings, themeBackgroundColor, writeLog } from './config';
 import { t, translateText } from './i18n';
+import { IS_WINDOWS } from './platform';
 import { isDeveloperMode, isDownloading, isJavaDownloading } from './state';
 // __IMPORTS_END__
 
@@ -32,7 +33,7 @@ export function createWindow(): void {
     maxHeight: 1080,
     frame: false,
     title: 'GoodPlanCraftLauncher',
-    icon: path.join(__dirname, 'icon.ico'),
+    icon: path.join(__dirname, 'static', 'icon', 'GPCL.png'),
     backgroundColor: themeBackgroundColor(loadSettings().appearance?.theme),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -102,6 +103,7 @@ export function createWindow(): void {
 
 
 export function createGPCLShortcut(): void {
+  if (!IS_WINDOWS) return;
   try {
     const startMenuDir = path.join(app.getPath('appData'), 'Microsoft', 'Windows', 'Start Menu', 'Programs');
     const shortcutPath = path.join(startMenuDir, 'GPCL.lnk');

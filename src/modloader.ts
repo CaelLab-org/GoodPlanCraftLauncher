@@ -15,8 +15,9 @@ import path from 'path';
 import { GAME_DIR, applyInitialVersionIsolation, getVersionGameDir, writeLog } from './config';
 import { beginProgressSession, downloadFile, fetchText, finishProgressSession, installVersion, mirrorUrlFor, updateVersionLastPlayed } from './download';
 import { t, translateText } from './i18n';
-import { ensureJavaRuntime, findJavaExecutable, getJavaRuntimeDir, getJavaVersionForMCVersion } from './java';
+import { ensureJavaRuntime, findJavaExecutable, getJavaRuntimeDir, getJavaVersionForMCVersion, listSystemJavaCandidates } from './java';
 import { installModrinthProjectTo } from './mods';
+import { IS_WINDOWS } from './platform';
 import { shouldCancelDownload } from './state';
 // __IMPORTS_END__
 
@@ -785,7 +786,7 @@ export async function installOptiFine(mcVersion: string, optifineFilename: strin
   try {
     fs.mkdirSync(homeDir, { recursive: true });
     try {
-      fs.symlinkSync(GAME_DIR, homeMcDir, 'junction');
+      fs.symlinkSync(GAME_DIR, homeMcDir, IS_WINDOWS ? 'junction' : 'dir');
       linked = true;
     } catch (e: any) {
       writeLog(`[OptiFine] 无法创建目录链接，改用临时复制: ${e.message}`);
@@ -809,7 +810,7 @@ export async function installOptiFine(mcVersion: string, optifineFilename: strin
         timeout: 180000,
         windowsHide: true,
         maxBuffer: 10 * 1024 * 1024,
-        env: { ...process.env, APPDATA: homeDir }
+        env: { ...process.env, ...(IS_WINDOWS ? { APPDATA: homeDir } : { HOME: homeDir }) }
       }, (error: any, stdout: string, stderr: string) => {
         if (stdout) writeLog(`[OptiFine] stdout: ${stdout}`);
         if (stderr) writeLog(`[OptiFine] stderr: ${stderr}`);
@@ -854,41 +855,14 @@ export async function installOptiFine(mcVersion: string, optifineFilename: strin
 
 
 export function findJava(): string | null {
-  const paths: (string | null)[] = [
-    process.env.JAVA_HOME ? path.join(process.env.JAVA_HOME, 'bin', 'java.exe') : null,
-    'C:\\Program Files\\Java\\jdk1.8.0_351\\bin\\java.exe',
-    'C:\\Program Files\\Java\\jdk-17\\bin\\java.exe',
-    'C:\\Program Files\\Java\\jdk-21\\bin\\java.exe',
-    'C:\\Program Files (x86)\\Java\\jdk1.8.0_351\\bin\\java.exe',
-    'C:\\Program Files\\Eclipse Adoptium\\jdk-17.0.8.101-hotspot\\bin\\java.exe',
-    'C:\\Program Files (x86)\\Eclipse Adoptium\\jdk-17.0.8.101-hotspot\\bin\\java.exe',
-    'C:\\Program Files\\Amazon Corretto\\jdk17.0.8_7\\bin\\java.exe',
-    'C:\\Program Files\\Microsoft\\jdk-17.0.8.101-hotspot\\bin\\java.exe'
-  ];
-  
-  for (const javaPath of paths) {
-    if (javaPath && fs.existsSync(javaPath)) {
-      writeLog(`[Forge] 找到 Java: ${javaPath}`);
-      return javaPath;
-    }
-  }
-  
-  try {
-    const { execSync } = require('child_process');
-    const whichOutput: string = execSync('where java', { stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim();
-    if (whichOutput) {
-      const javaPaths: string[] = whichOutput.split('\n').map((p: string) => p.trim()).filter((p: string) => p);
-      for (const javaPath of javaPaths) {
-        if (fs.existsSync(javaPath)) {
-          writeLog(`[Forge] 通过 where 找到 Java: ${javaPath}`);
-          return javaPath;
-        }
+  for (const javaPath of listSystemJavaCandidates()) {
+    try {
+      if (fs.existsSync(javaPath) && fs.statSync(javaPath).isFile()) {
+        writeLog(`[Forge] 找到 Java: ${javaPath}`);
+        return javaPath;
       }
-    }
-  } catch (e: any) {
-    writeLog(`[Forge] where java 执行失败: ${e.message}`);
+    } catch {}
   }
-  
   return null;
 }
 

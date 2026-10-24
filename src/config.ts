@@ -105,7 +105,8 @@ export const DEFAULT_SETTINGS = {
     optimizeBeforeLaunch: false,
     autoLanguage: true,
     language: 'zh_cn',
-    versionIsolation: 'all'
+    versionIsolation: 'all',
+    caellabIntegration: false
   },
   appearance: {
     theme: 'light',
@@ -749,7 +750,8 @@ ipcMain.on('get-i18n-info-sync', (event: any) => {
     theme: currentSettings.appearance?.theme || 'dark',
     style: currentSettings.appearance?.style || 'advanced',
     scale: currentSettings.appearance?.scale || '100',
-    skipSplash: currentSettings.appearance?.skipSplash === true
+    skipSplash: currentSettings.appearance?.skipSplash === true,
+    platform: process.platform
   };
 });
 

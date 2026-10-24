@@ -74,7 +74,7 @@
                     </div>
                 </li>
                 <li class="lang-switch"><select aria-label="Language" onchange="if(this.value)location.href=this.value"><option value="./index.en-us" selected>English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select></li>
-                <li><a href="../index.en-us#download" class="nav-cta">&#9662; Download v1.9.1</a></li>
+                <li><a href="../index.en-us#download" class="nav-cta">&#9662; Download v1.9.2</a></li>
             </ul>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu" aria-expanded="false">&#9776;</button>
         </div>
@@ -92,6 +92,7 @@
             <p class="cl-intro">From 1.0.0 to the latest release, every version — what changed, and whether it can be downloaded — is on this page.</p>
             <p class="cl-note">Installers were not kept for 1.3.2 and earlier; the built-in updater in old versions may no longer work, so installing the latest release is recommended for daily use.</p>
             <div class="cl-index" role="navigation" aria-label="Version index">
+                <a href="#v1-9-2">1.9.2</a>
                 <a href="#v1-9-1">1.9.1</a>
                 <a href="#v1-9-0">1.9.0</a>
                 <a href="#v1-8-0">1.8.0</a>
@@ -121,12 +122,36 @@
     <main class="history cl-history">
         <div class="container">
             <div class="timeline">
+                <article class="timeline-item" id="v1-9-2">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.9.2</span>
+                        <span class="version-title">First Linux build (experimental), CaelLabMinecraft linking</span>
+                        <span class="latest-chip">Latest</span>
+                        <span class="version-date">2026-10-24</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>First Linux build (experimental): an x64 tar.gz package that can download the game and install Forge / Fabric / mods; in-app updates are not available yet, so the launcher opens the download page instead</li>
+                        <li>New CaelLabMinecraft linking: turn it on in settings and connect your Microsoft account with a link code</li>
+                        <li>Java runtimes already installed on your system (Program Files, JAVA_HOME, etc.) are detected automatically and can be picked per version, so no more duplicate downloads</li>
+                        <li>Java downloads are more resilient: if a mirror has not synced the latest build yet, an older build from that mirror is used, and the mirror's file listing serves as a fallback when the API is unreachable</li>
+                        <li>Fixed the main window icon, which used to be blank</li>
+                        <li>Fixed update checks breaking on version numbers with letter suffixes</li>
+                        <li>Game downloads on Windows skip libraries that are not needed on this platform</li>
+                    </ul>
+                    <div class="cl-download">
+                        <a class="cl-dl-btn" href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.2-Setup.exe">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                            Download v1.9.2
+                        </a>
+                        <span class="cl-file">GPCL-1.9.2-Setup.exe · 94.0 MB · Windows 64-bit</span>
+                    </div>
+                </article>
                 <article class="timeline-item" id="v1-9-1">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
                         <span class="version-number">v1.9.1</span>
                         <span class="version-title">Microsoft accounts, multiple game folders, per-version Java</span>
-                        <span class="latest-chip">Latest</span>
                         <span class="version-date">2026-10-23</span>
                     </div>
                     <ul class="changelog">

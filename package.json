@@ -1,18 +1,22 @@
 {
   "name": "gpcl",
-  "version": "1.9.1",
+  "version": "1.9.2",
   "description": "Minecraft 启动器",
   "main": "main.js",
   "scripts": {
     "build-ts": "node build.js",
     "start": "chcp 65001 >nul && npm run build-ts && electron dist/",
     "start:dev": "chcp 65001 >nul && npm run build-ts && electron dist/",
+    "start:linux": "npm run build-ts && electron dist/",
     "pack": "npm run build-ts && electron-builder --win --dir --publish=never",
+    "pack:linux": "npm run build-ts && electron-builder --linux --dir --publish=never",
+    "build-linux": "npm run build-ts && electron-builder --linux --publish=never",
     "installer": "node scripts/build-installer.mjs",
     "build-prod": "npm run pack && node scripts/build-installer.mjs",
     "dist:nsis": "npm run build-ts && electron-builder --publish=never",
     "typecheck": "tsc --noEmit",
     "clean": "if (Test-Path dist) { Remove-Item -Recurse -Force dist }",
+    "clean:linux": "rm -rf dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -53,6 +57,25 @@
           ]
         }
       ]
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "tar.gz",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "category": "Game",
+      "icon": "static/icon/GPCL.png",
+      "artifactName": "GPCL-${version}-linux-${arch}.${ext}"
     },
     "nsis": {
       "oneClick": false,

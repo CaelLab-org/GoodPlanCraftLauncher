@@ -1,8 +1,31 @@
 {
   "schema": 1,
-  "latest": "1.9.1",
-  "updated": "2026-10-23",
+  "latest": "1.9.2",
+  "updated": "2026-10-24",
   "versions": [
+    {
+      "version": "1.9.2",
+      "anchor": "v1-9-2",
+      "date": "2026-10-24",
+      "title": "Linux 実験版を初公開、CaelLabMinecraft 連携に対応",
+      "log": [
+        "Linux 版を初公開（実験的）：x64 の tar.gz パッケージで、ゲームのダウンロードや Forge / Fabric / モッドのインストールが可能。アプリ内アップデートは未対応で、新バージョンが出るとダウンロードページへ案内します",
+        "CaelLabMinecraft 連携を追加：設定でオンにすると、バインドコードで Microsoft アカウントを接続できます",
+        "システムにインストール済みの Java（Program Files、JAVA_HOME など）を自動で検出し、バージョンごとに選択できます。重複ダウンロードはもうありません",
+        "Java のダウンロードがより安定：ミラーに最新ビルドがまだ無いときは同じミラーの古いビルドを使い、API に届かないときはミラーのファイル一覧で代替します",
+        "メインウィンドウのアイコンが空白だった問題を修正し、ランチャーのアイコンが正しく表示されるように",
+        "アルファベット付きのバージョン番号で更新確認が壊れる問題を修正",
+        "Windows ではこのプラットフォームで不要なライブラリをスキップし、ゲームのダウンロード量を削減"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.2-Setup.exe",
+        "file": "GPCL-1.9.2-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      },
+      "linux": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.2-linux-x64.tar.gz",
+      "linuxSha256": "9151ddf7732c9b6cf703229343c4440cab36dc2c4898c6ceffd8e916e486c8fd"
+    },
     {
       "version": "1.9.1",
       "anchor": "v1-9-1",

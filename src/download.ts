@@ -15,6 +15,7 @@ import path from 'path';
 import { APP_VERSION, CACHE_DIR, GAME_DIR, applyInitialVersionIsolation, formatTimestamp, getAllGameDirs, getGameDirEntries, loadSettings, setVersionIsolationChoice, writeLog } from './config';
 import { t } from './i18n';
 import { installVersionWithModLoader } from './modloader';
+import { matchesLibraryRules, nativesClassifier } from './platform';
 import { mainWindow } from './shell';
 import { MAX_CONCURRENT, activeDownloads, abortModDownloads, completedDownloadFiles, currentDownloadPath, currentDownloadType, currentDownloadVersion, downloadQueue, isDownloading, isJavaDownloading, setActiveDownloads, setCompletedDownloadFiles, setCurrentDownloadPath, setCurrentDownloadType, setCurrentDownloadVersion, setDownloadQueue, setIsDownloading, setIsJavaDownloading, setMaxConcurrent, setShouldCancelDownload, setTotalDownloadFiles, shouldCancelDownload, totalDownloadFiles } from './state';
 // __IMPORTS_END__
@@ -870,7 +871,10 @@ setProgressStage(t('ui.preparing_download'));
       }
     }
 
+    const nativeClassifier: string = nativesClassifier();
+
     for (const lib of versionData.libraries) {
+      if (!matchesLibraryRules(lib.rules)) continue;
       if (lib.downloads?.artifact) {
         const libPath: string = path.join(GAME_DIR, 'libraries', lib.downloads.artifact.path);
         if (!fs.existsSync(libPath)) {
@@ -887,7 +891,7 @@ setProgressStage(t('ui.preparing_download'));
       }
       if (lib.downloads?.classifiers) {
         for (const [cls, info] of Object.entries(lib.downloads.classifiers) as [string, any][]) {
-          if (cls.includes('natives-windows')) {
+          if (cls.includes(nativeClassifier)) {
             const libPath: string = path.join(GAME_DIR, 'libraries', info.path);
             if (!fs.existsSync(libPath)) {
               const size: number = Number(info.size) || 0;
@@ -915,9 +919,10 @@ setProgressStage(t('ui.preparing_download'));
     if (!fs.existsSync(nativesDir)) fs.mkdirSync(nativesDir, { recursive: true });
 
     for (const lib of versionData.libraries) {
+      if (!matchesLibraryRules(lib.rules)) continue;
       if (lib.downloads?.classifiers) {
         for (const [cls, info] of Object.entries(lib.downloads.classifiers) as [string, any][]) {
-          if (cls.includes('natives-windows')) {
+          if (cls.includes(nativeClassifier)) {
             const libPath: string = path.join(GAME_DIR, 'libraries', info.path);
             if (fs.existsSync(libPath)) {
               const AdmZip: any = require('adm-zip');

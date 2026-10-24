@@ -1,8 +1,31 @@
 {
   "schema": 1,
-  "latest": "1.9.1",
-  "updated": "2026-10-23",
+  "latest": "1.9.2",
+  "updated": "2026-10-24",
   "versions": [
+    {
+      "version": "1.9.2",
+      "anchor": "v1-9-2",
+      "date": "2026-10-24",
+      "title": "리눅스 실험판 첫 공개, CaelLabMinecraft 연동 지원",
+      "log": [
+        "리눅스 첫 버전(실험적): x64 tar.gz 패키지로 게임 다운로드와 Forge / Fabric / 모드 설치가 가능합니다. 앱 내 업데이트는 아직 지원되지 않으며 새 버전이 나오면 다운로드 페이지로 안내합니다",
+        "CaelLabMinecraft 연동 추가: 설정에서 켠 뒤 연동 코드로 마이크로소프트 계정을 연결할 수 있습니다",
+        "시스템에 설치된 Java(Program Files, JAVA_HOME 등)를 자동으로 찾아내어 버전별로 선택할 수 있고, 중복 다운로드가 사라졌습니다",
+        "Java 다운로드가 더 안정적: 미러에 최신 빌드가 아직 없으면 같은 미러의 이전 빌드를 사용하고, API에 접근할 수 없으면 미러의 파일 목록으로 대체합니다",
+        "메인 창 아이콘이 비어 있던 문제를 수정하고 런처 아이콘이 올바르게 표시됩니다",
+        "알파벳 접미사가 붙은 버전 번호에서 업데이트 확인이 실패하던 문제를 수정했습니다",
+        "Windows에서는 이 플랫폼에 필요 없는 라이브러리를 건너뛰어 게임 다운로드 용량을 줄였습니다"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.2-Setup.exe",
+        "file": "GPCL-1.9.2-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      },
+      "linux": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.2-linux-x64.tar.gz",
+      "linuxSha256": "9151ddf7732c9b6cf703229343c4440cab36dc2c4898c6ceffd8e916e486c8fd"
+    },
     {
       "version": "1.9.1",
       "anchor": "v1-9-1",

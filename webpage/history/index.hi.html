@@ -74,7 +74,7 @@
                     </div>
                 </li>
                 <li class="lang-switch"><select aria-label="भाषा" onchange="if(this.value)location.href=this.value"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi" selected>हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select></li>
-                <li><a href="../index.hi#download" class="nav-cta">&#9662; v1.9.1 डाउनलोड करें</a></li>
+                <li><a href="../index.hi#download" class="nav-cta">&#9662; v1.9.2 डाउनलोड करें</a></li>
             </ul>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="मेन्यू खोलें" aria-expanded="false">&#9776;</button>
         </div>
@@ -92,6 +92,7 @@
             <p class="cl-intro">1.0.0 से नवीनतम रिलीज़ तक, हर संस्करण — क्या बदला और क्या डाउनलोड हो सकता है — इसी पेज पर है।</p>
             <p class="cl-note">1.3.2 और उससे पहले के इंस्टॉलर नहीं रखे गए; पुराने संस्करणों का अंतर्निहित अपडेटर अब काम न कर सके, इसलिए रोज़मर्रा के उपयोग के लिए नवीनतम रिलीज़ इंस्टॉल करना बेहतर है।</p>
             <div class="cl-index" role="navigation" aria-label="संस्करण सूची">
+                <a href="#v1-9-2">1.9.2</a>
                 <a href="#v1-9-1">1.9.1</a>
                 <a href="#v1-9-0">1.9.0</a>
                 <a href="#v1-8-0">1.8.0</a>
@@ -121,12 +122,36 @@
     <main class="history cl-history">
         <div class="container">
             <div class="timeline">
+                <article class="timeline-item" id="v1-9-2">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.9.2</span>
+                        <span class="version-title">लिनक्स का पहला प्रयोगात्मक संस्करण, CaelLabMinecraft लिंकिंग</span>
+                        <span class="latest-chip">नवीनतम</span>
+                        <span class="version-date">2026-10-24</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>लिनक्स का पहला संस्करण (प्रयोगात्मक): x64 tar.gz पैकेज, जिससे गेम डाउनलोड और Forge / Fabric / मॉड इंस्टॉल किए जा सकते हैं; ऐप के भीतर अपडेट अभी उपलब्ध नहीं है, नए संस्करण पर डाउनलोड पेज खुलेगा</li>
+                        <li>नई CaelLabMinecraft लिंकिंग: सेटिंग्स में चालू करें और लिंक कोड से अपना माइक्रोसॉफ्ट खाता जोड़ें</li>
+                        <li>सिस्टम में पहले से इंस्टॉल Java (Program Files, JAVA_HOME आदि) अपने आप पहचान लिए जाते हैं और हर संस्करण के लिए अलग से चुने जा सकते हैं, दोबारा डाउनलोड नहीं होगा</li>
+                        <li>Java डाउनलोड और भरोसेमंद: अगर मिरर पर नवीनतम बिल्ड अभी सिंक नहीं हुआ तो उसी मिरर का पुराना बिल्ड इस्तेमाल होता है, और API उपलब्ध न होने पर मिरर की फ़ाइल सूची काम आती है</li>
+                        <li>मुख्य विंडो के खाली आइकन की समस्या ठीक हो गई — अब लॉन्चर का आइकन सही दिखता है</li>
+                        <li>अक्षर-प्रत्यय वाले संस्करण नंबर पर अपडेट जाँच टूटने की समस्या ठीक की गई</li>
+                        <li>Windows पर गेम डाउनलोड उन लाइब्रेरी को छोड़ देता है जो इस प्लेटफ़ॉर्म पर ज़रूरी नहीं हैं</li>
+                    </ul>
+                    <div class="cl-download">
+                        <a class="cl-dl-btn" href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.2-Setup.exe">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                            v1.9.2 डाउनलोड करें
+                        </a>
+                        <span class="cl-file">GPCL-1.9.2-Setup.exe · 94.0 MB · Windows 64-बिट</span>
+                    </div>
+                </article>
                 <article class="timeline-item" id="v1-9-1">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
                         <span class="version-number">v1.9.1</span>
                         <span class="version-title">Microsoft खाते, कई गेम फ़ोल्डर और हर वर्ज़न के लिए Java</span>
-                        <span class="latest-chip">नवीनतम</span>
                         <span class="version-date">2026-10-23</span>
                     </div>
                     <ul class="changelog">

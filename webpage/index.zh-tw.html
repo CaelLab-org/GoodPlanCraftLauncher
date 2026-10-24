@@ -75,7 +75,7 @@
                     </div>
                 </li>
                 <li class="lang-switch"><select aria-label="語言" onchange="if(this.value)location.href=this.value"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw" selected>繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select></li>
-                <li><a href="#download" class="nav-cta">&#9662; 下載 v1.9.1</a></li>
+                <li><a href="#download" class="nav-cta">&#9662; 下載 v1.9.2</a></li>
             </ul>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="開啟選單" aria-expanded="false">&#9776;</button>
         </div>
@@ -109,9 +109,9 @@
                 </a>
             </div>
             <div class="hero-meta">
-                <span>版本 <b>v1.9.1</b></span>
+                <span>版本 <b>v1.9.2</b></span>
                 <span class="sep">/</span>
-                <span>更新 <b>2026-10-23</b></span>
+                <span>更新 <b>2026-10-24</b></span>
                 <span class="sep">/</span>
                 <span>平台 <b>Windows 10+</b></span>
             </div>
@@ -260,13 +260,13 @@
                 <span class="dl-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
                 </span>
-                <div class="download-file">GPCL-1.9.1-Setup.exe</div>
-                <a href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.1-Setup.exe" class="download-btn">
+                <div class="download-file">GPCL-1.9.2-Setup.exe</div>
+                <a href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.2-Setup.exe" class="download-btn">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
                     啟動方塊世界！
                 </a>
                 <div class="update-info">
-                    <span>更新日期 <b>2026-10-23</b></span>
+                    <span>更新日期 <b>2026-10-24</b></span>
                     <span>平台 <b>Windows 10 64 位元</b></span>
                     <span>授權條款 <b>開源免費</b></span>
                 </div>
@@ -377,9 +377,26 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                 <div class="timeline-item reveal">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
+                        <span class="version-number">v1.9.2</span>
+                        <span class="version-title">Linux 實驗版首發，支援 CaelLabMinecraft 正版綁定</span>
+                        <span class="latest-chip">最新</span>
+                        <span class="version-date">2026-10-24</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>新增 Linux 版（實驗性）：提供 x64 的 tar.gz 包，可以下載遊戲、安裝 Forge / Fabric / 模組；應用程式內更新暫不可用，有新版本時會引導到官網下載</li>
+                        <li>新增 CaelLabMinecraft 正版綁定：在設定裡開啟後，用綁定碼即可接入 CaelLabMinecraft 伺服器</li>
+                        <li>會自動掃描系統裡已安裝的 Java（Program Files、JAVA_HOME 等），版本設定裡可以直接選用，不再重複下載</li>
+                        <li>Java 執行環境下載更穩定：鏡像還沒同步最新版時自動改用鏡像裡已有的版本，API 不可用時從鏡像目錄列表兜底</li>
+                        <li>修正主視窗圖示一直空白的問題，現在正確顯示啟動器圖示</li>
+                        <li>修正帶字母後綴的版本號導致更新檢查異常的問題</li>
+                        <li>Windows 下載遊戲時會略過目前平台用不到的相依程式庫，少下一些檔案</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
                         <span class="version-number">v1.9.1</span>
                         <span class="version-title">微軟帳號登入重做，支援多個遊戲目錄</span>
-                        <span class="latest-chip">最新</span>
                         <span class="version-date">2026-10-23</span>
                     </div>
                     <ul class="changelog">
@@ -507,6 +524,8 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                         <li>修正 0 位元組下載被當成成功、相對位址轉址，以及第二次下載沒有進度的問題</li>
                     </ul>
                 </div>
+                <details class="older-versions">
+                    <summary>展開更早的 15 個版本</summary>
                 <div class="timeline-item reveal">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
@@ -524,8 +543,6 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                         <li>修正：執行緒數設定沒有生效、404 頁面被存成檔案，以及下載失敗後殘留部分檔案</li>
                     </ul>
                 </div>
-                <details class="older-versions">
-                    <summary>展開更早的 14 個版本</summary>
                 <div class="timeline-item reveal">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
@@ -708,7 +725,7 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                 </div>
                 </details>
                 <div class="history-more">
-                    <a href="./history/index.zh-tw">查看完整更新紀錄（全部 22 個版本與安裝包） →</a>
+                    <a href="./history/index.zh-tw">查看完整更新紀錄（全部 23 個版本與安裝包） →</a>
                 </div>
             </div>
         </div>

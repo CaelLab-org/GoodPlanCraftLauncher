@@ -13,7 +13,7 @@ import { initChart, loadChartJs, resetChart, updateChart } from './chart';
 import { formatSpeed } from './speed';
 import { setStatus, showDialog, showToast } from './dom';
 import { updateSettingsBadge } from './settings';
-import { setUpdateBadgeAvailable, setUpdateBadgeDownloading, setUpdateBadgeFailed, setUpdateBadgeProgress, setUpdateBadgeReady, showUpdateBadge } from './update-badge';
+import { setUpdateBadgeAvailable, setUpdateBadgeDownloading, setUpdateBadgeFailed, setUpdateBadgeManualMode, setUpdateBadgeProgress, setUpdateBadgeReady, showUpdateBadge } from './update-badge';
 // __IMPORTS_END__
 
 export let isUpdateDownloadActive: boolean = false;
@@ -26,6 +26,16 @@ export let latestVersionLog: string | null = null;
 export let updateAvailable: boolean = false;
 
 export let allNewerVersions: any[] = [];
+
+// 本机平台（linux / win32）：Linux 包没有应用内更新，徽标改成「打开下载页」
+export const RUNTIME_PLATFORM: string = (window.gpcl?.initialI18n as any)?.platform || 'win32';
+
+export const MANUAL_UPDATE_ONLY: boolean = RUNTIME_PLATFORM !== 'win32';
+
+// 新版本的 Linux 下载地址（来自版本 JSON 的 linux 字段），没有就退回官网下载页
+let manualDownloadUrl: string | null = null;
+
+const DOWNLOAD_PAGE_URL: string = 'https://gamets.caellab.com/gpcl/';
 
 let readyInstallerPath: string | null = null;
 
@@ -42,13 +52,20 @@ export async function getCurrentVersion(): Promise<string> {
 }
 
 
+function parseVersionPart(part: string): number {
+  // "2-alpha-linux" 这类带后缀的段取前导数字，否则 alpha 版会算成 NaN、永远检测不到更新
+  const match: RegExpMatchArray | null = part.match(/^(\d+)/);
+  return match ? parseInt(match[1], 10) : 0;
+}
+
+
 export function compareVersions(current: string, latest: string): number {
-  const currentParts: number[] = current.split('.').map(Number);
-  const latestParts: number[] = latest.split('.').map(Number);
-  
+  const currentParts: string[] = String(current).split('.');
+  const latestParts: string[] = String(latest).split('.');
+
   for (let i = 0; i < Math.max(currentParts.length, latestParts.length); i++) {
-    const c: number = currentParts[i] || 0;
-    const l: number = latestParts[i] || 0;
+    const c: number = parseVersionPart(currentParts[i] || '0');
+    const l: number = parseVersionPart(latestParts[i] || '0');
     if (l > c) return 1;
     if (c > l) return -1;
   }
@@ -114,6 +131,15 @@ export async function checkForUpdates(silent: boolean = false): Promise<void> {
     
     if (!result.success) {
       throw new Error(result.error || t('ui.could_not_check_for_updates'));
+    }
+
+    manualDownloadUrl = typeof result.linuxDownloadUrl === 'string' && result.linuxDownloadUrl
+      ? result.linuxDownloadUrl
+      : null;
+
+    if (MANUAL_UPDATE_ONLY) {
+      // Linux 包不能下载 Windows 安装包：照常提示新版本，但按钮改成打开下载页
+      setUpdateBadgeManualMode(true);
     }
     
     const data = result.data;
@@ -248,6 +274,12 @@ export async function showUpdateStartupNotice(): Promise<void> {
 
 
 async function runUpdateDownload(version: string, manual: boolean): Promise<void> {
+  if (MANUAL_UPDATE_ONLY) {
+    // 非 Windows 没有 Setup.exe 可下：打开下载页（JSON 里带 linux 字段时直达文件）
+    openManualDownload();
+    return;
+  }
+
   if (!window.gpcl || !window.gpcl.downloadUpdate) {
     showToast('ui.update_failed', '更新功能不可用', 'error');
     return;
@@ -424,5 +456,15 @@ export async function startUpdateDownload(version: string): Promise<void> {
 
 
 export async function autoDownloadUpdate(version: string): Promise<void> {
+  if (MANUAL_UPDATE_ONLY) return;
   await runUpdateDownload(version, false);
+}
+
+
+export function openManualDownload(): void {
+  const url: string = manualDownloadUrl || DOWNLOAD_PAGE_URL;
+  if (window.gpcl && window.gpcl.openExternal) {
+    void window.gpcl.openExternal(url);
+  }
+  showToast('ui.update_ready', t('ui.open_download_page'), 'info');
 }
