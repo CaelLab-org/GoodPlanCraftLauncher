@@ -1192,5 +1192,7 @@
   "ui.mc_bind_error_mojang_failed": "Не вдалося перевірити профіль. Спробуйте пізніше",
   "ui.mc_bind_error_uuid_taken": "Цей обліковий запис Microsoft уже прив’язаний до іншого гравця",
   "ui.mc_bind_error_network": "Помилка мережі. Спробуйте пізніше",
-  "ui.mc_bind_error_failed": "Не вдалося прив’язати. Спробуйте пізніше"
+  "ui.mc_bind_error_failed": "Не вдалося прив’язати. Спробуйте пізніше",
+  "ui.settings_caellab_integration": "Інтеграція з CaelLabMinecraft",
+  "ui.settings_caellab_integration_desc": "Показувати посилання CaelLabMinecraft в акаунтах Microsoft; під час запуску ліцензійної гри сайт отримує одноразове сповіщення, і ви входите без ключа"
 }

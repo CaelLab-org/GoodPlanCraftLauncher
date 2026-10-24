@@ -1192,5 +1192,7 @@
   "ui.mc_bind_error_mojang_failed": "प्रोफ़ाइल सत्यापित नहीं हो सकी। बाद में पुनः प्रयास करें",
   "ui.mc_bind_error_uuid_taken": "यह Microsoft खाता पहले से ही किसी अन्य खिलाड़ी से लिंक है",
   "ui.mc_bind_error_network": "नेटवर्क त्रुटि। बाद में पुनः प्रयास करें",
-  "ui.mc_bind_error_failed": "लिंक नहीं हो सका। बाद में पुनः प्रयास करें"
+  "ui.mc_bind_error_failed": "लिंक नहीं हो सका। बाद में पुनः प्रयास करें",
+  "ui.settings_caellab_integration": "CaelLabMinecraft एकीकरण",
+  "ui.settings_caellab_integration_desc": "Microsoft खातों पर CaelLabMinecraft लिंक दिखाता है; चालू होने पर प्रीमियम गेम शुरू करने पर साइट को एक बार सूचित किया जाता है और बिना कुंजी के जुड़ सकते हैं"
 }

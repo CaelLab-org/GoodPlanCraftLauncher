@@ -1192,5 +1192,7 @@
   "ui.mc_bind_error_mojang_failed": "تعذّر التحقق من الملف الشخصي. حاول لاحقًا",
   "ui.mc_bind_error_uuid_taken": "حساب Microsoft هذا مرتبط بالفعل بلاعب آخر",
   "ui.mc_bind_error_network": "خطأ في الشبكة. حاول لاحقًا",
-  "ui.mc_bind_error_failed": "فشل الربط. حاول لاحقًا"
+  "ui.mc_bind_error_failed": "فشل الربط. حاول لاحقًا",
+  "ui.settings_caellab_integration": "تكامل CaelLabMinecraft",
+  "ui.settings_caellab_integration_desc": "يعرض رابط CaelLabMinecraft في حسابات Microsoft؛ عند بدء لعبة أصلية يتم إشعار الموقع مرة واحدة لتدخل دون مفتاح"
 }

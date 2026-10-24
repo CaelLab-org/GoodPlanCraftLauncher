@@ -161,6 +161,8 @@ export interface GameSettings {
   language: string;
   /** 新安装版本的默认隔离方式：off / modded / nonRelease / moddedAndNonRelease / all */
   versionIsolation: string;
+  /** CaelLabMinecraft 集成：显示绑定入口，启动正版游戏时向其报备以免密钥进服 */
+  caellabIntegration: boolean;
 }
 
 export interface AppearanceSettings {

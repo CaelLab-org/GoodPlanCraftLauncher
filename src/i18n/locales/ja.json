@@ -1192,5 +1192,7 @@
   "ui.mc_bind_error_mojang_failed": "プロフィールを検証できませんでした。後でもう一度お試しください",
   "ui.mc_bind_error_uuid_taken": "この Microsoft アカウントは既に別のプレイヤーに連携されています",
   "ui.mc_bind_error_network": "ネットワークエラーです。後でもう一度お試しください",
-  "ui.mc_bind_error_failed": "連携できませんでした。後でもう一度お試しください"
+  "ui.mc_bind_error_failed": "連携できませんでした。後でもう一度お試しください",
+  "ui.settings_caellab_integration": "CaelLabMinecraft 連携",
+  "ui.settings_caellab_integration_desc": "Microsoft アカウントに CaelLabMinecraft のリンクを表示します。有効にすると正規版の起動時に一度通知し、サーバーにキーなしで入れるようになります"
 }

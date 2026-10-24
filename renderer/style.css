@@ -1006,6 +1006,7 @@ body.light-mode .custom-select-dropdown {
   flex-direction: column;
   gap: 10px;
   margin-bottom: 12px;
+  flex-shrink: 0;
 }
 
 .auth-ms-state {
@@ -1111,6 +1112,8 @@ body.light-mode .custom-select-dropdown {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  max-height: 190px;
+  overflow-y: auto;
 }
 
 .auth-account-list-title {
@@ -1285,7 +1288,7 @@ body.light-mode .custom-select-dropdown {
 .skin-container {
   width: 100%;
   flex: 1;
-  min-height: 0;
+  min-height: 150px;
   margin-bottom: 8px;
   position: relative;
   display: flex;

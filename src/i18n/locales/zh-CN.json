@@ -1192,5 +1192,7 @@
   "ui.mc_bind_error_mojang_failed": "无法验证正版身份，请稍后再试",
   "ui.mc_bind_error_uuid_taken": "这个正版账号已绑定到其他玩家",
   "ui.mc_bind_error_network": "网络错误，请稍后再试",
-  "ui.mc_bind_error_failed": "绑定失败，请稍后再试"
+  "ui.mc_bind_error_failed": "绑定失败，请稍后再试",
+  "ui.settings_caellab_integration": "CaelLabMinecraft 集成",
+  "ui.settings_caellab_integration_desc": "在正版账号上显示 CaelLabMinecraft 绑定入口；开启后正版启动游戏时会向网站报备一次，进服免输密钥"
 }

@@ -1192,5 +1192,7 @@
   "ui.mc_bind_error_mojang_failed": "Profil doğrulanamadı. Daha sonra tekrar deneyin",
   "ui.mc_bind_error_uuid_taken": "Bu Microsoft hesabı zaten başka bir oyuncuya bağlı",
   "ui.mc_bind_error_network": "Ağ hatası. Daha sonra tekrar deneyin",
-  "ui.mc_bind_error_failed": "Bağlanamadı. Daha sonra tekrar deneyin"
+  "ui.mc_bind_error_failed": "Bağlanamadı. Daha sonra tekrar deneyin",
+  "ui.settings_caellab_integration": "CaelLabMinecraft entegrasyonu",
+  "ui.settings_caellab_integration_desc": "Microsoft hesaplarında CaelLabMinecraft bağlantısını gösterir; etkinleştirildiğinde premium oyun başlatıldığında siteye bir kez bildirim gönderilir ve anahtarsız girersiniz"
 }

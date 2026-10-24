@@ -1192,5 +1192,7 @@
   "ui.mc_bind_error_mojang_failed": "Profil tidak dapat disahkan. Cuba lagi kemudian",
   "ui.mc_bind_error_uuid_taken": "Akaun Microsoft ini telah dipautkan kepada pemain lain",
   "ui.mc_bind_error_network": "Ralat rangkaian. Cuba lagi kemudian",
-  "ui.mc_bind_error_failed": "Gagal memautkan. Cuba lagi kemudian"
+  "ui.mc_bind_error_failed": "Gagal memautkan. Cuba lagi kemudian",
+  "ui.settings_caellab_integration": "Integrasi CaelLabMinecraft",
+  "ui.settings_caellab_integration_desc": "Memaparkan pautan CaelLabMinecraft pada akaun Microsoft; apakah diaktifkan, memulakan permainan premium akan memberitahu tapak sekali untuk masuk tanpa kunci"
 }

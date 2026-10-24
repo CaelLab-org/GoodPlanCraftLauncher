@@ -1192,5 +1192,7 @@
   "ui.mc_bind_error_mojang_failed": "প্রোফাইল যাচাই করা যায়নি। পরে আবার চেষ্টা করুন",
   "ui.mc_bind_error_uuid_taken": "এই Microsoft অ্যাকাউন্ট ইতিমধ্যেই অন্য খেলোয়াড়ের সাথে লিঙ্ক করা",
   "ui.mc_bind_error_network": "নেটওয়ার্ক ত্রুটি। পরে আবার চেষ্টা করুন",
-  "ui.mc_bind_error_failed": "লিঙ্ক করা যায়নি। পরে আবার চেষ্টা করুন"
+  "ui.mc_bind_error_failed": "লিঙ্ক করা যায়নি। পরে আবার চেষ্টা করুন",
+  "ui.settings_caellab_integration": "CaelLabMinecraft ইন্টিগ্রেশন",
+  "ui.settings_caellab_integration_desc": "Microsoft অ্যাকাউন্টে CaelLabMinecraft লিঙ্ক দেখায়; চালু থাকলে প্রিমিয়াম গেম চালু করলে একবার সাইটকে জানানো হয় এবং কী ছাড়াই যুক্ত হতে পারেন"
 }

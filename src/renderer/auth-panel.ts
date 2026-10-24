@@ -12,6 +12,7 @@ import { t } from '../i18n';
 import { paintSkinHead, showAccountSkin } from './avatar';
 import { icon, showDialog, showToast, usernameHistoryBtn, usernameInput } from './dom';
 import { closeUsernameHistory } from './player';
+import { loadSettings } from './settings';
 import { authMode, msAuthData, setAuthMode, setMsAuthData } from './session';
 // __IMPORTS_END__
 
@@ -55,6 +56,8 @@ let switchingUuid: string | null = null;
 let accountListOpen: boolean = false;
 let mcBindRowOpen: boolean = false;
 let mcBinding: boolean = false;
+// CaelLabMinecraft 集成开关（设置页）：关着时绑定入口整个不显示
+let caellabIntegration: boolean = false;
 let accounts: AccountInfo[] = [];
 const headCache: Map<string, SkinInfo> = new Map();
 
@@ -183,7 +186,7 @@ function render(): void {
   accountList?.classList.toggle('hidden', !listVisible);
   addAccountBtn?.classList.toggle('hidden', !signedIn);
   skinRefreshBtn?.classList.toggle('hidden', !signedIn);
-  mcBindBtn?.classList.toggle('hidden', !signedIn);
+  mcBindBtn?.classList.toggle('hidden', !signedIn || !caellabIntegration);
   mcBindRow?.classList.toggle('hidden', !(listVisible && mcBindRowOpen));
   if (!listVisible) mcBindRowOpen = false;
   renderAccountItems(listVisible);
@@ -469,12 +472,25 @@ mcBindInput?.addEventListener('keydown', (event: KeyboardEvent) => {
   }
 });
 
+async function refreshCaellabIntegration(): Promise<void> {
+  try {
+    const settings: any = await loadSettings();
+    caellabIntegration = settings?.game?.caellabIntegration === true;
+  } catch {
+    caellabIntegration = false;
+  }
+}
+
 // 启动前校验发现 refresh_token 也失效了：回到未登录卡片，别继续显示「已登录」
 window.addEventListener('gpcl-auth-expired', () => {
   if (!msAuthData) return;
   signOut(false);
   setError(t('ui.auth_login_required'));
   render();
+});
+
+window.addEventListener('gpcl-caellab-integration-changed', () => {
+  void refreshCaellabIntegration().then(render);
 });
 
 // 这个监听只在模块加载时注册一次；preload 的 removeAllListeners 别清它
@@ -509,6 +525,7 @@ if (window.gpcl && window.gpcl.onMicrosoftAuthResult) {
 }
 
 (async function initAuthPanel(): Promise<void> {
+  await refreshCaellabIntegration();
   render();
   try {
     const stored: any = await window.gpcl.getMicrosoftAuth();

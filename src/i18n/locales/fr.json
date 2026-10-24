@@ -1192,5 +1192,7 @@
   "ui.mc_bind_error_mojang_failed": "Impossible de vérifier le profil. Réessayez plus tard",
   "ui.mc_bind_error_uuid_taken": "Ce compte Microsoft est déjà lié à un autre joueur",
   "ui.mc_bind_error_network": "Erreur de réseau. Réessayez plus tard",
-  "ui.mc_bind_error_failed": "Échec de la liaison. Réessayez plus tard"
+  "ui.mc_bind_error_failed": "Échec de la liaison. Réessayez plus tard",
+  "ui.settings_caellab_integration": "Intégration CaelLabMinecraft",
+  "ui.settings_caellab_integration_desc": "Affiche le lien CaelLabMinecraft sur les comptes Microsoft ; au lancement d’un jeu officiel, le site est notifié une fois pour entrer sans clé"
 }

@@ -1192,5 +1192,7 @@
   "ui.mc_bind_error_mojang_failed": "Profil konnte nicht geprüft werden. Versuche es später erneut",
   "ui.mc_bind_error_uuid_taken": "Dieses Microsoft-Konto ist bereits mit einem anderen Spieler verknüpft",
   "ui.mc_bind_error_network": "Netzwerkfehler. Versuche es später erneut",
-  "ui.mc_bind_error_failed": "Verknüpfen fehlgeschlagen. Versuche es später erneut"
+  "ui.mc_bind_error_failed": "Verknüpfen fehlgeschlagen. Versuche es später erneut",
+  "ui.settings_caellab_integration": "CaelLabMinecraft-Integration",
+  "ui.settings_caellab_integration_desc": "Zeigt den CaelLabMinecraft-Link bei Microsoft-Konten; beim Start eines Premium-Spiels wird die Seite einmal benachrichtigt, damit du ohne Schlüssel beitreten kannst"
 }

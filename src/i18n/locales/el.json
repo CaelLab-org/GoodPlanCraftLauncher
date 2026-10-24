@@ -1192,5 +1192,7 @@
   "ui.mc_bind_error_mojang_failed": "Δεν ήταν δυνατή η επαλήθευση του προφίλ. Δοκιμάστε αργότερα",
   "ui.mc_bind_error_uuid_taken": "Αυτός ο λογαριασμός Microsoft είναι ήδη συνδεδεμένος με άλλο παίκτη",
   "ui.mc_bind_error_network": "Σφάλμα δικτύου. Δοκιμάστε αργότερα",
-  "ui.mc_bind_error_failed": "Αποτυχία σύνδεσης. Δοκιμάστε αργότερα"
+  "ui.mc_bind_error_failed": "Αποτυχία σύνδεσης. Δοκιμάστε αργότερα",
+  "ui.settings_caellab_integration": "Ενσωμάτωση CaelLabMinecraft",
+  "ui.settings_caellab_integration_desc": "Εμφανίζει τον σύνδεσμο CaelLabMinecraft στους λογαριασμούς Microsoft; όταν είναι ενεργό, η εκκίνηση επίσημου παιχνιδιού ειδοποιεί τον ιστότοπο μία φορά για είσοδο χωρίς κλειδί"
 }

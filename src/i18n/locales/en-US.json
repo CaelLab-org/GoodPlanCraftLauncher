@@ -1192,5 +1192,7 @@
   "ui.mc_bind_error_mojang_failed": "Could not verify your profile. Try again later.",
   "ui.mc_bind_error_uuid_taken": "This Microsoft account is already linked to another player",
   "ui.mc_bind_error_network": "Network error. Try again later.",
-  "ui.mc_bind_error_failed": "Linking failed. Try again later."
+  "ui.mc_bind_error_failed": "Linking failed. Try again later.",
+  "ui.settings_caellab_integration": "CaelLabMinecraft integration",
+  "ui.settings_caellab_integration_desc": "Show the CaelLabMinecraft link on Microsoft accounts; when on, launching a premium game notifies the site once so you can join without the key"
 }

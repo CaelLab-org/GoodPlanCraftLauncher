@@ -354,6 +354,7 @@ export async function initMemorySettings(): Promise<void> {
   const usageBar: HTMLElement | null = document.getElementById('memory-usage-used');
   const warning: HTMLElement | null = document.getElementById('memory-warning');
   const optimizeToggle: HTMLInputElement | null = document.getElementById('optimize-before-launch') as HTMLInputElement | null;
+  const caellabToggle: HTMLInputElement | null = document.getElementById('caellab-integration') as HTMLInputElement | null;
   if (!modeGroup && !slider) return;
 
   let systemInfo: any = { totalMB: 0, freeMB: 0, autoMemoryMB: 0 };
@@ -410,6 +411,7 @@ export async function initMemorySettings(): Promise<void> {
 
     setMode(auto);
     if (optimizeToggle) optimizeToggle.checked = settings.game?.optimizeBeforeLaunch === true;
+    if (caellabToggle) caellabToggle.checked = settings.game?.caellabIntegration === true;
   };
 
   if (modeGroup) {
@@ -432,6 +434,13 @@ export async function initMemorySettings(): Promise<void> {
   if (optimizeToggle) {
     optimizeToggle.addEventListener('change', async (): Promise<void> => {
       await saveGameSetting({ optimizeBeforeLaunch: optimizeToggle.checked });
+    });
+  }
+
+  if (caellabToggle) {
+    caellabToggle.addEventListener('change', async (): Promise<void> => {
+      await saveGameSetting({ caellabIntegration: caellabToggle.checked });
+      window.dispatchEvent(new CustomEvent('gpcl-caellab-integration-changed', { detail: { enabled: caellabToggle.checked } }));
     });
   }
 
