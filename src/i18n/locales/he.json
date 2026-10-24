@@ -1194,5 +1194,6 @@
   "ui.mc_bind_error_network": "שגיאת רשת. נסה שוב מאוחר יותר",
   "ui.mc_bind_error_failed": "הקישור נכשל. נסה שוב מאוחר יותר",
   "ui.settings_caellab_integration": "שילוב CaelLabMinecraft",
-  "ui.settings_caellab_integration_desc": "מציג את קישור CaelLabMinecraft בחשבונות Microsoft; כשמופעל, בהפעלת משחק רשמי האתר מקבל התראה חד-פעמית ותוכל להיכנס ללא מפתח"
+  "ui.settings_caellab_integration_desc": "מציג את קישור CaelLabMinecraft בחשבונות Microsoft; כשמופעל, בהפעלת משחק רשמי האתר מקבל התראה חד-פעמית ותוכל להיכנס ללא מפתח",
+  "ui.mc_bind_get_code": "קבלו את הקוד ב-minecraft.caellab.com"
 }

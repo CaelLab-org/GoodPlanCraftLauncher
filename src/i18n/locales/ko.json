@@ -1194,5 +1194,6 @@
   "ui.mc_bind_error_network": "네트워크 오류입니다. 나중에 다시 시도하세요",
   "ui.mc_bind_error_failed": "연결에 실패했습니다. 나중에 다시 시도하세요",
   "ui.settings_caellab_integration": "CaelLabMinecraft 연동",
-  "ui.settings_caellab_integration_desc": "Microsoft 계정에 CaelLabMinecraft 링크를 표시합니다. 켜면 정품 게임 시작 시 사이트에 한 번 알려 키 없이 서버에 접속할 수 있습니다"
+  "ui.settings_caellab_integration_desc": "Microsoft 계정에 CaelLabMinecraft 링크를 표시합니다. 켜면 정품 게임 시작 시 사이트에 한 번 알려 키 없이 서버에 접속할 수 있습니다",
+  "ui.mc_bind_get_code": "minecraft.caellab.com에서 코드 받기"
 }

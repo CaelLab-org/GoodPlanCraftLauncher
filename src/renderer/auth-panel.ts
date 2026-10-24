@@ -47,6 +47,7 @@ const addAccountBtn: HTMLButtonElement | null = document.getElementById('auth-ac
 const skinRefreshBtn: HTMLButtonElement | null = document.getElementById('auth-skin-refresh') as HTMLButtonElement | null;
 const mcBindBtn: HTMLButtonElement | null = document.getElementById('auth-mc-bind') as HTMLButtonElement | null;
 const mcBindRow: HTMLElement | null = document.getElementById('auth-mc-bind-row');
+const mcBindGetcode: HTMLElement | null = document.getElementById('auth-mc-bind-getcode');
 const mcBindInput: HTMLInputElement | null = document.getElementById('auth-mc-bind-code') as HTMLInputElement | null;
 const mcBindConfirmBtn: HTMLButtonElement | null = document.getElementById('auth-mc-bind-confirm') as HTMLButtonElement | null;
 const mcBindCancelBtn: HTMLButtonElement | null = document.getElementById('auth-mc-bind-cancel') as HTMLButtonElement | null;
@@ -188,6 +189,7 @@ function render(): void {
   skinRefreshBtn?.classList.toggle('hidden', !signedIn);
   mcBindBtn?.classList.toggle('hidden', !signedIn || !caellabIntegration);
   mcBindRow?.classList.toggle('hidden', !(listVisible && mcBindRowOpen));
+  mcBindGetcode?.classList.toggle('hidden', !(listVisible && mcBindRowOpen));
   if (!listVisible) mcBindRowOpen = false;
   renderAccountItems(listVisible);
 }
@@ -465,6 +467,10 @@ skinRefreshBtn?.addEventListener('click', () => void refreshSkin());
 mcBindBtn?.addEventListener('click', openMcBindRow);
 mcBindCancelBtn?.addEventListener('click', closeMcBindRow);
 mcBindConfirmBtn?.addEventListener('click', () => void submitMcBind());
+mcBindGetcode?.addEventListener('click', (event: MouseEvent) => {
+  event.preventDefault();
+  if (window.gpcl && window.gpcl.openExternal) void window.gpcl.openExternal('https://minecraft.caellab.com/auth/dashboard');
+});
 mcBindInput?.addEventListener('keydown', (event: KeyboardEvent) => {
   if (event.key === 'Enter') {
     event.preventDefault();

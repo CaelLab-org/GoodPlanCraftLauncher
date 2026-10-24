@@ -1194,5 +1194,6 @@
   "ui.mc_bind_error_network": "Lỗi mạng. Thử lại sau",
   "ui.mc_bind_error_failed": "Liên kết thất bại. Thử lại sau",
   "ui.settings_caellab_integration": "Tích hợp CaelLabMinecraft",
-  "ui.settings_caellab_integration_desc": "Hiện liên kết CaelLabMinecraft trên tài khoản Microsoft; khi bật, khởi động game bản quyền sẽ thông báo cho trang một lần để vào không cần khóa"
+  "ui.settings_caellab_integration_desc": "Hiện liên kết CaelLabMinecraft trên tài khoản Microsoft; khi bật, khởi động game bản quyền sẽ thông báo cho trang một lần để vào không cần khóa",
+  "ui.mc_bind_get_code": "Lấy mã tại minecraft.caellab.com"
 }

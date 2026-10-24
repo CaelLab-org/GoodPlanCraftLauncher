@@ -1194,5 +1194,6 @@
   "ui.mc_bind_error_network": "Netwerkfout. Probeer het later opnieuw",
   "ui.mc_bind_error_failed": "Koppelen mislukt. Probeer het later opnieuw",
   "ui.settings_caellab_integration": "CaelLabMinecraft-integratie",
-  "ui.settings_caellab_integration_desc": "Toont de CaelLabMinecraft-link bij Microsoft-accounts; bij het starten van een premium-game wordt de site eenmalig ingelicht zodat je zonder sleutel kunt deelnemen"
+  "ui.settings_caellab_integration_desc": "Toont de CaelLabMinecraft-link bij Microsoft-accounts; bij het starten van een premium-game wordt de site eenmalig ingelicht zodat je zonder sleutel kunt deelnemen",
+  "ui.mc_bind_get_code": "Haal de code op via minecraft.caellab.com"
 }

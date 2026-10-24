@@ -1194,5 +1194,6 @@
   "ui.mc_bind_error_network": "Помилка мережі. Спробуйте пізніше",
   "ui.mc_bind_error_failed": "Не вдалося прив’язати. Спробуйте пізніше",
   "ui.settings_caellab_integration": "Інтеграція з CaelLabMinecraft",
-  "ui.settings_caellab_integration_desc": "Показувати посилання CaelLabMinecraft в акаунтах Microsoft; під час запуску ліцензійної гри сайт отримує одноразове сповіщення, і ви входите без ключа"
+  "ui.settings_caellab_integration_desc": "Показувати посилання CaelLabMinecraft в акаунтах Microsoft; під час запуску ліцензійної гри сайт отримує одноразове сповіщення, і ви входите без ключа",
+  "ui.mc_bind_get_code": "Отримати код на minecraft.caellab.com"
 }

@@ -1194,5 +1194,6 @@
   "ui.mc_bind_error_network": "網路錯誤，請稍後再試",
   "ui.mc_bind_error_failed": "綁定失敗，請稍後再試",
   "ui.settings_caellab_integration": "CaelLabMinecraft 整合",
-  "ui.settings_caellab_integration_desc": "在正版帳號上顯示 CaelLabMinecraft 綁定入口；開啟後正版啟動遊戲時會向網站報備一次，進服免輸密鑰"
+  "ui.settings_caellab_integration_desc": "在正版帳號上顯示 CaelLabMinecraft 綁定入口；開啟後正版啟動遊戲時會向網站報備一次，進服免輸密鑰",
+  "ui.mc_bind_get_code": "去 minecraft.caellab.com 產生綁定碼"
 }

@@ -1194,5 +1194,6 @@
   "ui.mc_bind_error_network": "Kesalahan jaringan. Coba lagi nanti",
   "ui.mc_bind_error_failed": "Gagal menautkan. Coba lagi nanti",
   "ui.settings_caellab_integration": "Integrasi CaelLabMinecraft",
-  "ui.settings_caellab_integration_desc": "Menampilkan tautan CaelLabMinecraft di akun Microsoft; saat aktif, memulai game premium akan memberi tahu situs sekali sehingga bisa masuk tanpa kunci"
+  "ui.settings_caellab_integration_desc": "Menampilkan tautan CaelLabMinecraft di akun Microsoft; saat aktif, memulai game premium akan memberi tahu situs sekali sehingga bisa masuk tanpa kunci",
+  "ui.mc_bind_get_code": "Ambil kodenya di minecraft.caellab.com"
 }

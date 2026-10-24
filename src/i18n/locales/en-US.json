@@ -1194,5 +1194,6 @@
   "ui.mc_bind_error_network": "Network error. Try again later.",
   "ui.mc_bind_error_failed": "Linking failed. Try again later.",
   "ui.settings_caellab_integration": "CaelLabMinecraft integration",
-  "ui.settings_caellab_integration_desc": "Show the CaelLabMinecraft link on Microsoft accounts; when on, launching a premium game notifies the site once so you can join without the key"
+  "ui.settings_caellab_integration_desc": "Show the CaelLabMinecraft link on Microsoft accounts; when on, launching a premium game notifies the site once so you can join without the key",
+  "ui.mc_bind_get_code": "Get the code at minecraft.caellab.com"
 }

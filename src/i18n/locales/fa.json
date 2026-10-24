@@ -1194,5 +1194,6 @@
   "ui.mc_bind_error_network": "خطای شبکه. بعداً دوباره تلاش کنید",
   "ui.mc_bind_error_failed": "اتصال ناموفق بود. بعداً دوباره تلاش کنید",
   "ui.settings_caellab_integration": "یکپارچگی CaelLabMinecraft",
-  "ui.settings_caellab_integration_desc": "نشان CaelLabMinecraft را در حساب‌های Microsoft نمایش می‌دهد؛ با روشن بودن، هنگام اجرای بازی اورجینال یک بار به سایت اطلاع داده می‌شود تا بدون کلید وارد شوید"
+  "ui.settings_caellab_integration_desc": "نشان CaelLabMinecraft را در حساب‌های Microsoft نمایش می‌دهد؛ با روشن بودن، هنگام اجرای بازی اورجینال یک بار به سایت اطلاع داده می‌شود تا بدون کلید وارد شوید",
+  "ui.mc_bind_get_code": "کد را از minecraft.caellab.com بگیرید"
 }

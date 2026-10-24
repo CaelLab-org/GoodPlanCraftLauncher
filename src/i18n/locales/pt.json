@@ -1194,5 +1194,6 @@
   "ui.mc_bind_error_network": "Erro de rede. Tente novamente mais tarde",
   "ui.mc_bind_error_failed": "Falha ao vincular. Tente novamente mais tarde",
   "ui.settings_caellab_integration": "Integração com CaelLabMinecraft",
-  "ui.settings_caellab_integration_desc": "Mostra o link do CaelLabMinecraft nas contas Microsoft; ao iniciar um jogo original, o site é notificado uma vez para entrar sem chave"
+  "ui.settings_caellab_integration_desc": "Mostra o link do CaelLabMinecraft nas contas Microsoft; ao iniciar um jogo original, o site é notificado uma vez para entrar sem chave",
+  "ui.mc_bind_get_code": "Obter o código em minecraft.caellab.com"
 }

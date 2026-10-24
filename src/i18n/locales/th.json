@@ -1194,5 +1194,6 @@
   "ui.mc_bind_error_network": "ข้อผิดพลาดเครือข่าย ลองอีกครั้งภายหลัง",
   "ui.mc_bind_error_failed": "เชื่อมต่อไม่สำเร็จ ลองอีกครั้งภายหลัง",
   "ui.settings_caellab_integration": "การเชื่อมต่อ CaelLabMinecraft",
-  "ui.settings_caellab_integration_desc": "แสดงลิงก์ CaelLabMinecraft ในบัญชี Microsoft; เมื่อเปิดใช้งาน การเริ่มเกมเวอร์ชันลิขสิทธิ์จะแจ้งเว็บไซต์หนึ่งครั้งเพื่อเข้าได้โดยไม่ต้องใช้คีย์"
+  "ui.settings_caellab_integration_desc": "แสดงลิงก์ CaelLabMinecraft ในบัญชี Microsoft; เมื่อเปิดใช้งาน การเริ่มเกมเวอร์ชันลิขสิทธิ์จะแจ้งเว็บไซต์หนึ่งครั้งเพื่อเข้าได้โดยไม่ต้องใช้คีย์",
+  "ui.mc_bind_get_code": "รับรหัสที่ minecraft.caellab.com"
 }

@@ -1194,5 +1194,6 @@
   "ui.mc_bind_error_network": "Ralat rangkaian. Cuba lagi kemudian",
   "ui.mc_bind_error_failed": "Gagal memautkan. Cuba lagi kemudian",
   "ui.settings_caellab_integration": "Integrasi CaelLabMinecraft",
-  "ui.settings_caellab_integration_desc": "Memaparkan pautan CaelLabMinecraft pada akaun Microsoft; apakah diaktifkan, memulakan permainan premium akan memberitahu tapak sekali untuk masuk tanpa kunci"
+  "ui.settings_caellab_integration_desc": "Memaparkan pautan CaelLabMinecraft pada akaun Microsoft; apakah diaktifkan, memulakan permainan premium akan memberitahu tapak sekali untuk masuk tanpa kunci",
+  "ui.mc_bind_get_code": "Dapatkan kod di minecraft.caellab.com"
 }

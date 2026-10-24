@@ -1194,5 +1194,6 @@
   "ui.mc_bind_error_network": "Σφάλμα δικτύου. Δοκιμάστε αργότερα",
   "ui.mc_bind_error_failed": "Αποτυχία σύνδεσης. Δοκιμάστε αργότερα",
   "ui.settings_caellab_integration": "Ενσωμάτωση CaelLabMinecraft",
-  "ui.settings_caellab_integration_desc": "Εμφανίζει τον σύνδεσμο CaelLabMinecraft στους λογαριασμούς Microsoft; όταν είναι ενεργό, η εκκίνηση επίσημου παιχνιδιού ειδοποιεί τον ιστότοπο μία φορά για είσοδο χωρίς κλειδί"
+  "ui.settings_caellab_integration_desc": "Εμφανίζει τον σύνδεσμο CaelLabMinecraft στους λογαριασμούς Microsoft; όταν είναι ενεργό, η εκκίνηση επίσημου παιχνιδιού ειδοποιεί τον ιστότοπο μία φορά για είσοδο χωρίς κλειδί",
+  "ui.mc_bind_get_code": "Πάρτε τον κωδικό στο minecraft.caellab.com"
 }
