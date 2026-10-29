@@ -9,7 +9,8 @@
 
 // __IMPORTS_BEGIN__
 import { t } from '../i18n';
-import { escapeHtml, icon, showDialog, showToast } from './dom';
+import { icon, showDialog, showToast } from './dom';
+import { startJavaInstall } from './launch';
 import { loadSettings } from './settings';
 // __IMPORTS_END__
 
@@ -113,78 +114,40 @@ export function bindJavaInstallButtons(): void {
 
 
 export async function installJavaWithPanel(javaVersion: string): Promise<void> {
-  const filenameEl: HTMLElement | null = document.getElementById('download-filename');
-  const downloadStatusEl: HTMLElement | null = document.getElementById('download-status');
-  const downloadPanelEl: HTMLElement | null = document.getElementById('download-panel');
-  const progressFill: HTMLElement | null = document.getElementById('progress-fill');
-  const progressText: HTMLElement | null = document.getElementById('progress-text');
-  const cancelBtn: HTMLElement | null = document.getElementById('cancel-download-btn');
-
-  const downloadPageEl: HTMLElement | null = document.getElementById('download-page');
-  if (downloadPageEl) {
-    downloadPageEl.scrollTop = 0;
-  }
-
-  if (downloadPanelEl) {
-    downloadPanelEl.classList.remove('hidden');
-    downloadPanelEl.classList.add('download-panel-container');
-  }
-  if (filenameEl) filenameEl.textContent = t('ui.installing_java_version', { version: javaVersion });
-  if (downloadStatusEl) downloadStatusEl.textContent = t('ui.preparing_to_download_java_version', { version: javaVersion });
-  if (progressFill) progressFill.style.width = '0%';
-  if (progressText) progressText.textContent = '0%';
-  if (cancelBtn) (cancelBtn as HTMLButtonElement).disabled = false;
-
   document.querySelectorAll('.java-install-btn').forEach((btn: Element) => {
     (btn as HTMLButtonElement).disabled = true;
   });
 
   try {
-    const result = await window.gpcl.installJava(javaVersion);
+    const result: any = await startJavaInstall(javaVersion);
+    // 失败提示由下载队列统一给出，这里只负责把卡片状态切过来
+    if (!result || !result.success) return;
 
-    if (result.success) {
-      if (downloadStatusEl) downloadStatusEl.innerHTML = icon('check-circle', 'icon-success') + ' ' + t('ui.java_version_installed_successfully', { version: escapeHtml(javaVersion) });
-      if (progressFill) progressFill.style.width = '100%';
-      if (progressText) progressText.textContent = '100%';
+    const card: HTMLElement | null = document.querySelector(`.java-version-card[data-version="${javaVersion}"]`) as HTMLElement | null;
+    const badge: HTMLElement | null = document.getElementById(`java-${javaVersion}-status`);
+    const btn: HTMLElement | null = card?.querySelector('.java-install-btn') as HTMLElement | null;
 
-      showToast('ui.installation_complete_2', t('ui.java_version_is_ready', { version: javaVersion }), 'success', 'java-install-success');
-
-      const card: HTMLElement | null = document.querySelector(`.java-version-card[data-version="${javaVersion}"]`) as HTMLElement | null;
-      const badge: HTMLElement | null = document.getElementById(`java-${javaVersion}-status`);
-      const btn: HTMLElement | null = card?.querySelector('.java-install-btn') as HTMLElement | null;
-
-      if (card) card.classList.add('installed');
-      if (badge) {
-        badge.textContent = '已安装';
-        badge.className = 'java-version-badge installed';
-      }
-      if (btn) {
-        btn.textContent = '卸载';
-        btn.classList.add('installed');
-        (btn as HTMLButtonElement).disabled = false;
-      }
-
-      updateJavaInstallStatus();
-
-      setTimeout(() => {
-        if (downloadPanelEl) {
-          downloadPanelEl.classList.add('hidden');
-          downloadPanelEl.classList.remove('download-panel-container');
-        }
-      }, 2000);
-    } else {
-      throw new Error(result.error || '安装失败');
+    if (card) card.classList.add('installed');
+    if (badge) {
+      badge.textContent = '已安装';
+      badge.className = 'java-version-badge installed';
     }
-  } catch (err: any) {
-    if (downloadStatusEl) downloadStatusEl.innerHTML = icon('x-circle', 'icon-error') + ' ' + t('ui.installation_failed_error', { error: escapeHtml(String(err.message || err)) });
-    showToast('ui.installation_failed', err.message || String(err), 'error', 'java-install-failed');
-  }
-  document.querySelectorAll('.java-install-btn').forEach((btn: Element) => {
-    if (!btn.classList.contains('installed')) {
+    if (btn) {
+      btn.textContent = '卸载';
+      btn.classList.add('installed');
       (btn as HTMLButtonElement).disabled = false;
     }
-  });
-  if (cancelBtn) (cancelBtn as HTMLButtonElement).disabled = true;
+
+    updateJavaInstallStatus();
+  } catch (err: any) {
+    showToast('ui.installation_failed', err.message || String(err), 'error', 'java-install-failed');
+  } finally {
+    document.querySelectorAll('.java-install-btn').forEach((btn: Element) => {
+      if (!btn.classList.contains('installed')) {
+        (btn as HTMLButtonElement).disabled = false;
+      }
+    });
+  }
 }
 
 
@@ -284,7 +247,7 @@ if (window.gpcl && window.gpcl.onDownloadProgress) {
     const panelVisible: boolean = !!downloadPanelEl && !downloadPanelEl.classList.contains('hidden');
     const floatNotification: HTMLElement | null = document.getElementById('float-notification');
     const floatVisible: boolean = !!floatNotification && !floatNotification.classList.contains('hidden');
-    // 游戏版本下载走底部下载条，这里只在 Java / 启动器更新真的把面板打开时更新
+    // 游戏版本 / Java 下载走底部下载条，这里只服务启动器更新自己的下载面板
     if (!panelVisible && !floatVisible) return;
 
     const progressFill: HTMLElement | null = document.getElementById('progress-fill');
@@ -312,29 +275,6 @@ if (window.gpcl && window.gpcl.onDownloadProgress) {
       floatProgressFill.style.width = percent + '%';
       floatProgressText.textContent = percent.toFixed(1) + '%';
     }
-  });
-}
-
-
-if (window.gpcl && window.gpcl.onJavaDownloadCompleted) {
-  window.gpcl.onJavaDownloadCompleted((data: any): void => {
-    const { javaVersion } = data;
-    const downloadStatusEl: HTMLElement | null = document.getElementById('download-status');
-    if (downloadStatusEl) {
-      downloadStatusEl.innerHTML = icon('check-circle', 'icon-success') + ' ' + t('ui.download_complete_extracting_and_installing');
-    }
-  });
-}
-
-
-if (window.gpcl && window.gpcl.onJavaDownloadFailed) {
-  window.gpcl.onJavaDownloadFailed((data: any): void => {
-    const { error } = data;
-    const downloadStatusEl: HTMLElement | null = document.getElementById('download-status');
-    if (downloadStatusEl) {
-      downloadStatusEl.innerHTML = icon('x-circle', 'icon-error') + ' ' + t('ui.download_failed_error', { error: escapeHtml(String(error)) });
-    }
-    showToast('ui.download_failed', error, 'error', 'java-download-failed');
   });
 }
 

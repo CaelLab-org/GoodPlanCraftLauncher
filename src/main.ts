@@ -7,11 +7,12 @@
  */
 
 // __IMPORTS_BEGIN__
-import { app, ipcMain, shell } from 'electron';
+import { app, dialog, ipcMain, shell } from 'electron';
 import fs from 'fs';
 import path from 'path';
 
 import { APP_VERSION, BASE_DIR, GAME_DIR, LOG_FILE, cleanupExpiredLogs, initGameDirFromSettings, initLanguage, initPaths, parseIni, setBaseDir, writeLog } from './config';
+import { t } from './i18n';
 import { createGPCLShortcut, createWindow, mainWindow } from './shell';
 import { initUpdateState, installPendingUpdateOnRestart } from './update';
 import { isDeveloperMode, setIsDeveloperMode } from './state';
@@ -32,6 +33,26 @@ process.stderr.setDefaultEncoding('utf8');
 
 app.commandLine.appendSwitch('js-flags', '--compile-hints-always');
 app.commandLine.appendSwitch('disk-cache-size', '134217728');
+
+// 校园网 / 公司网的代理认证：Electron 默认直接取消，用户只会看到“下载失败”，
+// 至少要说清楚是网络在要账号，而不是启动器坏了。
+const authWarnedHosts: Set<string> = new Set();
+app.on('login', (_event: any, _webContents: any, _details: any, authInfo: any) => {
+  const host: string = String(authInfo?.host || 'unknown');
+  writeLog(`[网络] ${authInfo?.isProxy ? '代理' : '服务器'}要求身份验证: ${host}`);
+  if (authWarnedHosts.has(host)) return;
+  authWarnedHosts.add(host);
+  try {
+    void dialog.showMessageBox({
+      type: 'warning',
+      title: 'GPCL',
+      message: t('ui.network_requires_sign_in'),
+      detail: host
+    });
+  } catch (e: any) {
+    writeLog(`[网络] 提示身份验证失败: ${e.message}`);
+  }
+});
 
 app.on('web-contents-created', (event: any, contents: any) => {
   try {

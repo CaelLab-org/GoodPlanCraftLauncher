@@ -74,7 +74,7 @@
                     </div>
                 </li>
                 <li class="lang-switch"><select aria-label="Taal" onchange="if(this.value)location.href=this.value"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl" selected>Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select></li>
-                <li><a href="../index.nl#download" class="nav-cta">&#9662; Download v1.9.2</a></li>
+                <li><a href="../index.nl#download" class="nav-cta">&#9662; Download v1.9.3</a></li>
             </ul>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu openen" aria-expanded="false">&#9776;</button>
         </div>
@@ -92,6 +92,7 @@
             <p class="cl-intro">Van 1.0.0 tot de nieuwste release: elke versie — wat er is veranderd en of hij te downloaden is — staat op deze pagina.</p>
             <p class="cl-note">Voor 1.3.2 en eerder zijn geen installatieprogramma's bewaard; de ingebouwde updater in oude versies werkt mogelijk niet meer, dus voor dagelijks gebruik wordt de nieuwste release aanbevolen.</p>
             <div class="cl-index" role="navigation" aria-label="Versieoverzicht">
+                <a href="#v1-9-3">1.9.3</a>
                 <a href="#v1-9-2">1.9.2</a>
                 <a href="#v1-9-1">1.9.1</a>
                 <a href="#v1-9-0">1.9.0</a>
@@ -122,12 +123,38 @@
     <main class="history cl-history">
         <div class="container">
             <div class="timeline">
+                <article class="timeline-item" id="v1-9-3">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.9.3</span>
+                        <span class="version-title">Java-downloads gebruiken nu de gedeelde downloadwachtrij</span>
+                        <span class="latest-chip">Nieuwste</span>
+                        <span class="version-date">2026-10-29</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Java-downloads lopen nu via dezelfde wachtrij als spelversies en mods: voortgang, snelheid, wachtrij en annuleren in de balk onderaan.</li>
+                        <li>De standaardspiegel van Tsinghua mislukte altijd: de launcher stuurde een browser User-Agent, die de spiegel weigert.</li>
+                        <li>De Huawei Cloud-spiegel is verwijderd (levert geen bestanden meer); had je die gekozen, dan valt de launcher terug op Tsinghua.</li>
+                        <li>De Java-spiegelinstelling werkt nu echt: hij werd alleen opgeslagen en nooit gelezen bij het downloaden.</li>
+                        <li>Java-runtimes worden nu in de spelmap geïnstalleerd, zodat eigen spelmaptes (schoolcomputers, roaming-profielen) werken.</li>
+                        <li>Als een netwerk inloggen vereist (proxy-authenticatie), krijg je een duidelijke melding en een logregel in plaats van alleen 'download mislukt'.</li>
+                        <li>Fouten bij de Java-installatie zijn concreter (bestand te klein / archief beschadigd / geen bron beschikbaar) en systeem-Java kan niet meer via de launcher worden verwijderd.</li>
+                        <li>Een mislukte nieuwe download verwijdert geen versiemap meer die er al was.</li>
+                        <li>De Java-installatie verschijnt in het downloadpaneel, kan worden geannuleerd en loopt niet op de achtergrond door.</li>
+                    </ul>
+                    <div class="cl-download">
+                        <a class="cl-dl-btn" href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.3-Setup.exe">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                            Download v1.9.3
+                        </a>
+                        <span class="cl-file">GPCL-1.9.3-Setup.exe · 94.0 MB · Windows 64-bit</span>
+                    </div>
+                </article>
                 <article class="timeline-item" id="v1-9-2">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
                         <span class="version-number">v1.9.2</span>
                         <span class="version-title">Eerste Linux-versie (experimenteel), CaelLabMinecraft-koppeling</span>
-                        <span class="latest-chip">Nieuwste</span>
                         <span class="version-date">2026-10-24</span>
                     </div>
                     <ul class="changelog">

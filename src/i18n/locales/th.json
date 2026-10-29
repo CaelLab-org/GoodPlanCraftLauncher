@@ -418,7 +418,6 @@
   "ui.hours_h_ago": "{hours} ชั่วโมงที่ผ่านมา",
   "ui.how_long_log_files_are_kept": "ไฟล์บันทึกจะถูกเก็บไว้นานเท่าใด",
   "ui.how_the_launcher_itself_looks": "ตัวเรียกใช้งานมีลักษณะอย่างไร",
-  "ui.huawei_cloud_mirror": "กระจกหัวเว่ยคลาวด์",
   "ui.icon": "ไอคอน",
   "ui.if_you_need_help_send_the_error_report_file_rather_than_a_screenshot_of_cd6013": "หากคุณต้องการความช่วยเหลือ ให้ส่งไฟล์รายงานข้อผิดพลาดแทนภาพหน้าจอของหน้าต่างนี้",
   "ui.images": "รูปภาพ",
@@ -1195,5 +1194,11 @@
   "ui.mc_bind_error_failed": "เชื่อมต่อไม่สำเร็จ ลองอีกครั้งภายหลัง",
   "ui.settings_caellab_integration": "การเชื่อมต่อ CaelLabMinecraft",
   "ui.settings_caellab_integration_desc": "แสดงลิงก์ CaelLabMinecraft ในบัญชี Microsoft; เมื่อเปิดใช้งาน การเริ่มเกมเวอร์ชันลิขสิทธิ์จะแจ้งเว็บไซต์หนึ่งครั้งเพื่อเข้าได้โดยไม่ต้องใช้คีย์",
-  "ui.mc_bind_get_code": "รับรหัสที่ minecraft.caellab.com"
+  "ui.mc_bind_get_code": "รับรหัสที่ minecraft.caellab.com",
+  "ui.java_file_too_small": "Java download failed: the downloaded file is too small",
+  "ui.java_invalid_archive": "Java download failed: the downloaded file is not a valid archive",
+  "ui.java_extract_failed": "Could not extract the Java runtime: {error}",
+  "ui.java_no_download_source": "No Java download source is available; check your network connection",
+  "ui.network_requires_sign_in": "This network requires sign-in (proxy authentication). Sign in on this computer first, then retry.",
+  "ui.system_java_cannot_be_uninstalled": "This Java is installed by the system; uninstall it from the system instead"
 }

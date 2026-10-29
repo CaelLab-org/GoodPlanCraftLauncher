@@ -1,8 +1,31 @@
 {
   "schema": 1,
-  "latest": "1.9.2",
-  "updated": "2026-10-24",
+  "latest": "1.9.3",
+  "updated": "2026-10-29",
   "versions": [
+    {
+      "version": "1.9.3",
+      "anchor": "v1-9-3",
+      "date": "2026-10-29",
+      "title": "Java-downloads gebruiken nu de gedeelde downloadwachtrij",
+      "log": [
+        "Java-downloads lopen nu via dezelfde wachtrij als spelversies en mods: voortgang, snelheid, wachtrij en annuleren in de balk onderaan.",
+        "De standaardspiegel van Tsinghua mislukte altijd: de launcher stuurde een browser User-Agent, die de spiegel weigert.",
+        "De Huawei Cloud-spiegel is verwijderd (levert geen bestanden meer); had je die gekozen, dan valt de launcher terug op Tsinghua.",
+        "De Java-spiegelinstelling werkt nu echt: hij werd alleen opgeslagen en nooit gelezen bij het downloaden.",
+        "Java-runtimes worden nu in de spelmap geïnstalleerd, zodat eigen spelmaptes (schoolcomputers, roaming-profielen) werken.",
+        "Als een netwerk inloggen vereist (proxy-authenticatie), krijg je een duidelijke melding en een logregel in plaats van alleen 'download mislukt'.",
+        "Fouten bij de Java-installatie zijn concreter (bestand te klein / archief beschadigd / geen bron beschikbaar) en systeem-Java kan niet meer via de launcher worden verwijderd.",
+        "Een mislukte nieuwe download verwijdert geen versiemap meer die er al was.",
+        "De Java-installatie verschijnt in het downloadpaneel, kan worden geannuleerd en loopt niet op de achtergrond door."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.3-Setup.exe",
+        "file": "GPCL-1.9.3-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.9.2",
       "anchor": "v1-9-2",

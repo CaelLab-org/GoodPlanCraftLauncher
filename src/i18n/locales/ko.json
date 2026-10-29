@@ -418,7 +418,6 @@
   "ui.hours_h_ago": "{hours}시간 전",
   "ui.how_long_log_files_are_kept": "로그 파일이 보관되는 기간",
   "ui.how_the_launcher_itself_looks": "런처 자체의 모습",
-  "ui.huawei_cloud_mirror": "화웨이 클라우드 미러",
   "ui.icon": "아이콘",
   "ui.if_you_need_help_send_the_error_report_file_rather_than_a_screenshot_of_cd6013": "도움이 필요하면 이 창의 스크린샷 대신 오류 보고서 파일을 보내주세요.",
   "ui.images": "이미지",
@@ -1195,5 +1194,11 @@
   "ui.mc_bind_error_failed": "연결에 실패했습니다. 나중에 다시 시도하세요",
   "ui.settings_caellab_integration": "CaelLabMinecraft 연동",
   "ui.settings_caellab_integration_desc": "Microsoft 계정에 CaelLabMinecraft 링크를 표시합니다. 켜면 정품 게임 시작 시 사이트에 한 번 알려 키 없이 서버에 접속할 수 있습니다",
-  "ui.mc_bind_get_code": "minecraft.caellab.com에서 코드 받기"
+  "ui.mc_bind_get_code": "minecraft.caellab.com에서 코드 받기",
+  "ui.java_file_too_small": "Java download failed: the downloaded file is too small",
+  "ui.java_invalid_archive": "Java download failed: the downloaded file is not a valid archive",
+  "ui.java_extract_failed": "Could not extract the Java runtime: {error}",
+  "ui.java_no_download_source": "No Java download source is available; check your network connection",
+  "ui.network_requires_sign_in": "This network requires sign-in (proxy authentication). Sign in on this computer first, then retry.",
+  "ui.system_java_cannot_be_uninstalled": "This Java is installed by the system; uninstall it from the system instead"
 }

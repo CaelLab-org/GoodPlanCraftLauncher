@@ -1,8 +1,31 @@
 {
   "schema": 1,
-  "latest": "1.9.2",
-  "updated": "2026-10-24",
+  "latest": "1.9.3",
+  "updated": "2026-10-29",
   "versions": [
+    {
+      "version": "1.9.3",
+      "anchor": "v1-9-3",
+      "date": "2026-10-29",
+      "title": "Les téléchargements Java utilisent la file d'attente commune",
+      "log": [
+        "Les téléchargements Java passent désormais par la même file d'attente que les versions de jeu et les mods : progression, vitesse, ordre et annulation dans la barre en bas de la fenêtre.",
+        "Le miroir Tsinghua par défaut échouait à chaque téléchargement : le lanceur envoyait un User-Agent de navigateur, que le miroir refuse.",
+        "Le miroir Huawei Cloud a été retiré (il ne fournit plus de fichiers) ; si vous l'aviez choisi, le lanceur revient à Tsinghua.",
+        "Le réglage du miroir Java est enfin appliqué : il était enregistré mais jamais lu lors du téléchargement.",
+        "Les environnements Java s'installent maintenant dans le dossier du jeu, ce qui fait fonctionner les dossiers personnalisés (ordinateurs scolaires, profils itinérants).",
+        "Quand un réseau demande une connexion (authentification proxy), un message clair et une ligne de journal remplacent un simple « échec du téléchargement ».",
+        "Les erreurs d'installation de Java sont plus précises (fichier trop petit / archive invalide / aucune source disponible) et un Java installé par le système ne peut plus être désinstallé depuis le lanceur.",
+        "Un nouveau téléchargement en échec ne supprime plus un dossier de version déjà présent.",
+        "L'installation de Java apparaît dans le panneau de téléchargement, peut être annulée et ne continue pas en arrière-plan."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.3-Setup.exe",
+        "file": "GPCL-1.9.3-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.9.2",
       "anchor": "v1-9-2",

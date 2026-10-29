@@ -455,19 +455,26 @@ interface DownloadTask {
   error?: string;
   modpack?: { source: 'modrinth' | 'curseforge'; projectId: string; versionId: string; gameVersion: string; instanceName: string };
   modInstall?: { direct: boolean; payload: any };
+  javaInstall?: { version: string };
 }
 
 const downloadTasks: DownloadTask[] = [];
-const modTaskResolvers: Map<string, (result: any) => void> = new Map();
+const taskResolvers: Map<string, Array<(result: any) => void>> = new Map();
 let activeDownloadTask: DownloadTask | null = null;
 let queueRunning: boolean = false;
 let queueTaskSeq: number = 0;
 
-function resolveModTask(taskId: string, result: any): void {
-  const resolve: ((result: any) => void) | undefined = modTaskResolvers.get(taskId);
-  if (!resolve) return;
-  modTaskResolvers.delete(taskId);
-  resolve(result);
+function addTaskResolver(taskId: string, resolve: (result: any) => void): void {
+  const list: Array<(result: any) => void> = taskResolvers.get(taskId) || [];
+  list.push(resolve);
+  taskResolvers.set(taskId, list);
+}
+
+function resolveTaskResult(taskId: string, result: any): void {
+  const list: Array<(result: any) => void> | undefined = taskResolvers.get(taskId);
+  if (!list) return;
+  taskResolvers.delete(taskId);
+  for (const resolve of list) resolve(result);
 }
 
 export function hasQueuedDownloads(): boolean {
@@ -574,7 +581,7 @@ function renderDownloadTasks(): void {
         const index: number = downloadTasks.findIndex((t: DownloadTask) => t.id === task.id);
         if (index >= 0 && downloadTasks[index].status === 'queued') {
           const removed: DownloadTask = downloadTasks.splice(index, 1)[0];
-          resolveModTask(removed.id, { success: false, error: t('ui.cancelled') });
+          resolveTaskResult(removed.id, { success: false, error: t('ui.cancelled') });
           renderDownloadTasks();
           setDownloadDockQueue(queuedCount());
         }
@@ -628,7 +635,9 @@ async function runDownloadTask(task: DownloadTask): Promise<void> {
 
   try {
     const maxConcurrent: number = getMaxConcurrentFromSettings();
-    const result: any = task.modInstall
+    const result: any = task.javaInstall
+      ? await window.gpcl.installJava(task.javaInstall.version)
+      : task.modInstall
       ? await (task.modInstall.direct
           ? window.gpcl.modsInstallDirect(task.modInstall.payload)
           : window.gpcl.modsInstall(task.modInstall.payload))
@@ -637,6 +646,28 @@ async function runDownloadTask(task: DownloadTask): Promise<void> {
         : task.loaderType
           ? await window.gpcl.downloadWithModLoader(task.versionId, task.loaderType, task.loaderVersion, maxConcurrent, { installFabricApi: task.installFabricApi })
           : await window.gpcl.downloadVersion(task.versionId, maxConcurrent);
+
+    if (task.javaInstall) {
+      if (result && result.success) {
+        task.status = 'done';
+        task.percent = 100;
+        task.message = t('ui.done');
+        updateTaskRow(task);
+        const readyText: string = t('ui.java_version_is_ready', { version: task.javaInstall.version });
+        showToast('ui.installation_complete_2', readyText, 'success', 'java-install-success');
+        setStatus(readyText, 'success');
+        finishDownloadDock(readyText, 'done');
+      } else {
+        task.status = 'error';
+        task.error = normalizeDownloadError(result?.error || t('ui.unknown_error'));
+        updateTaskRow(task);
+        showToast('ui.installation_failed', task.error, 'error', 'java-install-failed');
+        setStatus(t('ui.download_failed_error_2', { error: task.error }), 'error');
+        finishDownloadDock(t('ui.download_failed_error_2', { error: task.error }), 'error');
+      }
+      resolveTaskResult(task.id, result && result.success ? result : { success: false, error: task.error });
+      return;
+    }
 
     if (task.modInstall) {
       if (result && result.success) {
@@ -655,7 +686,7 @@ async function runDownloadTask(task: DownloadTask): Promise<void> {
         setStatus(t('ui.download_failed_error_2', { error: task.error }), 'error');
         finishDownloadDock(t('ui.download_failed_error_2', { error: task.error }), 'error');
       }
-      resolveModTask(task.id, result && result.success ? result : { success: false, error: task.error });
+      resolveTaskResult(task.id, result && result.success ? result : { success: false, error: task.error });
       return;
     }
 
@@ -710,9 +741,9 @@ async function runDownloadTask(task: DownloadTask): Promise<void> {
     task.status = 'error';
     task.error = normalizeDownloadError(e.message || String(e));
     updateTaskRow(task);
-    if (task.modInstall) {
+    if (task.modInstall || task.javaInstall) {
       finishDownloadDock(t('ui.download_failed_error_2', { error: task.error }), 'error');
-      resolveModTask(task.id, { success: false, error: task.error });
+      resolveTaskResult(task.id, { success: false, error: task.error });
       return;
     }
     showToast('ui.download_error', task.error, 'error', 'download-error');
@@ -792,7 +823,41 @@ export function startModInstall(options: { direct: boolean; payload: any; displa
       message: t('ui.queued'),
       modInstall: { direct: options.direct, payload: options.payload }
     };
-    modTaskResolvers.set(task.id, resolve);
+    addTaskResolver(task.id, resolve);
+    downloadTasks.push(task);
+    renderDownloadTasks();
+    setDownloadDockQueue(queuedCount());
+    if (!queueRunning) void processDownloadQueue();
+  });
+}
+
+
+export function startJavaInstall(javaVersion: string): Promise<any> {
+  return new Promise((resolve) => {
+    const displayName: string = t('ui.installing_java_version', { version: javaVersion });
+    const existing: DownloadTask | undefined = downloadTasks.find((task: DownloadTask) =>
+      (task.status === 'queued' || task.status === 'running') &&
+      task.javaInstall?.version === javaVersion);
+    if (existing) {
+      addTaskResolver(existing.id, resolve);
+      showToast('ui.already_in_the_queue', displayName, 'info', 'java-install-duplicate');
+      return;
+    }
+
+    const task: DownloadTask = {
+      id: `task-${++queueTaskSeq}`,
+      versionId: '',
+      loaderType: '',
+      loaderVersion: '',
+      loaderName: '',
+      installFabricApi: false,
+      displayName,
+      status: 'queued',
+      percent: 0,
+      message: t('ui.queued'),
+      javaInstall: { version: javaVersion }
+    };
+    addTaskResolver(task.id, resolve);
     downloadTasks.push(task);
     renderDownloadTasks();
     setDownloadDockQueue(queuedCount());

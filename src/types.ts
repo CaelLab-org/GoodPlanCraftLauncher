@@ -36,8 +36,6 @@ export interface GPCLApi {
   showMessageDialog(options: DialogOptions): Promise<any>;
   confirmCloseDownload(): Promise<void>;
   cancelDownloadOnly(): Promise<void>;
-  getJavaMirrorSettings(): Promise<any>;
-  getJavaDownloadUrl(javaVersion: string): Promise<string>;
   cancelClose(): Promise<void>;
   checkJava(versionId: string): Promise<JavaCheckResult>;
   listJavaRuntimes(): Promise<JavaRuntimeInfo[]>;
@@ -46,8 +44,6 @@ export interface GPCLApi {
   installJava(javaVersion: string): Promise<any>;
   uninstallJava(javaVersion: string): Promise<any>;
   onJavaInstallDialog(callback: (data: any) => void): void;
-  onJavaDownloadCompleted(callback: (data: any) => void): void;
-  onJavaDownloadFailed(callback: (data: any) => void): void;
   onGameWindowCreated(callback: (data: any) => void): void;
   minimizeWindow(): Promise<void>;
   focusWindow(): Promise<void>;

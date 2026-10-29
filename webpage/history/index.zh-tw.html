@@ -74,7 +74,7 @@
                     </div>
                 </li>
                 <li class="lang-switch"><select aria-label="語言" onchange="if(this.value)location.href=this.value"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw" selected>繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select></li>
-                <li><a href="../index.zh-tw#download" class="nav-cta">&#9662; 下載 v1.9.2</a></li>
+                <li><a href="../index.zh-tw#download" class="nav-cta">&#9662; 下載 v1.9.3</a></li>
             </ul>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="開啟選單" aria-expanded="false">&#9776;</button>
         </div>
@@ -92,6 +92,7 @@
             <p class="cl-intro">從 1.0.0 到最新版，每個版本改了什麼、能不能下載，全都在這一頁。</p>
             <p class="cl-note">1.3.2 及更早的版本沒有保留安裝包；舊版啟動器的內建更新可能已無法使用，日常使用建議安裝最新版。</p>
             <div class="cl-index" role="navigation" aria-label="版本索引">
+                <a href="#v1-9-3">1.9.3</a>
                 <a href="#v1-9-2">1.9.2</a>
                 <a href="#v1-9-1">1.9.1</a>
                 <a href="#v1-9-0">1.9.0</a>
@@ -122,12 +123,38 @@
     <main class="history cl-history">
         <div class="container">
             <div class="timeline">
+                <article class="timeline-item" id="v1-9-3">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.9.3</span>
+                        <span class="version-title">Java 下載接入統一下載佇列</span>
+                        <span class="latest-chip">最新</span>
+                        <span class="version-date">2026-10-29</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Java 下載現在和遊戲版本、模組共用同一條佇列：進度、速度、排隊位置和取消都在底部下載列裡。</li>
+                        <li>修好了預設清華鏡像每次都不動的問題：啟動器以前對鏡像站送瀏覽器識別，被鏡像直接拒絕。</li>
+                        <li>華為雲鏡像已移除（那邊已經不提供檔案了）；之前選過它會自動回落到清華。</li>
+                        <li>Java 鏡像設定現在真的生效了。以前只是存下來、下載時根本沒讀，所以怎麼選都還是清華。</li>
+                        <li>Java 執行環境改為安裝在遊戲目錄裡，自訂遊戲目錄（學校電腦、漫遊設定）也能正常使用。</li>
+                        <li>網路需要登入（代理認證）時會明確提示並寫進日誌，不再只報一句「下載失敗」。</li>
+                        <li>Java 安裝失敗的提示更具體（檔案太小 / 壓縮檔損壞 / 沒有可用的下載來源），系統內建的 Java 也不能再從啟動器卸載。</li>
+                        <li>重新下載失敗時，不再把之前就裝好的版本資料夾刪掉。</li>
+                        <li>安裝 Java 會進「下載進程」面板，也能取消，不會留下一個還在背景跑的下載。</li>
+                    </ul>
+                    <div class="cl-download">
+                        <a class="cl-dl-btn" href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.3-Setup.exe">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                            下載 v1.9.3
+                        </a>
+                        <span class="cl-file">GPCL-1.9.3-Setup.exe · 94.0 MB · Windows 64 位元</span>
+                    </div>
+                </article>
                 <article class="timeline-item" id="v1-9-2">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
                         <span class="version-number">v1.9.2</span>
                         <span class="version-title">Linux 實驗版首發，支援 CaelLabMinecraft 正版綁定</span>
-                        <span class="latest-chip">最新</span>
                         <span class="version-date">2026-10-24</span>
                     </div>
                     <ul class="changelog">

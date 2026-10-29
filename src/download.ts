@@ -205,6 +205,12 @@ function sourceTimeout(policy: DownloadSourcePolicy, isOfficial: boolean, kind: 
   return kind === 'text' ? 20000 : 60000;
 }
 
+// 服务器中途不吐数据也不关连接时，等多久判定这个源已经死了
+const DOWNLOAD_IDLE_TIMEOUT_MS: number = 30000;
+
+// 清华镜像等站点会直接 403 掉浏览器 UA（反盗链）；用应用自己的标识才能下到文件
+const DOWNLOAD_USER_AGENT: string = `GPCL/${APP_VERSION}`;
+
 function fetchTextOnce(url: string, timeoutMs: number, redirectsLeft: number = 3): Promise<string> {
   return new Promise<string>((resolve, reject) => {
     let settled: boolean = false;
@@ -218,7 +224,7 @@ function fetchTextOnce(url: string, timeoutMs: number, redirectsLeft: number = 3
       if (settled) return;
       try {
         const https = require('https');
-        const req2 = https.get(url, { timeout: timeoutMs, headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' } }, (res2: any) => {
+        const req2 = https.get(url, { timeout: timeoutMs, headers: { 'User-Agent': DOWNLOAD_USER_AGENT } }, (res2: any) => {
           const status: number = res2.statusCode || 0;
           if (status >= 300 && status < 400 && res2.headers.location && redirectsLeft > 0) {
             const nextUrl: string = new URL(res2.headers.location, url).toString();
@@ -246,6 +252,8 @@ function fetchTextOnce(url: string, timeoutMs: number, redirectsLeft: number = 3
     try {
       const req = net.request(url);
       const timer: any = setTimeout(() => { try { req.abort(); } catch {} ; fallbackToHttps('超时'); }, timeoutMs);
+
+      req.setHeader('User-Agent', DOWNLOAD_USER_AGENT);
 
       req.on('response', (res: any) => {
         clearTimeout(timer);
@@ -559,6 +567,24 @@ async function downloadFileOnce(url: string, dest: string, label: string, timeou
     let loaded: number = 0;
     let total: number = 0;
     let fallbackStarted: boolean = false;
+    let idleTimer: any = null;
+    let activeRequest: any = null;
+
+    const stopIdle = (): void => {
+      if (idleTimer) {
+        clearTimeout(idleTimer);
+        idleTimer = null;
+      }
+    };
+
+    const resetIdle = (): void => {
+      stopIdle();
+      idleTimer = setTimeout(() => {
+        idleTimer = null;
+        try { activeRequest?.abort?.(); } catch {}
+        fallbackToHttps(new Error(t('ui.download_timed_out')));
+      }, DOWNLOAD_IDLE_TIMEOUT_MS);
+    };
 
     const resetFile = (): void => {
       try { file.destroy(); } catch {}
@@ -569,6 +595,12 @@ async function downloadFileOnce(url: string, dest: string, label: string, timeou
     const fallbackToHttps = (reason: any): void => {
       if (fallbackStarted) return;
       fallbackStarted = true;
+      stopIdle();
+      if (shouldCancelDownload) {
+        try { file.destroy(); } catch {}
+        reject(new Error('Download cancelled'));
+        return;
+      }
       writeLog(`[下载] ${label} HTTP请求失败: ${reason}，尝试HTTPS`);
       resetFile();
       try {
@@ -577,7 +609,7 @@ async function downloadFileOnce(url: string, dest: string, label: string, timeou
         const options: any = {
           timeout: timeoutMs,
           headers: {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+            'User-Agent': DOWNLOAD_USER_AGENT
           }
         };
         
@@ -660,14 +692,17 @@ async function downloadFileOnce(url: string, dest: string, label: string, timeou
 
     try {
       const req = net.request(url);
+      activeRequest = req;
       const to: any = setTimeout(() => { try { req.abort(); } catch {} ; fallbackToHttps('timeout'); }, timeoutMs);
 
-      req.setHeader('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36');
+      req.setHeader('User-Agent', DOWNLOAD_USER_AGENT);
 
       req.on('response', (res: any) => {
         clearTimeout(to);
+        resetIdle();
 
         if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+          stopIdle();
           writeLog(`[下载] ${label} 重定向到: ${res.headers.location}`);
           file.end(() => {
             downloadFileOnce(new URL(res.headers.location, url).toString(), dest, label, timeoutMs).then(resolve).catch(reject);
@@ -676,6 +711,7 @@ async function downloadFileOnce(url: string, dest: string, label: string, timeou
         }
 
         if (res.statusCode >= 400) {
+          stopIdle();
           writeLog(`[下载] ${label} HTTP ${res.statusCode}`);
           file.close();
           res.resume();
@@ -694,6 +730,7 @@ async function downloadFileOnce(url: string, dest: string, label: string, timeou
         
         res.on('data', (d: any) => {
           if (shouldCancelDownload) {
+            stopIdle();
             try { req.abort(); } catch {}
             file.destroy();
             reject(new Error('Download cancelled'));
@@ -702,6 +739,7 @@ async function downloadFileOnce(url: string, dest: string, label: string, timeou
           loaded += d.length;
           file.write(d);
           reportTransferProgress(dest, loaded, total, label);
+          resetIdle();
           if (speedLimitBytes > 0) {
             res.pause();
             void consumeDownloadTokens(d.length).then(() => {
@@ -710,6 +748,7 @@ async function downloadFileOnce(url: string, dest: string, label: string, timeou
           }
         });
         res.on('end', () => {
+          stopIdle();
           if (loaded === 0) {
             try { file.destroy(); } catch {}
             fallbackToHttps(new Error('The download was empty'));
@@ -727,11 +766,13 @@ async function downloadFileOnce(url: string, dest: string, label: string, timeou
           });
         });
         res.on('error', (err: any) => {
+          stopIdle();
           fallbackToHttps(err);
         });
       });
 
       req.on('error', (err: any) => {
+        stopIdle();
         fallbackToHttps(err);
       });
 
@@ -771,6 +812,7 @@ export async function downloadFileInternal(sources: string[], dest: string, labe
 export async function installVersion(versionId: string, maxConcurrent: number = 20, downloadPath: string | null = null): Promise<any> {
   loadDownloadSettings();
   const targetDir: string = downloadPath || path.join(GAME_DIR, 'versions', versionId);
+  const targetExisted: boolean = fs.existsSync(targetDir);
   const versionDir: string = targetDir;
   const cancelFilePath: string = path.join(versionDir, 'CancelDownload.txt');
   if (fs.existsSync(cancelFilePath)) {
@@ -947,7 +989,8 @@ setProgressStage(t('ui.preparing_download'));
     return { success: true };
   } catch (e: any) {
     writeLog(`下载失败：${versionId} - ${e.message}`);
-    if (fs.existsSync(targetDir)) {
+    // 目录原本就存在时不能整个删掉 —— 那是用户已经装好的版本，重下一次失败不该把它带走
+    if (!targetExisted && fs.existsSync(targetDir)) {
       try {
         fs.rmSync(targetDir, { recursive: true, force: true });
         writeLog(`已删除下载失败的文件夹：${targetDir}`);

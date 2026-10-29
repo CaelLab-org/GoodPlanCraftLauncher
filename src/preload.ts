@@ -59,8 +59,6 @@ const gpclApi: GPCLApi = {
   showMessageDialog: (options) => ipcRenderer.invoke('show-message-dialog', options),
   confirmCloseDownload: () => ipcRenderer.invoke('confirm-close-download'),
   cancelDownloadOnly: () => ipcRenderer.invoke('cancel-download-only'),
-  getJavaMirrorSettings: () => ipcRenderer.invoke('get-java-mirror-settings'),
-  getJavaDownloadUrl: (javaVersion: string) => ipcRenderer.invoke('get-java-download-url', javaVersion),
   cancelClose: () => ipcRenderer.invoke('cancel-close'),
   checkJava: (versionId: string) => ipcRenderer.invoke('check-java', versionId),
   listJavaRuntimes: () => ipcRenderer.invoke('list-java-runtimes'),
@@ -74,12 +72,6 @@ const gpclApi: GPCLApi = {
 
   onJavaInstallDialog: (callback) => {
     ipcRenderer.on('show-java-install-dialog', (_event, data) => callback(data));
-  },
-  onJavaDownloadCompleted: (callback) => {
-    ipcRenderer.on('java-download-completed', (_event, data) => callback(data));
-  },
-  onJavaDownloadFailed: (callback) => {
-    ipcRenderer.on('java-download-failed', (_event, data) => callback(data));
   },
   onGameWindowCreated: (callback) => {
     ipcRenderer.on('game-window-created', (_event, data) => callback(data));
@@ -168,8 +160,8 @@ const gpclApi: GPCLApi = {
 
   /**
    * 只清「每次启动 / 下载时都会重新注册」的这几个通道（它们的注册点在函数里，会越挂越多）。
-   * 其余通道（game-log / game-closed / game-status / game-crashed / java-download-* /
-   * microsoft-auth-result 等）在渲染层是模块加载时注册一次的，被清掉就再也没人补回来 ——
+   * 其余通道（game-log / game-closed / game-status / game-crashed / microsoft-auth-result 等）
+   * 在渲染层是模块加载时注册一次的，被清掉就再也没人补回来 ——
    * 表现是关掉游戏后面板一直显示「运行中」、启动过一次之后再登录正版没有反应。别加进来。
    */
   removeAllListeners: () => {

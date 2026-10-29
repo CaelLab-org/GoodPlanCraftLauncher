@@ -418,7 +418,6 @@
   "ui.hours_h_ago": "il y a {hours} h",
   "ui.how_long_log_files_are_kept": "Combien de temps les fichiers journaux sont conservés",
   "ui.how_the_launcher_itself_looks": "À quoi ressemble le lanceur lui-même",
-  "ui.huawei_cloud_mirror": "Miroir Huawei Cloud",
   "ui.icon": "Icône",
   "ui.if_you_need_help_send_the_error_report_file_rather_than_a_screenshot_of_cd6013": "Si vous avez besoin d'aide, envoyez le fichier de rapport d'erreur plutôt qu'une capture d'écran de cette fenêtre.",
   "ui.images": "Images",
@@ -1195,5 +1194,11 @@
   "ui.mc_bind_error_failed": "Échec de la liaison. Réessayez plus tard",
   "ui.settings_caellab_integration": "Intégration CaelLabMinecraft",
   "ui.settings_caellab_integration_desc": "Affiche le lien CaelLabMinecraft sur les comptes Microsoft ; au lancement d’un jeu officiel, le site est notifié une fois pour entrer sans clé",
-  "ui.mc_bind_get_code": "Obtenir le code sur minecraft.caellab.com"
+  "ui.mc_bind_get_code": "Obtenir le code sur minecraft.caellab.com",
+  "ui.java_file_too_small": "Java download failed: the downloaded file is too small",
+  "ui.java_invalid_archive": "Java download failed: the downloaded file is not a valid archive",
+  "ui.java_extract_failed": "Could not extract the Java runtime: {error}",
+  "ui.java_no_download_source": "No Java download source is available; check your network connection",
+  "ui.network_requires_sign_in": "This network requires sign-in (proxy authentication). Sign in on this computer first, then retry.",
+  "ui.system_java_cannot_be_uninstalled": "This Java is installed by the system; uninstall it from the system instead"
 }

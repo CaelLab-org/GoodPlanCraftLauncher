@@ -1,8 +1,31 @@
 {
   "schema": 1,
-  "latest": "1.9.2",
-  "updated": "2026-10-24",
+  "latest": "1.9.3",
+  "updated": "2026-10-29",
   "versions": [
+    {
+      "version": "1.9.3",
+      "anchor": "v1-9-3",
+      "date": "2026-10-29",
+      "title": "Las descargas de Java usan la cola de descargas compartida",
+      "log": [
+        "Las descargas de Java ahora usan la misma cola que las versiones del juego y los mods: progreso, velocidad, orden y cancelación en la barra inferior.",
+        "Corregido el fallo del espejo predeterminado de Tsinghua: el launcher enviaba un User-Agent de navegador y el espejo lo rechaza.",
+        "Se eliminó el espejo de Huawei Cloud (ya no sirve archivos); si lo tenías elegido, se vuelve a Tsinghua automáticamente.",
+        "El ajuste del espejo de Java por fin se aplica: antes solo se guardaba y no se leía al descargar.",
+        "Los entornos de Java se instalan ahora dentro de la carpeta del juego, así que las carpetas personalizadas (equipos escolares, perfiles móviles) funcionan.",
+        "Si la red requiere iniciar sesión (autenticación de proxy), ahora aparece un aviso claro y se registra en el log en lugar de un simple «error de descarga».",
+        "Los errores de instalación de Java son más concretos (archivo demasiado pequeño / comprimido dañado / sin fuente disponible) y el Java del sistema ya no se puede desinstalar desde el launcher.",
+        "Si falla una nueva descarga, ya no se borra una carpeta de versión que ya existía.",
+        "La instalación de Java aparece en el panel de descargas, se puede cancelar y no deja una descarga corriendo en segundo plano."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.3-Setup.exe",
+        "file": "GPCL-1.9.3-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.9.2",
       "anchor": "v1-9-2",

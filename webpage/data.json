@@ -2,6 +2,26 @@
     "Launcher": [
         {
             "name": "version",
+            "key": "1.9.3"
+        },
+        {
+            "name": "versiontitle",
+            "key": "Java 下载接入统一下载队列"
+        },
+        {
+            "name": "versiontitle_en",
+            "key": "Java downloads now use the shared download queue"
+        },
+        {
+            "name": "versionlog",
+            "key": "Java 下载现在和游戏版本、模组共用同一条队列：进度、速度、排队位置和取消都在底部下载条里。<br>修好了默认清华镜像每次都下不动的问题：启动器以前给镜像站发浏览器标识，被镜像直接拒绝。<br>华为云镜像已移除（那边已经不给文件了）；之前选过它的会自动回落到清华。<br>Java 镜像设置现在真的生效了。以前只是存下来、下载时根本没读，所以怎么选都还是清华。<br>Java 运行时改为装到游戏目录里，自定义游戏目录（学校电脑、漫游配置）也能正常用。<br>网络需要登录（代理认证）时会明确提示并写进日志，不再只报一句「下载失败」。<br>Java 安装失败的提示更具体（文件太小 / 压缩包损坏 / 没有可用下载源），系统自带的 Java 也不能再从启动器卸载。<br>重新下载失败时，不再把之前就装好的版本文件夹删掉。<br>安装 Java 会进「下载进程」面板，也能取消，不会留下一个还在后台跑的下载。"
+        },
+        {
+            "name": "versionlog_en",
+            "key": "Java downloads now use the same queue as game versions and mods: progress, speed, queue position and cancel are in the download bar at the bottom.<br>Fixed the default Tsinghua mirror failing every download: the launcher was sending a browser user-agent, which that mirror rejects.<br>The Huawei Cloud mirror has been removed (it no longer serves files); if you had selected it, the launcher falls back to Tsinghua.<br>The Java mirror setting now actually applies. It used to be saved and never read, so every download went to Tsinghua anyway.<br>Java runtimes are now installed inside your game folder, so custom game folders (school computers, roaming profiles) work.<br>When a network requires a sign-in (proxy authentication), you get a clear message and a log entry instead of a bare \"download failed\".<br>Java install errors are more specific (file too small, broken archive, no available source), and system Java can no longer be uninstalled from the launcher.<br>A failed re-download no longer deletes a version folder that was already there.<br>Installing Java shows up in the download panel and can be cancelled without leaving a download running in the background."
+        },
+        {
+            "name": "version",
             "key": "1.9.2"
         },
         {

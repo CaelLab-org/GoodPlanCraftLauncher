@@ -418,7 +418,6 @@
   "ui.hours_h_ago": "{hours} 小时前",
   "ui.how_long_log_files_are_kept": "设置日志文件的保留时长",
   "ui.how_the_launcher_itself_looks": "启动器本身的显示方式",
-  "ui.huawei_cloud_mirror": "华为云镜像",
   "ui.icon": "图标",
   "ui.if_you_need_help_send_the_error_report_file_rather_than_a_screenshot_of_cd6013": "如果要寻求帮助，请向他人发送错误报告文件，而不是发送这个窗口的截图。",
   "ui.images": "图片",
@@ -1195,5 +1194,11 @@
   "ui.mc_bind_error_failed": "绑定失败，请稍后再试",
   "ui.settings_caellab_integration": "CaelLabMinecraft 集成",
   "ui.settings_caellab_integration_desc": "在正版账号上显示 CaelLabMinecraft 绑定入口；开启后正版启动游戏时会向网站报备一次，进服免输密钥",
-  "ui.mc_bind_get_code": "去 minecraft.caellab.com 生成绑定码"
+  "ui.mc_bind_get_code": "去 minecraft.caellab.com 生成绑定码",
+  "ui.java_file_too_small": "Java 下载失败：下载到的文件太小",
+  "ui.java_invalid_archive": "Java 下载失败：下载到的文件不是有效的压缩包",
+  "ui.java_extract_failed": "解压 Java 运行时失败：{error}",
+  "ui.java_no_download_source": "没有可用的 Java 下载源，请检查网络连接",
+  "ui.network_requires_sign_in": "当前网络需要登录（代理认证）。请先在这台电脑上完成登录，然后重试。",
+  "ui.system_java_cannot_be_uninstalled": "这个 Java 是系统安装的，需要在系统里卸载"
 }

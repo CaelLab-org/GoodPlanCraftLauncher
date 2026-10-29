@@ -1,8 +1,31 @@
 {
   "schema": 1,
-  "latest": "1.9.2",
-  "updated": "2026-10-24",
+  "latest": "1.9.3",
+  "updated": "2026-10-29",
   "versions": [
+    {
+      "version": "1.9.3",
+      "anchor": "v1-9-3",
+      "date": "2026-10-29",
+      "title": "Muat turun Java menggunakan baris gilir muat turun yang dikongsi",
+      "log": [
+        "Muat turun Java kini menggunakan baris gilir yang sama dengan versi permainan dan mod: kemajuan, kelajuan, giliran dan batal pada bar bawah.",
+        "Membaiki cermin Tsinghua lalai yang sentiasa gagal: pelancar menghantar User-Agent pelayar, yang ditolak oleh cermin itu.",
+        "Cermin Huawei Cloud dibuang (tidak lagi menyediakan fail); jika pernah dipilih, pelancar kembali ke Tsinghua.",
+        "Tetapan cermin Java kini benar-benar berkesan: sebelum ini hanya disimpan dan tidak dibaca semasa memuat turun.",
+        "Runtime Java kini dipasang dalam folder permainan, jadi folder permainan tersuai (komputer sekolah, profil perayauan) berfungsi.",
+        "Jika rangkaian memerlukan log masuk (pengesahan proksi), mesej jelas dan catatan log dipaparkan, bukan sekadar \"muat turun gagal\".",
+        "Ralat pemasangan Java lebih khusus (fail terlalu kecil / arkib rosak / tiada sumber) dan Java sistem tidak boleh dinyahpasang lagi dari pelancar.",
+        "Muat turun semula yang gagal tidak lagi memadam folder versi yang sudah ada.",
+        "Pemasangan Java muncul dalam panel muat turun, boleh dibatalkan dan tidak berjalan di latar belakang."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.3-Setup.exe",
+        "file": "GPCL-1.9.3-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.9.2",
       "anchor": "v1-9-2",

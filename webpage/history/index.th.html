@@ -74,7 +74,7 @@
                     </div>
                 </li>
                 <li class="lang-switch"><select aria-label="ภาษา" onchange="if(this.value)location.href=this.value"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th" selected>ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select></li>
-                <li><a href="../index.th#download" class="nav-cta">&#9662; ดาวน์โหลด v1.9.2</a></li>
+                <li><a href="../index.th#download" class="nav-cta">&#9662; ดาวน์โหลด v1.9.3</a></li>
             </ul>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="เปิดเมนู" aria-expanded="false">&#9776;</button>
         </div>
@@ -92,6 +92,7 @@
             <p class="cl-intro">ตั้งแต่ 1.0.0 จนถึงเวอร์ชันล่าสุด ทุกเวอร์ชันเปลี่ยนอะไรและดาวน์โหลดได้หรือไม่ รวมอยู่ในหน้านี้</p>
             <p class="cl-note">เวอร์ชัน 1.3.2 และก่อนหน้าไม่ได้เก็บตัวติดตั้งไว้ ตัวอัปเดตในตัวของเวอร์ชันเก่าอาจใช้งานไม่ได้แล้ว แนะนำให้ติดตั้งเวอร์ชันล่าสุดสำหรับการใช้งานประจำวัน</p>
             <div class="cl-index" role="navigation" aria-label="ดัชนีเวอร์ชัน">
+                <a href="#v1-9-3">1.9.3</a>
                 <a href="#v1-9-2">1.9.2</a>
                 <a href="#v1-9-1">1.9.1</a>
                 <a href="#v1-9-0">1.9.0</a>
@@ -122,12 +123,38 @@
     <main class="history cl-history">
         <div class="container">
             <div class="timeline">
+                <article class="timeline-item" id="v1-9-3">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.9.3</span>
+                        <span class="version-title">การดาวน์โหลด Java ใช้คิวเดียวกับการดาวน์โหลดอื่น</span>
+                        <span class="latest-chip">ล่าสุด</span>
+                        <span class="version-date">2026-10-29</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>การดาวน์โหลด Java ตอนนี้ใช้คิวเดียวกับเวอร์ชันเกมและมอด: ความคืบหน้า ความเร็ว ลำดับคิว และยกเลิก อยู่ที่แถบด้านล่าง</li>
+                        <li>แก้ไขปัญหาแหล่งมิเรอร์ Tsinghua ที่เป็นค่าเริ่มต้นดาวน์โหลดไม่ได้ทุกครั้ง: ตัวเรียกใช้ส่ง User-Agent ของเบราว์เซอร์ ซึ่งมิเรอร์ปฏิเสธ</li>
+                        <li>ลบมิเรอร์ Huawei Cloud ออกแล้ว (ไม่ให้ไฟล์แล้ว) หากเคยเลือกไว้จะกลับไปใช้ Tsinghua อัตโนมัติ</li>
+                        <li>การตั้งค่ามิเรอร์ Java มีผลจริงแล้ว: เดิมเพียงบันทึกไว้แต่ไม่ได้อ่านตอนดาวน์โหลด</li>
+                        <li>Runtime ของ Java ติดตั้งในโฟลเดอร์เกมแล้ว โฟลเดอร์เกมที่กำหนดเอง (คอมพิวเตอร์โรงเรียน โปรไฟล์ roaming) จึงใช้งานได้</li>
+                        <li>หากเครือข่ายต้องเข้าสู่ระบบ (การยืนยันตัวตนผ่านพร็อกซี่) จะมีข้อความชัดเจนและบันทึกใน log แทนที่จะแค่ &quot;ดาวน์โหลดล้มเหลว&quot;</li>
+                        <li>ข้อผิดพลาดในการติดตั้ง Java ชัดเจนขึ้น (ไฟล์เล็กเกินไป / ไฟล์เสียหาย / ไม่มีแหล่งดาวน์โหลด) และ Java ของระบบจะถอนการติดตั้งจากตัวเรียกใช้ไม่ได้แล้ว</li>
+                        <li>การดาวน์โหลดซ้ำที่ล้มเหลวจะไม่ลบโฟลเดอร์เวอร์ชันที่มีอยู่เดิม</li>
+                        <li>การติดตั้ง Java แสดงในแผงดาวน์โหลด ยกเลิกได้ และไม่เหลือการดาวน์โหลดทำงานอยู่เบื้องหลัง</li>
+                    </ul>
+                    <div class="cl-download">
+                        <a class="cl-dl-btn" href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.3-Setup.exe">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                            ดาวน์โหลด v1.9.3
+                        </a>
+                        <span class="cl-file">GPCL-1.9.3-Setup.exe · 94.0 MB · Windows 64 บิต</span>
+                    </div>
+                </article>
                 <article class="timeline-item" id="v1-9-2">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
                         <span class="version-number">v1.9.2</span>
                         <span class="version-title">เวอร์ชัน Linux แรก (ทดลอง) และการเชื่อม CaelLabMinecraft</span>
-                        <span class="latest-chip">ล่าสุด</span>
                         <span class="version-date">2026-10-24</span>
                     </div>
                     <ul class="changelog">

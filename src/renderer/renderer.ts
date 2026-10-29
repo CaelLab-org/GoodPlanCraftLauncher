@@ -589,7 +589,9 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
       skipSplashSync.checked = settings.appearance?.skipSplash === true;
     }
 
-    const javaMirror: string = settings.download?.javaMirror || 'tsinghua';
+    // 华为云镜像的目录页已经改成 SPA，文件路径全 404，选项已去掉；老配置回落到清华
+    const savedMirror: string = settings.download?.javaMirror || 'tsinghua';
+    const javaMirror: string = savedMirror === 'nju' || savedMirror === 'custom' ? savedMirror : 'tsinghua';
     setCustomSelectValue('java-mirror-select', javaMirror);
     if (customMirrorContainerEl) {
       customMirrorContainerEl.classList.toggle('hidden', javaMirror !== 'custom');

@@ -418,7 +418,6 @@
   "ui.hours_h_ago": "{hours} 時間前",
   "ui.how_long_log_files_are_kept": "ログファイルの保存期間",
   "ui.how_the_launcher_itself_looks": "ランチャー自体の見た目",
-  "ui.huawei_cloud_mirror": "ファーウェイクラウドミラー",
   "ui.icon": "アイコン",
   "ui.if_you_need_help_send_the_error_report_file_rather_than_a_screenshot_of_cd6013": "サポートが必要な場合は、このウィンドウのスクリーンショットではなく、エラー レポート ファイルを送信してください。",
   "ui.images": "画像",
@@ -1195,5 +1194,11 @@
   "ui.mc_bind_error_failed": "連携できませんでした。後でもう一度お試しください",
   "ui.settings_caellab_integration": "CaelLabMinecraft 連携",
   "ui.settings_caellab_integration_desc": "Microsoft アカウントに CaelLabMinecraft のリンクを表示します。有効にすると正規版の起動時に一度通知し、サーバーにキーなしで入れるようになります",
-  "ui.mc_bind_get_code": "minecraft.caellab.com でコードを取得"
+  "ui.mc_bind_get_code": "minecraft.caellab.com でコードを取得",
+  "ui.java_file_too_small": "Java download failed: the downloaded file is too small",
+  "ui.java_invalid_archive": "Java download failed: the downloaded file is not a valid archive",
+  "ui.java_extract_failed": "Could not extract the Java runtime: {error}",
+  "ui.java_no_download_source": "No Java download source is available; check your network connection",
+  "ui.network_requires_sign_in": "This network requires sign-in (proxy authentication). Sign in on this computer first, then retry.",
+  "ui.system_java_cannot_be_uninstalled": "This Java is installed by the system; uninstall it from the system instead"
 }

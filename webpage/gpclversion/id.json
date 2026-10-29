@@ -1,8 +1,31 @@
 {
   "schema": 1,
-  "latest": "1.9.2",
-  "updated": "2026-10-24",
+  "latest": "1.9.3",
+  "updated": "2026-10-29",
   "versions": [
+    {
+      "version": "1.9.3",
+      "anchor": "v1-9-3",
+      "date": "2026-10-29",
+      "title": "Unduhan Java memakai antrean unduhan bersama",
+      "log": [
+        "Unduhan Java sekarang memakai antrean yang sama dengan versi game dan mod: progres, kecepatan, urutan, dan pembatalan ada di bilah bawah.",
+        "Memperbaiki mirror Tsinghua bawaan yang selalu gagal: launcher mengirim User-Agent browser, yang ditolak mirror tersebut.",
+        "Mirror Huawei Cloud dihapus (tidak lagi menyediakan file); jika sebelumnya dipilih, launcher kembali ke Tsinghua.",
+        "Pengaturan mirror Java sekarang benar-benar berlaku: sebelumnya hanya disimpan dan tidak dibaca saat mengunduh.",
+        "Runtime Java kini dipasang di folder game, jadi folder game kustom (komputer sekolah, profil roaming) tetap berfungsi.",
+        "Jika jaringan memerlukan login (autentikasi proxy), muncul pesan jelas dan catatan log, bukan hanya \"unduhan gagal\".",
+        "Kesalahan pemasangan Java lebih spesifik (file terlalu kecil / arsip rusak / tidak ada sumber) dan Java sistem tidak bisa lagi dihapus dari launcher.",
+        "Unduhan ulang yang gagal tidak lagi menghapus folder versi yang sudah ada.",
+        "Pemasangan Java muncul di panel unduhan, bisa dibatalkan, dan tidak berjalan terus di latar belakang."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.3-Setup.exe",
+        "file": "GPCL-1.9.3-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.9.2",
       "anchor": "v1-9-2",

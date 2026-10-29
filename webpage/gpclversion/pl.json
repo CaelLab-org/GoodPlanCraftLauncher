@@ -1,8 +1,31 @@
 {
   "schema": 1,
-  "latest": "1.9.2",
-  "updated": "2026-10-24",
+  "latest": "1.9.3",
+  "updated": "2026-10-29",
   "versions": [
+    {
+      "version": "1.9.3",
+      "anchor": "v1-9-3",
+      "date": "2026-10-29",
+      "title": "Pobieranie Javy przez wspólną kolejkę pobierania",
+      "log": [
+        "Pobieranie Javy korzysta teraz z tej samej kolejki co wersje gry i mody: postęp, prędkość, kolejność i anulowanie na dolnym pasku pobierania.",
+        "Naprawiono domyślne lustro Tsinghua, które zawsze zawodziło: launcher wysyłał User-Agent przeglądarki, a lustro go odrzuca.",
+        "Usunięto lustro Huawei Cloud (nie udostępnia już plików); jeśli było wybrane, launcher wraca do Tsinghua.",
+        "Ustawienie lustra Javy wreszcie działa: wcześniej było tylko zapisywane i nigdy nie czytane przy pobieraniu.",
+        "Środowiska Java instalują się teraz w folderze gry, więc własne foldery gry (komputery szkolne, profile mobilne) działają.",
+        "Gdy sieć wymaga logowania (uwierzytelnianie proxy), pojawia się jasny komunikat i wpis w logu zamiast samego „błąd pobierania”.",
+        "Błędy instalacji Javy są konkretniejsze (plik za mały / uszkodzone archiwum / brak źródła) i systemowej Javy nie można już odinstalować z launchera.",
+        "Nieudane ponowne pobieranie nie usuwa już istniejącego folderu wersji.",
+        "Instalacja Javy pojawia się w panelu pobierania, można ją anulować i nie trwa dalej w tle."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.3-Setup.exe",
+        "file": "GPCL-1.9.3-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.9.2",
       "anchor": "v1-9-2",

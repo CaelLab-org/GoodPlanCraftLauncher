@@ -1,8 +1,31 @@
 {
   "schema": 1,
-  "latest": "1.9.2",
-  "updated": "2026-10-24",
+  "latest": "1.9.3",
+  "updated": "2026-10-29",
   "versions": [
+    {
+      "version": "1.9.3",
+      "anchor": "v1-9-3",
+      "date": "2026-10-29",
+      "title": "I download di Java usano la coda di download condivisa",
+      "log": [
+        "I download di Java ora usano la stessa coda delle versioni del gioco e delle mod: avanzamento, velocità, ordine e annullamento nella barra in basso.",
+        "Corretto il mirror predefinito di Tsinghua che falliva sempre: il launcher inviava un User-Agent da browser, che il mirror rifiuta.",
+        "Il mirror Huawei Cloud è stato rimosso (non fornisce più file); se era selezionato, il launcher torna a Tsinghua.",
+        "L'impostazione del mirror Java ora funziona davvero: prima veniva solo salvata e mai letta durante il download.",
+        "I runtime Java ora si installano nella cartella del gioco, così le cartelle personalizzate (PC scolastici, profili mobili) funzionano.",
+        "Quando la rete richiede l'accesso (autenticazione proxy), compare un avviso chiaro e una riga nel log invece del solo «download non riuscito».",
+        "Gli errori di installazione di Java sono più precisi (file troppo piccolo / archivio danneggiato / nessuna fonte disponibile) e il Java di sistema non può più essere disinstallato dal launcher.",
+        "Un nuovo download non riuscito non elimina più una cartella di versione già presente.",
+        "L'installazione di Java appare nel pannello dei download, può essere annullata e non continua in background."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.3-Setup.exe",
+        "file": "GPCL-1.9.3-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.9.2",
       "anchor": "v1-9-2",

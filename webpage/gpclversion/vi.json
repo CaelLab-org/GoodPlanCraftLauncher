@@ -1,8 +1,31 @@
 {
   "schema": 1,
-  "latest": "1.9.2",
-  "updated": "2026-10-24",
+  "latest": "1.9.3",
+  "updated": "2026-10-29",
   "versions": [
+    {
+      "version": "1.9.3",
+      "anchor": "v1-9-3",
+      "date": "2026-10-29",
+      "title": "Tải Java dùng chung hàng đợi tải xuống",
+      "log": [
+        "Tải Java giờ dùng cùng hàng đợi với phiên bản trò chơi và mod: tiến độ, tốc độ, thứ tự và hủy đều ở thanh dưới cùng.",
+        "Sửa lỗi máy chủ gương Tsinghua mặc định luôn tải thất bại: trình khởi chạy gửi User-Agent của trình duyệt nên bị máy chủ gương từ chối.",
+        "Đã bỏ máy chủ gương Huawei Cloud (không còn cung cấp tệp); nếu đã chọn nó, trình khởi chạy tự quay về Tsinghua.",
+        "Cài đặt máy chủ gương Java giờ thực sự có hiệu lực: trước đây chỉ được lưu mà không đọc khi tải.",
+        "Runtime Java giờ được cài trong thư mục trò chơi, nên thư mục trò chơi tùy chỉnh (máy tính trường học, hồ sơ roaming) vẫn hoạt động.",
+        "Nếu mạng cần đăng nhập (xác thực proxy), sẽ có thông báo rõ ràng và ghi log thay vì chỉ báo \"tải xuống thất bại\".",
+        "Lỗi cài Java rõ hơn (tệp quá nhỏ / tệp nén hỏng / không có nguồn tải) và không thể gỡ Java của hệ thống khỏi trình khởi chạy nữa.",
+        "Tải lại thất bại không còn xóa thư mục phiên bản đã có từ trước.",
+        "Cài Java hiện trong bảng tải xuống, có thể hủy và không để lại tiến trình tải chạy ngầm."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.3-Setup.exe",
+        "file": "GPCL-1.9.3-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.9.2",
       "anchor": "v1-9-2",

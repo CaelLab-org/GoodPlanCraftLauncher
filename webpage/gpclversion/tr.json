@@ -1,8 +1,31 @@
 {
   "schema": 1,
-  "latest": "1.9.2",
-  "updated": "2026-10-24",
+  "latest": "1.9.3",
+  "updated": "2026-10-29",
   "versions": [
+    {
+      "version": "1.9.3",
+      "anchor": "v1-9-3",
+      "date": "2026-10-29",
+      "title": "Java indirmeleri ortak indirme kuyruğunu kullanıyor",
+      "log": [
+        "Java indirmeleri artık oyun sürümleri ve modlarla aynı kuyruğu kullanıyor: ilerleme, hız, sıra ve iptal alt çubukta.",
+        "Varsayılan Tsinghua aynasının her seferinde başarısız olması düzeltildi: başlatıcı tarayıcı User-Agent'ı gönderiyordu ve ayna bunu reddediyor.",
+        "Huawei Cloud aynası kaldırıldı (artık dosya sunmuyor); daha önce seçtiyseniz başlatıcı otomatik olarak Tsinghua'ya döner.",
+        "Java ayna ayarı artık gerçekten uygulanıyor: önceden yalnızca kaydediliyor, indirme sırasında okunmuyordu.",
+        "Java çalışma zamanları artık oyun klasörünün içine kuruluyor; böylece özel oyun klasörleri (okul bilgisayarları, dolaşım profilleri) çalışıyor.",
+        "Ağ oturum açma gerektiriyorsa (proxy kimlik doğrulaması), yalnızca \"indirme başarısız\" yerine açık bir mesaj ve günlük kaydı gösterilir.",
+        "Java kurulum hataları daha belirgin (dosya çok küçük / arşiv bozuk / kaynak yok) ve sistem Java'sı artık başlatıcıdan kaldırılamıyor.",
+        "Başarısız bir yeniden indirme, zaten var olan sürüm klasörünü artık silmiyor.",
+        "Java kurulumu indirme panelinde görünür, iptal edilebilir ve arka planda çalışmaya devam etmez."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.3-Setup.exe",
+        "file": "GPCL-1.9.3-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.9.2",
       "anchor": "v1-9-2",

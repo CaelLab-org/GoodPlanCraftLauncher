@@ -1,8 +1,31 @@
 {
   "schema": 1,
-  "latest": "1.9.2",
-  "updated": "2026-10-24",
+  "latest": "1.9.3",
+  "updated": "2026-10-29",
   "versions": [
+    {
+      "version": "1.9.3",
+      "anchor": "v1-9-3",
+      "date": "2026-10-29",
+      "title": "Java-Downloads nutzen jetzt die gemeinsame Download-Warteschlange",
+      "log": [
+        "Java-Downloads laufen jetzt über dieselbe Warteschlange wie Spielversionen und Mods – Fortschritt, Geschwindigkeit, Reihenfolge und Abbrechen in der Leiste am unteren Rand.",
+        "Der Standardspiegel in Tsinghua schlug bei jedem Download fehl: Der Launcher hat einen Browser-User-Agent gesendet, den der Spiegel ablehnt.",
+        "Der Huawei-Cloud-Spiegel wurde entfernt (dort gibt es keine Dateien mehr); wer ihn ausgewählt hatte, landet automatisch beim Tsinghua-Spiegel.",
+        "Die Einstellung für den Java-Spiegel wirkt jetzt tatsächlich – sie wurde bisher nur gespeichert und beim Download nicht gelesen.",
+        "Java-Laufzeiten werden jetzt im Spielordner installiert, damit eigene Spielordner (Schulrechner, Roaming-Profile) funktionieren.",
+        "Wenn ein Netzwerk eine Anmeldung verlangt (Proxy-Authentifizierung), erscheint ein klarer Hinweis und ein Logeintrag statt nur „Download fehlgeschlagen“.",
+        "Fehler bei der Java-Installation sind genauer (Datei zu klein / Archiv beschädigt / keine Quelle verfügbar); vom System installiertes Java lässt sich nicht mehr über den Launcher deinstallieren.",
+        "Ein fehlgeschlagener erneuter Download löscht keinen bereits vorhandenen Versionsordner mehr.",
+        "Die Java-Installation erscheint im Download-Panel, lässt sich abbrechen und läuft nicht im Hintergrund weiter."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.3-Setup.exe",
+        "file": "GPCL-1.9.3-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.9.2",
       "anchor": "v1-9-2",

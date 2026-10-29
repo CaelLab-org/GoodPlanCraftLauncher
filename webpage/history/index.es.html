@@ -74,7 +74,7 @@
                     </div>
                 </li>
                 <li class="lang-switch"><select aria-label="Idioma" onchange="if(this.value)location.href=this.value"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es" selected>Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select></li>
-                <li><a href="../index.es#download" class="nav-cta">&#9662; Descargar v1.9.2</a></li>
+                <li><a href="../index.es#download" class="nav-cta">&#9662; Descargar v1.9.3</a></li>
             </ul>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Abrir menú" aria-expanded="false">&#9776;</button>
         </div>
@@ -92,6 +92,7 @@
             <p class="cl-intro">Desde la 1.0.0 hasta la última versión, todas las versiones —qué cambió y si se puede descargar— están en esta página.</p>
             <p class="cl-note">No se conservaron instaladores de la 1.3.2 ni de las anteriores; el actualizador integrado de las versiones antiguas puede que ya no funcione, así que para el uso diario se recomienda instalar la última versión.</p>
             <div class="cl-index" role="navigation" aria-label="Índice de versiones">
+                <a href="#v1-9-3">1.9.3</a>
                 <a href="#v1-9-2">1.9.2</a>
                 <a href="#v1-9-1">1.9.1</a>
                 <a href="#v1-9-0">1.9.0</a>
@@ -122,12 +123,38 @@
     <main class="history cl-history">
         <div class="container">
             <div class="timeline">
+                <article class="timeline-item" id="v1-9-3">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.9.3</span>
+                        <span class="version-title">Las descargas de Java usan la cola de descargas compartida</span>
+                        <span class="latest-chip">Última</span>
+                        <span class="version-date">2026-10-29</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Las descargas de Java ahora usan la misma cola que las versiones del juego y los mods: progreso, velocidad, orden y cancelación en la barra inferior.</li>
+                        <li>Corregido el fallo del espejo predeterminado de Tsinghua: el launcher enviaba un User-Agent de navegador y el espejo lo rechaza.</li>
+                        <li>Se eliminó el espejo de Huawei Cloud (ya no sirve archivos); si lo tenías elegido, se vuelve a Tsinghua automáticamente.</li>
+                        <li>El ajuste del espejo de Java por fin se aplica: antes solo se guardaba y no se leía al descargar.</li>
+                        <li>Los entornos de Java se instalan ahora dentro de la carpeta del juego, así que las carpetas personalizadas (equipos escolares, perfiles móviles) funcionan.</li>
+                        <li>Si la red requiere iniciar sesión (autenticación de proxy), ahora aparece un aviso claro y se registra en el log en lugar de un simple «error de descarga».</li>
+                        <li>Los errores de instalación de Java son más concretos (archivo demasiado pequeño / comprimido dañado / sin fuente disponible) y el Java del sistema ya no se puede desinstalar desde el launcher.</li>
+                        <li>Si falla una nueva descarga, ya no se borra una carpeta de versión que ya existía.</li>
+                        <li>La instalación de Java aparece en el panel de descargas, se puede cancelar y no deja una descarga corriendo en segundo plano.</li>
+                    </ul>
+                    <div class="cl-download">
+                        <a class="cl-dl-btn" href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.3-Setup.exe">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                            Descargar v1.9.3
+                        </a>
+                        <span class="cl-file">GPCL-1.9.3-Setup.exe · 94.0 MB · Windows 64 bits</span>
+                    </div>
+                </article>
                 <article class="timeline-item" id="v1-9-2">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
                         <span class="version-number">v1.9.2</span>
                         <span class="version-title">Primera versión para Linux (experimental), vinculación con CaelLabMinecraft</span>
-                        <span class="latest-chip">Última</span>
                         <span class="version-date">2026-10-24</span>
                     </div>
                     <ul class="changelog">
