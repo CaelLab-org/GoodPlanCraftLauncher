@@ -75,7 +75,7 @@
                     </div>
                 </li>
                 <li class="lang-switch"><select aria-label="Мова" onchange="if(this.value)location.href=this.value"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk" selected>Українська</option><option value="./index.vi">Tiếng Việt</option></select></li>
-                <li><a href="#download" class="nav-cta">&#9662; Завантажити v1.9.3</a></li>
+                <li><a href="#download" class="nav-cta">&#9662; Завантажити v1.9.4</a></li>
             </ul>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Відкрити меню" aria-expanded="false">&#9776;</button>
         </div>
@@ -109,9 +109,9 @@
                 </a>
             </div>
             <div class="hero-meta">
-                <span>Версія <b>v1.9.3</b></span>
+                <span>Версія <b>v1.9.4</b></span>
                 <span class="sep">/</span>
-                <span>Оновлено <b>2026-10-29</b></span>
+                <span>Оновлено <b>2026-11-08</b></span>
                 <span class="sep">/</span>
                 <span>Платформа <b>Windows / Linux</b></span>
             </div>
@@ -260,13 +260,13 @@
                 <span class="dl-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
                 </span>
-                <div class="download-file">GPCL-1.9.3-Setup.exe</div>
-                <a href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.3-Setup.exe" class="download-btn">
+                <div class="download-file">GPCL-1.9.4-Setup.exe</div>
+                <a href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.4-Setup.exe" class="download-btn">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
                     У блоковий світ!
                 </a>
                 <div class="update-info">
-                    <span>Оновлено <b>2026-10-29</b></span>
+                    <span>Оновлено <b>2026-11-08</b></span>
                     <span>Платформа <b>Windows / Linux</b></span>
                     <span>Ліцензія <b>Відкритий код, безкоштовно</b></span>
                 </div>
@@ -379,9 +379,24 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                 <div class="timeline-item reveal">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
+                        <span class="version-number">v1.9.4</span>
+                        <span class="version-title">Виправлено: швидкі кліки могли запустити одразу кілька ігор</span>
+                        <span class="latest-chip">Остання</span>
+                        <span class="version-date">2026-11-08</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Виправлено: швидкі натискання кнопки «Запустити гру» в перші секунди після відкриття лаунчера могли запустити одразу кілька процесів гри, а підказки в анімації запуску блимали безладно.</li>
+                        <li>Встановлені версії готові до запуску одразу після локального сканування — більше не потрібно чекати онлайн-список (близько секунди); повний список продовжує завантажуватися у фоні.</li>
+                        <li>Анімація запуску з'являється раніше: одразу видно реакцію під час перевірки входу Microsoft і поновлення токена.</li>
+                        <li>Кнопка «Скасувати» в анімації запуску тепер діє й під час перевірки входу.</li>
+                        <li>Якщо вхід Microsoft минув і потрібен повторний вхід, анімація запуску тепер закривається належним чином, а не залишається на екрані.</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
                         <span class="version-number">v1.9.3</span>
                         <span class="version-title">Завантаження Java тепер через спільну чергу</span>
-                        <span class="latest-chip">Остання</span>
                         <span class="version-date">2026-10-29</span>
                     </div>
                     <ul class="changelog">
@@ -506,6 +521,8 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                         <li>Меню «Більше» типово згорнуте; увімкнути можна в Налаштування → Вигляд, а помилку з його повторною появою після перезапуску виправлено</li>
                     </ul>
                 </div>
+                <details class="older-versions">
+                    <summary>Показати 17 старіших версій</summary>
                 <div class="timeline-item reveal">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
@@ -524,8 +541,6 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                         <li>Під час встановлення мода старі jar-файли того самого проєкту видаляються, тож кілька версій більше не накопичуються</li>
                     </ul>
                 </div>
-                <details class="older-versions">
-                    <summary>Показати 16 старіших версій</summary>
                 <div class="timeline-item reveal">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
@@ -746,7 +761,7 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                 </div>
                 </details>
                 <div class="history-more">
-                    <a href="./history/index.uk">Повна історія змін (усі 24 версій та установчі файли) →</a>
+                    <a href="./history/index.uk">Повна історія змін (усі 25 версій та установчі файли) →</a>
                 </div>
             </div>
         </div>

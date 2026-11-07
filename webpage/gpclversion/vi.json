@@ -1,8 +1,27 @@
 {
   "schema": 1,
-  "latest": "1.9.3",
-  "updated": "2026-10-29",
+  "latest": "1.9.4",
+  "updated": "2026-11-08",
   "versions": [
+    {
+      "version": "1.9.4",
+      "anchor": "v1-9-4",
+      "date": "2026-11-08",
+      "title": "Đã sửa: nhấp nhanh có thể khởi động nhiều trò chơi cùng lúc",
+      "log": [
+        "Đã sửa: nhấp liên tiếp vào «Khởi động trò chơi» trong vài giây đầu sau khi mở trình khởi chạy có thể chạy cùng lúc nhiều tiến trình trò chơi, còn các mẹo trong hiệu ứng khởi động nhấp nháy loạn xạ.",
+        "Các phiên bản đã cài sẵn sàng khởi động ngay sau khi quét máy xong — không phải chờ danh sách trực tuyến (khoảng một giây); danh sách đầy đủ vẫn tải tiếp phía nền.",
+        "Hiệu ứng khởi động xuất hiện sớm hơn: có phản hồi ngay trong khi kiểm tra đăng nhập Microsoft và gia hạn token.",
+        "Nút Hủy trên hiệu ứng khởi động giờ cũng hoạt động trong khi việc kiểm tra đăng nhập vẫn đang chạy.",
+        "Khi đăng nhập Microsoft hết hạn và cần đăng nhập lại, hiệu ứng khởi động sẽ đóng đúng cách thay vì cứ treo trên màn hình."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.4-Setup.exe",
+        "file": "GPCL-1.9.4-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.9.3",
       "anchor": "v1-9-3",

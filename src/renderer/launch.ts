@@ -19,6 +19,14 @@ import { getMaxConcurrentFromSettings, loadSettings } from './settings';
 import { getLoaderDisplayName, hideVersionDetail, isVersionInstalled, loadVersions, modLoaderState, recordVersionDownload, recordVersionLaunch, renderVersionSelectList, selectedVersionId, selectedVersionRoot } from './versions';
 // __IMPORTS_END__
 
+let launchInProgress: boolean = false;
+let launchCancelRequested: boolean = false;
+
+/** 取消按钮在登录校验（网络）期间也要生效 —— 那时还没调到主进程的 launch */
+export function requestLaunchCancel(): void {
+  if (launchInProgress) launchCancelRequested = true;
+}
+
 export async function launchGame(): Promise<void> {
   
   const launchBtnEl: HTMLElement | null = document.getElementById('launch-btn');
@@ -30,6 +38,9 @@ export async function launchGame(): Promise<void> {
     setStatus('请选择要下载的游戏版本');
     return;
   }
+
+  // 按钮要等到几个 await 之后才禁用的写法，会让狂点期间每一次点击都走完整条启动链路
+  if (launchInProgress) return;
 
   if (authMode === 'microsoft' && !msAuthData) {
     showToast('ui.microsoft_sign_in', t('ui.sign_in_required'), 'warning');
@@ -46,42 +57,57 @@ export async function launchGame(): Promise<void> {
     return;
   }
 
-  // 正版登录的 accessToken 会过期；启动前校验一次，过期就先用 refresh_token 续上，
-  // 续不上才让玩家重新登录。否则进服务器会被 sessionserver 403 挡回来。
-  if (msAuthData && window.gpcl.validateMicrosoftAuth) {
-    setStatus(t('ui.auth_checking'));
-    try {
-      const auth: any = await window.gpcl.validateMicrosoftAuth();
-      if (auth?.valid) {
-        if (auth.accessToken) {
-          setMsAuthData({
-            uuid: auth.uuid || msAuthData.uuid,
-            username: auth.username || msAuthData.username,
-            accessToken: auth.accessToken,
-            expiresAt: Number(auth.expiresAt) || msAuthData.expiresAt
-          });
-        }
-      } else if (auth?.relogin) {
-        window.dispatchEvent(new CustomEvent('gpcl-auth-expired'));
-        showToast('ui.auth_expired', t('ui.auth_login_required'), 'error', 'auth-expired');
-        setStatus(t('ui.auth_expired'), 'error');
-        return;
-      }
-    } catch {}
-  }
-
-  await recordVersionLaunch(versionId);
-
-  if (window.gpcl && window.gpcl.savePlayerName) {
-    const names: any = await window.gpcl.savePlayerName(username);
-    if (names && Array.isArray(names.recent)) setPlayerHistory(names.recent);
-  }
-
+  launchInProgress = true;
+  launchCancelRequested = false;
   if (launchBtnEl) (launchBtnEl as HTMLButtonElement).disabled = true;
 
+  // 先亮动画再做登录校验：续期 token 是网络请求，最慢十几秒，不给反馈会被当成没反应
   showLaunchAnimation(versionId);
 
   try {
+    // 正版登录的 accessToken 会过期；启动前校验一次，过期就先用 refresh_token 续上，
+    // 续不上才让玩家重新登录。否则进服务器会被 sessionserver 403 挡回来。
+    if (msAuthData && window.gpcl.validateMicrosoftAuth) {
+      setStatus(t('ui.auth_checking'));
+      try {
+        const auth: any = await window.gpcl.validateMicrosoftAuth();
+        if (auth?.valid) {
+          if (auth.accessToken) {
+            setMsAuthData({
+              uuid: auth.uuid || msAuthData.uuid,
+              username: auth.username || msAuthData.username,
+              accessToken: auth.accessToken,
+              expiresAt: Number(auth.expiresAt) || msAuthData.expiresAt
+            });
+          }
+        } else if (auth?.relogin) {
+          window.dispatchEvent(new CustomEvent('gpcl-auth-expired'));
+          showToast('ui.auth_expired', t('ui.auth_login_required'), 'error', 'auth-expired');
+          setStatus(t('ui.auth_expired'), 'error');
+          hideLaunchAnimation();
+          return;
+        }
+      } catch {}
+    }
+
+    if (launchCancelRequested) {
+      hideLaunchAnimation();
+      setStatus('启动已取消', 'info');
+      return;
+    }
+
+    await recordVersionLaunch(versionId);
+
+    if (window.gpcl && window.gpcl.savePlayerName) {
+      const names: any = await window.gpcl.savePlayerName(username);
+      if (names && Array.isArray(names.recent)) setPlayerHistory(names.recent);
+    }
+
+    if (launchCancelRequested) {
+      hideLaunchAnimation();
+      setStatus('启动已取消', 'info');
+      return;
+    }
     
     const gameDir: string | null = selectedVersionRoot || await initGameDir();
     setStatus('[动画] 开始启动游戏');
@@ -128,6 +154,7 @@ export async function launchGame(): Promise<void> {
     setStatus('启动出错', 'error');
     showToast('ui.launch_error', err.message, 'error', 'launch-error');
   } finally {
+    launchInProgress = false;
     if (launchBtnEl) (launchBtnEl as HTMLButtonElement).disabled = false;
   }
 }

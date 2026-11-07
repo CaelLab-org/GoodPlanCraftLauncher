@@ -1,8 +1,27 @@
 {
   "schema": 1,
-  "latest": "1.9.3",
-  "updated": "2026-10-29",
+  "latest": "1.9.4",
+  "updated": "2026-11-08",
   "versions": [
+    {
+      "version": "1.9.4",
+      "anchor": "v1-9-4",
+      "date": "2026-11-08",
+      "title": "Opgelost: snel klikken kon meerdere spellen tegelijk starten",
+      "log": [
+        "Opgelost: snel meerdere keren klikken op „Spel starten” in de eerste seconden na het openen van de launcher kon meerdere spelprocessen tegelijk starten, waarbij de tips in de startanimatie door elkaar flitsten.",
+        "Geïnstalleerde versies zijn direct na de lokale scan klaar om te starten — zonder te wachten op de online lijst (ongeveer een seconde); de volledige lijst laadt op de achtergrond verder.",
+        "De startanimatie verschijnt eerder: er is direct reactie tijdens de Microsoft-aanmeldcontrole en het verlengen van het token.",
+        "De Annuleren-knop op de startanimatie werkt nu ook terwijl de aanmeldcontrole loopt.",
+        "Als de Microsoft-aanmelding is verlopen en opnieuw inloggen nodig is, sluit de startanimatie nu netjes in plaats van op het scherm te blijven."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.4-Setup.exe",
+        "file": "GPCL-1.9.4-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.9.3",
       "anchor": "v1-9-3",

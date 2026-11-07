@@ -1,8 +1,27 @@
 {
   "schema": 1,
-  "latest": "1.9.3",
-  "updated": "2026-10-29",
+  "latest": "1.9.4",
+  "updated": "2026-11-08",
   "versions": [
+    {
+      "version": "1.9.4",
+      "anchor": "v1-9-4",
+      "date": "2026-11-08",
+      "title": "Corrigido: cliques rápidos podiam iniciar vários jogos ao mesmo tempo",
+      "log": [
+        "Corrigido: clicar rapidamente em «Iniciar jogo» nos primeiros segundos após abrir o launcher podia iniciar vários processos do jogo ao mesmo tempo, com as dicas da animação a piscar sem ordem.",
+        "As versões instaladas ficam prontas a iniciar logo após a verificação local — sem esperar pela lista online (cerca de um segundo); a lista completa continua a carregar em segundo plano.",
+        "A animação de arranque aparece mais cedo: há resposta imediata durante a verificação de início de sessão Microsoft e a renovação do token.",
+        "O botão Cancelar da animação também funciona durante a verificação de início de sessão.",
+        "Quando o início de sessão Microsoft expira e é necessário iniciar sessão novamente, a animação fecha corretamente em vez de ficar no ecrã."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.4-Setup.exe",
+        "file": "GPCL-1.9.4-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.9.3",
       "anchor": "v1-9-3",

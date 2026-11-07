@@ -1,8 +1,27 @@
 {
   "schema": 1,
-  "latest": "1.9.3",
-  "updated": "2026-10-29",
+  "latest": "1.9.4",
+  "updated": "2026-11-08",
   "versions": [
+    {
+      "version": "1.9.4",
+      "anchor": "v1-9-4",
+      "date": "2026-11-08",
+      "title": "Diperbaiki: klik cepat bisa menjalankan beberapa permainan sekaligus",
+      "log": [
+        "Diperbaiki: mengeklik «Mulai Permainan» dengan cepat pada beberapa detik pertama setelah launcher dibuka bisa menjalankan beberapa proses permainan sekaligus, dan tips pada animasi peluncuran berkedip tak beraturan.",
+        "Versi yang terpasang siap diluncurkan tepat setelah pemindaian lokal — tanpa menunggu daftar versi daring (sekitar satu detik); daftar lengkap tetap dimuat di latar belakang.",
+        "Animasi peluncuran kini muncul lebih awal: ada umpan balik langsung saat pemeriksaan masuk Microsoft dan pembaruan token berjalan.",
+        "Tombol Batal pada animasi peluncuran kini juga berfungsi selama pemeriksaan masuk masih berlangsung.",
+        "Saat sesi Microsoft kedaluwarsa dan perlu masuk kembali, animasi peluncuran kini tertutup dengan benar, tidak lagi tertinggal di layar."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.4-Setup.exe",
+        "file": "GPCL-1.9.4-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.9.3",
       "anchor": "v1-9-3",

@@ -23,7 +23,7 @@ import { applyI18n, docsUrl, observeI18n, setLocale, setSystemLocale, t } from '
 import { cancelDownloadBtn, detailDownloadBtn, downloadPanel, getCustomSelectValue, initCustomSelect, launchBtn, menuLaunch, setCustomSelectOptions, setCustomSelectValue, setStatus, showDialog, showToast, usernameInput } from './dom';
 import { bindJavaInstallButtons, initJavaVersionStatus, saveJavaMirrorSettings, updateJavaInstallStatus } from './java-panel';
 import { initBootSplash } from './boot-splash';
-import { hasQueuedDownloads, hideLaunchAnimation, launchGame, launchTipFrequency, setLaunchTipFrequency } from './launch';
+import { hasQueuedDownloads, hideLaunchAnimation, launchGame, launchTipFrequency, requestLaunchCancel, setLaunchTipFrequency } from './launch';
 import { initLanguagePicker } from './language';
 import { refreshGameMonitor } from './monitor';
 import { currentPage, showPage, switchSettingsTab } from './nav';
@@ -109,10 +109,16 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
 
   await refreshGameMonitor();
 
-  await loadVersions();
-  await loadRemoteVersions();
-
-  await renderVersionSelectList();
+  // 本地版本扫完就能启动；远程清单要走网络（官方源 8s、镜像 20s 超时），
+  // 以前它排在前面，玩家点「开始游戏」要先干等好几秒 —— 放到后面去，别挡着启动。
+  if (launchBtn) (launchBtn as HTMLButtonElement).disabled = true;
+  try {
+    await loadVersions();
+    await renderVersionSelectList();
+  } finally {
+    if (launchBtn) (launchBtn as HTMLButtonElement).disabled = false;
+  }
+  void loadRemoteVersions();
 
   await initJavaVersionStatus();
   bindJavaInstallButtons();
@@ -221,6 +227,7 @@ if (launchBtn) launchBtn.addEventListener('click', launchGame);
   if (launchCancelBtn) {
     launchCancelBtn.addEventListener('click', () => {
       setStatus('[动画] 用户取消启动');
+      requestLaunchCancel();
       if (window.gpcl && window.gpcl.cancelLaunch) {
         window.gpcl.cancelLaunch();
       }

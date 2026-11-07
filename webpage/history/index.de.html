@@ -74,7 +74,7 @@
                     </div>
                 </li>
                 <li class="lang-switch"><select aria-label="Sprache" onchange="if(this.value)location.href=this.value"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de" selected>Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select></li>
-                <li><a href="../index.de#download" class="nav-cta">&#9662; Download v1.9.3</a></li>
+                <li><a href="../index.de#download" class="nav-cta">&#9662; Download v1.9.4</a></li>
             </ul>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menü öffnen" aria-expanded="false">&#9776;</button>
         </div>
@@ -92,6 +92,7 @@
             <p class="cl-intro">Von 1.0.0 bis zur aktuellen Version: was sich geändert hat und ob es die Version zum Download gibt, steht alles auf dieser Seite.</p>
             <p class="cl-note">Für 1.3.2 und älter wurden keine Installer aufbewahrt; der eingebaute Updater alter Versionen funktioniert möglicherweise nicht mehr, für den täglichen Einsatz empfiehlt sich daher die aktuelle Version.</p>
             <div class="cl-index" role="navigation" aria-label="Versionsindex">
+                <a href="#v1-9-4">1.9.4</a>
                 <a href="#v1-9-3">1.9.3</a>
                 <a href="#v1-9-2">1.9.2</a>
                 <a href="#v1-9-1">1.9.1</a>
@@ -123,12 +124,34 @@
     <main class="history cl-history">
         <div class="container">
             <div class="timeline">
+                <article class="timeline-item" id="v1-9-4">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.9.4</span>
+                        <span class="version-title">Behoben: Schnelles Klicken auf Start konnte mehrere Spiele starten</span>
+                        <span class="latest-chip">Aktuell</span>
+                        <span class="version-date">2026-11-08</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Behoben: Wer direkt nach dem Öffnen des Launchers mehrfach schnell auf „Spiel starten“ geklickt hat, konnte mehrere Spielprozesse gleichzeitig starten; die Tipps in der Startanimation flackerten durcheinander.</li>
+                        <li>Installierte Versionen sind direkt nach dem lokalen Scan startbereit — ohne Wartezeit auf die Online-Liste (etwa eine Sekunde); die vollständige Liste lädt im Hintergrund weiter.</li>
+                        <li>Die Startanimation erscheint früher: Während der Microsoft-Anmeldungsprüfung und Token-Erneuerung gibt es sofort eine Rückmeldung.</li>
+                        <li>Der Abbrechen-Knopf der Startanimation funktioniert jetzt auch, während die Anmeldungsprüfung läuft.</li>
+                        <li>Wenn die Microsoft-Anmeldung abgelaufen ist und eine neue Anmeldung nötig ist, schließt sich die Startanimation jetzt sauber, statt auf dem Bildschirm stehen zu bleiben.</li>
+                    </ul>
+                    <div class="cl-download">
+                        <a class="cl-dl-btn" href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.4-Setup.exe">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                            Download v1.9.4
+                        </a>
+                        <span class="cl-file">GPCL-1.9.4-Setup.exe · 94.0 MB · Windows 64-Bit</span>
+                    </div>
+                </article>
                 <article class="timeline-item" id="v1-9-3">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
                         <span class="version-number">v1.9.3</span>
                         <span class="version-title">Java-Downloads nutzen jetzt die gemeinsame Download-Warteschlange</span>
-                        <span class="latest-chip">Aktuell</span>
                         <span class="version-date">2026-10-29</span>
                     </div>
                     <ul class="changelog">

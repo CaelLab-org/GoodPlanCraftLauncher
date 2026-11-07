@@ -75,7 +75,7 @@
                     </div>
                 </li>
                 <li class="lang-switch"><select aria-label="ভাষা" onchange="if(this.value)location.href=this.value"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn" selected>বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select></li>
-                <li><a href="#download" class="nav-cta">&#9662; v1.9.3 ডাউনলোড</a></li>
+                <li><a href="#download" class="nav-cta">&#9662; v1.9.4 ডাউনলোড</a></li>
             </ul>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="মেনু খুলুন" aria-expanded="false">&#9776;</button>
         </div>
@@ -109,9 +109,9 @@
                 </a>
             </div>
             <div class="hero-meta">
-                <span>ভার্সন <b>v1.9.3</b></span>
+                <span>ভার্সন <b>v1.9.4</b></span>
                 <span class="sep">/</span>
-                <span>আপডেট <b>2026-10-29</b></span>
+                <span>আপডেট <b>2026-11-08</b></span>
                 <span class="sep">/</span>
                 <span>প্ল্যাটফর্ম <b>Windows / Linux</b></span>
             </div>
@@ -260,13 +260,13 @@
                 <span class="dl-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
                 </span>
-                <div class="download-file">GPCL-1.9.3-Setup.exe</div>
-                <a href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.3-Setup.exe" class="download-btn">
+                <div class="download-file">GPCL-1.9.4-Setup.exe</div>
+                <a href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.4-Setup.exe" class="download-btn">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
                     ব্লক জগতে ঝাঁপ দাও!
                 </a>
                 <div class="update-info">
-                    <span>আপডেট <b>2026-10-29</b></span>
+                    <span>আপডেট <b>2026-11-08</b></span>
                     <span>প্ল্যাটফর্ম <b>Windows / Linux</b></span>
                     <span>লাইসেন্স <b>ওপেন সোর্স, বিনামূল্যে</b></span>
                 </div>
@@ -379,9 +379,24 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                 <div class="timeline-item reveal">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
+                        <span class="version-number">v1.9.4</span>
+                        <span class="version-title">সংশোধন: দ্রুত ক্লিকে একসঙ্গে একাধিক গেম চালু হতে পারত</span>
+                        <span class="latest-chip">সর্বশেষ</span>
+                        <span class="version-date">2026-11-08</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>সংশোধন: লঞ্চার খোলার প্রথম কয়েক সেকেন্ডে «গেম শুরু করুন» বোতামে দ্রুত বারবার ক্লিক করলে একসঙ্গে একাধিক গেম প্রসেস চালু হতে পারত, আর স্টার্ট অ্যানিমেশনের টিপস এলোমেলোভাবে জ্বলজ্বল করত।</li>
+                        <li>লোকাল স্ক্যান শেষ হওয়ার সাথে সাথেই ইনস্টল করা ভার্সন চালু করার জন্য প্রস্তুত — অনলাইন তালিকার জন্য অপেক্ষা করতে হয় না (প্রায় এক সেকেন্ড); পুরো তালিকা ব্যাকগ্রাউন্ডে লোড হতে থাকে।</li>
+                        <li>স্টার্ট অ্যানিমেশন এখন আগেই দেখা যায়: Microsoft সাইন-ইন যাচাই ও টোকেন নবায়নের সময় সাথে সাথেই প্রতিক্রিয়া দেখা যায়।</li>
+                        <li>স্টার্ট অ্যানিমেশনের «বাতিল» বোতাম এখন সাইন-ইন যাচাই চলাকালীনও কাজ করে।</li>
+                        <li>Microsoft সাইন-ইনের মেয়াদ শেষ হয়ে আবার লগইন দরকার হলে স্টার্ট অ্যানিমেশন এখন ঠিকভাবে বন্ধ হয়, পর্দায় আটকে থাকে না।</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
                         <span class="version-number">v1.9.3</span>
                         <span class="version-title">Java ডাউনলোড এখন শেয়ার করা ডাউনলোড সারিতে</span>
-                        <span class="latest-chip">সর্বশেষ</span>
                         <span class="version-date">2026-10-29</span>
                     </div>
                     <ul class="changelog">
@@ -506,6 +521,8 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                         <li>'আরও' মেনু ডিফল্টে বন্ধ; দরকার হলে সেটিংস → অ্যাপিয়ারেন্স থেকে চালু করুন, আর রিস্টার্টের পর আবার দেখানোর বাগটি ঠিক হয়েছে</li>
                     </ul>
                 </div>
+                <details class="older-versions">
+                    <summary>17 টি পুরনো ভার্সন দেখান</summary>
                 <div class="timeline-item reveal">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
@@ -524,8 +541,6 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                         <li>মড ইনস্টল করলে একই প্রজেক্টের পুরনো jar মুছে যায়, তাই আর কয়েকটি ভার্সন জমে থাকে না</li>
                     </ul>
                 </div>
-                <details class="older-versions">
-                    <summary>16 টি পুরনো ভার্সন দেখান</summary>
                 <div class="timeline-item reveal">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
@@ -746,7 +761,7 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                 </div>
                 </details>
                 <div class="history-more">
-                    <a href="./history/index.bn">পূর্ণ চেঞ্জলগ দেখুন (সব 24 ভার্সন ও ইনস্টলার) →</a>
+                    <a href="./history/index.bn">পূর্ণ চেঞ্জলগ দেখুন (সব 25 ভার্সন ও ইনস্টলার) →</a>
                 </div>
             </div>
         </div>

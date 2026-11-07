@@ -1,8 +1,27 @@
 {
   "schema": 1,
-  "latest": "1.9.3",
-  "updated": "2026-10-29",
+  "latest": "1.9.4",
+  "updated": "2026-11-08",
   "versions": [
+    {
+      "version": "1.9.4",
+      "anchor": "v1-9-4",
+      "date": "2026-11-08",
+      "title": "Correction : des clics rapides pouvaient lancer plusieurs jeux à la fois",
+      "log": [
+        "Correction : cliquer rapidement sur « Lancer le jeu » dans les secondes suivant l’ouverture du lanceur pouvait lancer plusieurs processus de jeu en même temps, et les astuces de l’animation clignotaient en désordre.",
+        "Les versions installées sont prêtes à être lancées dès la fin du scan local — plus besoin d’attendre la liste en ligne (environ une seconde) ; la liste complète continue de se charger en arrière-plan.",
+        "L’animation de lancement apparaît plus tôt : il y a un retour immédiat pendant la vérification de connexion Microsoft et le renouvellement du token.",
+        "Le bouton Annuler de l’animation fonctionne désormais aussi pendant la vérification de connexion.",
+        "Quand la connexion Microsoft a expiré et qu’une reconnexion est nécessaire, l’animation se ferme correctement au lieu de rester à l’écran."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.4-Setup.exe",
+        "file": "GPCL-1.9.4-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.9.3",
       "anchor": "v1-9-3",

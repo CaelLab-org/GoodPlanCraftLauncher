@@ -1,8 +1,27 @@
 {
   "schema": 1,
-  "latest": "1.9.3",
-  "updated": "2026-10-29",
+  "latest": "1.9.4",
+  "updated": "2026-11-08",
   "versions": [
+    {
+      "version": "1.9.4",
+      "anchor": "v1-9-4",
+      "date": "2026-11-08",
+      "title": "Corretto: i clic rapidi potevano avviare più giochi insieme",
+      "log": [
+        "Corretto: fare clic ripetutamente su «Avvia gioco» nei primi secondi dopo l’apertura del launcher poteva avviare più processi di gioco insieme, con i suggerimenti dell’animazione che lampeggiavano in disordine.",
+        "Le versioni installate sono pronte per l’avvio subito dopo la scansione locale — senza aspettare l’elenco online (circa un secondo); l’elenco completo continua a caricarsi in background.",
+        "L’animazione di avvio appare prima: c’è una risposta immediata durante la verifica dell’accesso Microsoft e il rinnovo del token.",
+        "Il pulsante Annulla dell’animazione ora funziona anche mentre è in corso la verifica dell’accesso.",
+        "Quando l’accesso Microsoft è scaduto ed è necessario accedere di nuovo, l’animazione si chiude correttamente invece di rimanere sullo schermo."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.4-Setup.exe",
+        "file": "GPCL-1.9.4-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.9.3",
       "anchor": "v1-9-3",

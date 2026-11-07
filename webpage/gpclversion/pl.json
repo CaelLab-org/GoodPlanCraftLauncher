@@ -1,8 +1,27 @@
 {
   "schema": 1,
-  "latest": "1.9.3",
-  "updated": "2026-10-29",
+  "latest": "1.9.4",
+  "updated": "2026-11-08",
   "versions": [
+    {
+      "version": "1.9.4",
+      "anchor": "v1-9-4",
+      "date": "2026-11-08",
+      "title": "Naprawiono: szybkie klikanie mogło uruchomić kilka gier naraz",
+      "log": [
+        "Naprawiono: szybkie klikanie przycisku „Uruchom grę” w pierwszych sekundach po otwarciu launchera mogło uruchomić kilka procesów gry naraz, a wskazówki w animacji startowej migały nieładnie.",
+        "Zainstalowane wersje są gotowe do uruchomienia od razu po skanowaniu lokalnym — bez czekania na listę z sieci (około sekundy); pełna lista ładuje się dalej w tle.",
+        "Animacja startowa pojawia się wcześniej: od razu widać reakcję podczas sprawdzania logowania Microsoft i odnawiania tokena.",
+        "Przycisk Anuluj w animacji startowej działa teraz także w trakcie sprawdzania logowania.",
+        "Gdy logowanie Microsoft wygasło i trzeba się zalogować ponownie, animacja startowa zamyka się poprawnie zamiast zostać na ekranie."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.4-Setup.exe",
+        "file": "GPCL-1.9.4-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.9.3",
       "anchor": "v1-9-3",
