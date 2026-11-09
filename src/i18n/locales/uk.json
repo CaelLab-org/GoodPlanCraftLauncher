@@ -450,6 +450,7 @@
   "ui.installed": "встановлено",
   "ui.installed_1_file": "Встановив 1 файл",
   "ui.installed_count_files_including_dependencies": "Встановлено файли {count} (включаючи залежності)",
+  "ui.installer_file_is_in_use_restart_your_pc_and_try_again": "The installer file is being used by another program (probably an earlier installer that never exited). Restart your PC and try again.",
   "ui.installer_verification_failed": "Помилка перевірки інсталятора",
   "ui.installer_verification_failed_2": "Помилка перевірки інсталятора",
   "ui.installing": "Встановлення…",

@@ -1,8 +1,26 @@
 {
   "schema": 1,
-  "latest": "1.9.4",
-  "updated": "2026-11-08",
+  "latest": "1.9.5",
+  "updated": "2026-11-09",
   "versions": [
+    {
+      "version": "1.9.5",
+      "anchor": "v1-9-5",
+      "date": "2026-11-09",
+      "title": "Perbaikan: pembaruan terus diunduh ulang dan gagal",
+      "log": [
+        "Memperbaiki masalah yang membuat pembaruan otomatis gagal setiap kali dijalankan: penginstal dari sesi sebelumnya masih berjalan dan mengunci berkas.",
+        "Penginstal yang sudah diunduh dan lolos verifikasi kini langsung dipakai ulang, tidak diunduh ulang setiap kali aplikasi dibuka.",
+        "Setelah memilih \"Nanti\" pada pemberitahuan pembaruan yang belum selesai, unduhan otomatis tidak dimulai lagi selama sesi ini.",
+        "Jika berkas penginstal dipakai program lain, kini disarankan memulai ulang PC alih-alih menampilkan kode galat mentah."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.5-Setup.exe",
+        "file": "GPCL-1.9.5-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.9.4",
       "anchor": "v1-9-4",

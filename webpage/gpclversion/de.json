@@ -1,8 +1,26 @@
 {
   "schema": 1,
-  "latest": "1.9.4",
-  "updated": "2026-11-08",
+  "latest": "1.9.5",
+  "updated": "2026-11-09",
   "versions": [
+    {
+      "version": "1.9.5",
+      "anchor": "v1-9-5",
+      "date": "2026-11-09",
+      "title": "Behoben: Das Update wurde immer wieder neu geladen und schlug fehl",
+      "log": [
+        "Ein Problem behoben, bei dem die automatische Aktualisierung wiederholt fehlschlug, weil ein Installationsprogramm aus einer vorherigen Sitzung noch lief und die Datei blockierte.",
+        "Ein bereits heruntergeladenes und geprüftes Installationsprogramm wird jetzt direkt wiederverwendet, statt es bei jedem Start neu zu laden.",
+        "Nach „Später“ im Hinweis auf die unvollständige Aktualisierung wird bis zum nächsten Start nicht mehr automatisch geladen.",
+        "Wenn die Installationsdatei von einem anderen Programm gesperrt ist, erscheint jetzt der Hinweis, den PC neu zu starten, statt einer rohen Fehlermeldung."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.5-Setup.exe",
+        "file": "GPCL-1.9.5-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.9.4",
       "anchor": "v1-9-4",

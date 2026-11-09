@@ -1,8 +1,26 @@
 {
   "schema": 1,
-  "latest": "1.9.4",
-  "updated": "2026-11-08",
+  "latest": "1.9.5",
+  "updated": "2026-11-09",
   "versions": [
+    {
+      "version": "1.9.5",
+      "anchor": "v1-9-5",
+      "date": "2026-11-09",
+      "title": "Sửa lỗi cập nhật bị tải lại nhiều lần rồi thất bại",
+      "log": [
+        "Đã sửa lỗi khiến cập nhật tự động thất bại mỗi lần mở: trình cài đặt từ phiên trước vẫn đang chạy và giữ chặt tệp.",
+        "Trình cài đặt đã tải xuống và xác minh thành công sẽ được dùng lại trực tiếp, thay vì tải lại từ đầu mỗi lần mở ứng dụng.",
+        "Sau khi chọn \"Để sau\" trong thông báo cập nhật chưa hoàn tất, phiên làm việc này sẽ không tự động tải xuống nữa.",
+        "Khi tệp trình cài đặt bị chương trình khác chiếm dụng, ứng dụng sẽ gợi ý khởi động lại máy tính thay vì hiện mã lỗi thô."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.5-Setup.exe",
+        "file": "GPCL-1.9.5-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.9.4",
       "anchor": "v1-9-4",

@@ -1,8 +1,26 @@
 {
   "schema": 1,
-  "latest": "1.9.4",
-  "updated": "2026-11-08",
+  "latest": "1.9.5",
+  "updated": "2026-11-09",
   "versions": [
+    {
+      "version": "1.9.5",
+      "anchor": "v1-9-5",
+      "date": "2026-11-09",
+      "title": "Corrección: la actualización se descargaba una y otra vez y fallaba",
+      "log": [
+        "Se corrigió un problema por el que la actualización automática fallaba repetidamente: un instalador de una sesión anterior seguía en ejecución y bloqueaba el archivo.",
+        "El instalador ya descargado y verificado ahora se reutiliza directamente en lugar de descargarse de nuevo en cada inicio.",
+        "Tras elegir «Más tarde» en el aviso de actualización incompleta, ya no se inicia una descarga automática durante esta sesión.",
+        "Si otro programa bloquea el archivo del instalador, se sugiere reiniciar el PC en lugar de mostrar un error técnico."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.5-Setup.exe",
+        "file": "GPCL-1.9.5-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.9.4",
       "anchor": "v1-9-4",

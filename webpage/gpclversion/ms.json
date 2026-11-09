@@ -1,8 +1,26 @@
 {
   "schema": 1,
-  "latest": "1.9.4",
-  "updated": "2026-11-08",
+  "latest": "1.9.5",
+  "updated": "2026-11-09",
   "versions": [
+    {
+      "version": "1.9.5",
+      "anchor": "v1-9-5",
+      "date": "2026-11-09",
+      "title": "Pembetulan: kemas kini dimuat turun berulang kali lalu gagal",
+      "log": [
+        "Membetulkan masalah yang menyebabkan kemas kini automatik gagal setiap kali dimulakan: pemasang dari sesi sebelumnya masih berjalan dan menahan fail.",
+        "Pemasang yang telah dimuat turun dan disahkan kini digunakan semula terus, tanpa dimuat turun semula setiap kali dimulakan.",
+        "Selepas memilih \"Kemudian\" pada gesaan kemas kini yang tidak selesai, muat turun automatik tidak bermula semula dalam sesi ini.",
+        "Jika fail pemasang digunakan oleh program lain, mesej yang menyarankan memulakan semula PC dipaparkan berbanding kod ralat mentah."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.5-Setup.exe",
+        "file": "GPCL-1.9.5-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.9.4",
       "anchor": "v1-9-4",

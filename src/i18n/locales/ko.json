@@ -450,6 +450,7 @@
   "ui.installed": "설치됨",
   "ui.installed_1_file": "파일 1개 설치됨",
   "ui.installed_count_files_including_dependencies": "설치된 {count} 파일(종속성 포함)",
+  "ui.installer_file_is_in_use_restart_your_pc_and_try_again": "The installer file is being used by another program (probably an earlier installer that never exited). Restart your PC and try again.",
   "ui.installer_verification_failed": "설치 프로그램 확인 실패",
   "ui.installer_verification_failed_2": "설치 프로그램 확인 실패",
   "ui.installing": "설치 중…",

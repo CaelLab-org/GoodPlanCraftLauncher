@@ -1,8 +1,26 @@
 {
   "schema": 1,
-  "latest": "1.9.4",
-  "updated": "2026-11-08",
+  "latest": "1.9.5",
+  "updated": "2026-11-09",
   "versions": [
+    {
+      "version": "1.9.5",
+      "anchor": "v1-9-5",
+      "date": "2026-11-09",
+      "title": "Fix: the update was re-downloaded repeatedly and failed",
+      "log": [
+        "Fixed auto-update failing on every launch when an installer from a previous session was still running and holding the downloaded file.",
+        "An installer that has already been downloaded and verified is now reused directly instead of being downloaded again.",
+        "After choosing \"Later\" on the unfinished-update prompt, no automatic download starts for the rest of this session.",
+        "When the installer file is locked by another program, the launcher now suggests restarting the PC instead of showing a raw error message."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.5-Setup.exe",
+        "file": "GPCL-1.9.5-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.9.4",
       "anchor": "v1-9-4",

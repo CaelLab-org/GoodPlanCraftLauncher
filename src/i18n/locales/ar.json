@@ -450,6 +450,7 @@
   "ui.installed": "تم التثبيت",
   "ui.installed_1_file": "تم تثبيت ملف واحد",
   "ui.installed_count_files_including_dependencies": "ملفات {count} المثبتة (بما في ذلك التبعيات)",
+  "ui.installer_file_is_in_use_restart_your_pc_and_try_again": "The installer file is being used by another program (probably an earlier installer that never exited). Restart your PC and try again.",
   "ui.installer_verification_failed": "فشل التحقق من المثبت",
   "ui.installer_verification_failed_2": "فشل التحقق من المثبت",
   "ui.installing": "جارٍ التثبيت…",

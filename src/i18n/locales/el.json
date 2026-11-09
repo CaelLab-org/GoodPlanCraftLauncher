@@ -450,6 +450,7 @@
   "ui.installed": "Εγκατεστημένο",
   "ui.installed_1_file": "Εγκατεστημένο 1 αρχείο",
   "ui.installed_count_files_including_dependencies": "Εγκατεστημένα αρχεία {count} (συμπεριλαμβανομένων των εξαρτήσεων)",
+  "ui.installer_file_is_in_use_restart_your_pc_and_try_again": "The installer file is being used by another program (probably an earlier installer that never exited). Restart your PC and try again.",
   "ui.installer_verification_failed": "Η επαλήθευση προγράμματος εγκατάστασης απέτυχε",
   "ui.installer_verification_failed_2": "Η επαλήθευση προγράμματος εγκατάστασης απέτυχε",
   "ui.installing": "Εγκατάσταση…",

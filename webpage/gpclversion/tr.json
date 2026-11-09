@@ -1,8 +1,26 @@
 {
   "schema": 1,
-  "latest": "1.9.4",
-  "updated": "2026-11-08",
+  "latest": "1.9.5",
+  "updated": "2026-11-09",
   "versions": [
+    {
+      "version": "1.9.5",
+      "anchor": "v1-9-5",
+      "date": "2026-11-09",
+      "title": "Düzeltme: güncelleme sürekli yeniden indirilip başarısız oluyordu",
+      "log": [
+        "Önceki oturumdan kalan bir yükleyici çalışmaya devam edip dosyayı kilitlediği için otomatik güncellemenin her açılışta başarısız olup yeniden indirilmesine yol açan sorun düzeltildi.",
+        "Zaten indirilmiş ve doğrulanmış bir yükleyici artık doğrudan yeniden kullanılıyor.",
+        "Tamamlanmamış güncelleme bildiriminde \"Daha sonra\" seçildiğinde bu oturumda otomatik indirme tekrar başlamıyor.",
+        "Yükleyici dosyası başka bir program tarafından kullanılıyorsa ham hata kodu yerine bilgisayarı yeniden başlatma önerisi gösteriliyor."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.5-Setup.exe",
+        "file": "GPCL-1.9.5-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.9.4",
       "anchor": "v1-9-4",

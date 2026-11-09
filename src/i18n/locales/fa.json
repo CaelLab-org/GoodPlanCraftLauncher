@@ -450,6 +450,7 @@
   "ui.installed": "نصب شده است",
   "ui.installed_1_file": "1 فایل نصب شد",
   "ui.installed_count_files_including_dependencies": "فایل های {count} نصب شده (از جمله وابستگی ها)",
+  "ui.installer_file_is_in_use_restart_your_pc_and_try_again": "The installer file is being used by another program (probably an earlier installer that never exited). Restart your PC and try again.",
   "ui.installer_verification_failed": "تأیید نصب کننده ناموفق بود",
   "ui.installer_verification_failed_2": "تأیید نصب کننده ناموفق بود",
   "ui.installing": "در حال نصب…",

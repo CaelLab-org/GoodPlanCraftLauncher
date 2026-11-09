@@ -75,7 +75,7 @@
                     </div>
                 </li>
                 <li class="lang-switch"><select aria-label="Idioma" onchange="if(this.value)location.href=this.value"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es" selected>Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select></li>
-                <li><a href="#download" class="nav-cta">&#9662; Descargar v1.9.4</a></li>
+                <li><a href="#download" class="nav-cta">&#9662; Descargar v1.9.5</a></li>
             </ul>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Abrir menú" aria-expanded="false">&#9776;</button>
         </div>
@@ -109,9 +109,9 @@
                 </a>
             </div>
             <div class="hero-meta">
-                <span>Versión <b>v1.9.4</b></span>
+                <span>Versión <b>v1.9.5</b></span>
                 <span class="sep">/</span>
-                <span>Actualizado <b>2026-11-08</b></span>
+                <span>Actualizado <b>2026-11-09</b></span>
                 <span class="sep">/</span>
                 <span>Plataforma <b>Windows / Linux</b></span>
             </div>
@@ -260,13 +260,13 @@
                 <span class="dl-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
                 </span>
-                <div class="download-file">GPCL-1.9.4-Setup.exe</div>
-                <a href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.4-Setup.exe" class="download-btn">
+                <div class="download-file">GPCL-1.9.5-Setup.exe</div>
+                <a href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.5-Setup.exe" class="download-btn">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
                     ¡Entra al mundo de bloques!
                 </a>
                 <div class="update-info">
-                    <span>Actualizado <b>2026-11-08</b></span>
+                    <span>Actualizado <b>2026-11-09</b></span>
                     <span>Plataforma <b>Windows / Linux</b></span>
                     <span>Licencia <b>Código abierto, gratis</b></span>
                 </div>
@@ -379,9 +379,23 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                 <div class="timeline-item reveal">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
+                        <span class="version-number">v1.9.5</span>
+                        <span class="version-title">Corrección: la actualización se descargaba una y otra vez y fallaba</span>
+                        <span class="latest-chip">Última</span>
+                        <span class="version-date">2026-11-09</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Se corrigió un problema por el que la actualización automática fallaba repetidamente: un instalador de una sesión anterior seguía en ejecución y bloqueaba el archivo.</li>
+                        <li>El instalador ya descargado y verificado ahora se reutiliza directamente en lugar de descargarse de nuevo en cada inicio.</li>
+                        <li>Tras elegir «Más tarde» en el aviso de actualización incompleta, ya no se inicia una descarga automática durante esta sesión.</li>
+                        <li>Si otro programa bloquea el archivo del instalador, se sugiere reiniciar el PC en lugar de mostrar un error técnico.</li>
+                    </ul>
+                </div>
+                <div class="timeline-item reveal">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
                         <span class="version-number">v1.9.4</span>
                         <span class="version-title">Corregido: los clics rápidos podían iniciar varias partidas a la vez</span>
-                        <span class="latest-chip">Última</span>
                         <span class="version-date">2026-11-08</span>
                     </div>
                     <ul class="changelog">
@@ -504,6 +518,8 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                         <li>La 1.7.1 fue una compilación interna no publicada y se retiró; la 1.7.2 incluye todos sus cambios</li>
                     </ul>
                 </div>
+                <details class="older-versions">
+                    <summary>Mostrar 18 versiones anteriores</summary>
                 <div class="timeline-item reveal">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
@@ -521,8 +537,6 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                         <li>El menú «Más» ahora está contraído por defecto; actívalo en Ajustes → Apariencia cuando lo necesites, y se corrigió el error que lo hacía reaparecer tras reiniciar</li>
                     </ul>
                 </div>
-                <details class="older-versions">
-                    <summary>Mostrar 17 versiones anteriores</summary>
                 <div class="timeline-item reveal">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
@@ -761,7 +775,7 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</pre>
                 </div>
                 </details>
                 <div class="history-more">
-                    <a href="./history/index.es">Ver el historial completo (las 25 versiones e instaladores) →</a>
+                    <a href="./history/index.es">Ver el historial completo (las 26 versiones e instaladores) →</a>
                 </div>
             </div>
         </div>

@@ -74,7 +74,7 @@
                     </div>
                 </li>
                 <li class="lang-switch"><select aria-label="Idioma" onchange="if(this.value)location.href=this.value"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es" selected>Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi">Tiếng Việt</option></select></li>
-                <li><a href="../index.es#download" class="nav-cta">&#9662; Descargar v1.9.4</a></li>
+                <li><a href="../index.es#download" class="nav-cta">&#9662; Descargar v1.9.5</a></li>
             </ul>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Abrir menú" aria-expanded="false">&#9776;</button>
         </div>
@@ -92,6 +92,7 @@
             <p class="cl-intro">Desde la 1.0.0 hasta la última versión, todas las versiones —qué cambió y si se puede descargar— están en esta página.</p>
             <p class="cl-note">No se conservaron instaladores de la 1.3.2 ni de las anteriores; el actualizador integrado de las versiones antiguas puede que ya no funcione, así que para el uso diario se recomienda instalar la última versión.</p>
             <div class="cl-index" role="navigation" aria-label="Índice de versiones">
+                <a href="#v1-9-5">1.9.5</a>
                 <a href="#v1-9-4">1.9.4</a>
                 <a href="#v1-9-3">1.9.3</a>
                 <a href="#v1-9-2">1.9.2</a>
@@ -124,12 +125,33 @@
     <main class="history cl-history">
         <div class="container">
             <div class="timeline">
+                <article class="timeline-item" id="v1-9-5">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.9.5</span>
+                        <span class="version-title">Corrección: la actualización se descargaba una y otra vez y fallaba</span>
+                        <span class="latest-chip">Última</span>
+                        <span class="version-date">2026-11-09</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Se corrigió un problema por el que la actualización automática fallaba repetidamente: un instalador de una sesión anterior seguía en ejecución y bloqueaba el archivo.</li>
+                        <li>El instalador ya descargado y verificado ahora se reutiliza directamente en lugar de descargarse de nuevo en cada inicio.</li>
+                        <li>Tras elegir «Más tarde» en el aviso de actualización incompleta, ya no se inicia una descarga automática durante esta sesión.</li>
+                        <li>Si otro programa bloquea el archivo del instalador, se sugiere reiniciar el PC en lugar de mostrar un error técnico.</li>
+                    </ul>
+                    <div class="cl-download">
+                        <a class="cl-dl-btn" href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.5-Setup.exe">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                            Descargar v1.9.5
+                        </a>
+                        <span class="cl-file">GPCL-1.9.5-Setup.exe · 94.0 MB · Windows 64 bits</span>
+                    </div>
+                </article>
                 <article class="timeline-item" id="v1-9-4">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
                         <span class="version-number">v1.9.4</span>
                         <span class="version-title">Corregido: los clics rápidos podían iniciar varias partidas a la vez</span>
-                        <span class="latest-chip">Última</span>
                         <span class="version-date">2026-11-08</span>
                     </div>
                     <ul class="changelog">

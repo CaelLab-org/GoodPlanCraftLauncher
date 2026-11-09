@@ -2,6 +2,26 @@
     "Launcher": [
         {
             "name": "version",
+            "key": "1.9.5"
+        },
+        {
+            "name": "versiontitle",
+            "key": "修复自动更新反复下载失败的问题"
+        },
+        {
+            "name": "versiontitle_en",
+            "key": "Fix: the update was re-downloaded repeatedly and failed"
+        },
+        {
+            "name": "versionlog",
+            "key": "修复了一个会导致自动更新反复失败的问题：上一次没退出的安装程序一直占着安装包，启动器每次打开都重新下载却装不上。<br>已经下载完成、校验通过的更新包现在会直接复用，不再每次启动都重新下载一遍。<br>在「上次更新未完成」提示里点了「稍后」之后，本次启动不会再自动开始下载。<br>安装包被其他程序占用时，会提示重启电脑后再试，不再显示原始的错误代码。"
+        },
+        {
+            "name": "versionlog_en",
+            "key": "Fixed auto-update failing on every launch when an installer from a previous session was still running and holding the downloaded file.<br>An installer that has already been downloaded and verified is now reused directly instead of being downloaded again.<br>After choosing \"Later\" on the unfinished-update prompt, no automatic download starts for the rest of this session.<br>When the installer file is locked by another program, the launcher now suggests restarting the PC instead of showing a raw error message."
+        },
+        {
+            "name": "version",
             "key": "1.9.4"
         },
         {

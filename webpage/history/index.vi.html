@@ -74,7 +74,7 @@
                     </div>
                 </li>
                 <li class="lang-switch"><select aria-label="Ngôn ngữ" onchange="if(this.value)location.href=this.value"><option value="./index.en-us">English</option><option value="./index.zh-cn">简体中文</option><option value="./index.zh-tw">繁體中文</option><option value="./index.ar">العربية</option><option value="./index.bn">বাংলা</option><option value="./index.de">Deutsch</option><option value="./index.el">Ελληνικά</option><option value="./index.es">Español</option><option value="./index.fa">فارسی</option><option value="./index.fr">Français</option><option value="./index.he">עברית</option><option value="./index.hi">हिन्दी</option><option value="./index.id">Bahasa Indonesia</option><option value="./index.it">Italiano</option><option value="./index.ja">日本語</option><option value="./index.ko">한국어</option><option value="./index.ms">Bahasa Melayu</option><option value="./index.nl">Nederlands</option><option value="./index.pl">Polski</option><option value="./index.pt">Português</option><option value="./index.ru">Русский</option><option value="./index.th">ไทย</option><option value="./index.tr">Türkçe</option><option value="./index.uk">Українська</option><option value="./index.vi" selected>Tiếng Việt</option></select></li>
-                <li><a href="../index.vi#download" class="nav-cta">&#9662; Tải v1.9.4</a></li>
+                <li><a href="../index.vi#download" class="nav-cta">&#9662; Tải v1.9.5</a></li>
             </ul>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Mở menu" aria-expanded="false">&#9776;</button>
         </div>
@@ -92,6 +92,7 @@
             <p class="cl-intro">Từ 1.0.0 đến bản mới nhất, mọi phiên bản — thay đổi gì và có tải được không — đều có trên trang này.</p>
             <p class="cl-note">Các bản 1.3.2 trở về trước không giữ bộ cài; trình cập nhật tích hợp trong bản cũ có thể không còn hoạt động, nên dùng bản mới nhất cho việc hằng ngày.</p>
             <div class="cl-index" role="navigation" aria-label="Mục lục phiên bản">
+                <a href="#v1-9-5">1.9.5</a>
                 <a href="#v1-9-4">1.9.4</a>
                 <a href="#v1-9-3">1.9.3</a>
                 <a href="#v1-9-2">1.9.2</a>
@@ -124,12 +125,33 @@
     <main class="history cl-history">
         <div class="container">
             <div class="timeline">
+                <article class="timeline-item" id="v1-9-5">
+                    <span class="timeline-dot"></span>
+                    <div class="version-info">
+                        <span class="version-number">v1.9.5</span>
+                        <span class="version-title">Sửa lỗi cập nhật bị tải lại nhiều lần rồi thất bại</span>
+                        <span class="latest-chip">Mới nhất</span>
+                        <span class="version-date">2026-11-09</span>
+                    </div>
+                    <ul class="changelog">
+                        <li>Đã sửa lỗi khiến cập nhật tự động thất bại mỗi lần mở: trình cài đặt từ phiên trước vẫn đang chạy và giữ chặt tệp.</li>
+                        <li>Trình cài đặt đã tải xuống và xác minh thành công sẽ được dùng lại trực tiếp, thay vì tải lại từ đầu mỗi lần mở ứng dụng.</li>
+                        <li>Sau khi chọn &quot;Để sau&quot; trong thông báo cập nhật chưa hoàn tất, phiên làm việc này sẽ không tự động tải xuống nữa.</li>
+                        <li>Khi tệp trình cài đặt bị chương trình khác chiếm dụng, ứng dụng sẽ gợi ý khởi động lại máy tính thay vì hiện mã lỗi thô.</li>
+                    </ul>
+                    <div class="cl-download">
+                        <a class="cl-dl-btn" href="https://dl.caellab.com/file/games/gpcl/GPCL-1.9.5-Setup.exe">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>
+                            Tải v1.9.5
+                        </a>
+                        <span class="cl-file">GPCL-1.9.5-Setup.exe · 94.0 MB · Windows 64-bit</span>
+                    </div>
+                </article>
                 <article class="timeline-item" id="v1-9-4">
                     <span class="timeline-dot"></span>
                     <div class="version-info">
                         <span class="version-number">v1.9.4</span>
                         <span class="version-title">Đã sửa: nhấp nhanh có thể khởi động nhiều trò chơi cùng lúc</span>
-                        <span class="latest-chip">Mới nhất</span>
                         <span class="version-date">2026-11-08</span>
                     </div>
                     <ul class="changelog">

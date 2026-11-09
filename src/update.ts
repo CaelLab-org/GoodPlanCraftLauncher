@@ -125,13 +125,32 @@ function cleanupUpdateDir(keepInstaller: string | null): void {
     if (!fs.existsSync(UPDATA_DIR)) return;
     for (const file of fs.readdirSync(UPDATA_DIR)) {
       const fullPath = path.join(UPDATA_DIR, file);
-      if (file.endsWith('.part') || file === 'update-install.ps1' || file === 'update-install.cmd') { removeFile(fullPath); continue; }
+      if (file.endsWith('.part') || file.endsWith('.stale') || file === 'update-install.ps1' || file === 'update-install.cmd') { removeFile(fullPath); continue; }
       if (file.startsWith('GPCL-') && file.endsWith('-Setup.exe') && fullPath !== keepInstaller) {
         removeFile(fullPath);
       }
     }
   } catch (e: any) {
     writeLog(`[更新] 清理更新目录失败: ${e.message}`);
+  }
+}
+
+
+// 状态文件丢了（比如上次下载失败被清掉）时，保留最新的一个安装包给下次复用校验，
+// 否则每次启动都先删包再重下 94MB。
+function newestInstallerPath(): string | null {
+  try {
+    if (!fs.existsSync(UPDATA_DIR)) return null;
+    const installers = fs.readdirSync(UPDATA_DIR)
+      .filter((file) => /^GPCL-.*-Setup\.exe$/.test(file))
+      .map((file) => {
+        const fullPath = path.join(UPDATA_DIR, file);
+        return { fullPath, mtime: fs.statSync(fullPath).mtimeMs };
+      })
+      .sort((a, b) => b.mtime - a.mtime);
+    return installers.length > 0 ? installers[0].fullPath : null;
+  } catch (e) {
+    return null;
   }
 }
 
@@ -149,7 +168,7 @@ export function initUpdateState(): void {
 
   const state = readUpdateState();
   if (!state) {
-    cleanupUpdateDir(null);
+    cleanupUpdateDir(newestInstallerPath());
     return;
   }
 
@@ -335,6 +354,32 @@ async function verifyInstaller(filePath: string): Promise<{ ok: boolean; error?:
 }
 
 
+// 目标安装包可能正被上一次没退出的安装程序占着（运行中的 exe 删不掉，rename 会 EPERM）。
+// 运行中的 exe 允许改名，所以先把旧文件挪成 .stale 再放新包；新包放不进去就把旧文件还回去。
+function moveInstallerIntoPlace(partPath: string, destPath: string): void {
+  if (fs.existsSync(destPath)) {
+    try { fs.unlinkSync(destPath); } catch (e) {}
+  }
+  try {
+    fs.renameSync(partPath, destPath);
+    return;
+  } catch (e: any) {
+    if (!fs.existsSync(destPath)) throw e;
+  }
+
+  const stalePath = `${destPath}.stale`;
+  removeFile(stalePath);
+  fs.renameSync(destPath, stalePath);
+  try {
+    fs.renameSync(partPath, destPath);
+  } catch (e) {
+    try { fs.renameSync(stalePath, destPath); } catch (restoreError) {}
+    throw e;
+  }
+  removeFile(stalePath);
+}
+
+
 ipcMain.handle('download-update', async (_: any, version: string, manual: boolean = false) => {
   if (!IN_APP_UPDATE_SUPPORTED) return { success: false, error: t('ui.updates_are_unavailable') };
   if (isUpdateDownloading) return { success: false, error: 'An update download is already in progress' };
@@ -361,10 +406,24 @@ ipcMain.handle('download-update', async (_: any, version: string, manual: boolea
     attempts: 0,
     updatedAt: Date.now()
   };
-  writeUpdateState(state);
-  readyVersion = null;
   isUpdateDownloading = true;
   shouldCancelUpdateDownload = false;
+
+  // 上次已经下好的安装包直接复用：没必要重下 94MB，也避免跟占着文件的旧安装程序较劲
+  if (fs.existsSync(destPath)) {
+    const existing = await verifyInstaller(destPath);
+    if (existing.ok) {
+      writeLog(`[更新] 安装包已存在且校验通过，直接复用: ${destPath}`);
+      writeUpdateState({ ...state, stage: 'ready', updatedAt: Date.now() });
+      readyVersion = version;
+      isUpdateDownloading = false;
+      return { success: true, filePath: destPath, size: fs.statSync(destPath).size, verified: true, reused: true };
+    }
+    writeLog(`[更新] 已存在的安装包校验未通过，重新下载: ${existing.error || ''}`);
+  }
+
+  writeUpdateState(state);
+  readyVersion = null;
 
   const downloadResult = await new Promise<any>((resolve) => {
     let finished = false;
@@ -430,12 +489,17 @@ ipcMain.handle('download-update', async (_: any, version: string, manual: boolea
   if (!downloadResult.success) return downloadResult;
 
   try {
-    removeFile(destPath);
-    fs.renameSync(partPath, destPath);
+    moveInstallerIntoPlace(partPath, destPath);
   } catch (e: any) {
     removeFile(partPath);
     clearUpdateState();
-    return { success: false, error: t('ui.could_not_save_the_installer_message', { message: e.message }) };
+    const locked: boolean = /^(EPERM|EBUSY|EACCES)$/.test(e.code || '') || /EPERM|operation not permitted/i.test(e.message || '');
+    return {
+      success: false,
+      error: locked
+        ? t('ui.installer_file_is_in_use_restart_your_pc_and_try_again')
+        : t('ui.could_not_save_the_installer_message', { message: e.message })
+    };
   }
 
   const verified = await verifyInstaller(destPath);

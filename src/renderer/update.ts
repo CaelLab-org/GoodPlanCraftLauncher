@@ -41,6 +41,9 @@ let readyInstallerPath: string | null = null;
 
 let readyVersionInMemory: string | null = null;
 
+// 用户在「上次更新未完成」里点了「稍后」：本次启动不再自动下载，等他下次手动点更新
+let skipAutoDownloadThisSession: boolean = false;
+
 
 export async function getCurrentVersion(): Promise<string> {
   try {
@@ -256,6 +259,7 @@ export async function showUpdateStartupNotice(): Promise<void> {
       if (openSite && window.gpcl.openExternal) {
         window.gpcl.openExternal('https://gamets.caellab.com/gpcl/');
       }
+      if (!openSite) skipAutoDownloadThisSession = true;
       return;
     }
 
@@ -267,6 +271,7 @@ export async function showUpdateStartupNotice(): Promise<void> {
       cancelText: '稍后'
     });
     if (retry) await installNow(failure.installerPath);
+    else skipAutoDownloadThisSession = true;
   } catch (e: any) {
     console.error('[更新] 读取更新状态失败:', e);
   }
@@ -457,6 +462,10 @@ export async function startUpdateDownload(version: string): Promise<void> {
 
 export async function autoDownloadUpdate(version: string): Promise<void> {
   if (MANUAL_UPDATE_ONLY) return;
+  if (skipAutoDownloadThisSession) {
+    setUpdateBadgeAvailable();
+    return;
+  }
   await runUpdateDownload(version, false);
 }
 

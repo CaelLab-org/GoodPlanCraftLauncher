@@ -1,8 +1,26 @@
 {
   "schema": 1,
-  "latest": "1.9.4",
-  "updated": "2026-11-08",
+  "latest": "1.9.5",
+  "updated": "2026-11-09",
   "versions": [
+    {
+      "version": "1.9.5",
+      "anchor": "v1-9-5",
+      "date": "2026-11-09",
+      "title": "Opgelost: de update werd steeds opnieuw gedownload en mislukte",
+      "log": [
+        "Opgelost: de automatische update mislukte bij elke start omdat een installatieprogramma van een vorige sessie nog draaide en het bestand blokkeerde.",
+        "Een al gedownload en gecontroleerd installatieprogramma wordt nu direct hergebruikt in plaats van opnieuw gedownload te worden.",
+        "Na „Later“ te kiezen in de melding over de onvoltooide update wordt deze sessie niet opnieuw automatisch gedownload.",
+        "Als het installatiebestand door een ander programma wordt gebruikt, wordt nu gevraagd de pc opnieuw te starten in plaats van een technische foutmelding te tonen."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.5-Setup.exe",
+        "file": "GPCL-1.9.5-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.9.4",
       "anchor": "v1-9-4",

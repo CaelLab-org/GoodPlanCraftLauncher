@@ -450,6 +450,7 @@
   "ui.installed": "ติดตั้งแล้ว",
   "ui.installed_1_file": "ติดตั้งแล้ว 1 ไฟล์",
   "ui.installed_count_files_including_dependencies": "ติดตั้งไฟล์ {count} แล้ว (รวมถึงการขึ้นต่อกัน)",
+  "ui.installer_file_is_in_use_restart_your_pc_and_try_again": "The installer file is being used by another program (probably an earlier installer that never exited). Restart your PC and try again.",
   "ui.installer_verification_failed": "การยืนยันตัวติดตั้งล้มเหลว",
   "ui.installer_verification_failed_2": "การยืนยันตัวติดตั้งล้มเหลว",
   "ui.installing": "กำลังติดตั้ง...",

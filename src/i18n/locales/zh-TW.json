@@ -450,6 +450,7 @@
   "ui.installed": "已安裝",
   "ui.installed_1_file": "已安裝 1 個文件",
   "ui.installed_count_files_including_dependencies": "安裝的 {count} 檔案（包括依賴項）",
+  "ui.installer_file_is_in_use_restart_your_pc_and_try_again": "安裝包正被另一個程式佔用（可能是上次沒退出的安裝程式），重新開機後再試。",
   "ui.installer_verification_failed": "安裝程式驗證失敗",
   "ui.installer_verification_failed_2": "安裝程式驗證失敗",
   "ui.installing": "正在安裝...",

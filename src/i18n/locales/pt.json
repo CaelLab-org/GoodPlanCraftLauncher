@@ -450,6 +450,7 @@
   "ui.installed": "Instalado",
   "ui.installed_1_file": "Instalado 1 arquivo",
   "ui.installed_count_files_including_dependencies": "Arquivos {count} instalados (incluindo dependências)",
+  "ui.installer_file_is_in_use_restart_your_pc_and_try_again": "The installer file is being used by another program (probably an earlier installer that never exited). Restart your PC and try again.",
   "ui.installer_verification_failed": "Falha na verificação do instalador",
   "ui.installer_verification_failed_2": "Falha na verificação do instalador",
   "ui.installing": "Instalando…",

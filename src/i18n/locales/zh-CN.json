@@ -450,6 +450,7 @@
   "ui.installed": "已安装",
   "ui.installed_1_file": "已安装 1 个文件",
   "ui.installed_count_files_including_dependencies": "已安装 {count} 个文件（含前置）",
+  "ui.installer_file_is_in_use_restart_your_pc_and_try_again": "安装包正被另一个程序占用（可能是上次没退出的安装程序），重启电脑后再试。",
   "ui.installer_verification_failed": "安装包校验失败",
   "ui.installer_verification_failed_2": "更新包校验失败",
   "ui.installing": "安装中…",

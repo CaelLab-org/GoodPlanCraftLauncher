@@ -1,8 +1,26 @@
 {
   "schema": 1,
-  "latest": "1.9.4",
-  "updated": "2026-11-08",
+  "latest": "1.9.5",
+  "updated": "2026-11-09",
   "versions": [
+    {
+      "version": "1.9.5",
+      "anchor": "v1-9-5",
+      "date": "2026-11-09",
+      "title": "Correction : la mise à jour se retéléchargeait en boucle et échouait",
+      "log": [
+        "Correction d'un problème où la mise à jour automatique échouait à chaque lancement : un programme d'installation d'une session précédente tournait encore et bloquait le fichier.",
+        "Un programme d'installation déjà téléchargé et vérifié est maintenant réutilisé directement au lieu d'être retéléchargé à chaque démarrage.",
+        "Après avoir choisi « Plus tard » dans l'invite de mise à jour inachevée, aucun téléchargement automatique ne démarre pendant cette session.",
+        "Si le fichier d'installation est verrouillé par un autre programme, un message propose de redémarrer le PC au lieu d'afficher une erreur brute."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.5-Setup.exe",
+        "file": "GPCL-1.9.5-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.9.4",
       "anchor": "v1-9-4",

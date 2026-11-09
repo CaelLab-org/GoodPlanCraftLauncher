@@ -450,6 +450,7 @@
   "ui.installed": "ইনস্টল করা হয়েছে",
   "ui.installed_1_file": "1টি ফাইল ইনস্টল করা হয়েছে",
   "ui.installed_count_files_including_dependencies": "ইনস্টল করা {count} ফাইল (নির্ভরতা সহ)",
+  "ui.installer_file_is_in_use_restart_your_pc_and_try_again": "The installer file is being used by another program (probably an earlier installer that never exited). Restart your PC and try again.",
   "ui.installer_verification_failed": "ইনস্টলার যাচাইকরণ ব্যর্থ হয়েছে৷",
   "ui.installer_verification_failed_2": "ইনস্টলার যাচাইকরণ ব্যর্থ হয়েছে৷",
   "ui.installing": "ইনস্টল করা হচ্ছে...",

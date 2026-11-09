@@ -1,8 +1,26 @@
 {
   "schema": 1,
-  "latest": "1.9.4",
-  "updated": "2026-11-08",
+  "latest": "1.9.5",
+  "updated": "2026-11-09",
   "versions": [
+    {
+      "version": "1.9.5",
+      "anchor": "v1-9-5",
+      "date": "2026-11-09",
+      "title": "Naprawiono: aktualizacja była pobierana w kółko i kończyła się błędem",
+      "log": [
+        "Naprawiono problem, przez który aktualizacja automatyczna za każdym razem kończyła się błędem: instalator z poprzedniej sesji nadal działał i blokował plik.",
+        "Już pobrany i zweryfikowany instalator jest teraz używany ponownie zamiast być pobieranym od nowa przy każdym uruchomieniu.",
+        "Po wybraniu „Później” w powiadomieniu o niedokończonej aktualizacji automatyczne pobieranie nie startuje do ponownego uruchomienia.",
+        "Gdy plik instalatora jest zajęty przez inny program, pojawia się sugestia ponownego uruchomienia komputera zamiast surowego komunikatu o błędzie."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.5-Setup.exe",
+        "file": "GPCL-1.9.5-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      }
+    },
     {
       "version": "1.9.4",
       "anchor": "v1-9-4",
