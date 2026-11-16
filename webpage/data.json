@@ -2,6 +2,34 @@
     "Launcher": [
         {
             "name": "version",
+            "key": "1.9.6"
+        },
+        {
+            "name": "versiontitle",
+            "key": "修复版本列表出现假版本的问题"
+        },
+        {
+            "name": "versiontitle_en",
+            "key": "Fix: fake entries appeared in the version list"
+        },
+        {
+            "name": "versionlog",
+            "key": "修复版本列表出现「debug-profile」「realms_persistence」等假版本的问题：新版 Minecraft 会把调试界面设置、Realms 状态这类辅助文件写进版本文件夹，之前会被误认成单独的版本。<br>这些假版本本来就无法启动，现在不会再出现在列表里；真实版本的识别不受影响。"
+        },
+        {
+            "name": "versionlog_en",
+            "key": "Fixed entries like \"debug-profile\" and \"realms_persistence\" showing up in the version list: newer Minecraft versions write helper files (debug overlay settings, Realms state) into the version folder, and the launcher mistook them for separate versions.<br>These entries could never be launched and are no longer listed; detection of real installed versions is unchanged."
+        },
+        {
+            "name": "linuxurl",
+            "key": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.6-linux-x64.tar.gz"
+        },
+        {
+            "name": "linuxsha256",
+            "key": "966021b8e9be1fe5389b220a6a65a8b41435a2be2295dd3d10e7903e3584f64c"
+        },
+        {
+            "name": "version",
             "key": "1.9.5"
         },
         {

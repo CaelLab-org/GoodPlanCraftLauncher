@@ -1,8 +1,27 @@
 {
   "schema": 1,
-  "latest": "1.9.5",
-  "updated": "2026-11-09",
+  "latest": "1.9.6",
+  "updated": "2026-11-17",
   "versions": [
+    {
+      "version": "1.9.6",
+      "anchor": "v1-9-6",
+      "date": "2026-11-17",
+      "title": "แก้ไข: รายการปลอมปรากฏในรายการเวอร์ชัน",
+      "log": [
+        "แก้ไขปัญหาที่มีรายการอย่าง \"debug-profile\" และ \"realms_persistence\" ปรากฏในรายการเวอร์ชัน: Minecraft เวอร์ชันใหม่จะเขียนไฟล์เสริม (การตั้งค่าหน้าจอดีบัก สถานะ Realms) ลงในโฟลเดอร์เวอร์ชัน ทำให้ตัวเปิดเกมเข้าใจผิดว่าเป็นเวอร์ชันแยกต่างหาก",
+        "รายการเหล่านี้ไม่เคยเปิดได้ตั้งแต่แรกและจะไม่ปรากฏอีกต่อไป การตรวจจับเวอร์ชันที่ติดตั้งจริงไม่มีการเปลี่ยนแปลง"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.6-Setup.exe",
+        "file": "GPCL-1.9.6-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      },
+      "linux": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.6-linux-x64.tar.gz",
+      "linuxSha256": "966021b8e9be1fe5389b220a6a65a8b41435a2be2295dd3d10e7903e3584f64c",
+      "linuxSize": "104.3 MB"
+    },
     {
       "version": "1.9.5",
       "anchor": "v1-9-5",

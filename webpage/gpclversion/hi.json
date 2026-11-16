@@ -1,8 +1,27 @@
 {
   "schema": 1,
-  "latest": "1.9.5",
-  "updated": "2026-11-09",
+  "latest": "1.9.6",
+  "updated": "2026-11-17",
   "versions": [
+    {
+      "version": "1.9.6",
+      "anchor": "v1-9-6",
+      "date": "2026-11-17",
+      "title": "संस्करण सूची में फ़र्ज़ी प्रविष्टियाँ दिखने की समस्या ठीक की गई",
+      "log": [
+        "संस्करण सूची में \"debug-profile\" और \"realms_persistence\" जैसी प्रविष्टियाँ दिखने की समस्या ठीक की गई: नए Minecraft संस्करण सहायक फ़ाइलें (डिबग ओवरले सेटिंग्स, Realms स्थिति) संस्करण फ़ोल्डर में लिखते हैं, और लॉन्चर उन्हें अलग संस्करण समझ लेता था।",
+        "ये प्रविष्टियाँ पहले कभी लॉन्च नहीं हो सकती थीं और अब सूची में नहीं दिखेंगी; वास्तव में इंस्टॉल किए गए संस्करणों की पहचान पर कोई असर नहीं पड़ा।"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.6-Setup.exe",
+        "file": "GPCL-1.9.6-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      },
+      "linux": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.6-linux-x64.tar.gz",
+      "linuxSha256": "966021b8e9be1fe5389b220a6a65a8b41435a2be2295dd3d10e7903e3584f64c",
+      "linuxSize": "104.3 MB"
+    },
     {
       "version": "1.9.5",
       "anchor": "v1-9-5",

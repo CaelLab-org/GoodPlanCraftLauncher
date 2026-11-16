@@ -1,8 +1,27 @@
 {
   "schema": 1,
-  "latest": "1.9.5",
-  "updated": "2026-11-09",
+  "latest": "1.9.6",
+  "updated": "2026-11-17",
   "versions": [
+    {
+      "version": "1.9.6",
+      "anchor": "v1-9-6",
+      "date": "2026-11-17",
+      "title": "Corretto: voci fittizie nell'elenco delle versioni",
+      "log": [
+        "Corretto un problema per cui nell'elenco delle versioni comparivano voci come \"debug-profile\" e \"realms_persistence\": le nuove versioni di Minecraft scrivono file ausiliari (impostazioni dell'overlay di debug, stato dei Realms) nella cartella della versione e il launcher li scambiava per versioni separate.",
+        "Queste voci non potevano essere avviate e non compaiono più; il riconoscimento delle versioni realmente installate resta invariato."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.6-Setup.exe",
+        "file": "GPCL-1.9.6-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      },
+      "linux": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.6-linux-x64.tar.gz",
+      "linuxSha256": "966021b8e9be1fe5389b220a6a65a8b41435a2be2295dd3d10e7903e3584f64c",
+      "linuxSize": "104.3 MB"
+    },
     {
       "version": "1.9.5",
       "anchor": "v1-9-5",

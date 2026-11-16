@@ -1,8 +1,27 @@
 {
   "schema": 1,
-  "latest": "1.9.5",
-  "updated": "2026-11-09",
+  "latest": "1.9.6",
+  "updated": "2026-11-17",
   "versions": [
+    {
+      "version": "1.9.6",
+      "anchor": "v1-9-6",
+      "date": "2026-11-17",
+      "title": "رفع مشکل نمایش نسخه‌های جعلی در فهرست نسخه‌ها",
+      "log": [
+        "رفع مشکلی که در آن ورودی‌هایی مانند «debug-profile» و «realms_persistence» در فهرست نسخه‌ها ظاهر می‌شدند: نسخه‌های جدیدتر Minecraft فایل‌های کمکی (تنظیمات لایه اشکال‌زدایی و وضعیت Realms) را در پوشه نسخه می‌نویسند و راه‌انداز آن‌ها را نسخه‌های جداگانه می‌پنداشت.",
+        "این ورودی‌ها اصلاً قابل اجرا نبودند و دیگر در فهرست نمایش داده نمی‌شوند؛ شناسایی نسخه‌های واقعی نصب‌شده تغییری نکرده است."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.6-Setup.exe",
+        "file": "GPCL-1.9.6-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      },
+      "linux": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.6-linux-x64.tar.gz",
+      "linuxSha256": "966021b8e9be1fe5389b220a6a65a8b41435a2be2295dd3d10e7903e3584f64c",
+      "linuxSize": "104.3 MB"
+    },
     {
       "version": "1.9.5",
       "anchor": "v1-9-5",

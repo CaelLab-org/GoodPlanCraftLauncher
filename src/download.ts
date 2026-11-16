@@ -1045,6 +1045,18 @@ export function updateVersionLastPlayed(versionId: string, targetDir?: string): 
 }
 
 
+// 版本 JSON 必须能跑：有 mainClass 或 inheritsFrom。新版 MC 会往版本文件夹里写
+// debug-profile.json（F3 调试界面设置）、realms_persistence.json（Realms 新闻）这类辅助文件，
+// 不能当版本注册
+function isVersionJson(versionDir: string, file: string): boolean {
+  try {
+    const data = JSON.parse(fs.readFileSync(path.join(versionDir, file), 'utf8'));
+    return !!data && typeof data === 'object' && ('mainClass' in data || 'inheritsFrom' in data);
+  } catch {
+    return false;
+  }
+}
+
 function scanVersionsInDir(targetDir: string, silent: boolean = false): string[] {
   const versionsDir: string = path.join(targetDir, 'versions');
   if (!fs.existsSync(versionsDir)) {
@@ -1067,10 +1079,10 @@ function scanVersionsInDir(targetDir: string, silent: boolean = false): string[]
         continue;
       }
 
-      const jsonFiles: string[] = files.filter((f: string) => f.endsWith('.json'));
+      const jsonFiles: string[] = files.filter((f: string) => f.endsWith('.json') && isVersionJson(versionDir, f));
       if (jsonFiles.length === 0) {
         skippedVersions.push(entry.name);
-        if (!silent) writeLog(`扫描本地版本：跳过 "${entry.name}"（无 .json 文件）`);
+        if (!silent) writeLog(`扫描本地版本：跳过 "${entry.name}"（无有效的版本 JSON）`);
         continue;
       }
 

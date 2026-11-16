@@ -1,8 +1,27 @@
 {
   "schema": 1,
-  "latest": "1.9.5",
-  "updated": "2026-11-09",
+  "latest": "1.9.6",
+  "updated": "2026-11-17",
   "versions": [
+    {
+      "version": "1.9.6",
+      "anchor": "v1-9-6",
+      "date": "2026-11-17",
+      "title": "Pembetulan: entri palsu dalam senarai versi",
+      "log": [
+        "Pembetulan entri seperti \"debug-profile\" dan \"realms_persistence\" yang muncul dalam senarai versi: Minecraft versi baharu menulis fail bantuan (tetapan tindan debug, status Realms) ke dalam folder versi, dan pelancar menganggapnya sebagai versi berasingan.",
+        "Entri ini tidak boleh dilancarkan sebelum ini dan kini tidak lagi dipaparkan; pengesanan versi yang benar-benar dipasang tidak berubah."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.6-Setup.exe",
+        "file": "GPCL-1.9.6-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      },
+      "linux": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.6-linux-x64.tar.gz",
+      "linuxSha256": "966021b8e9be1fe5389b220a6a65a8b41435a2be2295dd3d10e7903e3584f64c",
+      "linuxSize": "104.3 MB"
+    },
     {
       "version": "1.9.5",
       "anchor": "v1-9-5",

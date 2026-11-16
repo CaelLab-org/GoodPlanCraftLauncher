@@ -1,8 +1,27 @@
 {
   "schema": 1,
-  "latest": "1.9.5",
-  "updated": "2026-11-09",
+  "latest": "1.9.6",
+  "updated": "2026-11-17",
   "versions": [
+    {
+      "version": "1.9.6",
+      "anchor": "v1-9-6",
+      "date": "2026-11-17",
+      "title": "সংস্করণ তালিকায় ভুয়া এন্ট্রি দেখানোর সমস্যা ঠিক করা হয়েছে",
+      "log": [
+        "সংস্করণ তালিকায় \"debug-profile\", \"realms_persistence\" এর মতো এন্ট্রি দেখা যাওয়ার সমস্যা ঠিক করা হয়েছে: নতুন Minecraft সংস্করণগুলো সহায়ক ফাইল (ডিবাগ ওভারলে সেটিংস, Realms অবস্থা) সংস্করণ ফোল্ডারে লেখে, আর লঞ্চার সেগুলোকে আলাদা সংস্করণ ভেবে ভুল করত।",
+        "এই এন্ট্রিগুলো আগে কখনোই চালানো যেত না এবং এখন আর তালিকায় দেখা যাবে না; সত্যিই ইনস্টল করা সংস্করণ শনাক্তকরণে কোনো পরিবর্তন নেই।"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.6-Setup.exe",
+        "file": "GPCL-1.9.6-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      },
+      "linux": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.6-linux-x64.tar.gz",
+      "linuxSha256": "966021b8e9be1fe5389b220a6a65a8b41435a2be2295dd3d10e7903e3584f64c",
+      "linuxSize": "104.3 MB"
+    },
     {
       "version": "1.9.5",
       "anchor": "v1-9-5",

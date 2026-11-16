@@ -1,8 +1,27 @@
 {
   "schema": 1,
-  "latest": "1.9.5",
-  "updated": "2026-11-09",
+  "latest": "1.9.6",
+  "updated": "2026-11-17",
   "versions": [
+    {
+      "version": "1.9.6",
+      "anchor": "v1-9-6",
+      "date": "2026-11-17",
+      "title": "버전 목록에 가짜 항목이 나타나는 문제 수정",
+      "log": [
+        "버전 목록에 \"debug-profile\", \"realms_persistence\" 같은 가짜 항목이 표시되는 문제를 수정했습니다. 최신 Minecraft는 디버그 화면 설정, Realms 상태 같은 보조 파일을 버전 폴더에 저장하는데, 이전에는 이것들이 별도의 버전으로 잘못 인식되었습니다.",
+        "이 항목들은 원래 실행할 수 없었으며 이제는 목록에 나타나지 않습니다. 실제 설치된 버전 인식에는 영향이 없습니다."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.6-Setup.exe",
+        "file": "GPCL-1.9.6-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      },
+      "linux": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.6-linux-x64.tar.gz",
+      "linuxSha256": "966021b8e9be1fe5389b220a6a65a8b41435a2be2295dd3d10e7903e3584f64c",
+      "linuxSize": "104.3 MB"
+    },
     {
       "version": "1.9.5",
       "anchor": "v1-9-5",

@@ -255,17 +255,18 @@ ipcMain.handle('check-for-updates', async (_: any, locale: string = 'en-US') => 
     let linuxDownloadUrl: string | null = null;
     let linuxSha256: string | null = null;
     try {
+      // versions[0] / 第一组是最新版本，旧版本条目可能还留着过期的 linux 字段，所以只有第一个命中的算数
       if (data && Array.isArray(data.versions)) {
         for (const entry of data.versions) {
-          if (entry && typeof entry.linux === 'string' && entry.linux) { linuxDownloadUrl = entry.linux; }
-          if (entry && typeof entry.linuxSha256 === 'string' && entry.linuxSha256) { linuxSha256 = entry.linuxSha256; }
+          if (!linuxDownloadUrl && entry && typeof entry.linux === 'string' && entry.linux) { linuxDownloadUrl = entry.linux; }
+          if (!linuxSha256 && entry && typeof entry.linuxSha256 === 'string' && entry.linuxSha256) { linuxSha256 = entry.linuxSha256; }
         }
       } else if (data && Array.isArray(data.Launcher)) {
         let haveVersion: boolean = false;
         for (const item of data.Launcher) {
           if (item?.name === 'version' && item.key) haveVersion = true;
-          if (haveVersion && item?.name === 'linuxurl' && item.key) linuxDownloadUrl = item.key;
-          if (haveVersion && item?.name === 'linuxsha256' && item.key) linuxSha256 = item.key;
+          if (haveVersion && !linuxDownloadUrl && item?.name === 'linuxurl' && item.key) linuxDownloadUrl = item.key;
+          if (haveVersion && !linuxSha256 && item?.name === 'linuxsha256' && item.key) linuxSha256 = item.key;
         }
       }
     } catch (e: any) {
