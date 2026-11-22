@@ -39,57 +39,26 @@
   "features": {
     "tag": "Funktionen",
     "title": "Kernfunktionen",
-    "desc": "Praktische Werkzeuge für Spieler, jedes darauf ausgelegt, dich schneller ins Spiel zu bringen",
+    "desc": "Von der Version bis zum Spiel — die lästigen Schritte dazwischen übernimmt der Launcher.",
     "items": [
       {
-        "title": "Zwei Anmeldemodi",
-        "desc": "Microsoft- und Offline-Anmeldung, jederzeit umschaltbar; der Offline-Modus braucht keine Online-Verifizierung."
+        "title": "Versionen und Loader",
+        "desc": "Vanilla, Forge, NeoForge, Fabric und OptiFine werden aus offiziellen Quellen installiert; Java und Arbeitsspeicher werden passend zum Rechner eingestellt, und die Versionen bleiben voneinander getrennt."
       },
       {
-        "title": "Mod-Downloads integriert",
-        "desc": "Durchsuche Modrinth und CurseForge und installiere Mods, Shader oder Ressourcenpakete in den Ordner, den die gewählte Version tatsächlich nutzt."
+        "title": "Mods und Modpacks",
+        "desc": "Durchsuche Modrinth und CurseForge direkt im Launcher; benötigte Abhängigkeiten werden ergänzt, Mods, Shader, Ressourcenpakete und Modpacks landen im jeweils richtigen Ordner."
       },
       {
-        "title": "Vier Mod-Loader",
-        "desc": "Forge, NeoForge, Fabric und OptiFine werden aus offiziellen Quellen installiert; die Java-Version wird vorher geprüft."
+        "title": "Anmeldung",
+        "desc": "Microsoft- und Offline-Modus, mehrere Konten zum Umschalten; die Anmeldung wird gespeichert, du musst dich nicht jedes Mal neu anmelden."
       },
       {
-        "title": "25 Oberflächensprachen",
-        "desc": "Folgt beim ersten Start der Systemsprache; jederzeit in den Einstellungen änderbar."
-      },
-      {
-        "title": "Automatische Versionsverwaltung",
-        "desc": "Minecraft-Versionen mit einem Klick herunterladen, installieren und wechseln, Bibliotheken und Assets werden automatisch verwaltet."
-      },
-      {
-        "title": "Schneller Start",
-        "desc": "Ein schlanker Startablauf und Caching, damit du klickst und spielst, statt zu warten."
-      },
-      {
-        "title": "Java-Laufzeitverwaltung",
-        "desc": "Erkennt und installiert eine Java-Laufzeit automatisch; als Downloadquelle lassen sich Tsinghua, die Nanjing-Universität, Huawei Cloud oder die offizielle Quelle einstellen, bei Fehlern wird die nächste versucht."
-      },
-      {
-        "title": "Theme-Unterstützung",
-        "desc": "Vollständige Unterstützung für hellen und dunklen Modus, mit einstellbarer Oberflächenskalierung für ein einheitliches Bild."
-      },
-      {
-        "title": "Automatische Updates und Wartung",
-        "desc": "Integrierte Update-Prüfung und eine konfigurierbare automatische Log-Bereinigung halten den Launcher mit der Zeit schlank."
-      },
-      {
-        "title": "Absturzhinweise und Fehlerberichte",
-        "desc": "Beendet sich das Spiel ungewöhnlich, erklärt er warum, und kann mit einem Klick einen Fehlerbericht exportieren (Absturzbericht + Logs + Systeminfos)."
-      },
-      {
-        "title": "Panel für laufende Spiele",
-        "desc": "Nach dem Start zeigt ein Panel rechts Version, PID, Laufzeit und Speicherverbrauch und kann das Spiel jederzeit beenden."
-      },
-      {
-        "title": "Eigener Fenstertitel",
-        "desc": "Schreibe deinen eigenen Titel für das Spielfenster, mit Zauberwörtern wie {mc_version} und {time}."
+        "title": "Wenn etwas schiefgeht",
+        "desc": "Beendet sich das Spiel ungewöhnlich, erklärt GPCL warum, zeigt Logs und das Panel für laufende Spiele und exportiert mit einem Klick einen vollständigen Bericht."
       }
-    ]
+    ],
+    "more": "Außerdem: 25 Oberflächensprachen, helles / dunkles Theme, mehrere Spielordner und automatische Updates."
   },
   "shots": {
     "tag": "Screenshots",

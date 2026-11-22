@@ -39,57 +39,26 @@
   "features": {
     "tag": "Özellikler",
     "title": "Temel özellikler",
-    "desc": "Oyunculara yönelik pratik araçlar; her biri sizi oyuna daha hızlı sokmayı amaçlıyor",
+    "desc": "Sürüm kurmaktan dünyaya girmeye kadar can sıkıcı adımlar halledilir.",
     "items": [
       {
-        "title": "İki giriş modu",
-        "desc": "Microsoft ve çevrimdışı giriş, istediğiniz an değiştirilebilir; çevrimdışı modda çevrimiçi doğrulama gerekmez."
+        "title": "Sürümler ve yükleyiciler",
+        "desc": "Vanilla, Forge, NeoForge, Fabric ve OptiFine resmi kaynaklardan kurulur; Java ve bellek makinenize göre ayarlanır, sürümler birbirine karışmaz."
       },
       {
-        "title": "Yerleşik mod indirme",
-        "desc": "Modrinth ve CurseForge'da arayın; modları, shader'ları veya kaynak paketlerini seçili sürümün gerçekten kullandığı klasöre kurun."
+        "title": "Modlar ve modpack’ler",
+        "desc": "Modrinth ve CurseForge’u başlatıcının içinde arayın, gerekli bağımlılıklar otomatik eklenir; modlar, shader’lar, kaynak paketleri ve modpack’ler kendi klasörlerine gider."
       },
       {
-        "title": "Dört mod yükleyici",
-        "desc": "Forge, NeoForge, Fabric ve OptiFine resmi kaynaklardan kurulur; Java sürümü önce kontrol edilir."
+        "title": "Giriş",
+        "desc": "Microsoft ve çevrimdışı giriş, birden fazla hesap hazır; oturum hatırlanır, her seferinde yeniden giriş yapmanız gerekmez."
       },
       {
-        "title": "25 arayüz dili",
-        "desc": "İlk açılışta sistem dilini izler; ayarlardan istediğiniz zaman değiştirebilirsiniz."
-      },
-      {
-        "title": "Otomatik sürüm yönetimi",
-        "desc": "Minecraft sürümlerini tek tıkla indirin, kurun ve değiştirin; kütüphaneler ve varlıklar otomatik halledilir."
-      },
-      {
-        "title": "Hızlı başlatma",
-        "desc": "Sadeleştirilmiş başlatma yolu ve önbellekleme, böylece beklemek yerine tıklayıp oynarsınız."
-      },
-      {
-        "title": "Java çalışma zamanı yönetimi",
-        "desc": "Java çalışma zamanını otomatik algılar ve kurar; indirme kaynağı Tsinghua, Nanjing University, Huawei Cloud veya resmi kaynak olarak ayarlanabilir, başarısız olursa bir sonrakine geçilir."
-      },
-      {
-        "title": "Tema desteği",
-        "desc": "Tam açık ve koyu mod desteği, tutarlı bir görünüm için ayarlanabilir arayüz ölçekleme."
-      },
-      {
-        "title": "Otomatik güncelleme ve bakım",
-        "desc": "Yerleşik güncelleme denetimi ve yapılandırılabilir otomatik günlük temizliği, başlatıcıyı zamanla yalın tutar."
-      },
-      {
-        "title": "Çökme bildirimleri ve hata raporları",
-        "desc": "Oyun anormal sonlanınca nedenini açıklar ve tek tıkla hata raporu dışa aktarabilir (çökme raporu + günlükler + sistem bilgisi)."
-      },
-      {
-        "title": "Çalışma paneli",
-        "desc": "Başlatmadan sonra sağdaki panel sürümü, PID'yi, çalışma süresini ve bellek kullanımını gösterir, oyunu istediğiniz an sonlandırabilir."
-      },
-      {
-        "title": "Özel pencere başlığı",
-        "desc": "Oyun penceresinin başlığını kendiniz yazın; {mc_version} ve {time} gibi sihirli sözcükler desteklenir."
+        "title": "Bir sorun çıktığında",
+        "desc": "Oyun anormal sonlanırsa GPCL nedenini açıklar, günlükleri ve çalışma panelini gösterir, tek tıkla tam rapor dışa aktarır."
       }
-    ]
+    ],
+    "more": "Ayrıca: 25 arayüz dili, açık / koyu tema, birden fazla oyun klasörü ve otomatik güncellemeler."
   },
   "shots": {
     "tag": "Ekran görüntüleri",

@@ -39,57 +39,26 @@
   "features": {
     "tag": "Tính năng",
     "title": "Tính năng chính",
-    "desc": "Công cụ thiết thực cho người chơi, mỗi thứ đều nhằm giúp bạn vào game nhanh hơn",
+    "desc": "Từ cài phiên bản đến vào thế giới — những bước phiền phức đã được xử lý.",
     "items": [
       {
-        "title": "Hai cách đăng nhập",
-        "desc": "Đăng nhập Microsoft và ngoại tuyến, chuyển đổi bất cứ lúc nào; chế độ ngoại tuyến không cần xác minh trực tuyến."
+        "title": "Phiên bản và trình tải",
+        "desc": "Vanilla, Forge, NeoForge, Fabric và OptiFine được cài từ nguồn chính thức; Java và bộ nhớ được đặt theo máy của bạn, các phiên bản không ảnh hưởng lẫn nhau."
       },
       {
-        "title": "Tải mod tích hợp",
-        "desc": "Tìm trên Modrinth và CurseForge, rồi cài mod, shader hoặc gói tài nguyên vào thư mục mà phiên bản đã chọn thực sự dùng."
+        "title": "Mod và modpack",
+        "desc": "Tìm Modrinth và CurseForge ngay trong trình khởi chạy, dependency cần thiết được thêm tự động; mod, shader, gói tài nguyên và modpack vào đúng thư mục của chúng."
       },
       {
-        "title": "Bốn trình tải mod",
-        "desc": "Forge, NeoForge, Fabric và OptiFine được cài từ nguồn chính thức, kiểm tra phiên bản Java trước."
+        "title": "Đăng nhập",
+        "desc": "Đăng nhập Microsoft và chế độ ngoại tuyến, nhiều tài khoản sẵn sàng chuyển; phiên đăng nhập được ghi nhớ, không cần đăng nhập lại mỗi lần."
       },
       {
-        "title": "25 ngôn ngữ giao diện",
-        "desc": "Theo ngôn ngữ hệ thống lần đầu khởi chạy; đổi bất cứ lúc nào trong cài đặt."
-      },
-      {
-        "title": "Quản lý phiên bản tự động",
-        "desc": "Tải, cài và chuyển phiên bản Minecraft chỉ một cú nhấp, thư viện và tài nguyên được xử lý tự động."
-      },
-      {
-        "title": "Khởi động nhanh",
-        "desc": "Luồng khởi chạy tinh gọn cùng bộ nhớ đệm giúp bạn bấm là chơi, không phải chờ."
-      },
-      {
-        "title": "Quản lý môi trường Java",
-        "desc": "Tự phát hiện và cài môi trường Java; nguồn tải có thể chọn Thanh Hoa, Đại học Nam Kinh, Huawei Cloud hoặc nguồn chính thức, lỗi thì chuyển sang nguồn kế tiếp."
-      },
-      {
-        "title": "Hỗ trợ giao diện sáng tối",
-        "desc": "Hỗ trợ đầy đủ chế độ sáng và tối, có thể điều chỉnh tỉ lệ giao diện để hiển thị đồng nhất."
-      },
-      {
-        "title": "Tự động cập nhật và bảo trì",
-        "desc": "Kiểm tra cập nhật tích hợp và tự động dọn nhật ký có thể cấu hình giúp trình khởi chạy luôn gọn nhẹ theo thời gian."
-      },
-      {
-        "title": "Thông báo sự cố và báo cáo lỗi",
-        "desc": "Khi game thoát bất thường, nó giải thích nguyên nhân và có thể xuất báo cáo lỗi chỉ một cú nhấp (báo cáo sự cố + nhật ký + thông tin hệ thống)."
-      },
-      {
-        "title": "Bảng trạng thái khi chạy",
-        "desc": "Sau khi khởi chạy, bảng bên phải hiển thị phiên bản, PID, thời gian chạy và bộ nhớ, có thể kết thúc game bất cứ lúc nào."
-      },
-      {
-        "title": "Tiêu đề cửa sổ tùy chỉnh",
-        "desc": "Tự viết tiêu đề cửa sổ game, hỗ trợ từ khóa như {mc_version} và {time}."
+        "title": "Khi có sự cố",
+        "desc": "Nếu game thoát bất thường, GPCL giải thích nguyên nhân, hiển thị nhật ký và bảng trạng thái khi chạy, đồng thời xuất báo cáo đầy đủ chỉ một cú nhấp."
       }
-    ]
+    ],
+    "more": "Ngoài ra: 25 ngôn ngữ giao diện, giao diện sáng / tối, nhiều thư mục game và tự động cập nhật."
   },
   "shots": {
     "tag": "Ảnh chụp",

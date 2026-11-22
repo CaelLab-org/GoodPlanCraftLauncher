@@ -39,57 +39,26 @@
   "features": {
     "tag": "Funzionalità",
     "title": "Funzioni principali",
-    "desc": "Strumenti pratici per i giocatori, ognuno pensato per farti entrare in gioco più in fretta",
+    "desc": "Dall’installazione di una versione all’ingresso nel mondo: le parti noiose sono già gestite.",
     "items": [
       {
-        "title": "Due modalità di accesso",
-        "desc": "Accesso Microsoft e offline, intercambiabili in qualsiasi momento; la modalità offline non richiede verifica online."
+        "title": "Versioni e loader",
+        "desc": "Vanilla, Forge, NeoForge, Fabric e OptiFine si installano dalle fonti ufficiali; Java e memoria vengono impostati per il tuo computer e le versioni restano separate."
       },
       {
-        "title": "Download di mod integrati",
-        "desc": "Cerca su Modrinth e CurseForge e installa mod, shader o resource pack nella cartella usata davvero dalla versione selezionata."
+        "title": "Mod e modpack",
+        "desc": "Cerca su Modrinth e CurseForge dentro il launcher, con le dipendenze necessarie aggiunte; mod, shader, resource pack e modpack finiscono ciascuno nella cartella giusta."
       },
       {
-        "title": "Quattro loader di mod",
-        "desc": "Forge, NeoForge, Fabric e OptiFine si installano dalle fonti ufficiali, controllando prima la versione di Java."
+        "title": "Accesso",
+        "desc": "Accesso Microsoft e modalità offline, con più account pronti da cambiare; la sessione viene ricordata, così non devi riaccedere ogni volta."
       },
       {
-        "title": "25 lingue dell'interfaccia",
-        "desc": "Segue la lingua di sistema al primo avvio; si può cambiare nelle impostazioni."
-      },
-      {
-        "title": "Gestione automatica delle versioni",
-        "desc": "Scarica, installa e cambia versione di Minecraft con un clic, con librerie e asset gestiti automaticamente."
-      },
-      {
-        "title": "Avvio rapido",
-        "desc": "Percorso di avvio snello e cache, così clicchi e giochi invece di aspettare."
-      },
-      {
-        "title": "Gestione del runtime Java",
-        "desc": "Rileva e installa automaticamente un runtime Java; la fonte di download può essere Tsinghua, Nanjing University, Huawei Cloud o la fonte ufficiale, passando alla successiva in caso di errore."
-      },
-      {
-        "title": "Supporto ai temi",
-        "desc": "Supporto completo a modalità chiara e scura, con scala dell'interfaccia regolabile per un aspetto coerente."
-      },
-      {
-        "title": "Aggiornamenti e manutenzione automatici",
-        "desc": "Controlli degli aggiornamenti integrati e pulizia automatica dei log configurabile mantengono il launcher snello nel tempo."
-      },
-      {
-        "title": "Avvisi di crash e segnalazioni di errore",
-        "desc": "Quando il gioco termina in modo anomalo spiega il perché e può esportare una segnalazione di errore con un clic (rapporto di crash + log + info di sistema)."
-      },
-      {
-        "title": "Pannello di esecuzione",
-        "desc": "Dopo l'avvio, un pannello a destra mostra versione, PID, tempo di attività e uso della memoria, e può terminare il gioco in qualsiasi momento."
-      },
-      {
-        "title": "Titolo della finestra personalizzato",
-        "desc": "Scrivi il titolo che vuoi per la finestra di gioco, con parole magiche come {mc_version} e {time}."
+        "title": "Quando qualcosa si rompe",
+        "desc": "Se il gioco termina in modo anomalo, GPCL spiega il perché, mostra i log e il pannello di esecuzione, ed esporta un report completo con un clic."
       }
-    ]
+    ],
+    "more": "Inoltre: 25 lingue dell’interfaccia, temi chiaro / scuro, più cartelle di gioco e aggiornamenti automatici."
   },
   "shots": {
     "tag": "Screenshot",

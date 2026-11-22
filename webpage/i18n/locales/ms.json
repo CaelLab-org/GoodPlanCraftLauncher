@@ -39,57 +39,26 @@
   "features": {
     "tag": "Ciri",
     "title": "Ciri utama",
-    "desc": "Alat praktikal untuk pemain, setiap satu bertujuan memudahkan anda masuk ke permainan dengan lebih cepat",
+    "desc": "Dari memasang versi hingga masuk ke dunia — bahagian yang menyusahkan sudah diurus.",
     "items": [
       {
-        "title": "Dua mod log masuk",
-        "desc": "Log masuk Microsoft dan luar talian, boleh ditukar bila-bila masa; mod luar talian tidak memerlukan pengesahan dalam talian."
+        "title": "Versi dan pemuat",
+        "desc": "Vanilla, Forge, NeoForge, Fabric dan OptiFine dipasang dari sumber rasmi; Java dan memori dilaraskan mengikut mesin anda, dan setiap versi kekal berasingan."
       },
       {
-        "title": "Muat turun mod terbina dalam",
-        "desc": "Cari di Modrinth dan CurseForge, kemudian pasang mod, shader atau pek sumber ke folder yang benar-benar digunakan versi dipilih."
+        "title": "Mod dan modpack",
+        "desc": "Cari di Modrinth dan CurseForge dalam pelancar, dengan kebergantungan wajib diisi automatik; mod, shader, pek sumber dan modpack masuk ke folder masing-masing."
       },
       {
-        "title": "Empat pemuat mod",
-        "desc": "Forge, NeoForge, Fabric dan OptiFine dipasang dari sumber rasmi, dengan versi Java disemak dahulu."
+        "title": "Log masuk",
+        "desc": "Log masuk Microsoft dan mod luar talian, dengan beberapa akaun sedia ditukar; sesi diingati, jadi anda tidak perlu log masuk semula setiap kali."
       },
       {
-        "title": "25 bahasa antara muka",
-        "desc": "Mengikut bahasa sistem pada pelancaran pertama; boleh ditukar bila-bila masa dalam tetapan."
-      },
-      {
-        "title": "Pengurusan versi automatik",
-        "desc": "Muat turun, pasang dan tukar versi Minecraft dengan satu klik, dengan pustaka dan aset diuruskan secara automatik."
-      },
-      {
-        "title": "Permulaan pantas",
-        "desc": "Laluan pelancaran dan cache yang dipermudahkan, jadi anda klik dan terus bermain tanpa menunggu."
-      },
-      {
-        "title": "Pengurusan runtime Java",
-        "desc": "Mengesan dan memasang runtime Java secara automatik; sumber muat turun boleh ditetapkan kepada Tsinghua, Universiti Nanjing, Huawei Cloud atau sumber rasmi, dan beralih ke sumber seterusnya jika gagal."
-      },
-      {
-        "title": "Sokongan tema",
-        "desc": "Sokongan penuh mod cerah dan gelap, dengan penskalaan antara muka yang boleh dilaras untuk rupa yang konsisten."
-      },
-      {
-        "title": "Kemas kini dan penyelenggaraan automatik",
-        "desc": "Semakan kemas kini terbina dalam dan pembersihan log automatik yang boleh dikonfigurasikan memastikan pelancar kekal ringan dari semasa ke semasa."
-      },
-      {
-        "title": "Notis ranap dan laporan ralat",
-        "desc": "Apabila permainan keluar secara tidak normal, ia menerangkan puncanya dan boleh mengeksport laporan ralat dengan satu klik (laporan ranap + log + maklumat sistem)."
-      },
-      {
-        "title": "Panel berjalan",
-        "desc": "Selepas dilancarkan, panel di sebelah kanan menunjukkan versi, PID, tempoh berjalan dan penggunaan memori, serta boleh menamatkan permainan bila-bila masa."
-      },
-      {
-        "title": "Tajuk tetingkap tersuai",
-        "desc": "Tulis tajuk tetingkap permainan anda sendiri, dengan kata ajaib seperti {mc_version} dan {time}."
+        "title": "Apabila berlaku masalah",
+        "desc": "Jika permainan keluar secara tidak normal, GPCL menerangkan puncanya, menunjukkan log dan panel berjalan, serta mengeksport laporan penuh dengan satu klik."
       }
-    ]
+    ],
+    "more": "Juga: 25 bahasa antara muka, tema cerah / gelap, beberapa folder permainan dan kemas kini automatik."
   },
   "shots": {
     "tag": "Tangkapan skrin",

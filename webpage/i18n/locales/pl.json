@@ -39,57 +39,26 @@
   "features": {
     "tag": "Funkcje",
     "title": "Najważniejsze funkcje",
-    "desc": "Praktyczne narzędzia dla graczy — każde ma skrócić drogę do gry",
+    "desc": "Od instalacji wersji po wejście do świata — nudne kroki mamy z głowy.",
     "items": [
       {
-        "title": "Dwa tryby logowania",
-        "desc": "Logowanie przez Microsoft i offline, przełączane w każdej chwili; tryb offline nie wymaga weryfikacji online."
+        "title": "Wersje i loadery",
+        "desc": "Vanilla, Forge, NeoForge, Fabric i OptiFine instalują się z oficjalnych źródeł; Java i pamięć są dopasowane do komputera, a wersje nie mieszają się ze sobą."
       },
       {
-        "title": "Wbudowane pobieranie modów",
-        "desc": "Wyszukuj w Modrinth i CurseForge i instaluj mody, shadery lub paczki zasobów w folderze, którego naprawdę używa wybrana wersja."
+        "title": "Mody i modpacki",
+        "desc": "Wyszukuj w Modrinth i CurseForge w launcherze, a wymagane zależności są dodawane automatycznie; mody, shadery, paczki zasobów i modpacki trafiają do właściwych folderów."
       },
       {
-        "title": "Cztery loadery modów",
-        "desc": "Forge, NeoForge, Fabric i OptiFine instalują się z oficjalnych źródeł, po sprawdzeniu wersji Javy."
+        "title": "Logowanie",
+        "desc": "Logowanie Microsoft i tryb offline, z wieloma kontami gotowymi do przełączenia; sesja jest zapamiętywana, więc nie musisz logować się za każdym razem."
       },
       {
-        "title": "25 języków interfejsu",
-        "desc": "Przy pierwszym uruchomieniu podąża za językiem systemu; można go zmienić w ustawieniach."
-      },
-      {
-        "title": "Automatyczne zarządzanie wersjami",
-        "desc": "Pobieranie, instalacja i przełączanie wersji Minecraft jednym kliknięciem; biblioteki i zasoby są obsługiwane automatycznie."
-      },
-      {
-        "title": "Szybki start",
-        "desc": "Uproszczona ścieżka startu i cache — klikasz i grasz, zamiast czekać."
-      },
-      {
-        "title": "Zarządzanie środowiskiem Java",
-        "desc": "Wykrywa i instaluje środowisko Java automatycznie; źródło pobierania można ustawić na Tsinghua, Nanjing University, Huawei Cloud lub oficjalne, a przy błędzie przechodzi do kolejnego."
-      },
-      {
-        "title": "Obsługa motywów",
-        "desc": "Pełna obsługa trybu jasnego i ciemnego, z regulowaną skalą interfejsu dla spójnego wyglądu."
-      },
-      {
-        "title": "Automatyczne aktualizacje i konserwacja",
-        "desc": "Wbudowane sprawdzanie aktualizacji i konfigurowalne automatyczne czyszczenie logów utrzymują launcher w formie."
-      },
-      {
-        "title": "Powiadomienia o awariach i raporty błędów",
-        "desc": "Gdy gra zakończy się nieprawidłowo, launcher wyjaśnia dlaczego i jednym kliknięciem eksportuje raport błędu (raport awarii + logi + informacje o systemie)."
-      },
-      {
-        "title": "Panel uruchomionej gry",
-        "desc": "Po starcie panel po prawej pokazuje wersję, PID, czas działania i użycie pamięci oraz pozwala w każdej chwili zakończyć grę."
-      },
-      {
-        "title": "Własny tytuł okna",
-        "desc": "Ustaw własny tytuł okna gry, z magicznymi słowami takimi jak {mc_version} i {time}."
+        "title": "Gdy coś się zepsuje",
+        "desc": "Gdy gra zakończy się nieprawidłowo, GPCL wyjaśnia dlaczego, pokazuje logi i panel uruchomionej gry oraz eksportuje pełny raport jednym kliknięciem."
       }
-    ]
+    ],
+    "more": "Do tego: 25 języków interfejsu, jasny / ciemny motyw, wiele folderów gry i automatyczne aktualizacje."
   },
   "shots": {
     "tag": "Zrzuty ekranu",

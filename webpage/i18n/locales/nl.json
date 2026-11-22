@@ -39,57 +39,26 @@
   "features": {
     "tag": "Functies",
     "title": "Belangrijkste functies",
-    "desc": "Praktische hulpmiddelen voor spelers, allemaal gericht op sneller in het spel komen",
+    "desc": "Van het installeren van een versie tot het betreden van een wereld — de vervelende stappen zijn al geregeld.",
     "items": [
       {
-        "title": "Twee manieren om in te loggen",
-        "desc": "Microsoft- en offlinelogin, altijd te wisselen; de offlinemodus heeft geen online verificatie nodig."
+        "title": "Versies en loaders",
+        "desc": "Vanilla, Forge, NeoForge, Fabric en OptiFine worden uit officiële bronnen geïnstalleerd; Java en geheugen worden op je machine afgestemd en versies blijven gescheiden."
       },
       {
-        "title": "Mod-downloads ingebouwd",
-        "desc": "Zoek op Modrinth en CurseForge en installeer mods, shaders of resourcepacks in de map die de gekozen versie echt gebruikt."
+        "title": "Mods en modpacks",
+        "desc": "Zoek in Modrinth en CurseForge vanuit de launcher, met vereiste afhankelijkheden erbij; mods, shaders, resourcepacks en modpacks gaan elk naar de juiste map."
       },
       {
-        "title": "Vier modladers",
-        "desc": "Forge, NeoForge, Fabric en OptiFine worden uit officiële bronnen geïnstalleerd, met eerst een controle van de Java-versie."
+        "title": "Inloggen",
+        "desc": "Microsoft- en offlinemodus, met meerdere accounts klaar om te wisselen; je sessie wordt onthouden, dus je hoeft niet elke keer opnieuw in te loggen."
       },
       {
-        "title": "25 interfacetalen",
-        "desc": "Volgt bij de eerste start je systeemtaal; later altijd aan te passen in de instellingen."
-      },
-      {
-        "title": "Automatisch versiebeheer",
-        "desc": "Minecraft-versies downloaden, installeren en wisselen met één klik; bibliotheken en assets worden automatisch geregeld."
-      },
-      {
-        "title": "Snel opstarten",
-        "desc": "Een korte opstartroute met caching, zodat je klikt en speelt in plaats van te wachten."
-      },
-      {
-        "title": "Beheer van de Java-runtime",
-        "desc": "Detecteert en installeert automatisch een Java-runtime; als downloadbron kun je Tsinghua, de Universiteit van Nanjing, Huawei Cloud of de officiële bron kiezen, met automatische terugval naar de volgende bij een fout."
-      },
-      {
-        "title": "Thema-ondersteuning",
-        "desc": "Volledige ondersteuning voor licht en donker thema, met instelbare schaal van de interface voor een consistent uiterlijk."
-      },
-      {
-        "title": "Automatische updates en onderhoud",
-        "desc": "Ingebouwde updatecontrole en instelbaar automatisch opschonen van logs houden de launcher op termijn slank."
-      },
-      {
-        "title": "Crashmeldingen en foutrapporten",
-        "desc": "Als het spel abnormaal afsluit, lees je waarom, en kun je met één klik een foutrapport exporteren (crashrapport + logs + systeeminformatie)."
-      },
-      {
-        "title": "Paneel tijdens het spelen",
-        "desc": "Na het starten toont een paneel rechts de versie, PID, speelduur en geheugengebruik, en kun je het spel altijd afsluiten."
-      },
-      {
-        "title": "Eigen venstertitel",
-        "desc": "Schrijf je eigen titel voor het spelvenster, met magische woorden zoals {mc_version} en {time}."
+        "title": "Als er iets misgaat",
+        "desc": "Als het spel abnormaal afsluit, legt GPCL uit waarom, toont het de logs en het paneel tijdens het spelen, en exporteert met één klik een volledig rapport."
       }
-    ]
+    ],
+    "more": "Ook: 25 interfacetalen, licht / donker thema, meerdere spelmappen en automatische updates."
   },
   "shots": {
     "tag": "Schermafbeeldingen",

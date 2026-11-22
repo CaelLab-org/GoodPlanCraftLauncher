@@ -39,57 +39,26 @@
   "features": {
     "tag": "Fitur",
     "title": "Fitur utama",
-    "desc": "Perkakas praktis untuk pemain, semuanya bertujuan membuat Anda masuk ke game lebih cepat",
+    "desc": "Dari memasang versi sampai masuk ke dunia — bagian yang merepotkan sudah diurus.",
     "items": [
       {
-        "title": "Dua mode login",
-        "desc": "Login Microsoft dan offline, dapat diganti kapan saja; mode offline tidak memerlukan verifikasi online."
+        "title": "Versi dan pemuat",
+        "desc": "Vanilla, Forge, NeoForge, Fabric, dan OptiFine dipasang dari sumber resmi; Java dan memori disesuaikan dengan mesin Anda, dan tiap versi tetap terpisah."
       },
       {
-        "title": "Unduhan mod bawaan",
-        "desc": "Cari di Modrinth dan CurseForge, lalu pasang mod, shader, atau resource pack ke folder yang benar-benar dipakai versi terpilih."
+        "title": "Mod dan modpack",
+        "desc": "Cari di Modrinth dan CurseForge langsung di peluncur, dengan dependensi wajib dilengkapi; mod, shader, resource pack, dan modpack masuk ke foldernya masing-masing."
       },
       {
-        "title": "Empat pemuat mod",
-        "desc": "Forge, NeoForge, Fabric, dan OptiFine dipasang dari sumber resmi, dengan versi Java diperiksa lebih dulu."
+        "title": "Login",
+        "desc": "Login Microsoft dan mode offline, dengan beberapa akun siap diganti; sesi diingat, jadi tidak perlu login ulang setiap kali."
       },
       {
-        "title": "25 bahasa antarmuka",
-        "desc": "Mengikuti bahasa sistem saat pertama dijalankan; bisa diganti kapan saja di pengaturan."
-      },
-      {
-        "title": "Manajemen versi otomatis",
-        "desc": "Unduh, pasang, dan ganti versi Minecraft dengan satu klik, sementara library dan aset ditangani otomatis."
-      },
-      {
-        "title": "Mulai cepat",
-        "desc": "Jalur peluncuran yang ringkas dan caching, jadi Anda tinggal klik dan bermain tanpa menunggu."
-      },
-      {
-        "title": "Manajemen runtime Java",
-        "desc": "Mendeteksi dan memasang runtime Java secara otomatis; sumber unduhan dapat disetel ke Tsinghua, Universitas Nanjing, Huawei Cloud, atau sumber resmi, lalu beralih ke sumber berikutnya bila gagal."
-      },
-      {
-        "title": "Dukungan tema",
-        "desc": "Dukungan penuh mode terang dan gelap, dengan skala antarmuka yang dapat diatur agar tampilan tetap konsisten."
-      },
-      {
-        "title": "Pembaruan dan perawatan otomatis",
-        "desc": "Pemeriksaan pembaruan bawaan dan pembersihan log otomatis yang dapat diatur menjaga peluncur tetap ringan seiring waktu."
-      },
-      {
-        "title": "Pemberitahuan crash dan laporan kesalahan",
-        "desc": "Saat game tertutup secara tidak normal, ia menjelaskan penyebabnya dan dapat mengekspor laporan kesalahan dengan satu klik (laporan crash + log + info sistem)."
-      },
-      {
-        "title": "Panel saat berjalan",
-        "desc": "Setelah diluncurkan, panel di sebelah kanan menampilkan versi, PID, durasi, dan penggunaan memori, serta dapat mengakhiri game kapan saja."
-      },
-      {
-        "title": "Judul jendela kustom",
-        "desc": "Tulis sendiri judul jendela game, dengan kata ajaib seperti {mc_version} dan {time}."
+        "title": "Saat ada masalah",
+        "desc": "Jika game tertutup secara tidak normal, GPCL menjelaskan penyebabnya, menampilkan log dan panel saat berjalan, serta mengekspor laporan lengkap dengan satu klik."
       }
-    ]
+    ],
+    "more": "Juga: 25 bahasa antarmuka, tema terang / gelap, beberapa folder game, dan pembaruan otomatis."
   },
   "shots": {
     "tag": "Tangkapan layar",

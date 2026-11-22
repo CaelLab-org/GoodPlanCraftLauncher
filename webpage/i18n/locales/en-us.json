@@ -39,57 +39,26 @@
   "features": {
     "tag": "Features",
     "title": "Core features",
-    "desc": "Practical tools for players, each one aimed at getting you into the game faster",
+    "desc": "From installing a version to joining a world — the tedious parts are handled.",
     "items": [
       {
-        "title": "Two login modes",
-        "desc": "Microsoft and offline login, switchable at any time; offline mode needs no online verification."
+        "title": "Versions and loaders",
+        "desc": "Vanilla, Forge, NeoForge, Fabric and OptiFine install from official sources; Java and memory are set for your machine, and versions stay out of each other’s way."
       },
       {
-        "title": "Mod downloads built in",
-        "desc": "Search Modrinth and CurseForge, then install mods, shaders or resource packs into the folder the selected version actually uses."
+        "title": "Mods and modpacks",
+        "desc": "Search Modrinth and CurseForge in the launcher, with required dependencies filled in; mods, shaders, resource packs and modpacks each go to the right folder."
       },
       {
-        "title": "Four mod loaders",
-        "desc": "Forge, NeoForge, Fabric and OptiFine install from the official sources, with the Java version checked first."
+        "title": "Sign-in",
+        "desc": "Microsoft and offline modes, with multiple accounts ready to switch; your session is remembered, so you don’t sign in every time."
       },
       {
-        "title": "25 interface languages",
-        "desc": "Follows your system language on first launch; switch it any time in the settings."
-      },
-      {
-        "title": "Automatic version management",
-        "desc": "Download, install, and switch Minecraft versions in one click, with libraries and assets handled automatically."
-      },
-      {
-        "title": "Fast startup",
-        "desc": "A streamlined launch path and caching, so you click and play instead of waiting."
-      },
-      {
-        "title": "Java runtime management",
-        "desc": "Detects and installs a Java runtime automatically; the download source can be set to Tsinghua, Nanjing University, Huawei Cloud, or the official source, falling back to the next one on failure."
-      },
-      {
-        "title": "Theme support",
-        "desc": "Full light and dark mode support, with adjustable interface scaling for a consistent look."
-      },
-      {
-        "title": "Automatic updates and maintenance",
-        "desc": "Built-in update checks and a configurable automatic log cleanup keep the launcher lean over time."
-      },
-      {
-        "title": "Crash notices and error reports",
-        "desc": "When the game exits abnormally it explains why, and can export an error report in one click (crash report + logs + system info)."
-      },
-      {
-        "title": "Running panel",
-        "desc": "After launch, a panel on the right shows the version, PID, uptime, and memory use, and can end the game at any time."
-      },
-      {
-        "title": "Custom window title",
-        "desc": "Write your own game window title, with magic words such as {mc_version} and {time}."
+        "title": "When something breaks",
+        "desc": "If the game exits abnormally, GPCL explains why, shows the logs and the running panel, and exports a full report in one click."
       }
-    ]
+    ],
+    "more": "Also: 25 interface languages, light / dark themes, multiple game directories and automatic updates."
   },
   "shots": {
     "tag": "Screenshots",

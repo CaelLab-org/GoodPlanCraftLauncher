@@ -40,19 +40,11 @@ const DOCS_LOCALE = {
   'zh-tw': 'zh-Hant/'
 };
 
-const FEATURE_ICONS = [
-  '<circle cx="7.5" cy="15.5" r="4.5"/><path d="m10.8 12.2 8.7-8.7"/><path d="m16 5 3 3"/><path d="m19 8 2-2-3-3-2 2"/>',
-  '<path d="M12 13v8"/><path d="m8 17 4 4 4-4"/><path d="M20 16.7A5 5 0 0 0 18 7h-1.3A8 8 0 1 0 4 15.2"/>',
-  '<path d="m12 2 9 4.9-9 4.9-9-4.9Z"/><path d="m3 12 9 4.9 9-4.9"/><path d="m3 17 9 4.9 9-4.9"/>',
-  '<circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 0 20a15.3 15.3 0 0 1 0-20Z"/>',
-  '<path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/>',
-  '<path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/>',
-  '<path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><path d="M6 2v2"/><path d="M10 2v2"/><path d="M14 2v2"/>',
-  '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
-  '<path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/>',
-  '<path d="m10.29 3.86-8.47 14.14A2 2 0 0 0 3.53 21h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
-  '<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>',
-  '<path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/>'
+const FEATURE_ART = [
+  '<circle cx="100" cy="100" r="72" class="feature-art-bg"/><rect x="54" y="92" width="84" height="48" rx="11" class="feature-art-soft"/><rect x="62" y="80" width="84" height="48" rx="11" class="feature-art-soft"/><rect x="70" y="68" width="84" height="48" rx="11" class="feature-art-fill"/><rect x="84" y="82" width="42" height="7" rx="3.5" class="feature-art-line"/><rect x="84" y="95" width="24" height="7" rx="3.5" class="feature-art-line"/>',
+  '<circle cx="100" cy="100" r="72" class="feature-art-bg"/><rect x="58" y="58" width="38" height="38" rx="9" class="feature-art-soft"/><rect x="104" y="58" width="38" height="38" rx="9" class="feature-art-fill"/><rect x="58" y="104" width="38" height="38" rx="9" class="feature-art-fill"/><rect x="104" y="104" width="38" height="38" rx="9" class="feature-art-soft"/><path d="M123 69v16M115 77h16" class="feature-art-mark"/>',
+  '<circle cx="100" cy="100" r="72" class="feature-art-bg"/><rect x="58" y="54" width="84" height="96" rx="18" class="feature-art-fill"/><circle cx="100" cy="86" r="15" class="feature-art-line"/><rect x="78" y="108" width="44" height="22" rx="11" class="feature-art-line"/><circle cx="136" cy="136" r="14" class="feature-art-line"/><path d="m129 136 5 5 9-10" class="feature-art-check"/>',
+  '<circle cx="100" cy="100" r="72" class="feature-art-bg"/><rect x="56" y="56" width="88" height="64" rx="15" class="feature-art-fill"/><path d="M82 118v22l22-22Z" class="feature-art-fill"/><rect x="74" y="74" width="52" height="7" rx="3.5" class="feature-art-line"/><rect x="74" y="88" width="34" height="7" rx="3.5" class="feature-art-line"/><circle cx="142" cy="138" r="14" class="feature-art-line"/><path d="M142 131v8" class="feature-art-check"/><circle cx="142" cy="145" r="2" class="feature-art-fill"/>'
 ];
 
 const OPENSOURCE_ICONS = [
@@ -129,15 +121,17 @@ function renderTags(tags) {
   return tags.map(tag => `                <span class="hero-tag"><span class="dot"></span>${e(tag)}</span>`).join('\n');
 }
 
-function renderFeatureGrid(site) {
+function renderFeatureStories(site) {
   return site.features.items.map((item, i) => {
-    return `                <div class="feature-card reveal">
-                    <span class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${FEATURE_ICONS[i]}</svg>
-                    </span>
-                    <h3>${e(item.title)}</h3>
-                    <p>${e(item.desc)}</p>
-                </div>`;
+    return `                <article class="feature-story reveal">
+                    <div class="feature-art">
+                        <svg viewBox="0 0 200 200" aria-hidden="true">${FEATURE_ART[i]}</svg>
+                    </div>
+                    <div class="feature-copy">
+                        <h3>${e(item.title)}</h3>
+                        <p>${e(item.desc)}</p>
+                    </div>
+                </article>`;
   }).join('\n');
 }
 
@@ -449,7 +443,8 @@ function buildLocale(locale, templateHome, templateHistory, templateDownload) {
     FEATURES_TAG: e(site.features.tag),
     FEATURES_TITLE: e(site.features.title),
     FEATURES_DESC: e(site.features.desc),
-    FEATURES_GRID: renderFeatureGrid(site),
+    FEATURES_STORIES: renderFeatureStories(site),
+    FEATURES_MORE: e(site.features.more),
     SHOTS_TAG: e(site.shots.tag),
     SHOTS_TITLE: e(site.shots.title),
     SHOTS_DESC: e(site.shots.desc),
