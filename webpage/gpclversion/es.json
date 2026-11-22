@@ -1,8 +1,30 @@
 {
   "schema": 1,
-  "latest": "1.9.7",
+  "latest": "1.10.0",
   "updated": "2026-11-22",
   "versions": [
+    {
+      "version": "1.10.0",
+      "anchor": "v1-10-0",
+      "date": "2026-11-22",
+      "title": "Gestión automática de memoria",
+      "log": [
+        "Nuevo: gestión automática de memoria. Cuando no hay descargas en curso, el lanzador libera su propia memoria en segundo plano y se mantiene en unos 35–70 MB en lugar de 100–200 MB.",
+        "La liberación se omite automáticamente durante las descargas; los juegos en ejecución nunca se ven afectados.",
+        "La función está activada por defecto; se puede desactivar en Ajustes → Juego → Memoria.",
+        "Se eliminó el menú «Más» de la barra superior (herramientas y foro). La optimización de memoria ahora es automática, por lo que el botón «Optimizar ahora» también desapareció.",
+        "«Optimizar memoria antes de iniciar» ahora solo libera la memoria del propio lanzador y nunca afecta a los juegos en ejecución."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.10.0-Setup.exe",
+        "file": "GPCL-1.10.0-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      },
+      "linux": "https://dl.caellab.com/file/games/gpcl/GPCL-1.10.0-linux-x64.tar.gz",
+      "linuxSha256": "170ec7d7465e61b608522983d376d22bf57982ed458a42adb4f5595867afbe8b",
+      "linuxSize": "104.3 MB"
+    },
     {
       "version": "1.9.7",
       "anchor": "v1-9-7",

@@ -1,8 +1,30 @@
 {
   "schema": 1,
-  "latest": "1.9.7",
+  "latest": "1.10.0",
   "updated": "2026-11-22",
   "versions": [
+    {
+      "version": "1.10.0",
+      "anchor": "v1-10-0",
+      "date": "2026-11-22",
+      "title": "Otomatik bellek yönetimi",
+      "log": [
+        "Yeni: otomatik bellek yönetimi. İndirme yapılmadığı zamanlarda başlatıcı kendi belleğini arka planda boşaltır ve 100–200 MB yerine yaklaşık 35–70 MB'da kalır.",
+        "İndirmeler sırasında boşaltma otomatik olarak atlanır; çalışan oyunlara asla dokunulmaz.",
+        "Özellik varsayılan olarak açıktır; Ayarlar → Oyun → Bellek bölümünden kapatılabilir.",
+        "Üstteki 'Daha Fazla' menüsü (araç kutusu ve forum) kaldırıldı. Bellek optimizasyonu artık otomatik olduğu için 'Şimdi optimize et' düğmesi de kaldırıldı.",
+        "'Başlatmadan önce belleği optimize et' artık yalnızca başlatıcının kendi belleğini boşaltır ve çalışan oyunları asla etkilemez."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.10.0-Setup.exe",
+        "file": "GPCL-1.10.0-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      },
+      "linux": "https://dl.caellab.com/file/games/gpcl/GPCL-1.10.0-linux-x64.tar.gz",
+      "linuxSha256": "170ec7d7465e61b608522983d376d22bf57982ed458a42adb4f5595867afbe8b",
+      "linuxSize": "104.3 MB"
+    },
     {
       "version": "1.9.7",
       "anchor": "v1-9-7",

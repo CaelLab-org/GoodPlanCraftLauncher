@@ -103,6 +103,7 @@ export const DEFAULT_SETTINGS = {
     windowWidth: 854,
     windowHeight: 480,
     optimizeBeforeLaunch: false,
+    autoMemoryManage: true,
     autoLanguage: true,
     language: 'zh_cn',
     versionIsolation: 'all',
@@ -114,7 +115,6 @@ export const DEFAULT_SETTINGS = {
     scale: '110',
     skipSplash: false,
     tipFrequency: 'rare',
-    enableMore: false,
     avatarSize: 50
   },
   download: {

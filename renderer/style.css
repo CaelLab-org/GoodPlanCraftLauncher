@@ -2545,211 +2545,6 @@ select {
   box-shadow: 0 4px 12px rgba(255, 87, 87, 0.2);
 }
 
-.toolbox-row {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.toolbox-card-wide {
-  background: var(--bg-card);
-  border: 1px solid var(--border-light);
-  border-radius: 12px;
-  padding: 24px;
-  display: flex;
-  gap: 20px;
-  align-items: flex-start;
-  width: 100%;
-  max-width: 800px;
-  transition: all 0.3s ease;
-}
-
-.toolbox-card-wide:hover {
-  border-color: var(--accent-primary);
-  box-shadow: 0 4px 12px var(--accent-glow);
-}
-
-.toolbox-icon-large {
-  font-size: 48px;
-  flex-shrink: 0;
-}
-
-.toolbox-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.toolbox-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--text-title);
-}
-
-.toolbox-description {
-  font-size: 14px;
-  color: var(--text-label);
-  line-height: 1.6;
-}
-
-.toolbox-description .strikethrough {
-  text-decoration: line-through;
-  color: var(--text-dim);
-}
-
-.toolbox-btn-primary {
-  align-self: flex-start;
-  padding: 12px 24px;
-  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-  color: var(--bg-primary);
-  border: none;
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.toolbox-btn-primary:hover:not(:disabled) {
-  background: linear-gradient(135deg, var(--accent-secondary), var(--accent-tertiary));
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px var(--accent-glow);
-}
-
-.toolbox-btn-primary:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.btn-icon {
-  font-size: 16px;
-}
-
-.btn-text {
-  font-size: 14px;
-}
-
-.toolbox-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
-  margin-top: 20px;
-}
-
-.toolbox-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-light);
-  border-radius: 12px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  transition: all 0.3s ease;
-}
-
-.toolbox-card:hover {
-  border-color: var(--accent-primary);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px var(--accent-glow);
-}
-
-.toolbox-icon {
-  font-size: 32px;
-}
-
-.toolbox-info {
-  flex: 1;
-}
-
-.toolbox-name {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--text-title);
-  margin-bottom: 4px;
-}
-
-.toolbox-desc {
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-.toolbox-btn {
-  padding: 10px 16px;
-  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-  color: var(--bg-primary);
-  border: none;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.toolbox-btn:hover {
-  background: linear-gradient(135deg, var(--accent-secondary), var(--accent-tertiary));
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px var(--accent-glow);
-}
-
-.forum-iframe-full {
-  width: 100%;
-  height: calc((100vh / var(--app-zoom)) - 52px);
-  border: none;
-  background: #fff;
-  margin: 0;
-  padding: 0;
-  display: block;
-}
-
-#more-page.forum-mode {
-  display: flex;
-  position: fixed;
-  top: 52px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 0;
-  margin: 0;
-  max-width: none;
-  overflow: hidden;
-  height: calc((100vh / var(--app-zoom)) - 52px);
-}
-
-#more-page.forum-mode #more-sidebar {
-  position: fixed;
-  left: 0;
-  top: 52px;
-  bottom: 0;
-  z-index: 100;
-  width: 180px;
-  margin: 0;
-  padding: 0;
-}
-
-#more-page.forum-mode .settings-content {
-  flex: 1;
-  padding: 0;
-  margin: 0 0 0 180px;
-  max-height: calc((100vh / var(--app-zoom)) - 52px);
-  overflow: hidden;
-  width: calc(100% - 180px);
-  position: relative;
-  height: calc((100vh / var(--app-zoom)) - 52px);
-}
-
-#more-page.forum-mode #more-content-forum {
-  display: block;
-  height: calc((100vh / var(--app-zoom)) - 52px);
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-}
-
 .settings-page {
   padding: 0;
   max-width: none;
@@ -4761,7 +4556,6 @@ body:has(#game-monitor.active) .container {
 .icon-play { --icon: url("icons/play.svg"); }
 .icon-download { --icon: url("icons/download.svg"); }
 .icon-gear { --icon: url("icons/gear.svg"); }
-.icon-more { --icon: url("icons/more.svg"); }
 .icon-minimize { --icon: url("icons/minimize.svg"); }
 .icon-close { --icon: url("icons/close.svg"); }
 .icon-trash { --icon: url("icons/trash.svg"); }
@@ -4782,7 +4576,6 @@ body:has(#game-monitor.active) .container {
 .icon-sliders { --icon: url("icons/sliders.svg"); }
 .icon-palette { --icon: url("icons/palette.svg"); }
 .icon-book { --icon: url("icons/book.svg"); }
-.icon-chat { --icon: url("icons/chat.svg"); }
 .icon-save { --icon: url("icons/save.svg"); }
 .icon-bolt { --icon: url("icons/bolt.svg"); }
 .icon-eye { --icon: url("icons/eye.svg"); }
@@ -7517,8 +7310,7 @@ html.gpcl-skip-splash #boot-splash {
 }
 
 html.gpcl-boot-settings #launch-panel,
-html.gpcl-boot-settings #download-page,
-html.gpcl-boot-settings #more-page {
+html.gpcl-boot-settings #download-page {
   display: none !important;
 }
 

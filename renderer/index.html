@@ -70,7 +70,6 @@
             <li id="menu-launch" class="menu-item"><span class="menu-icon icon icon-play" ></span>Launch</li>
             <li id="menu-download" class="menu-item"><span class="menu-icon icon icon-download" ></span>Download</li>
             <li id="menu-settings" class="menu-item"><span class="menu-icon icon icon-gear" ></span>Settings</li>
-            <li id="menu-more" class="menu-item hidden"><span class="menu-icon icon icon-more" ></span>More</li>
           </ul>
         </nav>
       </div>
@@ -818,6 +817,19 @@
 
                     <div class="setting-row">
                       <div class="setting-left">
+                        <div class="setting-label" data-i18n="ui.auto_memory_management">Automatic memory management</div>
+                        <div class="setting-desc" data-i18n="ui.auto_memory_management_desc">Reclaim GPCL's own memory in the background; running games are not affected</div>
+                      </div>
+                      <div class="setting-control">
+                        <label class="switch">
+                          <input type="checkbox" id="auto-memory-manage" checked>
+                          <span class="slider"></span>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="setting-row">
+                      <div class="setting-left">
                         <div class="setting-label" data-i18n="ui.settings_caellab_integration">CaelLabMinecraft integration</div>
                         <div class="setting-desc" data-i18n="ui.settings_caellab_integration_desc">Show the CaelLabMinecraft link on Microsoft accounts; when on, launching a premium game notifies the site once so you can join without the key</div>
                       </div>
@@ -1244,19 +1256,6 @@
                             <div class="custom-select-option" data-value="always" data-i18n="ui.every_time">Every time</div>
                           </div>
                         </div>
-                      </div>
-                    </div>
-
-                    <div class="setting-row">
-                      <div class="setting-left">
-                        <div class="setting-label" data-i18n="ui.enable_more">Enable More</div>
-                        <div class="setting-desc" data-i18n="ui.show_the_more_menu_in_the_top_navigation_bar">Show the More menu in the top navigation bar</div>
-                      </div>
-                      <div class="setting-control">
-                        <label class="switch">
-                          <input type="checkbox" id="enable-more">
-                          <span class="slider"></span>
-                        </label>
                       </div>
                     </div>
                   </div>
@@ -1791,55 +1790,6 @@
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-
-        <div id="more-page" class="settings-page hidden">
-          <div class="settings-sidebar" id="more-sidebar">
-            <ul class="settings-sidebar-menu">
-              <li id="more-tab-toolbox" class="settings-sidebar-item active" data-tab="toolbox">
-                <span class="sidebar-icon icon icon-box" ></span>
-                <span class="sidebar-label" data-i18n="ui.toolbox">Toolbox</span>
-              </li>
-              <li id="more-tab-forum" class="settings-sidebar-item" data-tab="forum">
-                <span class="sidebar-icon icon icon-chat" ></span>
-                <span class="sidebar-label" data-i18n="ui.forum">Forum</span>
-              </li>
-            </ul>
-          </div>
-          
-          <div class="settings-content">
-            <div id="more-content-toolbox" class="settings-content-panel active">
-              <div class="settings-page-inner">
-                <div class="settings-group">
-                  <h2 class="settings-group-title" data-i18n="ui.toolbox">Toolbox</h2>
-                  <p class="settings-group-desc" data-i18n="ui.utilities_and_resources">Utilities and resources</p>
-                  
-                  <div class="toolbox-row">
-                    <div class="toolbox-card-wide">
-                      <div class="toolbox-icon-large"><span class="icon icon-save"></span></div>
-                      <div class="toolbox-content">
-                        <div class="toolbox-title" data-i18n="ui.memory_optimization">Memory optimization</div>
-                        <div class="toolbox-description" data-i18n="ui.free_physical_memory_used_by_gpcl_running_games_are_not_affected_may_cau_93da42">Free physical memory used by GPCL; running games are not affected. May cause a brief stutter on hard drives</div>
-                        <button id="memory-optimize-btn" class="toolbox-btn-primary">
-                          <span class="btn-icon icon icon-bolt" ></span>
-                          <span class="btn-text" data-i18n="ui.optimize_now">Optimize now</span>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div id="more-content-forum" class="settings-content-panel hidden">
-              <iframe 
-                id="forum-iframe" 
-                class="forum-iframe-full"
-                sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-top-navigation"
-                data-i18n-title="ui.community_forum" title="Community forum"
-              ></iframe>
             </div>
           </div>
         </div>

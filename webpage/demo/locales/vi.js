@@ -7,6 +7,8 @@
  */
 
 window.DEMO_DICTIONARY = {
+  "Automatic memory management": "Automatic memory management",
+  "Reclaim GPCL's own memory in the background; running games are not affected": "Reclaim GPCL's own memory in the background; running games are not affected",
   "Launch": "Khởi chạy",
   "Download": "Tải xuống",
   "Settings": "Cài đặt",

@@ -13,6 +13,7 @@ import path from 'path';
 
 import { APP_VERSION, BASE_DIR, GAME_DIR, LOG_FILE, cleanupExpiredLogs, initGameDirFromSettings, initLanguage, initPaths, parseIni, setBaseDir, writeLog } from './config';
 import { t } from './i18n';
+import { startAutoMemoryManager } from './memory';
 import { createGPCLShortcut, createWindow, mainWindow } from './shell';
 import { initUpdateState, installPendingUpdateOnRestart } from './update';
 import { isDeveloperMode, setIsDeveloperMode } from './state';
@@ -161,6 +162,8 @@ setIsDeveloperMode(true);
     writeLog(`[致命错误] 创建窗口失败: ${e.message}`);
     console.error('创建窗口失败:', e);
   }
+
+  startAutoMemoryManager();
 });
 
 app.on('window-all-closed', () => app.quit());

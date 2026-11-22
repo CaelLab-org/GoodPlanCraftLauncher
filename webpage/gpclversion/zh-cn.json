@@ -1,8 +1,30 @@
 {
   "schema": 1,
-  "latest": "1.9.7",
+  "latest": "1.10.0",
   "updated": "2026-11-22",
   "versions": [
+    {
+      "version": "1.10.0",
+      "anchor": "v1-10-0",
+      "date": "2026-11-22",
+      "title": "自动内存管理",
+      "log": [
+        "新增自动内存管理：没有在下载东西时，启动器会在后台自动回收自身内存，占用从 100–200MB 稳定到 35–70MB 左右。",
+        "下载期间自动跳过回收，正在运行的游戏完全不受影响。",
+        "默认开启，可在 设置 → 游戏 → 内存 中关闭。",
+        "移除了顶部的「更多」菜单（工具箱和论坛入口）；内存优化改为自动进行，原「立即优化」按钮随之移除。",
+        "「启动前优化内存」现在只回收启动器自身的内存，绝不影响正在运行的游戏。"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.10.0-Setup.exe",
+        "file": "GPCL-1.10.0-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      },
+      "linux": "https://dl.caellab.com/file/games/gpcl/GPCL-1.10.0-linux-x64.tar.gz",
+      "linuxSha256": "170ec7d7465e61b608522983d376d22bf57982ed458a42adb4f5595867afbe8b",
+      "linuxSize": "104.3 MB"
+    },
     {
       "version": "1.9.7",
       "anchor": "v1-9-7",

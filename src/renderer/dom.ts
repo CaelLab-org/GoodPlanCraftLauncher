@@ -43,15 +43,11 @@ export const menuLaunch: HTMLElement | null = document.getElementById('menu-laun
 
 export const menuSettings: HTMLElement | null = document.getElementById('menu-settings');
 
-export const menuMore: HTMLElement | null = document.getElementById('menu-more');
-
 export const downloadPage: HTMLElement | null = document.getElementById('download-page');
 
 export const launchPanel: HTMLElement | null = document.getElementById('launch-panel');
 
 export const settingsPage: HTMLElement | null = document.getElementById('settings-page');
-
-export const morePage: HTMLElement | null = document.getElementById('more-page');
 
 export const mainContent: Element | null = document.querySelector('.main-content .container');
 
@@ -348,8 +344,6 @@ export function showToast(title: string, message?: string, type: string = 'info'
 export const downloadPanel: HTMLElement | null = document.getElementById('download-panel');
 
 
-export const memoryOptimizeBtn: HTMLElement | null = document.getElementById('memory-optimize-btn');
-
 export const customSelectHandlers: Map<string, { setValue: (value: string, label?: string) => void; getValue: () => string | null }> = new Map();
 const customSelectCallbacks: Map<string, (value: string) => void> = new Map();
 
@@ -506,8 +500,6 @@ if (floatCloseBtn) {
 
 
 export const settingsNumInput: HTMLInputElement | null = document.getElementById('num-threads') as HTMLInputElement | null;
-
-export const enableMoreEl: HTMLInputElement | null = document.getElementById('enable-more') as HTMLInputElement | null;
 
 export function setStatus(text: string, type: string = 'info'): void {
   if (statusDiv) statusDiv.textContent = translateText(text);

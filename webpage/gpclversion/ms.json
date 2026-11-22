@@ -1,8 +1,30 @@
 {
   "schema": 1,
-  "latest": "1.9.7",
+  "latest": "1.10.0",
   "updated": "2026-11-22",
   "versions": [
+    {
+      "version": "1.10.0",
+      "anchor": "v1-10-0",
+      "date": "2026-11-22",
+      "title": "Pengurusan memori automatik",
+      "log": [
+        "Baharu: pengurusan memori automatik. Apabila tiada muat turun berjalan, pelancar melepaskan memori sendiri di latar belakang, kekal sekitar 35–70 MB berbanding 100–200 MB.",
+        "Pelepasan dilangkau secara automatik semasa muat turun; permainan yang sedang berjalan tidak pernah terjejas.",
+        "Ciri ini dihidupkan secara lalai; boleh dimatikan dalam Tetapan → Permainan → Memori.",
+        "Menu 'Lagi' di bahagian atas (kotak alat dan forum) telah dibuang. Memandangkan pengoptimuman memori kini automatik, butang 'Optimumkan sekarang' turut dibuang.",
+        "'Optimumkan memori sebelum melancarkan' kini hanya melepaskan memori pelancar itu sendiri dan tidak pernah menjejaskan permainan yang sedang berjalan."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.10.0-Setup.exe",
+        "file": "GPCL-1.10.0-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      },
+      "linux": "https://dl.caellab.com/file/games/gpcl/GPCL-1.10.0-linux-x64.tar.gz",
+      "linuxSha256": "170ec7d7465e61b608522983d376d22bf57982ed458a42adb4f5595867afbe8b",
+      "linuxSize": "104.3 MB"
+    },
     {
       "version": "1.9.7",
       "anchor": "v1-9-7",

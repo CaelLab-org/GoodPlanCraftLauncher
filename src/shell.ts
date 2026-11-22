@@ -368,7 +368,7 @@ ipcMain.handle('write-json-file', async (_, subPath: string, fileName: string, d
 });
 
 
-function getLauncherWorkingSetMB(): number {
+export function getLauncherWorkingSetMB(): number {
   try {
     const totalKB: number = app.getAppMetrics().reduce((sum: number, metric: any) => {
       return sum + (metric.memory?.workingSetSize || 0);
@@ -389,6 +389,18 @@ export function trimWorkingSets(): Promise<{ beforeMB: number; afterMB: number; 
       return;
     }
 
+    // 只回收启动器自己的进程（browser / renderer / gpu / utility）。
+    // 不能按父进程递归：游戏是 detached 子进程，PID 树上仍挂在启动器下面，
+    // 对 Java 进程 EmptyWorkingSet 会把游戏内存页换出去，进游戏就卡。
+    const pids: number[] = Array.from(new Set<number>([
+      process.pid,
+      ...app.getAppMetrics().map((metric: any) => Number(metric.pid)).filter((pid: number) => pid > 0)
+    ]));
+    if (pids.length === 0) {
+      resolve({ beforeMB, afterMB: beforeMB, freedMB: 0 });
+      return;
+    }
+
     const typeDef: string = [
       'using System;',
       'using System.Runtime.InteropServices;',
@@ -403,23 +415,13 @@ export function trimWorkingSets(): Promise<{ beforeMB: number; afterMB: number; 
       `Add-Type -TypeDefinition @'`,
       typeDef,
       `'@`,
-      `$root = ${process.pid}`,
-      `$all = Get-CimInstance Win32_Process | Select-Object ProcessId, ParentProcessId`,
-      `$queue = New-Object System.Collections.Queue`,
-      `$seen = @{}`,
-      `$queue.Enqueue([int]$root)`,
+      `$pids = @(${pids.join(',')})`,
       `$count = 0`,
-      `while ($queue.Count -gt 0) {`,
-      `  $procId = [int]$queue.Dequeue()`,
-      `  if ($seen.ContainsKey($procId)) { continue }`,
-      `  $seen[$procId] = $true`,
+      `foreach ($procId in $pids) {`,
       `  $h = [GpclMem]::OpenProcess(0x0500, $false, $procId)`,
       `  if ($h -ne [IntPtr]::Zero) {`,
       `    if ([GpclMem]::EmptyWorkingSet($h)) { $count++ }`,
       `    [GpclMem]::CloseHandle($h) | Out-Null`,
-      `  }`,
-      `  foreach ($child in $all) {`,
-      `    if ([int]$child.ParentProcessId -eq $procId) { $queue.Enqueue([int]$child.ProcessId) }`,
       `  }`,
       `}`,
       `Write-Output ("TRIMMED|" + $count)`
@@ -459,13 +461,7 @@ export function trimWorkingSets(): Promise<{ beforeMB: number; afterMB: number; 
 }
 
 
-ipcMain.handle('get-memory-usage', () => getLauncherWorkingSetMB());
-
-
 ipcMain.handle('get-system-memory', () => getSystemMemoryInfo());
-
-
-ipcMain.handle('optimize-memory', () => trimWorkingSets());
 
 
 ipcMain.handle('get-license-text', () => {

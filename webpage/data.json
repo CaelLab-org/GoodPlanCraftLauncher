@@ -2,6 +2,26 @@
     "Launcher": [
         {
             "name": "version",
+            "key": "1.10.0"
+        },
+        {
+            "name": "versiontitle",
+            "key": "自动内存管理"
+        },
+        {
+            "name": "versiontitle_en",
+            "key": "Automatic memory management"
+        },
+        {
+            "name": "versionlog",
+            "key": "新增自动内存管理：没有在下载东西时，启动器会在后台自动回收自身内存，占用从 100–200MB 稳定到 35–70MB 左右。<br>下载期间自动跳过回收，正在运行的游戏完全不受影响。<br>默认开启，可在 设置 → 游戏 → 内存 中关闭。<br>移除了顶部的「更多」菜单（工具箱和论坛入口）；内存优化改为自动进行，原「立即优化」按钮随之移除。<br>「启动前优化内存」现在只回收启动器自身的内存，绝不影响正在运行的游戏。"
+        },
+        {
+            "name": "versionlog_en",
+            "key": "New: automatic memory management. While nothing is being downloaded, GPCL now reclaims its own memory in the background, keeping the launcher around 35–70 MB instead of 100–200 MB.<br>Reclaiming is skipped automatically while downloads are running, and running games are never touched.<br>The feature is on by default; you can turn it off in Settings → Game → Memory.<br>Removed the top \"More\" menu (toolbox and forum entry). Memory optimization is now automatic, so the manual \"Optimize now\" button is gone with it.<br>\"Optimize memory before launching\" now only frees the launcher's own memory and never affects running games."
+        },
+        {
+            "name": "version",
             "key": "1.9.7"
         },
         {

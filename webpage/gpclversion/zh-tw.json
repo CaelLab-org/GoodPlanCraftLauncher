@@ -1,8 +1,30 @@
 {
   "schema": 1,
-  "latest": "1.9.7",
+  "latest": "1.10.0",
   "updated": "2026-11-22",
   "versions": [
+    {
+      "version": "1.10.0",
+      "anchor": "v1-10-0",
+      "date": "2026-11-22",
+      "title": "自動記憶體管理",
+      "log": [
+        "新增自動記憶體管理：沒有在下載東西時，啟動器會在背景自動回收自身記憶體，佔用從 100–200MB 穩定到 35–70MB 左右。",
+        "下載期間自動跳過回收，執行中的遊戲完全不受影響。",
+        "預設開啟，可在 設定 → 遊戲 → 記憶體 中關閉。",
+        "移除了頂部的「更多」選單（工具箱和論壇入口）；記憶體最佳化改為自動進行，原「立即最佳化」按鈕隨之移除。",
+        "「啟動前最佳化記憶體」現在只回收啟動器自身的記憶體，絕不影響執行中的遊戲。"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.10.0-Setup.exe",
+        "file": "GPCL-1.10.0-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      },
+      "linux": "https://dl.caellab.com/file/games/gpcl/GPCL-1.10.0-linux-x64.tar.gz",
+      "linuxSha256": "170ec7d7465e61b608522983d376d22bf57982ed458a42adb4f5595867afbe8b",
+      "linuxSize": "104.3 MB"
+    },
     {
       "version": "1.9.7",
       "anchor": "v1-9-7",

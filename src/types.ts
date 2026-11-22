@@ -98,8 +98,6 @@ export interface GPCLApi {
   listInstalledVersions(): Promise<any>;
   onModDownloadProgress(callback: (data: any) => void): void;
   onInstallStage(callback: (data: any) => void): void;
-  getMemoryUsage(): Promise<number>;
-  optimizeMemory(): Promise<{ beforeMB: number; afterMB: number; freedMB: number }>;
   getSystemMemory(): Promise<{ totalMB: number; freeMB: number; autoMemoryMB: number }>;
   getLicenseText(): Promise<string>;
   getRuntimeInfo(): Promise<{ appVersion: string; electron: string; chrome: string; node: string; platform: string }>;
@@ -169,7 +167,6 @@ export interface AppearanceSettings {
   skipSplash: boolean;
   /** 启动小知识的出现频率：off / rare / half / always */
   tipFrequency: string;
-  enableMore: boolean;
   avatarSize: number;
 }
 

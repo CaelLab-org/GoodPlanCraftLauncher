@@ -1,8 +1,30 @@
 {
   "schema": 1,
-  "latest": "1.9.7",
+  "latest": "1.10.0",
   "updated": "2026-11-22",
   "versions": [
+    {
+      "version": "1.10.0",
+      "anchor": "v1-10-0",
+      "date": "2026-11-22",
+      "title": "Manajemen memori otomatis",
+      "log": [
+        "Baru: manajemen memori otomatis. Ketika tidak ada unduhan yang berjalan, launcher melepaskan memorinya sendiri di latar belakang, tetap sekitar 35–70 MB alih-alih 100–200 MB.",
+        "Pelepasan dilewati otomatis selama unduhan berlangsung; game yang sedang berjalan tidak pernah terpengaruh.",
+        "Fitur ini aktif secara bawaan; dapat dimatikan di Pengaturan → Game → Memori.",
+        "Menu 'Lainnya' di bagian atas (kotak alat dan forum) telah dihapus. Karena optimasi memori kini otomatis, tombol 'Optimalkan sekarang' juga dihapus.",
+        "'Optimalkan memori sebelum meluncurkan' kini hanya melepaskan memori launcher itu sendiri dan tidak pernah memengaruhi game yang berjalan."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.10.0-Setup.exe",
+        "file": "GPCL-1.10.0-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      },
+      "linux": "https://dl.caellab.com/file/games/gpcl/GPCL-1.10.0-linux-x64.tar.gz",
+      "linuxSha256": "170ec7d7465e61b608522983d376d22bf57982ed458a42adb4f5595867afbe8b",
+      "linuxSize": "104.3 MB"
+    },
     {
       "version": "1.9.7",
       "anchor": "v1-9-7",

@@ -268,7 +268,6 @@ export const launchTips: string[] = [
   'In Java Edition, F3 opens the debug screen and F3+G shows chunk borders.',
   'Jungle temples and desert pyramids have traps; disarm the pressure plates before going in.',
   'The music disc \'11\' is the creepiest in the game, ending with a noise-like sound.',
-  'The More menu in GPCL links to the community forum if you need help.',
   'When the game crashes, GPCL shows a dialog and lets you export an error report — far more useful than a screenshot.',
 ];
 

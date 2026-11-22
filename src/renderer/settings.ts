@@ -9,7 +9,7 @@
 
 // __IMPORTS_BEGIN__
 import { t } from '../i18n';
-import { enableMoreEl, getCustomSelectValue, icon, initCustomSelect, memoryOptimizeBtn, setCustomSelectValue, settingsNumInput, showToast } from './dom';
+import { getCustomSelectValue, initCustomSelect, setCustomSelectValue, settingsNumInput, showToast } from './dom';
 import { allNewerVersions, updateAvailable } from './update';
 // __IMPORTS_END__
 
@@ -17,35 +17,6 @@ let currentMaxConcurrent: number = 64;
 
 export function getMaxConcurrentFromSettings(): number {
   return currentMaxConcurrent;
-}
-
-
-if (memoryOptimizeBtn) {
-  memoryOptimizeBtn.addEventListener('click', async (): Promise<void> => {
-    const btnIcon: HTMLElement | null = memoryOptimizeBtn.querySelector('.btn-icon');
-    const btnText: HTMLElement | null = memoryOptimizeBtn.querySelector('.btn-text');
-    
-    const originalIcon: string | null = btnIcon?.textContent || null;
-    const originalText: string | null = btnText?.textContent || null;
-    
-    (memoryOptimizeBtn as HTMLButtonElement).disabled = true;
-    if (btnIcon) btnIcon.innerHTML = icon('loader', 'spin');
-    if (btnText) btnText.textContent = t('ui.optimizing');
-    
-    const beforeMemory: number = await window.gpcl.getMemoryUsage();
-    
-    const result: any = await window.gpcl.optimizeMemory();
-    const freedMB: number = result?.freedMB ?? Math.max(0, beforeMemory - (result?.afterMB ?? beforeMemory));
-    const afterMB: number = result?.afterMB ?? await window.gpcl.getMemoryUsage();
-    
-    (memoryOptimizeBtn as HTMLButtonElement).disabled = false;
-    if (btnIcon) btnIcon.textContent = originalIcon;
-    if (btnText) btnText.textContent = originalText;
-    
-    showToast('ui.memory_optimization_complete', freedMB > 0
-      ? t('ui.gpcl_is_now_using_mb_mb_freed_freed_mb', { mb: afterMB, freed: freedMB })
-      : t('ui.gpcl_is_using_mb_mb_nothing_could_be_freed', { mb: afterMB }), 'success');
-  });
 }
 
 export const DEFAULT_MAX_THREADS: number = 64;
@@ -100,35 +71,6 @@ if (settingsNumInput) {
     await saveSettingToStorage(parseInt(settingsNumInput!.value, 10));
   });
 }
-
-
-export function updateMoreMenuVisibility(enabled: boolean): void {
-  const menuMoreEl: HTMLElement | null = document.getElementById('menu-more');
-  if (menuMoreEl) {
-    menuMoreEl.classList.toggle('hidden', !enabled);
-  }
-}
-
-
-if (enableMoreEl) {
-  (async (): Promise<void> => {
-    const settings = await loadSettings();
-    const enabled: boolean = settings.appearance?.enableMore === true;
-    enableMoreEl.checked = enabled;
-    updateMoreMenuVisibility(enabled);
-  })();
-
-  enableMoreEl.addEventListener('change', async (e: Event): Promise<void> => {
-    const enabled: boolean = (e.target as HTMLInputElement).checked;
-    updateMoreMenuVisibility(enabled);
-    
-    const settings = await loadSettings();
-    settings.appearance = settings.appearance || {} as any;
-    (settings.appearance as any).enableMore = enabled;
-    await window.gpcl.saveSettings(settings);
-  });
-}
-
 
 
 export async function updateSettingsBadge(): Promise<void> {
@@ -202,6 +144,7 @@ export async function loadSettings(): Promise<any> {
         windowWidth: 854,
         windowHeight: 480,
         optimizeBeforeLaunch: false,
+        autoMemoryManage: true,
         autoLanguage: true,
         language: 'zh_cn',
         versionIsolation: 'all'
@@ -211,8 +154,7 @@ export async function loadSettings(): Promise<any> {
         style: 'advanced',
         scale: '100',
         skipSplash: false,
-        tipFrequency: 'rare',
-        enableMore: false
+        tipFrequency: 'rare'
       },
       download: {
         maxConcurrent: 64,
@@ -354,6 +296,7 @@ export async function initMemorySettings(): Promise<void> {
   const usageBar: HTMLElement | null = document.getElementById('memory-usage-used');
   const warning: HTMLElement | null = document.getElementById('memory-warning');
   const optimizeToggle: HTMLInputElement | null = document.getElementById('optimize-before-launch') as HTMLInputElement | null;
+  const autoMemoryToggle: HTMLInputElement | null = document.getElementById('auto-memory-manage') as HTMLInputElement | null;
   const caellabToggle: HTMLInputElement | null = document.getElementById('caellab-integration') as HTMLInputElement | null;
   if (!modeGroup && !slider) return;
 
@@ -411,6 +354,7 @@ export async function initMemorySettings(): Promise<void> {
 
     setMode(auto);
     if (optimizeToggle) optimizeToggle.checked = settings.game?.optimizeBeforeLaunch === true;
+    if (autoMemoryToggle) autoMemoryToggle.checked = settings.game?.autoMemoryManage !== false;
     if (caellabToggle) caellabToggle.checked = settings.game?.caellabIntegration === true;
   };
 
@@ -434,6 +378,12 @@ export async function initMemorySettings(): Promise<void> {
   if (optimizeToggle) {
     optimizeToggle.addEventListener('change', async (): Promise<void> => {
       await saveGameSetting({ optimizeBeforeLaunch: optimizeToggle.checked });
+    });
+  }
+
+  if (autoMemoryToggle) {
+    autoMemoryToggle.addEventListener('change', async (): Promise<void> => {
+      await saveGameSetting({ autoMemoryManage: autoMemoryToggle.checked });
     });
   }
 

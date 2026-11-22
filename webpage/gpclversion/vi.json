@@ -1,8 +1,30 @@
 {
   "schema": 1,
-  "latest": "1.9.7",
+  "latest": "1.10.0",
   "updated": "2026-11-22",
   "versions": [
+    {
+      "version": "1.10.0",
+      "anchor": "v1-10-0",
+      "date": "2026-11-22",
+      "title": "Tự động quản lý bộ nhớ",
+      "log": [
+        "Mới: tự động quản lý bộ nhớ. Khi không có tải xuống nào đang chạy, trình khởi chạy sẽ tự giải phóng bộ nhớ của mình trong nền, giữ ở khoảng 35–70 MB thay vì 100–200 MB.",
+        "Việc giải phóng được tự động bỏ qua khi đang tải xuống; các trò chơi đang chạy không bao giờ bị ảnh hưởng.",
+        "Tính năng được bật theo mặc định; có thể tắt trong Cài đặt → Trò chơi → Bộ nhớ.",
+        "Đã xóa menu 'Thêm' ở đầu trang (hộp công cụ và diễn đàn). Việc tối ưu bộ nhớ giờ đây tự động, nên nút 'Tối ưu hóa ngay' cũng được gỡ bỏ.",
+        "'Tối ưu bộ nhớ trước khi khởi chạy' giờ chỉ giải phóng bộ nhớ của chính trình khởi chạy và không bao giờ ảnh hưởng đến trò chơi đang chạy."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.10.0-Setup.exe",
+        "file": "GPCL-1.10.0-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      },
+      "linux": "https://dl.caellab.com/file/games/gpcl/GPCL-1.10.0-linux-x64.tar.gz",
+      "linuxSha256": "170ec7d7465e61b608522983d376d22bf57982ed458a42adb4f5595867afbe8b",
+      "linuxSize": "104.3 MB"
+    },
     {
       "version": "1.9.7",
       "anchor": "v1-9-7",

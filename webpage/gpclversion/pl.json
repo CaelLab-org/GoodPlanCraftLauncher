@@ -1,8 +1,30 @@
 {
   "schema": 1,
-  "latest": "1.9.7",
+  "latest": "1.10.0",
   "updated": "2026-11-22",
   "versions": [
+    {
+      "version": "1.10.0",
+      "anchor": "v1-10-0",
+      "date": "2026-11-22",
+      "title": "Automatyczne zarządzanie pamięcią",
+      "log": [
+        "Nowość: automatyczne zarządzanie pamięcią. Gdy nic nie jest pobierane, launcher zwalnia własną pamięć w tle i zajmuje około 35–70 MB zamiast 100–200 MB.",
+        "Podczas pobierania zwalnianie jest automatycznie pomijane; działające gry nie są nigdy dotykane.",
+        "Funkcja jest domyślnie włączona; można ją wyłączyć w Ustawienia → Gra → Pamięć.",
+        "Górne menu „Więcej” (narzędzia i forum) zostało usunięte. Optymalizacja pamięci odbywa się teraz automatycznie, więc przycisk „Optymalizuj teraz” również usunięto.",
+        "„Optymalizuj pamięć przed uruchomieniem” zwalnia teraz tylko pamięć samego launchera i nigdy nie wpływa na działające gry."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.10.0-Setup.exe",
+        "file": "GPCL-1.10.0-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      },
+      "linux": "https://dl.caellab.com/file/games/gpcl/GPCL-1.10.0-linux-x64.tar.gz",
+      "linuxSha256": "170ec7d7465e61b608522983d376d22bf57982ed458a42adb4f5595867afbe8b",
+      "linuxSize": "104.3 MB"
+    },
     {
       "version": "1.9.7",
       "anchor": "v1-9-7",

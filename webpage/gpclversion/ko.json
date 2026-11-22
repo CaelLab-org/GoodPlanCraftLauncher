@@ -1,8 +1,30 @@
 {
   "schema": 1,
-  "latest": "1.9.7",
+  "latest": "1.10.0",
   "updated": "2026-11-22",
   "versions": [
+    {
+      "version": "1.10.0",
+      "anchor": "v1-10-0",
+      "date": "2026-11-22",
+      "title": "자동 메모리 관리",
+      "log": [
+        "자동 메모리 관리 추가: 다운로드 중이 아닐 때 런처가 백그라운드에서 자체 메모리를 자동 회수하여 사용량을 100–200MB에서 약 35–70MB로 유지합니다.",
+        "다운로드 중에는 자동으로 건너뛰며, 실행 중인 게임에는 전혀 영향을 주지 않습니다.",
+        "기본값은 켜짐이며 설정 → 게임 → 메모리에서 끌 수 있습니다.",
+        "상단의 '더 보기' 메뉴(도구 상자 및 포럼)를 제거했습니다. 메모리 최적화가 자동으로 진행되므로 수동 '지금 최적화' 버튼도 함께 제거되었습니다.",
+        "'실행 전 메모리 최적화'는 이제 런처 자체 메모리만 해제하며 실행 중인 게임에는 영향을 주지 않습니다."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.10.0-Setup.exe",
+        "file": "GPCL-1.10.0-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      },
+      "linux": "https://dl.caellab.com/file/games/gpcl/GPCL-1.10.0-linux-x64.tar.gz",
+      "linuxSha256": "170ec7d7465e61b608522983d376d22bf57982ed458a42adb4f5595867afbe8b",
+      "linuxSize": "104.3 MB"
+    },
     {
       "version": "1.9.7",
       "anchor": "v1-9-7",

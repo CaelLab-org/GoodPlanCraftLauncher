@@ -7,6 +7,8 @@
  */
 
 window.DEMO_DICTIONARY = {
+  "Automatic memory management": "自动内存管理",
+  "Reclaim GPCL's own memory in the background; running games are not affected": "后台自动回收 GPCL 自身占用的内存，不影响正在运行的游戏",
   "Launch": "启动",
   "Download": "下载",
   "Settings": "设置",
