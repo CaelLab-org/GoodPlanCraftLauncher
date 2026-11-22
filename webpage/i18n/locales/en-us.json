@@ -111,6 +111,10 @@
       {
         "alt": "GoodPlanCraftLauncher appearance settings",
         "caption": "Settings · language, interface style, theme and scaling"
+      },
+      {
+        "alt": "GoodPlanCraftLauncher launch screen (Minecraft style)",
+        "caption": "Launch screen · Minecraft style look"
       }
     ]
   },

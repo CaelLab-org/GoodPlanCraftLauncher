@@ -1,8 +1,31 @@
 {
   "schema": 1,
-  "latest": "1.9.6",
-  "updated": "2026-11-17",
+  "latest": "1.9.7",
+  "updated": "2026-11-22",
   "versions": [
+    {
+      "version": "1.9.7",
+      "anchor": "v1-9-7",
+      "date": "2026-11-22",
+      "title": "修正：バニラが未導入のままMODローダーを導入できてしまう問題",
+      "log": [
+        "Fabric / Forge / NeoForge のバージョンで「Minecraft game provider couldn't locate the game」が出る問題を修正しました。バニラのダウンロードに失敗した場合（証明書エラーなど）でもローダーの導入が続行され、空のバージョンが残っていました。今後は停止して、先にバニラを再インストールするよう案内します。",
+        "ローダーを導入する前に、バニラ本体（JSON と jar）が実際に存在するか確認するようにしました。バニラが導入済みで一部のアセットだけ失敗した場合は、これまで通り続行します。",
+        "起動前に、ローダーやMODパックが依存するバニラが残っているか確認し、見つからない場合は分かりにくい起動エラーではなく再インストールを案内します。",
+        "Java の自動選択が、ローダーが継承するバニラのバージョンに従うようになりました。ローダーのバージョン名をゲームのバージョンと誤認することはありません（Fabric 26.x は 1.20 と誤判定されて Java 17 が選ばれていました）。1.20.5 以降は正しく Java 21 を要求します。",
+        "証明書の問題で長い英語の例外を表示しなくなりました。ダウンロードやログインで証明書の検証に失敗した場合は、プロキシやセキュリティソフトの確認を促します。元のエラーはログに残ります。",
+        "Microsoft ログインが Electron のネットワークスタック（ブラウザと同じシステムの証明書ストア）を使うようになりました。ログインページは開けるのに、ランチャーのポーリングが「unable to verify the first certificate」で失敗し続ける環境を修正します。"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.7-Setup.exe",
+        "file": "GPCL-1.9.7-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      },
+      "linux": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.7-linux-x64.tar.gz",
+      "linuxSha256": "d4326bf03e57a3f65e6010de6a0e5ebfcf081a442c32abc80670bac646728fad",
+      "linuxSize": "104.3 MB"
+    },
     {
       "version": "1.9.6",
       "anchor": "v1-9-6",

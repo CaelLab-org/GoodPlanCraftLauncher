@@ -111,6 +111,10 @@
       {
         "alt": "Ρυθμίσεις εμφάνισης GoodPlanCraftLauncher",
         "caption": "Ρυθμίσεις · γλώσσα, στυλ διεπαφής, θέμα και κλίμακα"
+      },
+      {
+        "alt": "Οθόνη εκκίνησης GoodPlanCraftLauncher (στυλ Minecraft)",
+        "caption": "Οθόνη εκκίνησης · εμφάνιση στυλ Minecraft"
       }
     ]
   },

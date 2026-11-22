@@ -1,8 +1,31 @@
 {
   "schema": 1,
-  "latest": "1.9.6",
-  "updated": "2026-11-17",
+  "latest": "1.9.7",
+  "updated": "2026-11-22",
   "versions": [
+    {
+      "version": "1.9.7",
+      "anchor": "v1-9-7",
+      "date": "2026-11-22",
+      "title": "Opgelost: mod-loaders geïnstalleerd zonder het vanilla-spel",
+      "log": [
+        "„Minecraft game provider couldn't locate the game” bij Fabric-/Forge-/NeoForge-versies opgelost: als de download van het vanilla-spel mislukte (bijvoorbeeld door een certificaatfout), werd de loader toch op een lege versie geïnstalleerd. De launcher stopt nu en vraagt om eerst het vanilla-spel opnieuw te installeren.",
+        "Voor het installeren van een loader controleert de launcher of het vanilla-spel zelf (JSON en jar) echt aanwezig is. Is het spel al geïnstalleerd en zijn alleen sommige bestanden mislukt, dan gaat de installatie zoals voorheen verder.",
+        "Voor het starten controleert de launcher of de basisversie waarvan een loader of modpack afhankelijk is nog bestaat, en vraagt om opnieuw te installeren in plaats van een onduidelijke startfout te tonen.",
+        "De automatische Java-keuze volgt nu de basisversie die een loader erft, zodat namen van loader-versies niet meer als spelversies worden gezien (Fabric 26.x koos Java 17 alsof het 1.20 was). Vanaf 1.20.5 is Java 21 nu correct vereist.",
+        "Certificaatproblemen tonen geen lange Engelse uitzondering meer: als een download of aanmelding de certificaatcontrole niet haalt, adviseert de launcher om je proxy of beveiligingssoftware te controleren. De oorspronkelijke fout blijft in het log staan.",
+        "Microsoft-aanmelding gebruikt nu de netwerkstack van Electron, dus dezelfde systeemcertificaatopslag als je browser. Dit lost machines op waar de inlogpagina wel opende, maar de launcher bleef falen met „unable to verify the first certificate”."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.7-Setup.exe",
+        "file": "GPCL-1.9.7-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      },
+      "linux": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.7-linux-x64.tar.gz",
+      "linuxSha256": "d4326bf03e57a3f65e6010de6a0e5ebfcf081a442c32abc80670bac646728fad",
+      "linuxSize": "104.3 MB"
+    },
     {
       "version": "1.9.6",
       "anchor": "v1-9-6",

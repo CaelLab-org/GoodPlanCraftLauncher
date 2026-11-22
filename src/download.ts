@@ -809,6 +809,15 @@ export async function downloadFileInternal(sources: string[], dest: string, labe
 
 
 
+function friendlyDownloadError(message: string): string {
+  const text: string = String(message || '');
+  if (/unable to verify the first certificate|unable to get local issuer certificate|self[- ]signed certificate|net::ERR_CERT_|CERT_HAS_EXPIRED|CERT_AUTHORITY_INVALID/i.test(text)) {
+    return t('ui.https_certificate_error');
+  }
+  return text;
+}
+
+
 export async function installVersion(versionId: string, maxConcurrent: number = 20, downloadPath: string | null = null): Promise<any> {
   loadDownloadSettings();
   const targetDir: string = downloadPath || path.join(GAME_DIR, 'versions', versionId);
@@ -998,7 +1007,7 @@ setProgressStage(t('ui.preparing_download'));
         writeLog(`删除文件夹失败：${delErr.message}`);
       }
     }
-    return { success: false, error: e.message };
+    return { success: false, error: friendlyDownloadError(e.message) };
   } finally {
 resetProgressSession();
 setIsDownloading(false);

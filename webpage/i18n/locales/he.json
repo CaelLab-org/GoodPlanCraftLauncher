@@ -111,6 +111,10 @@
       {
         "alt": "הגדרות המראה של GoodPlanCraftLauncher",
         "caption": "הגדרות · שפה, סגנון ממשק, ערכת נושא וקנה מידה"
+      },
+      {
+        "alt": "מסך הפעלה של GoodPlanCraftLauncher (סגנון Minecraft)",
+        "caption": "מסך הפעלה · מראה בסגנון Minecraft"
       }
     ]
   },

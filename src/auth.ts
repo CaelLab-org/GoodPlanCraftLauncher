@@ -1,8 +1,7 @@
 // __IMPORTS_BEGIN__
-import { ipcMain, safeStorage, shell } from 'electron';
+import { ipcMain, net, safeStorage, shell } from 'electron';
 import crypto from 'crypto';
 import fs from 'fs';
-import https from 'https';
 import path from 'path';
 
 import { BASE_DIR, writeLog } from './config';
@@ -159,31 +158,36 @@ function listStoredAccounts(): any {
   };
 }
 
-function requestJson(url: string, options: {
+/**
+ * 认证请求走 Electron 的网络栈（Chromium）：它用 Windows 证书库，和浏览器一致。
+ * 以前用 Node 的 https，在装过代理 / 安全软件的机器上会因为找不到中间证书报
+ * `unable to verify the first certificate`，浏览器能打开登录页、启动器却轮询不到结果。
+ */
+async function requestJson(url: string, options: {
   method?: string;
   headers?: Record<string, string>;
   body?: string;
   timeout?: number;
 } = {}): Promise<{ status: number; json: any; raw: string }> {
-  return new Promise((resolve, reject) => {
-    const req = https.request(url, {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), options.timeout || 15000);
+  try {
+    const response = await net.fetch(url, {
       method: options.method || 'GET',
       headers: options.headers,
-      timeout: options.timeout || 15000
-    }, (resp) => {
-      let raw: string = '';
-      resp.on('data', (chunk: Buffer) => raw += chunk.toString('utf8'));
-      resp.on('end', () => {
-        let json: any = null;
-        try { json = raw ? JSON.parse(raw) : null; } catch {}
-        resolve({ status: resp.statusCode || 0, json, raw });
-      });
+      body: options.body,
+      signal: controller.signal
     });
-    req.on('error', reject);
-    req.on('timeout', () => req.destroy(new Error('Request timed out')));
-    if (options.body) req.write(options.body);
-    req.end();
-  });
+    const raw: string = await response.text();
+    let json: any = null;
+    try { json = raw ? JSON.parse(raw) : null; } catch {}
+    return { status: response.status, json, raw };
+  } catch (e: any) {
+    if (controller.signal.aborted) throw new Error('Request timed out');
+    throw e;
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 function stopAuthPolling(): void {
@@ -359,28 +363,19 @@ async function validateMicrosoftSession(): Promise<any> {
   return { valid: false, relogin: true, code: 'profile_failed', message: t('ui.auth_session_invalid') };
 }
 
-function downloadBinary(url: string, redirects: number = 3): Promise<Buffer> {
-  return new Promise((resolve, reject) => {
-    const req = https.get(url, { timeout: 15000 }, (resp) => {
-      const status: number = resp.statusCode || 0;
-      if (status >= 300 && status < 400 && resp.headers.location && redirects > 0) {
-        resp.resume();
-        const next: string = new URL(String(resp.headers.location), url).toString().replace(/^http:/, 'https:');
-        resolve(downloadBinary(next, redirects - 1));
-        return;
-      }
-      if (status !== 200) {
-        resp.resume();
-        reject(new Error(`HTTP ${status}`));
-        return;
-      }
-      const chunks: Buffer[] = [];
-      resp.on('data', (chunk: Buffer) => chunks.push(chunk));
-      resp.on('end', () => resolve(Buffer.concat(chunks)));
-    });
-    req.on('error', reject);
-    req.on('timeout', () => req.destroy(new Error('Request timed out')));
-  });
+async function downloadBinary(url: string): Promise<Buffer> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 15000);
+  try {
+    const response = await net.fetch(url, { signal: controller.signal });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    return Buffer.from(await response.arrayBuffer());
+  } catch (e: any) {
+    if (controller.signal.aborted) throw new Error('Request timed out');
+    throw e;
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 function skinFilePath(uuid: string): string {

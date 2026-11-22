@@ -111,6 +111,10 @@
       {
         "alt": "การตั้งค่ารูปลักษณ์ของ GoodPlanCraftLauncher",
         "caption": "การตั้งค่า · ภาษา, สไตล์อินเทอร์เฟซ, ธีม และมาตราส่วน"
+      },
+      {
+        "alt": "หน้าจอเริ่มเกมของ GoodPlanCraftLauncher (สไตล์ Minecraft)",
+        "caption": "หน้าจอเริ่มเกม · หน้าตาสไตล์ Minecraft"
       }
     ]
   },

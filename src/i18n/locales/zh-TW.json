@@ -1201,5 +1201,9 @@
   "ui.java_extract_failed": "解壓縮 Java 執行環境失敗：{error}",
   "ui.java_no_download_source": "沒有可用的 Java 下載來源，請檢查網路連線",
   "ui.network_requires_sign_in": "目前網路需要登入（代理認證）。請先在這台電腦上完成登入，然後重試。",
-  "ui.system_java_cannot_be_uninstalled": "這個 Java 是系統安裝的，需要在系統中解除安裝"
+  "ui.system_java_cannot_be_uninstalled": "這個 Java 是系統安裝的，需要在系統中解除安裝",
+  "ui.base_game_download_failed": "Minecraft {version} 下載失敗：{error}",
+  "ui.base_game_download_failed_stopped_loader": "Minecraft {version} 下載失敗，已停止安裝 {loader}：{error}",
+  "ui.base_game_missing_reinstall": "缺少 Minecraft 本體 {version}，請先重新下載該版本，再安裝載入器或啟動遊戲。",
+  "ui.https_certificate_error": "HTTPS 憑證驗證失敗，可能是代理或安全軟體攔截了連線；請更換下載來源或關閉 HTTPS 掃描後重試。"
 }

@@ -111,6 +111,10 @@
       {
         "alt": "GoodPlanCraftLauncher 外观设置",
         "caption": "设置 · 语言、界面风格、主题与缩放"
+      },
+      {
+        "alt": "GoodPlanCraftLauncher 启动页（Minecraft 风格）",
+        "caption": "启动页 · Minecraft 风格外观"
       }
     ]
   },

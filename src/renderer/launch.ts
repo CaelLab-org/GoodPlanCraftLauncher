@@ -524,7 +524,11 @@ function taskStateText(task: DownloadTask): string {
 }
 
 function normalizeDownloadError(message: string): string {
-  return /cancel/i.test(message) ? t('ui.download_cancelled') : message;
+  if (/cancel/i.test(message)) return t('ui.download_cancelled');
+  if (/^\s*(unable to verify the first certificate|unable to get local issuer certificate|self[- ]signed certificate|net::ERR_CERT_|CERT_HAS_EXPIRED|CERT_AUTHORITY_INVALID)/i.test(message)) {
+    return t('ui.https_certificate_error');
+  }
+  return message;
 }
 
 function updateTaskRow(task: DownloadTask): void {

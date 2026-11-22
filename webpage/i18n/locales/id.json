@@ -111,6 +111,10 @@
       {
         "alt": "Pengaturan tampilan GoodPlanCraftLauncher",
         "caption": "Pengaturan · bahasa, gaya antarmuka, tema, dan skala"
+      },
+      {
+        "alt": "Layar peluncuran GoodPlanCraftLauncher (gaya Minecraft)",
+        "caption": "Layar peluncuran · tampilan gaya Minecraft"
       }
     ]
   },

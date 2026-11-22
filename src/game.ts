@@ -944,6 +944,14 @@ ipcMain.handle('launch-minecraft', async (_, opt: any) => {
     }
 
     const vd_raw: any = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+    if (vd_raw.inheritsFrom) {
+      const parentId: string = String(vd_raw.inheritsFrom);
+      const parentJsonPath: string = path.join(rootDir, 'versions', parentId, `${parentId}.json`);
+      if (!fs.existsSync(parentJsonPath)) {
+        writeLog(`启动游戏失败：${versionId} 缺少依赖的原版 ${parentId}`);
+        return { success: false, error: t('ui.base_game_missing_reinstall', { version: parentId }) };
+      }
+    }
     const vd: any = resolveInheritsFrom(vd_raw, rootDir);
     const javaVersion: string = getJavaVersionFromVersionData(vd);
 

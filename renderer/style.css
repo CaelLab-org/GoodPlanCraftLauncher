@@ -6919,11 +6919,6 @@ body.style-mc .welcome-brand-mark {
   border-radius: 2px;
 }
 
-.welcome-brand-by {
-  color: var(--text-dim);
-  letter-spacing: 0.04em;
-}
-
 .welcome-viewport {
   flex: 1;
   min-height: 0;

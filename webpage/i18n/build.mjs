@@ -60,13 +60,14 @@ const OPENSOURCE_ICONS = [
   '<circle cx="12" cy="12" r="3"/><path d="M12 2v3"/><path d="M12 19v3"/><path d="M4.9 4.9l2.1 2.1"/><path d="M17 17l2.1 2.1"/><path d="M2 12h3"/><path d="M19 12h3"/><path d="M4.9 19.1 7 17"/><path d="M17 7l2.1-2.1"/>'
 ];
 
-const SHOT_VERSION = 'q9v3m7k2';
+const SHOT_VERSION = 'xhwjhqxw';
 
 const SHOTS = [
   ['launch.png', 'launch'],
   ['download.png', 'download'],
   ['settings.png', 'settings'],
-  ['appearance.png', 'appearance']
+  ['appearance.png', 'appearance'],
+  ['launch-mc.png', 'mc']
 ];
 
 const ARROW_SVG = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M5 21h14"/></svg>';

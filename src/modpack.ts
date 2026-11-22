@@ -425,7 +425,19 @@ export async function installModpack(options: { archivePath: string; instanceNam
       loaderVersionId = String(loaderResult.finalVersionId || info.mcVersion);
     } else {
       writeStage(t('ui.installing_minecraft_mcversion', { mcVersion: info.mcVersion }));
-      await installVersion(info.mcVersion, maxConcurrent);
+      const baseResult: any = await installVersion(info.mcVersion, maxConcurrent);
+      if (baseResult?.success === false) {
+        const baseVersionDir: string = path.join(GAME_DIR, 'versions', info.mcVersion);
+        const baseReady: boolean = fs.existsSync(path.join(baseVersionDir, `${info.mcVersion}.json`))
+          && fs.existsSync(path.join(baseVersionDir, `${info.mcVersion}.jar`));
+        if (!baseReady) {
+          throw new Error(t('ui.base_game_download_failed', {
+            version: info.mcVersion,
+            error: baseResult.error || t('ui.unknown_error')
+          }));
+        }
+        writeLog(`[整合包] 原版下载报告失败，但 ${info.mcVersion} 已存在，继续安装整合包: ${baseResult.error}`);
+      }
       if (shouldCancelDownload) throw new Error('Download cancelled');
     }
 

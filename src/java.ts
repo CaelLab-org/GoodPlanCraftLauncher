@@ -167,12 +167,30 @@ export function getJavaVersionForMCVersion(versionId: string): string {
   if (major === 1) {
     if (minor < 17) return '8';
     if (minor === 17) return '16';
-    if (minor <= 20) return '17';
+    if (minor < 20) return '17';
+    if (minor === 20) {
+      // 1.20.5 起官方要求 Java 21，1.20 ~ 1.20.4 仍是 17
+      const patch = parseInt(parts[2], 10);
+      return !isNaN(patch) && patch >= 5 ? '21' : '17';
+    }
     return '21';
   }
   if (major >= 26) return '25';
   if (major >= 21) return '21';
   return '17';
+}
+
+
+// 加载器的版本 id 不是游戏版本（fabric-loader-0.20.1-26.1.2、neoforge-21.1.193），
+// 直接按 id 的第一个数字段解析会选错 Java（26.x 的 Fabric 会被当成 1.20 → Java 17）。
+// 优先用 inheritsFrom 指向的原版版本号，取不到再退回 id。
+function extractMinecraftVersionId(versionId: string): string | null {
+  const matches = String(versionId || '').matchAll(/(\d+)\.(\d+)(?:\.(\d+))?/g);
+  for (const match of matches) {
+    const major: number = parseInt(match[1], 10);
+    if (major === 1 || major >= 20) return match[0];
+  }
+  return null;
 }
 
 
@@ -182,7 +200,14 @@ export function getJavaVersionFromVersionData(versionData: any): string {
     const m = versionData.javaVersion.component.match(/\d+/);
     if (m) return m[0];
   }
-  return getJavaVersionForMCVersion(versionData.id);
+  const parentVersion: string = String(versionData?.inheritsFrom || '').trim();
+  if (parentVersion) {
+    const parentMcVersion: string | null = extractMinecraftVersionId(parentVersion);
+    if (parentMcVersion) return getJavaVersionForMCVersion(parentMcVersion);
+  }
+  const ownId: string = String(versionData?.id || '');
+  const ownMcVersion: string | null = extractMinecraftVersionId(ownId);
+  return getJavaVersionForMCVersion(ownMcVersion || ownId);
 }
 
 

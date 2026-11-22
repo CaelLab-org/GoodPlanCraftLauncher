@@ -111,6 +111,10 @@
       {
         "alt": "إعدادات المظهر في GoodPlanCraftLauncher",
         "caption": "الإعدادات · اللغة ونمط الواجهة والسمة والمقياس"
+      },
+      {
+        "alt": "شاشة تشغيل GoodPlanCraftLauncher (نمط Minecraft)",
+        "caption": "شاشة التشغيل · مظهر بنمط Minecraft"
       }
     ]
   },

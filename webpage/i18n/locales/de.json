@@ -111,6 +111,10 @@
       {
         "alt": "GoodPlanCraftLauncher-Darstellungseinstellungen",
         "caption": "Einstellungen · Sprache, Oberflächenstil, Design und Skalierung"
+      },
+      {
+        "alt": "GoodPlanCraftLauncher-Startbildschirm (Minecraft-Stil)",
+        "caption": "Startbildschirm · Minecraft-Stil-Erscheinungsbild"
       }
     ]
   },

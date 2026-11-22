@@ -1201,5 +1201,9 @@
   "ui.java_extract_failed": "Could not extract the Java runtime: {error}",
   "ui.java_no_download_source": "No Java download source is available; check your network connection",
   "ui.network_requires_sign_in": "This network requires sign-in (proxy authentication). Sign in on this computer first, then retry.",
-  "ui.system_java_cannot_be_uninstalled": "This Java is installed by the system; uninstall it from the system instead"
+  "ui.system_java_cannot_be_uninstalled": "This Java is installed by the system; uninstall it from the system instead",
+  "ui.base_game_download_failed": "Minecraft {version} failed to download: {error}",
+  "ui.base_game_download_failed_stopped_loader": "Minecraft {version} failed to download, so {loader} installation was stopped: {error}",
+  "ui.base_game_missing_reinstall": "The base game {version} is missing. Download it again before installing the loader or starting the game.",
+  "ui.https_certificate_error": "HTTPS certificate verification failed. A proxy or security software may be intercepting the connection; change the download source or turn off HTTPS scanning and try again."
 }

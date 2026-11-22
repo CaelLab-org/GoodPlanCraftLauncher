@@ -111,6 +111,10 @@
       {
         "alt": "GoodPlanCraftLauncher görünüm ayarları",
         "caption": "Ayarlar · dil, arayüz stili, tema ve ölçek"
+      },
+      {
+        "alt": "GoodPlanCraftLauncher başlatma ekranı (Minecraft stili)",
+        "caption": "Başlatma ekranı · Minecraft stili görünüm"
       }
     ]
   },

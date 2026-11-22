@@ -1,8 +1,31 @@
 {
   "schema": 1,
-  "latest": "1.9.6",
-  "updated": "2026-11-17",
+  "latest": "1.9.7",
+  "updated": "2026-11-22",
   "versions": [
+    {
+      "version": "1.9.7",
+      "anchor": "v1-9-7",
+      "date": "2026-11-22",
+      "title": "修復：原版未裝好時裝模組載入器",
+      "log": [
+        "修復 Fabric / Forge / NeoForge 版本啟動時報「Minecraft game provider couldn't locate the game」：原版下載失敗（例如憑證錯誤）時，啟動器仍會繼續把載入器裝到這個空的版本上。現在會停下來，提示先重新安裝原版。",
+        "安裝載入器前會確認原版本體（JSON 和 jar）確實存在；已有原版、只是個別資源下載失敗時照舊繼續安裝。",
+        "啟動前會檢查載入器或模組包依賴的原版是否還在，缺少時提示重新安裝，不再拋出難懂的啟動錯誤。",
+        "自動選擇 Java 時改為依載入器繼承的原版版本判斷，不會再拿載入器版本號當遊戲版本（26.x 的 Fabric 之前會被當成 1.20 而選 Java 17）；1.20.5 起正確要求 Java 21。",
+        "憑證問題不再顯示一長串英文例外：下載或登入遇到憑證驗證失敗時，提示檢查代理或安全軟體，原始錯誤仍寫進日誌。",
+        "Microsoft 正版登入改走 Electron 的網路層，和瀏覽器使用同一套系統憑證存放區。修掉了某些機器上登入頁能開啟、啟動器卻一直輪詢失敗（unable to verify the first certificate）的問題。"
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.7-Setup.exe",
+        "file": "GPCL-1.9.7-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      },
+      "linux": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.7-linux-x64.tar.gz",
+      "linuxSha256": "d4326bf03e57a3f65e6010de6a0e5ebfcf081a442c32abc80670bac646728fad",
+      "linuxSize": "104.3 MB"
+    },
     {
       "version": "1.9.6",
       "anchor": "v1-9-6",

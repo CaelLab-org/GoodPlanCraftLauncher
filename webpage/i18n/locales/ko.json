@@ -111,6 +111,10 @@
       {
         "alt": "GoodPlanCraftLauncher 화면 설정",
         "caption": "설정 · 언어, 인터페이스 스타일, 테마, 배율"
+      },
+      {
+        "alt": "GoodPlanCraftLauncher 실행 화면(Minecraft 스타일)",
+        "caption": "실행 화면 · Minecraft 스타일 외관"
       }
     ]
   },

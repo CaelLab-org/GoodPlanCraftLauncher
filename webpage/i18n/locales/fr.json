@@ -111,6 +111,10 @@
       {
         "alt": "Paramètres d'apparence de GoodPlanCraftLauncher",
         "caption": "Paramètres · langue, style d'interface, thème et échelle"
+      },
+      {
+        "alt": "Écran de lancement de GoodPlanCraftLauncher (style Minecraft)",
+        "caption": "Écran de lancement · apparence style Minecraft"
       }
     ]
   },

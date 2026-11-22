@@ -21,6 +21,13 @@ import { IS_WINDOWS } from './platform';
 import { shouldCancelDownload } from './state';
 // __IMPORTS_END__
 
+const LOADER_DISPLAY_NAMES: Record<string, string> = {
+  forge: 'Forge',
+  neoforge: 'NeoForge',
+  fabric: 'Fabric',
+  optifine: 'OptiFine'
+};
+
 function writeStage(message: string): void {
   const localized: string = translateText(message);
   writeLog(`[安装] ${localized}`);
@@ -241,6 +248,11 @@ function mavenPath(name: string): string | null {
 
 
 export async function installFabric(mcVersion: string, loaderVersion: string): Promise<string> {
+  const baseJsonPath: string = path.join(GAME_DIR, 'versions', mcVersion, `${mcVersion}.json`);
+  if (!fs.existsSync(baseJsonPath)) {
+    throw new Error(t('ui.base_game_missing_reinstall', { version: mcVersion }));
+  }
+
   const profileUrl: string = `https://meta.fabricmc.net/v2/versions/loader/${encodeURIComponent(mcVersion)}/${encodeURIComponent(loaderVersion)}/profile/json`;
   const mirrorUrl: string = `https://bmclapi2.bangbang93.com/fabric-meta/v2/versions/loader/${encodeURIComponent(mcVersion)}/${encodeURIComponent(loaderVersion)}/profile/json`;
   const raw: string = await fetchText(profileUrl, [mirrorUrl, profileUrl]);
@@ -352,8 +364,22 @@ export async function installVersionWithModLoader(versionId: string, loaderType:
     writeLog(`[模组加载器] 开始下载: ${loaderType} ${loaderVersion} for MC ${versionId}`);
 
     writeLog(`[模组加载器] 下载原版 MC ${versionId}`);
-    await installVersion(versionId, maxConcurrent);
-    
+    const baseResult: any = await installVersion(versionId, maxConcurrent);
+    if (baseResult?.success === false) {
+      // 已有原版的机器上，个别资源下载失败不该拦住装加载器；本体（JSON + jar）在就继续
+      const baseVersionDir: string = path.join(GAME_DIR, 'versions', versionId);
+      const baseReady: boolean = fs.existsSync(path.join(baseVersionDir, `${versionId}.json`))
+        && fs.existsSync(path.join(baseVersionDir, `${versionId}.jar`));
+      if (!baseReady) {
+        throw new Error(t('ui.base_game_download_failed_stopped_loader', {
+          version: versionId,
+          loader: LOADER_DISPLAY_NAMES[loaderType] || loaderType,
+          error: baseResult.error || t('ui.unknown_error')
+        }));
+      }
+      writeLog(`[模组加载器] 原版下载报告失败，但 ${versionId} 已存在，继续安装加载器: ${baseResult.error}`);
+    }
+
     if (shouldCancelDownload) {
       return { success: false, error: 'Download cancelled' };
     }

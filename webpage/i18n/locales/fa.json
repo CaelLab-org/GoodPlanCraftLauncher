@@ -111,6 +111,10 @@
       {
         "alt": "تنظیمات ظاهر GoodPlanCraftLauncher",
         "caption": "تنظیمات · زبان، سبک رابط، پوسته و مقیاس"
+      },
+      {
+        "alt": "صفحه اجرای GoodPlanCraftLauncher (سبک Minecraft)",
+        "caption": "صفحه اجرا · ظاهر سبک Minecraft"
       }
     ]
   },

@@ -2,6 +2,26 @@
     "Launcher": [
         {
             "name": "version",
+            "key": "1.9.7"
+        },
+        {
+            "name": "versiontitle",
+            "key": "修复：原版未装好时装模组加载器"
+        },
+        {
+            "name": "versiontitle_en",
+            "key": "Fix: mod loaders installed without the base game"
+        },
+        {
+            "name": "versionlog",
+            "key": "修复 Fabric / Forge / NeoForge 版本启动时报「Minecraft game provider couldn't locate the game」：原版下载失败（例如证书错误）时，启动器仍会继续把加载器装到这个空的版本上。现在会停下来，提示先重装原版。<br>安装加载器前会确认原版本体（JSON 和 jar）确实存在；已有原版、只是个别资源下载失败时照旧继续安装。<br>启动前会检查加载器或整合包依赖的原版是否还在，缺失时提示重装，不再抛出难懂的启动错误。<br>自动选择 Java 时改为按加载器继承的原版版本判断，不会再拿加载器版本号当游戏版本（26.x 的 Fabric 之前会被当成 1.20 而选 Java 17）；1.20.5 起正确要求 Java 21。<br>证书问题不再显示一长串英文异常：下载或登录遇到证书校验失败时，提示检查代理或安全软件，原始错误仍写进日志。<br>微软正版登录改走 Electron 的网络栈，和浏览器使用同一套系统证书库。修掉了某些机器上登录页能打开、启动器却一直轮询失败（unable to verify the first certificate）的问题。"
+        },
+        {
+            "name": "versionlog_en",
+            "key": "Fixed \"Minecraft game provider couldn't locate the game\" on Fabric / Forge / NeoForge versions: when the vanilla game failed to download (for example due to a certificate error), the launcher still installed the loader onto an empty version. It now stops and asks you to reinstall the base game first.<br>Installing a loader now checks that the vanilla game itself (JSON and jar) is really present. If the game is already installed and only some assets failed, installation continues as before.<br>Before launch, the launcher verifies that the base version a loader or modpack depends on still exists, and asks you to reinstall it instead of throwing a cryptic launch error.<br>Automatic Java selection now follows the base version that a loader inherits from, so loader version names are no longer mistaken for game versions (Fabric 26.x used to pick Java 17 as if it were 1.20). 1.20.5 and newer now correctly require Java 21.<br>Certificate problems no longer show a raw English exception: when a download or sign-in fails certificate verification, the launcher suggests checking your proxy or security software. The original error is still written to the log.<br>Microsoft sign-in now uses Electron's network stack, the same system certificate store as your browser. This fixes machines where the login page opened fine but the launcher kept failing to poll with \"unable to verify the first certificate\"."
+        },
+        {
+            "name": "version",
             "key": "1.9.6"
         },
         {

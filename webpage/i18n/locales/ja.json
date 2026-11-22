@@ -111,6 +111,10 @@
       {
         "alt": "GoodPlanCraftLauncher の外観設定",
         "caption": "設定 · 言語、インターフェーススタイル、テーマ、拡大率"
+      },
+      {
+        "alt": "GoodPlanCraftLauncher の起動画面（Minecraft スタイル）",
+        "caption": "起動画面 · Minecraft スタイルの外観"
       }
     ]
   },

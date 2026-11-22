@@ -111,6 +111,10 @@
       {
         "alt": "Cài đặt giao diện GoodPlanCraftLauncher",
         "caption": "Cài đặt · ngôn ngữ, kiểu giao diện, chủ đề và tỉ lệ"
+      },
+      {
+        "alt": "Màn hình khởi chạy GoodPlanCraftLauncher (phong cách Minecraft)",
+        "caption": "Màn hình khởi chạy · diện mạo phong cách Minecraft"
       }
     ]
   },

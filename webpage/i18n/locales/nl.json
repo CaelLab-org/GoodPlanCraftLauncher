@@ -111,6 +111,10 @@
       {
         "alt": "Weergave-instellingen van GoodPlanCraftLauncher",
         "caption": "Instellingen · taal, interfacestijl, thema en schaal"
+      },
+      {
+        "alt": "GoodPlanCraftLauncher-startscherm (Minecraft-stijl)",
+        "caption": "Startscherm · uiterlijk in Minecraft-stijl"
       }
     ]
   },

@@ -1,8 +1,31 @@
 {
   "schema": 1,
-  "latest": "1.9.6",
-  "updated": "2026-11-17",
+  "latest": "1.9.7",
+  "updated": "2026-11-22",
   "versions": [
+    {
+      "version": "1.9.7",
+      "anchor": "v1-9-7",
+      "date": "2026-11-22",
+      "title": "수정: 바닐라가 설치되지 않은 채 모드 로더가 설치되는 문제",
+      "log": [
+        "Fabric / Forge / NeoForge 버전에서 \"Minecraft game provider couldn't locate the game\" 오류가 나던 문제를 수정했습니다. 바닐라 다운로드가 실패했을 때(예: 인증서 오류)에도 로더 설치가 계속되어 빈 버전이 남았습니다. 이제는 중단하고 먼저 바닐라를 다시 설치하도록 안내합니다.",
+        "로더를 설치하기 전에 바닐라 본체(JSON과 jar)가 실제로 있는지 확인합니다. 바닐라는 이미 있고 일부 리소스만 실패한 경우에는 기존처럼 계속 설치합니다.",
+        "실행 전에 로더나 모드팩이 의존하는 바닐라 버전이 남아 있는지 확인하고, 없으면 알기 어려운 실행 오류 대신 다시 설치하도록 안내합니다.",
+        "Java 자동 선택이 로더가 상속하는 바닐라 버전을 따르도록 바뀌었습니다. 로더 버전 이름을 게임 버전으로 착각하지 않습니다(26.x Fabric은 1.20으로 오인되어 Java 17이 선택되었습니다). 1.20.5 이상은 이제 올바르게 Java 21을 요구합니다.",
+        "인증서 문제에서 긴 영어 예외가 표시되지 않습니다. 다운로드나 로그인 중 인증서 검증에 실패하면 프록시나 보안 프로그램을 확인하도록 안내하고, 원래 오류는 로그에 남깁니다.",
+        "Microsoft 로그인이 Electron 네트워크 스택(브라우저와 같은 시스템 인증서 저장소)을 사용하도록 바뀌었습니다. 로그인 페이지는 열리지만 런처의 폴링이 \"unable to verify the first certificate\"로 계속 실패하던 환경을 수정합니다."
+      ],
+      "download": {
+        "url": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.7-Setup.exe",
+        "file": "GPCL-1.9.7-Setup.exe",
+        "size": "94.0 MB",
+        "github": false
+      },
+      "linux": "https://dl.caellab.com/file/games/gpcl/GPCL-1.9.7-linux-x64.tar.gz",
+      "linuxSha256": "d4326bf03e57a3f65e6010de6a0e5ebfcf081a442c32abc80670bac646728fad",
+      "linuxSize": "104.3 MB"
+    },
     {
       "version": "1.9.6",
       "anchor": "v1-9-6",

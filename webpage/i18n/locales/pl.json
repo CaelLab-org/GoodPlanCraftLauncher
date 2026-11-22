@@ -111,6 +111,10 @@
       {
         "alt": "Ustawienia wyglądu GoodPlanCraftLauncher",
         "caption": "Ustawienia · język, styl interfejsu, motyw i skala"
+      },
+      {
+        "alt": "Ekran startowy GoodPlanCraftLauncher (styl Minecraft)",
+        "caption": "Ekran startowy · wygląd w stylu Minecraft"
       }
     ]
   },
